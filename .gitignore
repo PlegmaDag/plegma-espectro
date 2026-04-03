@@ -1,0 +1,50 @@
+# PLEGMA-ESPECTRO - .gitignore | Protocolo Privacy Total
+
+# CREDENCIAIS & CHAVES
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+*_private_key*
+*dilithium*
+*seed*
+*wallet*
+
+# LOGICA DE AUTENTICACAO
+auth_server.py
+*_auth_logic*
+*_validator*
+auth_server_real.py
+
+# LOGS OFFLINE & MEMORIA PERSISTENTE
+offline_logs/
+persistent_memory/
+local_registry/
+*.registry.json
+*_offline.*
+
+# DADOS PESSOAIS
+personal_data/
+*.personal.*
+
+# ARTEFATOS DE SISTEMA & IDE
+__pycache__/
+*.pyc
+.DS_Store
+node_modules/
+.venv/
+dist/
+build/
+*.egg-info/
+.idea/
+.vscode/
+
+# CATCH-ALL DE SEGREDOS
+secrets/
+private/
+*.secret
+
+# Excecao: template publico sem dados reais
+!.env.example
