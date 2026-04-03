@@ -398,6 +398,100 @@
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
 
+        <!-- APP v1.8.5 — UX SENTINELA + SHIELD PAGAMENTO — 03 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">03 ABR 2026 — App v1.8.5: Animação ao ativar validador · Card de status Shield 3 cores · Botão ATIVAR dinâmico · Fix classificação de permissões</span>
+                <div class="post-meta">
+                    <span class="post-date">03 ABR 2026 · App</span>
+                    <span class="post-tag" style="border-color:rgba(239,68,68,0.4);color:#ef4444;background:rgba(239,68,68,0.06);">SHIELD</span>
+                    <span class="post-tag tag-front">UI/UX</span>
+                    <span class="post-tag" style="border-color:rgba(34,197,94,0.4);color:#22c55e;background:rgba(34,197,94,0.06);">SENTINELA</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Sentinela — Animação de celebração + confirmação de desativação</div>
+                <p>A aba <strong>VALIDADOR</strong> ganhou duas novas interações de UX:</p>
+                <ul>
+                    <li><strong>Ativar mineração</strong>: exibe um overlay animado (ScaleTransition + FadeTransition) com a mensagem <em>"Parabéns! Você está ajudando a construir o futuro. A rede PLEGMA agradece."</em> — desaparece após 2.6 segundos.</li>
+                    <li><strong>Desativar mineração</strong>: abre um dialog de confirmação antes de parar — "Tem certeza que realmente precisa desativar?" com botões MANTER e DESATIVAR. Previne desativações acidentais e perda de uptime/recompensas do ciclo em curso.</li>
+                </ul>
+                <p>Na aba <strong>PROVERS</strong>, o rodapé com referência ao "Estatuto §13" foi removido — a informação já estava no card de Justiça Computacional acima.</p>
+
+                <div class="post-section">Shield — Card de status tricolor e botão ATIVAR dinâmico</div>
+                <p>O topo da tela de ativação do Lattice Shield agora exibe um <strong>card de status</strong> que muda de cor conforme o estado da carteira:</p>
+                <ul>
+                    <li><span style="color:#ef4444">●</span> <strong>Vermelho</strong>: sem validador ativo e sem saldo PLG suficiente. Ao tocar: snackbar <em>"Ative o validador ou adquira PLG para continuar."</em></li>
+                    <li><span style="color:#f59e0b">●</span> <strong>Laranja</strong>: sem validador, mas com saldo suficiente. Avisa que o valor será debitado da carteira ao ativar.</li>
+                    <li><span style="color:#22c55e">●</span> <strong>Verde</strong>: validador ativo. Informa que o custo será descontado automaticamente das recompensas de mineração.</li>
+                </ul>
+                <p>O botão <strong>ATIVAR PROTEÇÃO</strong> segue a mesma paleta — sua cor de borda e texto refletem o estado da transação em tempo real, tornando o estado do sistema imediatamente legível sem precisar ler o texto.</p>
+                <p>Quando o método de pagamento é a carteira PLG, um <strong>BottomSheet de confirmação</strong> é exibido antes de executar a transferência, mostrando: endereço do destinatário (treasury Aerarium), valor travado em PLG (equivalente a US$ 12), identificador único do serviço e uma nota explicando como o Aerarium distribui o valor entre os participantes da rede.</p>
+
+                <div class="post-section">Permissões — Câmera e microfone classificados corretamente</div>
+                <p>A aba <strong>PERMISSÕES</strong> corrigia erroneamente apps com câmera e microfone como risco <strong>ALTO</strong>, mesmo quando configurados como "apenas durante o uso". A causa raiz era o método <code>AppOpsManager.unsafeCheckOpNoThrow()</code> retornando <code>MODE_ALLOWED</code> (0) silenciosamente em vez de <code>MODE_FOREGROUND</code> (4).</p>
+                <p>O fix no <code>MainActivity.kt</code> aplica uma regra mais precisa: no Android 10+, câmera e microfone são inerentemente de uso em primeiro plano para apps comuns — o sistema operacional não permite acesso em background sem permissões especiais de sistema. Agora esses apps são classificados como <strong>MÉDIO risco</strong>, reservando o nível ALTO para SMS, leitura de chamadas e permissões genuinamente perigosas.</p>
+            </div>
+        </article>
+
+        <!-- APP — SHIELD PAGAMENTO + SENTINELA LAYOUT — 03 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">03 ABR 2026 — App v1.8.4: Shield modelo de pagamento · Sentinela layout corrigido · Deploy automático por diff</span>
+                <div class="post-meta">
+                    <span class="post-date">03 ABR 2026 · App</span>
+                    <span class="post-tag" style="border-color:rgba(239,68,68,0.4);color:#ef4444;background:rgba(239,68,68,0.06);">SHIELD</span>
+                    <span class="post-tag tag-front">UI/UX</span>
+                    <span class="post-tag" style="border-color:rgba(0,242,255,0.4);color:#00F2FF;background:rgba(0,242,255,0.06);">BUILD</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Shield — Modelo de cobrança com 3 opções</div>
+                <p>O plano <strong>Lattice Shield ($12/mês)</strong> agora tem três formas de pagamento integradas ao backend:</p>
+                <ul>
+                    <li><strong>Genesis Grátis</strong> — 30 dias sem custo durante a fase Genesis (09 Mai – 08 Jun 2026). Verificado via <code>/api/genesis/status</code>.</li>
+                    <li><strong>Desconto da Carteira</strong> — transfere US$ 12 em PLG para o endereço treasury via <code>POST /wallet/transferir</code> com assinatura Dilithium3. O fluxo existente no aerarium foi reutilizado sem duplicar lógica.</li>
+                    <li><strong>Desconto da Mineração</strong> — disponível para validadores ativos. Verificado via <code>/shield/payment/check</code>.</li>
+                </ul>
+                <p>A ativação exibe uma animação estilo Xiaomi: 3 anéis concêntricos pulsantes + contador 0–100% enquanto executa o snapshot ZK e registra a assinatura no servidor.</p>
+
+                <div class="post-section">Shield — Overlay mais transparente + permissões inteligentes</div>
+                <p>As abas <strong>SCANNER</strong> e <strong>PERMISSÕES</strong> quando inativas agora usam uma máscara translúcida (opacity 0.55 + gradiente suave) — o conteúdo é visível mas inacessível. O usuário vê o que vai desbloquear antes de pagar.</p>
+                <p>Na aba PERMISSÕES, apps com câmera ou microfone configurados como <em>"apenas quando em uso"</em> são classificados como risco <strong>MÉDIO</strong> (não ALTO). Um botão de atalho abre diretamente as configurações do app no Android via <code>ACTION_APPLICATION_DETAILS_SETTINGS</code>.</p>
+
+                <div class="post-section">Sentinela — Cards alinhados + tabela de Provers</div>
+                <p>O layout da aba <strong>PROVERS</strong> foi corrigido:</p>
+                <ul>
+                    <li>Card 1 (Dispositivos Vinculados) e Card 2 (Ganhos Totais) ficam lado a lado com <strong>mesma altura</strong> via <code>IntrinsicHeight</code>.</li>
+                    <li>Card 3 (Justiça Computacional) agora ocupa a <strong>largura total</strong> da tela, em formato retangular horizontal com ícone à esquerda.</li>
+                    <li>O estado vazio foi substituído por uma <strong>tabela com cabeçalho</strong> (NODE ID / CATEGORIA / SCORE / GANHOS / STATUS) — consistente com o painel web do dashboard.</li>
+                </ul>
+
+                <div class="post-section">Deploy inteligente — sem re-upload de APKs existentes</div>
+                <p>O <code>deploy.ps1</code> foi reescrito para verificar via SSH (<code>test -f</code>) se cada APK já existe no servidor antes de fazer o upload — evitando re-transferir 75MB desnecessariamente. O servidor mantém sempre apenas 2 versões (atual + backup). Links HTML são atualizados automaticamente por regex. O arquivo <code>deploy.ps1</code> nunca é enviado ao servidor.</p>
+            </div>
+        </article>
+
+        <!-- INFRAESTRUTURA — GITHUB + DISCORD — 03 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">03 ABR 2026 — Infraestrutura: GitHub configurado com protocolo Privacy Total · Discord integrado com webhooks · Skill de fechamento de sessão automatizada</span>
+                <div class="post-meta">
+                    <span class="post-date">03 ABR 2026 · Infra</span>
+                    <span class="post-tag" style="border-color:rgba(0,242,255,0.4);color:#00F2FF;background:rgba(0,242,255,0.06);">GITHUB</span>
+                    <span class="post-tag" style="border-color:rgba(0,242,255,0.4);color:#00F2FF;background:rgba(0,242,255,0.06);">DISCORD</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Repositório GitHub — Privacy Total</div>
+                <p>O repositório <code>PlegmaDag/plegma-espectro</code> foi configurado com o protocolo Privacy Total: branch <code>main</code>, <code>.gitignore</code> bloqueando chaves, logs offline e dados pessoais. O frontend Espectro completo (38 arquivos — landing, dashboard, blog, forge, genesis, social) foi publicado. Arquivos sensíveis como <code>deploy.ps1</code> e credenciais ficam exclusivamente locais.</p>
+                <div class="post-section">Discord — Monitoramento Sentinela</div>
+                <p>Dois canais criados na categoria LABS do servidor: <code>#build-logs</code> (logs de commit e build) e <code>#alertas</code> (inconsistências de hash e eventos críticos). Webhooks configurados e URLs armazenadas no <code>.env</code> local — nunca no repositório público.</p>
+                <div class="post-section">Automação de Sessão</div>
+                <p>Skill <code>/fechar-sessao</code> criada para automatizar o ritual de encerramento: salva memória da sessão em <code>DOCS/PROJECT_MEMORY/</code>, atualiza o roadmap, publica entrada no blog e prepara o commit para o GitHub. Um comando encerra a sessão completamente.</p>
+            </div>
+        </article>
+
         <!-- APP — SHIELD + PROVERS — 02 ABR 2026 -->
         <article class="post">
             <div class="post-header">
