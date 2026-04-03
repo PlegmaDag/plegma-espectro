@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Rede social descentralizada sem algoritmo, sem moderação corporativa. Apenas reputação real entre pares na rede PLEGMA DAG.">
+    <meta name="keywords" content="PLEGMA DAG, blockchain DAG, criptografia pós-quântica, Dilithium3, ZK-SNARK, PLG-G, governança descentralizada, mineração mobile">
+    <meta name="robots" content="index, follow">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://plegmadag.com/social/">
+    <meta property="og:title" content="Rede Social P2P | PLEGMA DAG">
+    <meta property="og:description" content="Rede social descentralizada sem algoritmo, sem moderação corporativa. Apenas reputação real entre pares na rede PLEGMA DAG.">
+    <meta property="og:image" content="https://plegmadag.com/assets/img/logo.gif">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://plegmadag.com/social/">
+    <meta property="twitter:title" content="Rede Social P2P | PLEGMA DAG">
+    <meta property="twitter:image" content="https://plegmadag.com/assets/img/logo.gif">
+    <link rel="icon" type="image/svg+xml" href="/assets/img/favicon-social.svg">
+    <title>PLEGMA | Rede Social P2P</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    <script src="/auth.js"></script>
+    <style>
+        :root {
+            --bg: #000; --bg2: #050a14;
+            --cyan: #00F2FF; --cyan2: rgba(0,242,255,0.08);
+            --green: #23d18b; --amber: #f59e0b; --red: #ef4444; --purple: #a78bfa;
+            --border: rgba(0,242,255,0.12); --border2: rgba(0,242,255,0.25);
+            --text: #e2e8f0; --text2: #64748b; --text3: #94a3b8;
+            --glow: 0 0 20px rgba(0,242,255,0.3); --glow-sm: 0 0 8px rgba(0,242,255,0.2);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: 'Space Mono', monospace; min-height: 100vh; overflow-x: hidden; }
+        body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(0,242,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,242,255,0.03) 1px, transparent 1px); background-size: 40px 40px; z-index: 0; pointer-events: none; }
+        .page { position: relative; z-index: 1; }
+
+        nav { display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 60px; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 100; }
+        .nav-brand { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--cyan); text-shadow: var(--glow-sm); text-decoration: none; letter-spacing: 2px; }
+        .nav-links { display: flex; gap: 24px; align-items: center; }
+        .nav-link { font-size: 0.7rem; color: var(--text2); text-decoration: none; letter-spacing: 2px; text-transform: uppercase; transition: color 0.2s; }
+        .nav-link:hover, .nav-link.active { color: var(--cyan); }
+
+        /* SPLASH MANIFESTO */
+        .splash { background: linear-gradient(180deg, rgba(0,242,255,0.04) 0%, transparent 100%); border-bottom: 1px solid var(--border); padding: 80px 40px 60px; text-align: center; }
+        .splash-tag { font-size: 0.7rem; color: var(--purple); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 20px; }
+        .splash h1 { font-family: 'Montserrat', sans-serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; color: var(--cyan); text-shadow: var(--glow); line-height: 1.1; margin-bottom: 30px; }
+        .manifesto { max-width: 560px; margin: 0 auto 30px; font-size: 0.85rem; color: var(--text3); line-height: 2; font-style: italic; border-left: 2px solid var(--purple); padding: 16px 24px; text-align: left; }
+        .sync-code { font-size: 0.7rem; letter-spacing: 4px; color: rgba(0,242,255,0.4); }
+
+        .main { max-width: 900px; margin: 0 auto; padding: 60px 40px; }
+        .section-title { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; color: var(--cyan); margin-bottom: 30px; display: flex; align-items: center; gap: 16px; }
+        .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border2); }
+
+        /* Filtro Orgânico */
+        .filter-levels { display: flex; flex-direction: column; gap: 12px; margin-bottom: 60px; }
+        .filter-level { display: grid; grid-template-columns: 80px 1fr 1fr; gap: 16px; align-items: start; padding: 16px; background: var(--cyan2); border: 1px solid var(--border); border-radius: 6px; }
+        .filter-level .lvl-badge { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 4px; text-align: center; letter-spacing: 1px; }
+        .lvl-1 { background: rgba(245,158,11,0.15); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+        .lvl-2 { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+        .lvl-3 { background: rgba(239,68,68,0.2); color: var(--red); border: 1px solid rgba(239,68,68,0.5); }
+        .filter-level .lvl-trigger { font-size: 0.75rem; color: var(--text3); line-height: 1.6; }
+        .filter-level .lvl-action { font-size: 0.75rem; color: var(--text); line-height: 1.6; }
+
+        /* Reputação */
+        .rep-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 60px; }
+        .rep-card { background: var(--cyan2); border: 1px solid var(--border); border-radius: 6px; padding: 20px; }
+        .rep-card h4 { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--cyan); margin-bottom: 10px; }
+        .rep-card p { font-size: 0.75rem; color: var(--text3); line-height: 1.7; }
+
+        /* Anonimato */
+        .proibido-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .proibido-item { background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.2); border-radius: 6px; padding: 16px; text-align: center; }
+        .proibido-item .p-icon { font-size: 1.4rem; margin-bottom: 8px; }
+        .proibido-item span { font-size: 0.72rem; color: var(--red); letter-spacing: 1px; }
+        .allowed-box { background: rgba(35,209,139,0.06); border: 1px solid rgba(35,209,139,0.25); border-radius: 6px; padding: 20px; margin-bottom: 60px; display: flex; align-items: center; gap: 16px; }
+        .allowed-box .a-icon { font-size: 1.5rem; }
+        .allowed-box div { font-size: 0.78rem; color: var(--green); line-height: 1.7; }
+
+        /* Bloqueio externo */
+        .alert-bloqueio { background: rgba(239,68,68,0.04); border: 1px solid rgba(239,68,68,0.2); border-radius: 6px; padding: 24px; margin-bottom: 60px; }
+        .alert-bloqueio .alert-tag { font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: var(--red); margin-bottom: 14px; display: block; }
+        .alert-bloqueio p { font-size: 0.8rem; color: var(--text3); line-height: 1.8; margin-bottom: 10px; }
+        .alert-bloqueio .alert-msg { background: #000; border: 1px solid rgba(239,68,68,0.3); border-radius: 4px; padding: 16px; font-size: 0.75rem; color: var(--text3); line-height: 1.8; margin-top: 16px; }
+
+        /* Portal +18 */
+        .portal-box { background: var(--bg2); border: 1px solid rgba(167,139,250,0.3); border-radius: 6px; padding: 28px; margin-bottom: 60px; }
+        .portal-box h4 { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--purple); margin-bottom: 16px; }
+        .declaracao { font-size: 0.8rem; color: var(--text3); line-height: 1.8; border-left: 3px solid var(--purple); padding: 14px 20px; margin-bottom: 20px; font-style: italic; }
+        .filtro-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+        .filtro-list li { display: flex; gap: 12px; font-size: 0.75rem; color: var(--text3); line-height: 1.6; }
+        .filtro-list li::before { content: '◆'; color: var(--purple); font-size: 0.6rem; padding-top: 4px; flex-shrink: 0; }
+        .erro-menor { background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.2); border-radius: 4px; padding: 14px 18px; font-size: 0.75rem; color: var(--text3); line-height: 1.8; }
+
+        /* Regras de Diálogo */
+        .regras-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 60px; }
+        .regra-item { display: flex; gap: 16px; padding: 16px; background: var(--cyan2); border: 1px solid var(--border); border-radius: 6px; }
+        .regra-item .regra-icon { font-size: 1rem; flex-shrink: 0; }
+        .regra-item div strong { display: block; font-size: 0.78rem; color: var(--cyan); margin-bottom: 6px; }
+        .regra-item div p { font-size: 0.75rem; color: var(--text3); line-height: 1.7; }
+
+        .quote-block { border-left: 3px solid var(--purple); padding: 16px 24px; background: rgba(167,139,250,0.05); margin-bottom: 60px; }
+        .quote-block p { font-size: 0.85rem; color: var(--text3); font-style: italic; line-height: 1.8; }
+
+        /* Selos */
+        .selos-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 60px; }
+        .selo { background: var(--cyan2); border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px; font-size: 0.65rem; color: var(--text3); letter-spacing: 1px; }
+        .selo.purple { border-color: rgba(167,139,250,0.3); color: var(--purple); }
+
+        footer { border-top: 1px solid var(--border); padding: 40px; text-align: center; }
+        footer p { font-size: 0.65rem; color: var(--text2); letter-spacing: 4px; text-transform: uppercase; }
+
+        /* ═══════════════════════════════════════════
+           REDE SOCIAL — FEED + PERFIS
+        ═══════════════════════════════════════════ */
+        .network-section { max-width: 900px; margin: 0 auto; padding: 40px 40px 0; }
+        .network-layout { display: grid; grid-template-columns: 260px 1fr; gap: 24px; align-items: start; }
+
+        /* Sidebar — Perfis */
+        .sidebar { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 76px; }
+        .sidebar-title { font-size: 0.62rem; letter-spacing: 3px; text-transform: uppercase; color: var(--text2); margin-bottom: 4px; }
+        .profile-card { background: var(--cyan2); border: 1px solid var(--border); border-radius: 8px; padding: 18px; transition: border-color 0.2s; text-decoration: none; display: block; }
+        .profile-card:hover { border-color: var(--border2); }
+        .profile-card.official { border-color: rgba(0,242,255,0.3); background: rgba(0,242,255,0.05); }
+        .profile-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .profile-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; border: 1px solid var(--border2); }
+        .profile-avatar.official-dag { background: rgba(0,242,255,0.1); }
+        .profile-avatar.official-fund { background: rgba(35,209,139,0.1); }
+        .profile-name { font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 800; color: var(--cyan); }
+        .profile-handle { font-size: 0.65rem; color: var(--text2); letter-spacing: 1px; }
+        .profile-badge { display: inline-block; font-size: 0.58rem; letter-spacing: 2px; padding: 2px 8px; border-radius: 3px; margin-top: 4px; }
+        .badge-official { background: rgba(0,242,255,0.1); color: var(--cyan); border: 1px solid rgba(0,242,255,0.3); }
+        .badge-fund { background: rgba(35,209,139,0.1); color: var(--green); border: 1px solid rgba(35,209,139,0.3); }
+        .profile-stats { display: flex; gap: 16px; font-size: 0.68rem; color: var(--text2); }
+        .profile-stats span strong { color: var(--text3); }
+        .profile-bio { font-size: 0.72rem; color: var(--text3); line-height: 1.6; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+        .btn-follow { width: 100%; margin-top: 12px; padding: 8px; background: transparent; border: 1px solid var(--border2); border-radius: 4px; color: var(--cyan); font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+        .btn-follow:hover { background: var(--cyan2); }
+
+        /* Post Creator */
+        .post-creator { background: var(--cyan2); border: 1px solid var(--border); border-radius: 8px; padding: 18px; margin-bottom: 20px; }
+        .creator-header { font-size: 0.65rem; color: var(--text2); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+        .creator-input { width: 100%; background: #000; border: 1px solid var(--border); border-radius: 6px; padding: 12px; color: var(--text); font-family: 'Space Mono', monospace; font-size: 0.78rem; line-height: 1.6; resize: none; min-height: 80px; outline: none; }
+        .creator-input:focus { border-color: var(--border2); }
+        .creator-input::placeholder { color: var(--text2); }
+        .creator-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .creator-hint { font-size: 0.62rem; color: var(--text2); }
+        .btn-post { padding: 7px 18px; background: var(--cyan); color: #000; border: none; border-radius: 4px; font-family: 'Space Mono', monospace; font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s; }
+        .btn-post:hover { opacity: 0.85; }
+        .connect-wall { text-align: center; padding: 16px; font-size: 0.75rem; color: var(--text2); }
+        .connect-wall a { color: var(--cyan); text-decoration: none; }
+
+        /* Feed de Posts */
+        .feed { display: flex; flex-direction: column; gap: 16px; }
+        .post { background: var(--cyan2); border: 1px solid var(--border); border-radius: 8px; padding: 18px; transition: border-color 0.2s; }
+        .post:hover { border-color: var(--border2); }
+        .post.pinned { border-color: rgba(0,242,255,0.3); background: rgba(0,242,255,0.04); }
+        .post.pinned-fund { border-color: rgba(35,209,139,0.25); background: rgba(35,209,139,0.03); }
+        .post-pin-label { font-size: 0.58rem; letter-spacing: 3px; text-transform: uppercase; color: var(--cyan); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .post-pin-label.fund { color: var(--green); }
+        .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+        .post-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
+        .post-meta { flex: 1; }
+        .post-author { font-size: 0.75rem; font-weight: 700; color: var(--cyan); }
+        .post-author span { color: var(--text2); font-size: 0.65rem; font-weight: 400; }
+        .post-time { font-size: 0.62rem; color: var(--text2); margin-top: 2px; }
+        .post-body { font-size: 0.8rem; color: var(--text); line-height: 1.8; margin-bottom: 16px; }
+        .post-body .highlight { color: var(--cyan); }
+        .post-footer { display: flex; align-items: center; gap: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+        .vote-btn { display: flex; align-items: center; gap: 6px; padding: 5px 12px; background: transparent; border: 1px solid var(--border); border-radius: 4px; font-family: 'Space Mono', monospace; font-size: 0.68rem; color: var(--text2); cursor: pointer; transition: all 0.2s; }
+        .vote-btn:hover { border-color: var(--border2); color: var(--text); }
+        .vote-btn.respeit:hover { border-color: rgba(0,242,255,0.4); color: var(--cyan); }
+        .vote-btn.ruido:hover { border-color: rgba(239,68,68,0.4); color: var(--red); }
+        .vote-btn .vcount { font-size: 0.7rem; }
+        .reply-btn { display: flex; align-items: center; gap: 6px; padding: 5px 10px; background: transparent; border: 1px solid var(--border); border-radius: 4px; font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--text2); cursor: pointer; transition: all 0.2s; margin-left: auto; }
+        .reply-btn:hover { color: var(--text3); border-color: var(--border2); }
+
+        /* Separador antes das regras */
+        .protocol-header { max-width: 900px; margin: 0 auto; padding: 60px 40px 0; }
+        .protocol-divider { border: none; border-top: 1px solid var(--border); margin-bottom: 0; }
+
+        @media (max-width: 700px) {
+            .network-layout { grid-template-columns: 1fr; }
+            .sidebar { position: static; }
+            .network-section { padding: 24px 20px 0; }
+            .protocol-header { padding: 40px 20px 0; }
+        }
+
+        /* Tech Seals */
+        .tech-seals-wrap { max-width: 900px; margin: 0 auto; padding: 0 40px 40px; }
+        .tech-seals-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tech-seal { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; font-size: 0.6rem; letter-spacing: 1px; font-family: 'Space Mono', monospace; transition: border-color 0.2s; }
+        .tech-seal:hover { border-color: var(--border2); }
+        .seal-left { background: rgba(255,255,255,0.03); color: var(--text2); padding: 4px 8px; border-right: 1px solid var(--border); white-space: nowrap; }
+        .seal-right { padding: 4px 8px; white-space: nowrap; font-weight: 700; }
+        .seal-cyan { background: rgba(0,242,255,0.08); color: var(--cyan); }
+        .seal-green { background: rgba(35,209,139,0.08); color: var(--green); }
+        .seal-amber { background: rgba(245,158,11,0.08); color: var(--amber); }
+        .seal-purple { background: rgba(167,139,250,0.08); color: var(--purple); }
+
+        @media (max-width: 600px) {
+            nav { padding: 0 20px; } .splash { padding: 60px 20px 40px; } .main { padding: 40px 20px; } .nav-links { gap: 14px; }
+            .filter-level { grid-template-columns: 1fr; }
+            .tech-seals-wrap { padding: 0 20px 30px; }
+        }
+
+        @media (max-width: 600px) {
+            .hero, .splash { padding: 50px 20px 40px !important; }
+            .main, .content, .page-wrap { padding: 30px 20px !important; max-width: 100% !important; }
+            h1 { font-size: clamp(1.6rem, 7vw, 2.4rem) !important; }
+            .grid-2, .grid-3, .cards-grid, .benefits-grid, .rep-grid { grid-template-columns: 1fr !important; }
+            table { font-size: 0.7rem; }
+            table th, table td { padding: 8px 6px; }
+        }
+
+        /* ═══ HAMBURGER MENU MOBILE ═══ */
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; background: none; border: none; z-index: 200; }
+        .hamburger span { display: block; width: 22px; height: 2px; background: var(--cyan); border-radius: 2px; transition: all 0.3s; }
+        .nav-open .hamburger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .nav-open .hamburger span:nth-child(2) { opacity: 0; }
+        .nav-open .hamburger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        @media (max-width: 768px) {
+            nav { padding: 0 20px; }
+            .hamburger { display: flex; }
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 60px; right: 0; left: 0;
+                background: rgba(0,0,0,0.97);
+                border-bottom: 1px solid var(--border);
+                flex-direction: column;
+                padding: 20px;
+                gap: 4px;
+                z-index: 150;
+                backdrop-filter: blur(20px);
+            }
+            .nav-open .nav-links { display: flex; }
+            .nav-link { font-size: 0.75rem; padding: 12px 16px; border-radius: 4px; width: 100%; text-align: left; }
+            .nav-link:hover { background: var(--cyan2, rgba(0,242,255,0.08)); }
+            .nav-btn { width: 100%; text-align: center; padding: 12px 16px; margin-top: 8px; }
+        }
+        /* ═══ SOCIAL LINKS ═══ */
+        .social-links { display: flex; gap: 14px; justify-content: center; align-items: center; margin: 18px 0 14px; }
+        .social-links a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid rgba(0,242,255,0.18); border-radius: 6px; background: rgba(0,242,255,0.05); color: rgba(255,255,255,0.4); transition: all 0.2s; }
+        .social-links a:hover { color: #00f2ff; border-color: rgba(0,242,255,0.55); background: rgba(0,242,255,0.12); box-shadow: 0 0 14px rgba(0,242,255,0.22); }
+        .social-links a svg { display: block; }
+    </style>
+</head>
+<body>
+<div class="page">
+    <nav>
+        <a href="/" class="nav-brand" style="display:flex;align-items:center;gap:10px"><img src="/assets/img/logo.gif" alt="PLEGMA" style="height:36px;filter:drop-shadow(0 0 6px rgba(0,242,255,0.5))"><span>PLEGMA DAG</span></a>
+        <button class="hamburger" onclick="this.closest('nav').classList.toggle('nav-open')" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links">
+            <a href="/financas" class="nav-link">FINANÇAS</a>
+            <a href="/fundacao" class="nav-link">FUNDAÇÃO</a>
+            <a href="/social" class="nav-link active">REDE</a>
+            <a href="/blog" class="nav-link">BLOG</a>
+            <a href="/labs" class="nav-link">LABS</a>
+            <a href="/genesis" class="nav-link">GENESIS</a>
+            <a href="/servicos" class="nav-link">SERVIÇOS</a>
+            <a href="/podcast" class="nav-link">PODCAST</a>
+            <a href="/dashboard" class="nav-link">DASHBOARD</a>
+        </div>
+    </nav>
+
+    <!-- ═══ BANNER PRÉ-LANÇAMENTO ═══ -->
+    <style>.launch-banner{display:flex;align-items:center;gap:14px;background:rgba(239,68,68,0.06);border-bottom:1px solid rgba(239,68,68,0.25);padding:10px 40px;font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:1px;text-transform:uppercase;color:#ef4444;}.launch-dot{width:8px;height:8px;border-radius:50%;background:#ef4444;flex-shrink:0;animation:pulsered 1.4s ease-in-out infinite;}@keyframes pulsered{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.65);}60%{box-shadow:0 0 0 8px rgba(239,68,68,0);}}.launch-text{flex:1;line-height:1.6;}.launch-notify{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.45);color:#ef4444;padding:5px 16px;border-radius:3px;text-decoration:none;font-size:0.65rem;letter-spacing:2px;transition:all 0.2s;white-space:nowrap;}.launch-notify:hover{background:#ef4444;color:#000;}@media(max-width:600px){.launch-banner{padding:10px 16px;gap:10px;flex-wrap:wrap;}.launch-text{font-size:0.6rem;}}</style>
+    <div class="launch-banner">
+        <span class="launch-dot"></span>
+        <span class="launch-text">Plataforma em pré-lançamento — funcionalidades ativas somente na data oficial de abertura da Rede PLEGMA</span>
+        <a class="launch-notify" href="mailto:plegmadag@proton.me?subject=Notifique-me%20%E2%80%94%20PLEGMA%20DAG&body=Ol%C3%A1%2C%0A%0ANotifique-me%20quando%20houver%20data%20definida%20para%20o%20lan%C3%A7amento%20da%20Rede%20PLEGMA%20DAG.%0A%0AObrigado.">✉ AVISE-ME</a>
+    </div>
+
+    <section class="splash">
+        <div class="splash-tag">PLEGMA Mesh-Social</div>
+        <h1>Rede Social<br>sem Vigilância</h1>
+        <div class="manifesto">
+            "Você está entrando em uma rede imaterial.<br>
+            Sem rastro, sem rosto, sem vigilância.<br>
+            Aqui, sua voz é protegida pelo Grafo e seu anonimato é garantido pela matemática.<br>
+            Compartilhe sua visão, não sua localização.<br>
+            Doe sua gratidão, não seus dados."
+        </div>
+        <div class="sync-code">Sincronizando... PLEGMA_ZKDAG_MAINNET_GENESIS_2026</div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         REDE SOCIAL — FEED PRINCIPAL
+    ═══════════════════════════════════════════ -->
+    <section class="network-section">
+        <div class="network-layout">
+
+            <!-- SIDEBAR: Perfis Oficiais -->
+            <aside class="sidebar">
+                <div class="sidebar-title">⬡ Perfis Oficiais</div>
+
+                <!-- Plegmadag -->
+                <div class="profile-card official">
+                    <div class="profile-header">
+                        <div class="profile-avatar official-dag">⬡</div>
+                        <div>
+                            <div class="profile-name">Plegmadag</div>
+                            <div class="profile-handle">@plegmadag</div>
+                            <span class="profile-badge badge-official">✦ OFICIAL</span>
+                        </div>
+                    </div>
+                    <div class="profile-stats">
+                        <span><strong>247</strong> posts</span>
+                        <span><strong>∞</strong> seguidores</span>
+                    </div>
+                    <div class="profile-bio">Canal oficial da rede PLEGMA DAG. Atualizações de protocolo, releases, governança e comunicados da rede.</div>
+                    <a href="/social/perfil/plegmadag.html" style="text-decoration:none"><button class="btn-follow">[ Ver Perfil ]</button></a>
+                </div>
+
+                <!-- Fundação Plegma -->
+                <div class="profile-card official">
+                    <div class="profile-header">
+                        <div class="profile-avatar official-fund">🛡</div>
+                        <div>
+                            <div class="profile-name" style="color:var(--green)">Fundação Plegma</div>
+                            <div class="profile-handle">@fundacao</div>
+                            <span class="profile-badge badge-fund">✦ FUNDAÇÃO</span>
+                        </div>
+                    </div>
+                    <div class="profile-stats">
+                        <span><strong>89</strong> posts</span>
+                        <span><strong>∞</strong> seguidores</span>
+                    </div>
+                    <div class="profile-bio">Canal oficial da Fundação PLEGMA. Projetos humanitários validados, transparência de impacto e atualizações do protocolo solidário.</div>
+                    <a href="/social/perfil/fundacao.html" style="text-decoration:none"><button class="btn-follow" style="border-color:rgba(35,209,139,0.3);color:var(--green)">[ Ver Perfil ]</button></a>
+                </div>
+
+                <!-- Aviso Identidade -->
+                <div style="padding:12px;background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.15);border-radius:6px;font-size:0.68rem;color:var(--text2);line-height:1.7">
+                    <span style="color:var(--red);letter-spacing:2px;font-size:0.6rem">⬡ IDENTIDADE</span><br>
+                    Sua identidade na rede é exclusivamente sua <strong style="color:var(--text3)">Chave Pública</strong>. Nenhum dado pessoal é coletado ou exibido.
+                </div>
+            </aside>
+
+            <!-- FEED PRINCIPAL -->
+            <div class="feed-area">
+
+                <!-- Criador de Post -->
+                <div class="post-creator">
+                    <div class="creator-header">⬡ Novo Post no Grafo</div>
+                    <textarea class="creator-input" placeholder="Compartilhe sua visão... (máx. 280 caracteres)" maxlength="280" id="postInput"></textarea>
+                    <div class="creator-footer">
+                        <span class="creator-hint" id="charCount">280 caracteres restantes</span>
+                        <button class="btn-post" onclick="publicarPost()">Publicar ⬡</button>
+                    </div>
+                    <div class="connect-wall" id="connectWall" style="display:none">
+                        <a href="#" onclick="PlegmaAuth.openModal();return false">Conecte sua carteira</a> para publicar na rede.
+                    </div>
+                </div>
+
+                <!-- Feed de Posts -->
+                <div class="feed" id="feedPosts">
+
+                    <!-- POST FIXADO — Plegmadag -->
+                    <div class="post pinned">
+                        <div class="post-pin-label">📌 Fixado — Plegmadag</div>
+                        <div class="post-header">
+                            <div class="post-avatar" style="background:rgba(0,242,255,0.1)">⬡</div>
+                            <div class="post-meta">
+                                <div class="post-author">Plegmadag <span>@plegmadag · ✦ Oficial</span></div>
+                                <div class="post-time">Genesis Day — 22 Mar 2026</div>
+                            </div>
+                        </div>
+                        <div class="post-body">
+                            A rede PLEGMA está viva. <span class="highlight">Genesis Block confirmado.</span><br><br>
+                            Este é o primeiro post oficial na nossa rede social P2P — sem algoritmo de vigilância, sem publicidade, sem coleta de dados. Apenas o Grafo e a matemática.<br><br>
+                            Bem-vindo ao protocolo da liberdade soberana. <span class="highlight">⬡ PLEGMA DAG</span>
+                        </div>
+                        <div class="post-footer">
+                            <button class="vote-btn respeit" onclick="votar(this,1)"><span>💠</span> <span class="vcount">1.204</span> Respeito</button>
+                            <button class="vote-btn ruido" onclick="votar(this,-1)"><span>⚡</span> <span class="vcount">3</span> Ruído</button>
+                            <button class="reply-btn">💬 Responder</button>
+                        </div>
+                    </div>
+
+                    <!-- POST FIXADO — Fundação Plegma -->
+                    <div class="post pinned-fund">
+                        <div class="post-pin-label fund">📌 Fixado — Fundação Plegma</div>
+                        <div class="post-header">
+                            <div class="post-avatar" style="background:rgba(35,209,139,0.1)">🛡</div>
+                            <div class="post-meta">
+                                <div class="post-author" style="color:var(--green)">Fundação Plegma <span style="color:var(--text2)">@fundacao · ✦ Fundação</span></div>
+                                <div class="post-time">Genesis Day — 22 Mar 2026</div>
+                            </div>
+                        </div>
+                        <div class="post-body">
+                            A <span class="highlight" style="color:var(--green)">Fundação PLEGMA</span> não possui carteira própria.<br><br>
+                            Cada $PLG doado através do protocolo vai <strong>diretamente</strong> para a carteira da entidade beneficiada — sem intermediários, sem custódia institucional, sem taxas de gestão.<br><br>
+                            Transparência radical. Impacto direto. <span class="highlight" style="color:var(--green)">🛡 Salvar. Nutrir. Educar.</span>
+                        </div>
+                        <div class="post-footer">
+                            <button class="vote-btn respeit" onclick="votar(this,1)"><span>💠</span> <span class="vcount">892</span> Respeito</button>
+                            <button class="vote-btn ruido" onclick="votar(this,-1)"><span>⚡</span> <span class="vcount">1</span> Ruído</button>
+                            <button class="reply-btn">💬 Responder</button>
+                        </div>
+                    </div>
+
+                    <!-- POST — Plegmadag update -->
+                    <div class="post">
+                        <div class="post-header">
+                            <div class="post-avatar" style="background:rgba(0,242,255,0.1)">⬡</div>
+                            <div class="post-meta">
+                                <div class="post-author">Plegmadag <span>@plegmadag · ✦ Oficial</span></div>
+                                <div class="post-time">22 Mar 2026 · 14:32 UTC</div>
+                            </div>
+                        </div>
+                        <div class="post-body">
+                            Protocolo de Anonimato Radical ativo: sua única identidade na rede é sua <span class="highlight">Chave Pública PLEGMA</span>.<br><br>
+                            Compartilhamento de dados pessoais (telefone, e-mail, redes externas) é bloqueado automaticamente pelo Grafo. Identidade soberana. Dados invisíveis.
+                        </div>
+                        <div class="post-footer">
+                            <button class="vote-btn respeit" onclick="votar(this,1)"><span>💠</span> <span class="vcount">541</span> Respeito</button>
+                            <button class="vote-btn ruido" onclick="votar(this,-1)"><span>⚡</span> <span class="vcount">7</span> Ruído</button>
+                            <button class="reply-btn">💬 Responder</button>
+                        </div>
+                    </div>
+
+                    <!-- POST — Fundação update -->
+                    <div class="post">
+                        <div class="post-header">
+                            <div class="post-avatar" style="background:rgba(35,209,139,0.1)">🛡</div>
+                            <div class="post-meta">
+                                <div class="post-author" style="color:var(--green)">Fundação Plegma <span style="color:var(--text2)">@fundacao · ✦ Fundação</span></div>
+                                <div class="post-time">22 Mar 2026 · 11:15 UTC</div>
+                            </div>
+                        </div>
+                        <div class="post-body">
+                            Critérios de admissão publicados. Buscamos projetos com <span class="highlight" style="color:var(--green)">atuação física comprovada</span>, foco em proteção à infância, combate à fome ou resgate à dignidade humana.<br><br>
+                            Grandes ONGs multinacionais com financiamento corporativo não se enquadram. O foco são os <strong>pequenos projetos de impacto direto</strong>.
+                        </div>
+                        <div class="post-footer">
+                            <button class="vote-btn respeit" onclick="votar(this,1)"><span>💠</span> <span class="vcount">328</span> Respeito</button>
+                            <button class="vote-btn ruido" onclick="votar(this,-1)"><span>⚡</span> <span class="vcount">2</span> Ruído</button>
+                            <button class="reply-btn">💬 Responder</button>
+                        </div>
+                    </div>
+
+                    <!-- Placeholder — posts da comunidade -->
+                    <div style="text-align:center;padding:30px;border:1px dashed var(--border);border-radius:8px;color:var(--text2);font-size:0.75rem;line-height:2">
+                        <div style="font-size:1.4rem;margin-bottom:10px">⬡</div>
+                        Os posts da comunidade aparecem aqui em tempo real.<br>
+                        <span style="font-size:0.65rem;color:var(--text2)">Conecte sua carteira e publique o primeiro post da sua chave.</span>
+                    </div>
+
+                </div><!-- /feed -->
+            </div><!-- /feed-area -->
+        </div><!-- /network-layout -->
+    </section>
+
+    <!-- Divisor antes do Protocolo -->
+    <div class="protocol-header">
+        <hr class="protocol-divider">
+    </div>
+
+    <main class="main">
+        <div style="background:rgba(0,242,255,0.03);border:1px solid var(--border);border-radius:6px;padding:16px 20px;margin-bottom:40px;font-size:0.72rem;color:var(--text2);text-align:center;letter-spacing:2px;text-transform:uppercase">
+            ⬡ Protocolo da Rede — Código de Convivência
+        </div>
+
+        <!-- Código de Evolução -->
+        <div class="section-title">Código de Evolução</div>
+        <ul class="regras-list">
+            <li class="regra-item">
+                <span class="regra-icon">🔍</span>
+                <div>
+                    <strong>Exploração, não Comparação</strong>
+                    <p>Livre para falar sobre qualquer filosofia — o foco deve ser o conteúdo evolutivo. Comparações para diminuir uma crença são consideradas ruído técnico.</p>
+                </div>
+            </li>
+            <li class="regra-item">
+                <span class="regra-icon">🌐</span>
+                <div>
+                    <strong>Conversa de Nicho, não Conflito de Massa</strong>
+                    <p>Diálogo sobre religião deve permanecer no contexto de aprendizado. Tentativas de converter, atacar ou criar "times" opostos acionam o filtro automático.</p>
+                </div>
+            </li>
+            <li class="regra-item">
+                <span class="regra-icon">🚫</span>
+                <div>
+                    <strong>Proibição de Polarização</strong>
+                    <p>Política partidária é tema de exclusão por ser inerentemente divisivo. A rede não é palco para disputas de poder.</p>
+                </div>
+            </li>
+            <li class="regra-item">
+                <span class="regra-icon">⚖️</span>
+                <div>
+                    <strong>A Regra da Harmonia</strong>
+                    <p>Se uma conversa sobre fé gerar agressividade, o tópico será silenciado pelo peso de voto da comunidade. Não por censura — por matemática coletiva.</p>
+                </div>
+            </li>
+        </ul>
+
+        <div class="quote-block">
+            <p>"Fale sobre o que te eleva, não sobre o que te divide. Na PLEGMA, o conhecimento é um bem comum e o respeito é a nossa lei única."</p>
+        </div>
+
+        <!-- Filtragem Orgânica -->
+        <div class="section-title">Mecanismo de Filtragem Orgânica</div>
+        <div class="filter-levels">
+            <div class="filter-level">
+                <span class="lvl-badge lvl-1">Nível 1<br>Alerta</span>
+                <div class="lvl-trigger"><strong style="color:var(--amber)">Gatilho:</strong><br>Votos negativos superam positivos</div>
+                <div class="lvl-action"><strong style="color:var(--text)">Ação:</strong><br>Comentário fica cinza claro — perde destaque mas permanece visível</div>
+            </div>
+            <div class="filter-level">
+                <span class="lvl-badge lvl-2">Nível 2<br>Recolhimento</span>
+                <div class="lvl-trigger"><strong style="color:var(--red)">Gatilho:</strong><br>~70% de desaprovação</div>
+                <div class="lvl-action"><strong style="color:var(--text)">Ação:</strong><br>"Conteúdo oculto por baixo índice de evolução/respeito" — visível apenas ao autor</div>
+            </div>
+            <div class="filter-level">
+                <span class="lvl-badge lvl-3">Nível 3<br>Expulsão</span>
+                <div class="lvl-trigger"><strong style="color:var(--red)">Gatilho:</strong><br>Ataque pessoal, política ou briga religiosa marcados por usuários com alto peso de voto</div>
+                <div class="lvl-action"><strong style="color:var(--text)">Ação:</strong><br>Desvinculado do feed. Dado permanece no histórico (imutabilidade), mas não existe na interface</div>
+            </div>
+        </div>
+
+        <!-- Reputação Soberana -->
+        <div class="section-title">Reputação Soberana — Invisível</div>
+        <div class="rep-grid">
+            <div class="rep-card">
+                <h4>Proof of Presence</h4>
+                <p>Quanto mais tempo ativo e síncrono na rede, mais o protocolo confia na estabilidade da conta.</p>
+            </div>
+            <div class="rep-card">
+                <h4>Interação Qualitativa</h4>
+                <p>Postar no Labs, ajudar na Fundação ou trazer instruções em Finanças gera peso maior do que apenas observar.</p>
+            </div>
+            <div class="rep-card">
+                <h4>Engajamento de Curadoria</h4>
+                <p>Dar 💠 a conteúdos de alta qualidade aumenta a reputação — ajuda o algoritmo de evolução coletiva.</p>
+            </div>
+            <div class="rep-card">
+                <h4>Consistência de Ciclos</h4>
+                <p>Repetição de comportamentos positivos ao longo de ciclos de 30 dias solidifica a influência silenciosa.</p>
+            </div>
+        </div>
+
+        <!-- Anonimato Radical -->
+        <div class="section-title">Protocolo de Anonimato Radical</div>
+        <div class="proibido-grid">
+            <div class="proibido-item"><div class="p-icon">📱</div><span>Telefones</span></div>
+            <div class="proibido-item"><div class="p-icon">📧</div><span>E-mails</span></div>
+            <div class="proibido-item"><div class="p-icon">📍</div><span>Endereços Físicos</span></div>
+            <div class="proibido-item"><div class="p-icon">🪪</div><span>Documentos / Nomes Reais</span></div>
+        </div>
+        <div class="allowed-box">
+            <span class="a-icon">💠</span>
+            <div>
+                <strong>Única Identidade Permitida:</strong><br>
+                O endereço da sua carteira PLEGMA. Sua chave pública é sua face — nada mais transita entre usuários.
+            </div>
+        </div>
+
+        <!-- Isolamento Cross-Platform -->
+        <div class="section-title">Protocolo de Isolamento Cross-Platform</div>
+        <div class="alert-bloqueio">
+            <span class="alert-tag">⚠ Bloqueio Anti-Setor</span>
+            <p>Na PLEGMA, a vida digital fora do Grafo não existe. O compartilhamento ou solicitação de perfis em redes sociais externas é terminantemente proibido.</p>
+            <p>O sistema mascara automaticamente menções a redes sociais externas e neutraliza solicitações como "Onde te encontro?" ou "Qual seu @".</p>
+            <div class="alert-msg">
+                ⚠ BLOQUEIO DE SEGURANÇA: Detectamos uma tentativa de compartilhamento de dados externos.<br>
+                Na PLEGMA, sua única identidade permitida é a sua Chave Pública.<br>
+                Esta tentativa foi registrada pelo Protocolo de Maturidade.
+            </div>
+        </div>
+
+        <!-- Portal +18 -->
+        <div class="section-title">Portal de Acesso — Filtro de Maturidade</div>
+        <div class="portal-box">
+            <h4>Declaração de Acesso</h4>
+            <div class="declaracao">
+                "Declaro ter 18 anos ou mais. Compreendo que este é um ambiente de instrução financeira, debates filosóficos e gestão humanitária. Assumo a responsabilidade técnica e ética por minhas interações no Grafo."
+            </div>
+            <ul class="filtro-list">
+                <li>Analítica de Linguagem On-Device: o filtro processa localmente (sem enviar dados) se o padrão de escrita condiz com um adulto.</li>
+                <li>Isolamento Protetivo: padrões infantis detectados restringem automaticamente acesso à rede social e áreas de transação complexas.</li>
+                <li>Proteção contra Predadores: a proibição de dados pessoais bloqueia 100% das rotas de contato externo que poderiam colocar um menor em risco.</li>
+            </ul>
+            <div class="erro-menor">
+                O sistema detectou um padrão de interação não compatível com a maioridade exigida. Por segurança e proteção à infância, o acesso a esta aba foi restrito. O foco da PLEGMA para crianças é através da nossa Fundação, onde garantimos Educação e Nutrição via responsáveis.
+            </div>
+        </div>
+
+        <!-- Selos -->
+        <div class="section-title">Selos da Convivência P2P</div>
+        <div class="selos-grid">
+            <span class="selo purple">[Pluralismo Soberano]</span>
+            <span class="selo">[Anti-Polarização]</span>
+            <span class="selo">[Evolução Integral]</span>
+            <span class="selo">[Self-Cleaning Mesh]</span>
+            <span class="selo">[Anti-Troll Architecture]</span>
+            <span class="selo purple">[Silent Authority]</span>
+            <span class="selo">[Time-Based Trust]</span>
+            <span class="selo">[No-Leak Policy]</span>
+            <span class="selo">[Wallet-Only Identity]</span>
+            <span class="selo">[Cross-Platform Isolation]</span>
+            <span class="selo">[Maturity Assured]</span>
+            <span class="selo purple">[Child-Safe Architecture]</span>
+        </div>
+
+    </main>
+
+    <!-- Selos de Tecnologia -->
+    <div class="tech-seals-wrap">
+        <div class="section-title">Tecnologias da Rede PLEGMA</div>
+        <div class="tech-seals-grid">
+            <div class="tech-seal"><span class="seal-left">segurança</span><span class="seal-right seal-cyan">Crystals-Dilithium3</span></div>
+            <div class="tech-seal"><span class="seal-left">padrão</span><span class="seal-right seal-cyan">NIST FIPS 204</span></div>
+            <div class="tech-seal"><span class="seal-left">hash</span><span class="seal-right seal-cyan">BLAKE3</span></div>
+            <div class="tech-seal"><span class="seal-left">provas</span><span class="seal-right seal-cyan">ZK-SNARK · 22KB</span></div>
+            <div class="tech-seal"><span class="seal-left">rede</span><span class="seal-right seal-green">DAG · Acyclic Graph</span></div>
+            <div class="tech-seal"><span class="seal-left">criptografia</span><span class="seal-right seal-purple">Lattice-Based</span></div>
+            <div class="tech-seal"><span class="seal-left">mineração</span><span class="seal-right seal-green">Mobile-First</span></div>
+            <div class="tech-seal"><span class="seal-left">distribuição</span><span class="seal-right seal-green">Zero Pre-Mine</span></div>
+            <div class="tech-seal"><span class="seal-left">energia</span><span class="seal-right seal-green">Eficiência Extrema</span></div>
+            <div class="tech-seal"><span class="seal-left">supply</span><span class="seal-right seal-amber">21B $PLG · Fixed</span></div>
+            <div class="tech-seal"><span class="seal-left">governança</span><span class="seal-right seal-purple">1 Person · 1 Vote</span></div>
+            <div class="tech-seal"><span class="seal-left">lockup</span><span class="seal-right seal-amber">30-Day Lock</span></div>
+        </div>
+    </div>
+
+    <footer>
+    <p>&copy; 2026 PLEGMA DAG | The Architecture of Absolute Justice</p>
+    <div class="social-links">
+        <a href="https://x.com/plegmadag" target="_blank" rel="noopener" title="X (Twitter)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="https://t.me/plegma_dag" target="_blank" rel="noopener" title="Telegram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        </a>
+        <a href="https://discord.gg/MFsJqyBBJ" target="_blank" rel="noopener" title="Discord">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057.1 18.08.116 18.102.136 18.116a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+        </a>
+        <a href="https://github.com/PlegmaDag" target="_blank" rel="noopener" title="GitHub">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        </a>
+        <a href="https://www.instagram.com/plegmadag/" target="_blank" rel="noopener" title="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        </a>
+        <a href="/social" title="PLG — Sua Rede de Conexões">
+            <svg width="18" height="18" viewBox="0 0 6000 6000" fill="currentColor" style="fill-rule:evenodd;clip-rule:evenodd" xmlns="http://www.w3.org/2000/svg"><path d="M1808 4633c475,-3 951,0 1427,-1 499,0 825,11 1246,-181 606,-277 1097,-807 1277,-1576 98,-421 64,-847 -63,-1241 -116,-356 -298,-631 -547,-885 -121,-123 -243,-225 -394,-316 -147,-89 -305,-172 -491,-230 -431,-135 -863,-101 -1333,-101 -474,1 -948,0 -1422,0 -219,0 -501,-15 -712,4 -213,19 -375,141 -463,256 -135,176 -139,315 -140,573 0,238 0,475 0,712l1 2853c-1,420 -79,874 250,1182 473,441 1185,175 1333,-362 51,-186 32,-481 31,-687zm-276 -2047c1,0 4,-1 5,2l229 105 1 -163 -235 56zm2678 108l174 -76c27,-11 45,-15 65,-35l-240 -54 1 165zm-2424 -1372c16,32 45,52 71,77l213 219c43,44 99,107 144,144 41,33 122,107 141,147 -40,55 -185,171 -263,215l-239 -239c-28,-29 -50,-61 -86,-78l0 472c-58,33 -268,81 -346,89l0 -688 -265 705c30,18 49,40 61,78 391,-21 774,-165 1063,-392 130,-102 233,-229 338,-381 63,-92 205,-367 239,-492 -10,-15 -39,-53 -54,-69l-1017 193zm1336 -136c12,99 183,415 233,493 185,293 473,535 802,654 159,57 422,121 605,131 11,-37 33,-61 58,-78l-261 -712 -2 694c-110,-11 -249,-53 -347,-88l0 -476c-68,33 -248,271 -323,320 -56,-23 -239,-180 -266,-215 77,-97 509,-508 569,-584l-1024 -201c-11,40 -16,43 -44,62zm-562 2027c36,73 47,139 1,212 26,43 44,50 77,88 43,49 225,257 258,278 92,-46 115,-15 195,-2l203 -220c15,-17 23,-30 38,-47 30,-35 35,-26 82,-89 -36,-129 -43,-101 5,-227l-200 -239c-20,-25 -48,-64 -66,-83 -34,18 -57,50 -83,79 -27,28 -53,52 -81,78l-160 -156 -204 243c-20,26 -50,59 -65,85zm-1300 -652c46,32 222,79 293,108 453,182 667,444 734,479 89,-35 108,-30 195,-4 30,-37 256,-304 271,-337l-181 -193c-22,-22 -44,-37 -66,-60 -83,-88 -158,-172 -245,-255 6,-9 2,-4 12,-14l53 -40c25,-18 41,-32 67,-52 29,-22 34,-26 63,-56 22,-23 41,-47 68,-60 41,33 75,78 113,117 42,43 72,73 121,116 38,33 77,77 113,115 31,32 87,98 118,119 69,-54 429,-446 478,-468 27,40 80,85 119,117 24,20 42,33 66,52 31,24 47,27 64,54 -121,114 -245,256 -365,378 -45,45 -97,79 -128,130l203 249c22,26 45,61 71,85 128,-31 94,-20 202,10 26,-30 63,-63 99,-95 174,-154 402,-295 623,-385 58,-23 263,-87 296,-110 -484,-69 -777,-163 -1084,-415 -286,-236 -474,-547 -603,-904l-81 2c-74,180 -148,351 -243,500 -109,170 -211,271 -356,398 -283,249 -625,351 -1090,419zm-186 180c-248,18 -298,-236 -173,-347 49,-44 86,-49 166,-53l311 -847c-34,-39 -74,-69 -79,-153 -10,-153 124,-241 243,-211 70,18 106,54 133,109 110,-14 1079,-199 1112,-218 24,-53 22,-84 63,-124 73,-71 198,-71 274,-3 36,32 41,81 69,127 40,22 991,201 1109,218 102,-198 386,-121 379,94 -3,88 -43,115 -80,161l312 847c320,-5 296,429 -10,399 -25,54 -343,767 -347,804 -14,114 37,112 -51,177 -70,52 -199,142 -293,166l-2 -923c66,-44 255,-138 346,-166l0 473 254 -573 -36 -41c-171,36 -419,148 -556,226 -256,147 -416,313 -453,334 9,35 21,59 23,97 2,35 -18,84 -14,100 4,19 253,236 303,286 19,20 42,36 63,54l1 134c-70,-43 -391,-369 -452,-396 -63,54 -136,29 -202,10l-244 269c-21,21 -64,73 -80,94 68,141 -9,297 -165,305 -129,7 -268,-116 -183,-305 -72,-88 -176,-190 -242,-269 -28,-34 -58,-58 -81,-96 -108,30 -107,38 -214,-4l-326 288c-23,23 -27,31 -51,51 -12,9 -17,13 -28,22l-39 27c1,-151 -9,-123 80,-197 28,-23 39,-42 70,-66l141 -129c129,-118 67,-31 62,-161 -2,-43 14,-76 24,-112 -69,-56 -132,-118 -210,-177 -78,-59 -153,-106 -240,-158 -112,-67 -415,-204 -559,-229l-35 41 251 573 3 -470c72,19 296,125 345,164l1 1286c441,-1 883,0 1324,0 455,1 801,32 1197,-135 616,-259 1061,-852 1132,-1527 91,-871 -370,-1496 -838,-1805 -296,-194 -604,-294 -1034,-294 -877,1 -1775,6 -2650,0 -227,-2 -317,134 -317,346 1,223 0,446 0,669l0 3319c1,259 -31,386 112,560 199,240 727,185 727,-332 0,-443 0,-886 0,-1329 0,-52 3,-109 1,-161 -2,-49 -24,-82 -42,-125l-305 -694z"/></svg>
+        </a>
+    </div>
+    <div class="footer-legal">
+        <a href="/termos">Termos de Uso</a>
+        <a href="/privacidade">Privacidade</a>
+        <a href="/cookies">Cookies</a>
+        <a href="/quem-somos">Quem Somos</a>
+    </div>
+</footer>
+</div>
+
+<script>
+// Contador de caracteres
+const postInput = document.getElementById('postInput');
+const charCount = document.getElementById('charCount');
+if (postInput) {
+    postInput.addEventListener('input', () => {
+        const r = 280 - postInput.value.length;
+        charCount.textContent = r + ' caracteres restantes';
+        charCount.style.color = r < 40 ? '#ef4444' : '';
+    });
+}
+
+// Publicar post
+async function publicarPost() {
+    const txt = document.getElementById('postInput');
+    const texto = txt.value.trim();
+    if (!texto) return;
+
+    // Author = endereço da carteira (se disponível) ou anônimo
+    const author = localStorage.getItem('plegma_address') || 'anonimo_' + Math.random().toString(36).substr(2,6);
+
+    try {
+        const resp = await fetch('http://80.78.26.52:8080/api/social/post', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({author, conteudo: texto})
+        });
+        const data = await resp.json();
+        if (data.erro) throw new Error(data.erro);
+
+        // Adiciona post ao feed visualmente
+        const feed = document.getElementById('feed');
+        const div = document.createElement('div');
+        div.className = 'post';
+        div.innerHTML = `
+            <div class="post-time">agora mesmo</div>
+            <div class="post-body">${texto}</div>
+            <div class="post-footer">
+                <button class="vote-btn respeit" onclick="votar(this,1)"><span>💠</span> <span class="vcount">0</span> Respeito</button>
+                <button class="vote-btn ruido" onclick="votar(this,-1)"><span>⚡</span> <span class="vcount">0</span> Ruído</button>
+            </div>
+        `;
+        feed.insertBefore(div, feed.firstChild);
+        txt.value = '';
+        document.getElementById('charCount').textContent = '0/500';
+    } catch(e) {
+        // Fallback offline: adiciona localmente mesmo assim
+        console.warn('API offline, post local:', e.message);
+        // ... adiciona visualmente sem persistir
+    }
+}
+
+// Carrega posts reais da API ao iniciar
+async function carregarPostsAPI() {
+    try {
+        const resp = await fetch('http://80.78.26.52:8080/api/social/posts?limit=20');
+        const data = await resp.json();
+        // Não substitui posts fixados — apenas adiciona após eles
+        // (implementação simplificada: apenas loga)
+        console.log('[PLEGMA] Posts carregados da API:', data.total);
+    } catch(e) {
+        console.warn('[PLEGMA] API offline, usando posts estáticos');
+    }
+}
+carregarPostsAPI();
+
+// Votar
+function votar(btn, tipo) {
+    const count = btn.querySelector('.vcount');
+    const n = parseInt(count.textContent.replace('.','')) || 0;
+    if (btn.dataset.voted) {
+        count.textContent = formatNum(tipo > 0 ? n - 1 : n + 1);
+        delete btn.dataset.voted;
+        btn.style.borderColor = '';
+        btn.style.color = '';
+    } else {
+        count.textContent = formatNum(tipo > 0 ? n + 1 : n - 1);
+        btn.dataset.voted = '1';
+        btn.style.borderColor = tipo > 0 ? 'rgba(0,242,255,0.5)' : 'rgba(239,68,68,0.5)';
+        btn.style.color = tipo > 0 ? 'var(--cyan)' : 'var(--red)';
+    }
+}
+
+function formatNum(n) {
+    if (n >= 1000) return (n/1000).toFixed(1).replace('.0','') + 'K';
+    return Math.max(0, n);
+}
+</script>
+
+<!-- Auto-translate: detecta idioma do navegador e traduz automaticamente -->
+<div id="google_translate_element" style="display:none"></div>
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({ pageLanguage: 'pt', autoDisplay: false }, 'google_translate_element');
+  var lang = ((navigator.language || navigator.userLanguage || 'pt').split('-')[0]).toLowerCase();
+  if (lang !== 'pt') {
+    setTimeout(function() {
+      var sel = document.querySelector('.goog-te-combo');
+      if (sel) { sel.value = lang; sel.dispatchEvent(new Event('change')); }
+    }, 800);
+  }
+}
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

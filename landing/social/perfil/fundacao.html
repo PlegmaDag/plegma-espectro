@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Perfil oficial da Fundação PLEGMA na rede social descentralizada P2P.">
+    <meta name="keywords" content="PLEGMA DAG, blockchain DAG, criptografia pós-quântica, Dilithium3, ZK-SNARK, PLG-G, governança descentralizada, mineração mobile">
+    <meta name="robots" content="index, follow">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://plegmadag.com/social/perfil/fundacao">
+    <meta property="og:title" content="@fundacao — Perfil | PLEGMA DAG">
+    <meta property="og:description" content="Perfil oficial da Fundação PLEGMA na rede social descentralizada P2P.">
+    <meta property="og:image" content="https://plegmadag.com/assets/img/logo.gif">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://plegmadag.com/social/perfil/fundacao">
+    <meta property="twitter:title" content="@fundacao — Perfil | PLEGMA DAG">
+    <meta property="twitter:image" content="https://plegmadag.com/assets/img/logo.gif">
+    <title>@fundacao | PLEGMA Rede</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    <script src="/auth.js"></script>
+    <style>
+        :root {
+            --bg: #000; --bg2: #050a14;
+            --cyan: #00F2FF; --cyan2: rgba(0,242,255,0.08);
+            --green: #23d18b; --green2: rgba(35,209,139,0.08); --amber: #f59e0b; --red: #ef4444; --purple: #a78bfa;
+            --border: rgba(0,242,255,0.12); --border2: rgba(0,242,255,0.25);
+            --border-g: rgba(35,209,139,0.2); --border-g2: rgba(35,209,139,0.35);
+            --text: #e2e8f0; --text2: #64748b; --text3: #94a3b8;
+            --glow: 0 0 20px rgba(35,209,139,0.3); --glow-sm: 0 0 8px rgba(35,209,139,0.2);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: 'Space Mono', monospace; min-height: 100vh; overflow-x: hidden; }
+        body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(35,209,139,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(35,209,139,0.02) 1px, transparent 1px); background-size: 40px 40px; z-index: 0; pointer-events: none; }
+        .page { position: relative; z-index: 1; }
+
+        nav { display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 60px; border-bottom: 1px solid rgba(35,209,139,0.15); background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 100; }
+        .nav-brand { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--cyan); text-shadow: 0 0 8px rgba(0,242,255,0.3); text-decoration: none; letter-spacing: 2px; }
+        .nav-links { display: flex; gap: 24px; align-items: center; }
+        .nav-link { font-size: 0.7rem; color: var(--text2); text-decoration: none; letter-spacing: 2px; text-transform: uppercase; transition: color 0.2s; }
+        .nav-link:hover { color: var(--cyan); }
+        .nav-link.active { color: var(--cyan); }
+
+        /* Profile Banner */
+        .profile-banner { height: 140px; background: linear-gradient(135deg, rgba(35,209,139,0.06) 0%, rgba(0,0,0,0) 60%, rgba(35,209,139,0.03) 100%); border-bottom: 1px solid var(--border-g); position: relative; overflow: hidden; }
+        .profile-banner::before { content: '🛡'; position: absolute; font-size: 140px; color: rgba(35,209,139,0.05); right: -10px; top: -20px; line-height: 1; }
+        .profile-banner-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(35,209,139,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(35,209,139,0.04) 1px, transparent 1px); background-size: 20px 20px; }
+
+        /* Profile Info */
+        .profile-section { max-width: 800px; margin: 0 auto; padding: 0 40px; }
+        .profile-info { display: flex; gap: 24px; align-items: flex-end; margin-top: -30px; margin-bottom: 30px; }
+        .profile-big-avatar { width: 80px; height: 80px; border-radius: 50%; background: rgba(35,209,139,0.1); border: 3px solid var(--bg); display: flex; align-items: center; justify-content: center; font-size: 2rem; flex-shrink: 0; box-shadow: var(--glow-sm); }
+        .profile-info-text { flex: 1; padding-bottom: 4px; }
+        .profile-display-name { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--green); text-shadow: var(--glow-sm); }
+        .profile-handle-big { font-size: 0.75rem; color: var(--text2); letter-spacing: 2px; margin-top: 4px; }
+        .badge-row { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+        .profile-badge { font-size: 0.6rem; letter-spacing: 2px; padding: 3px 10px; border-radius: 3px; border: 1px solid rgba(35,209,139,0.3); color: var(--green); background: rgba(35,209,139,0.08); }
+        .profile-stats-row { display: flex; gap: 24px; margin-bottom: 20px; font-size: 0.72rem; color: var(--text2); }
+        .profile-stats-row span strong { color: var(--text); }
+        .profile-bio-big { font-size: 0.8rem; color: var(--text3); line-height: 1.8; margin-bottom: 30px; border-left: 2px solid var(--border-g); padding: 12px 20px; }
+
+        /* Aviso sem carteira */
+        .sem-carteira-box { background: rgba(35,209,139,0.04); border: 1px solid var(--border-g); border-radius: 6px; padding: 16px 20px; margin-bottom: 24px; font-size: 0.75rem; color: var(--text3); line-height: 1.8; }
+        .sem-carteira-box strong { color: var(--green); }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border-g); margin-bottom: 30px; }
+        .tab { padding: 12px 20px; font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text2); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; background: none; border-left: none; border-right: none; border-top: none; font-family: 'Space Mono', monospace; }
+        .tab:hover { color: var(--text3); }
+        .tab.active { color: var(--green); border-bottom-color: var(--green); }
+
+        /* Posts */
+        .post { background: var(--green2); border: 1px solid var(--border-g); border-radius: 8px; padding: 20px; margin-bottom: 14px; transition: border-color 0.2s; }
+        .post:hover { border-color: var(--border-g2); }
+        .post.pinned { border-color: var(--border-g2); background: rgba(35,209,139,0.06); }
+        .post-pin-label { font-size: 0.58rem; letter-spacing: 3px; text-transform: uppercase; color: var(--green); margin-bottom: 10px; }
+        .post-time { font-size: 0.65rem; color: var(--text2); margin-bottom: 14px; }
+        .post-body { font-size: 0.8rem; color: var(--text); line-height: 1.8; margin-bottom: 16px; }
+        .post-body .highlight { color: var(--green); }
+        .post-footer { display: flex; align-items: center; gap: 10px; padding-top: 12px; border-top: 1px solid var(--border-g); }
+        .vote-btn { display: flex; align-items: center; gap: 6px; padding: 5px 12px; background: transparent; border: 1px solid var(--border-g); border-radius: 4px; font-family: 'Space Mono', monospace; font-size: 0.68rem; color: var(--text2); cursor: pointer; transition: all 0.2s; }
+        .vote-btn.respeit:hover { border-color: rgba(35,209,139,0.5); color: var(--green); }
+        .vote-btn.ruido:hover { border-color: rgba(239,68,68,0.4); color: var(--red); }
+        .reply-btn { display: flex; align-items: center; gap: 6px; padding: 5px 10px; background: transparent; border: 1px solid var(--border-g); border-radius: 4px; font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--text2); cursor: pointer; margin-left: auto; }
+
+        footer { border-top: 1px solid var(--border-g); padding: 40px; text-align: center; margin-top: 60px; }
+        footer p { font-size: 0.65rem; color: var(--text2); letter-spacing: 4px; text-transform: uppercase; }
+
+        @media (max-width: 600px) {
+            nav { padding: 0 20px; } .profile-section { padding: 0 20px; }
+            .profile-display-name { font-size: 1.1rem; }
+        }
+
+        /* ═══ HAMBURGER MENU MOBILE ═══ */
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; background: none; border: none; z-index: 200; }
+        .hamburger span { display: block; width: 22px; height: 2px; background: var(--cyan); border-radius: 2px; transition: all 0.3s; }
+        .nav-open .hamburger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .nav-open .hamburger span:nth-child(2) { opacity: 0; }
+        .nav-open .hamburger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        @media (max-width: 768px) {
+            nav { padding: 0 20px; }
+            .hamburger { display: flex; }
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 60px; right: 0; left: 0;
+                background: rgba(0,0,0,0.97);
+                border-bottom: 1px solid var(--border);
+                flex-direction: column;
+                padding: 20px;
+                gap: 4px;
+                z-index: 150;
+                backdrop-filter: blur(20px);
+            }
+            .nav-open .nav-links { display: flex; }
+            .nav-link { font-size: 0.75rem; padding: 12px 16px; border-radius: 4px; width: 100%; text-align: left; }
+            .nav-link:hover { background: var(--cyan2, rgba(0,242,255,0.08)); }
+            .nav-btn { width: 100%; text-align: center; padding: 12px 16px; margin-top: 8px; }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <nav>
+        <a href="/" class="nav-brand" style="display:flex;align-items:center;gap:10px"><img src="/assets/img/logo.gif" alt="PLEGMA" style="height:36px;filter:drop-shadow(0 0 6px rgba(0,242,255,0.5))"><span>PLEGMA DAG</span></a>
+        <button class="hamburger" onclick="this.closest('nav').classList.toggle('nav-open')" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links">
+            <a href="/financas" class="nav-link">FINANÇAS</a>
+            <a href="/fundacao" class="nav-link">FUNDAÇÃO</a>
+            <a href="/social" class="nav-link active">REDE</a>
+            <a href="/blog" class="nav-link">BLOG</a>
+            <a href="/labs" class="nav-link">LABS</a>
+            <a href="/genesis" class="nav-link">GENESIS</a>
+            <a href="/dashboard" class="nav-link">DASHBOARD</a>
+        </div>
+    </nav>
+
+    <!-- Banner -->
+    <div class="profile-banner"><div class="profile-banner-grid"></div></div>
+
+    <div class="profile-section">
+        <!-- Info -->
+        <div class="profile-info">
+            <div class="profile-big-avatar">🛡</div>
+            <div class="profile-info-text">
+                <div class="profile-display-name">Fundação Plegma</div>
+                <div class="profile-handle-big">@fundacao · <span style="color:var(--green)">Conta Oficial</span></div>
+                <div class="badge-row">
+                    <span class="profile-badge">✦ FUNDAÇÃO</span>
+                    <span class="profile-badge">🛡 HUMANITÁRIO</span>
+                    <span class="profile-badge">🔒 VERIFICADO</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-stats-row">
+            <span><strong>89</strong> posts</span>
+            <span><strong>∞</strong> seguidores</span>
+            <span><strong>Genesis Day</strong> · 22 Mar 2026</span>
+        </div>
+
+        <div class="profile-bio-big">
+            Canal oficial da Fundação PLEGMA. Projetos humanitários validados, transparência de impacto e atualizações do protocolo solidário.<br>
+            <span style="color:var(--text2);font-size:0.72rem">A Fundação PLEGMA não possui carteira própria. Os fundos doados vão diretamente para a carteira da entidade beneficiada.</span>
+        </div>
+
+        <!-- Aviso sem carteira -->
+        <div class="sem-carteira-box">
+            <strong>⬡ Transparência Total</strong> — A Fundação PLEGMA <strong>não possui carteira própria.</strong>
+            Os fundos doados vão <strong>diretamente</strong> para a carteira de cada entidade beneficiada — sem intermediários, sem custódia institucional, sem taxas de gestão.
+            A Fundação atua como protocolo de validação e visibilidade, não como gestora de recursos.
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active">Posts</button>
+            <button class="tab">Projetos</button>
+            <button class="tab">Impacto</button>
+        </div>
+
+        <!-- Posts Oficiais -->
+        <div class="post pinned">
+            <div class="post-pin-label">📌 Post Fixado</div>
+            <div class="post-time">Genesis Day — 22 Mar 2026 · 00:00 UTC</div>
+            <div class="post-body">
+                A <span class="highlight">Fundação PLEGMA</span> não possui carteira própria.<br><br>
+                Cada $PLG doado através do protocolo vai <strong>diretamente</strong> para a carteira da entidade beneficiada — sem intermediários, sem custódia institucional, sem taxas de gestão.<br><br>
+                Transparência radical. Impacto direto. <span class="highlight">🛡 Salvar. Nutrir. Educar.</span>
+            </div>
+            <div class="post-footer">
+                <button class="vote-btn respeit" onclick="votar(this,1)"><span>💠</span> <span class="vcount">892</span> Respeito</button>
+                <button class="vote-btn ruido" onclick="votar(this,-1)"><span>⚡</span> <span class="vcount">1</span> Ruído</button>
+                <button class="reply-btn">💬 Responder</button>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="post-time">22 Mar 2026 · 11:15 UTC</div>
+            <div class="post-body">
+                Critérios de admissão publicados. Buscamos projetos com <span class="highlight">atuação física comprovada</span>, foco em proteção à infância, combate à fome ou resgate à dignidade humana.<br><br>
+                Grandes ONGs multinacionais com financiamento corporativo não se enquadram. O foco são os <strong>pequenos projetos de impacto direto.</strong>
+            </div>
+            <div class="post-footer">
+                <button class="vote-btn respeit" onclick="votar(this,1)"><span>💠</span> <span class="vcount">328</span> Respeito</button>
+                <button class="vote-btn ruido" onclick="votar(this,-1)"><span>⚡</span> <span class="vcount">2</span> Ruído</button>
+                <button class="reply-btn">💬 Responder</button>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="post-time">22 Mar 2026 · 09:30 UTC</div>
+            <div class="post-body">
+                Os três pilares da Fundação:<br><br>
+                🛡️ <strong>Proteção à Infância</strong> — combate ao abandono e exploração.<br>
+                🌱 <strong>Combate à Fome</strong> — nutrição imediata e soberania alimentar.<br>
+                🔓 <strong>Libertação Humana</strong> — resgate de trabalho escravo e tráfico humano.<br><br>
+                <span class="highlight">Nenhuma família espera por burocracia para comer.</span>
+            </div>
+            <div class="post-footer">
+                <button class="vote-btn respeit" onclick="votar(this,1)"><span>💠</span> <span class="vcount">614</span> Respeito</button>
+                <button class="vote-btn ruido" onclick="votar(this,-1)"><span>⚡</span> <span class="vcount">0</span> Ruído</button>
+                <button class="reply-btn">💬 Responder</button>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="post-time">22 Mar 2026 · 08:00 UTC</div>
+            <div class="post-body">
+                Requisitos para projetos solicitarem inscrição:<br><br>
+                ◆ Atuação física documentável (fotos, vídeos, relatórios).<br>
+                ◆ Mínimo 6 meses de operação ativa.<br>
+                ◆ Sem vínculo com partidos políticos ou corporações multinacionais.<br>
+                ◆ Redes sociais ativas com histórico real de impacto.<br>
+                ◆ Carteira PLEGMA operacional para recebimento direto.<br><br>
+                <span class="highlight">Submissões em</span> <a href="/fundacao" style="color:var(--green);text-decoration:none">/fundacao →</a>
+            </div>
+            <div class="post-footer">
+                <button class="vote-btn respeit" onclick="votar(this,1)"><span>💠</span> <span class="vcount">445</span> Respeito</button>
+                <button class="vote-btn ruido" onclick="votar(this,-1)"><span>⚡</span> <span class="vcount">4</span> Ruído</button>
+                <button class="reply-btn">💬 Responder</button>
+            </div>
+        </div>
+
+        <div style="text-align:center;padding:30px;color:var(--text2);font-size:0.72rem">
+            <a href="/social" style="color:var(--green);text-decoration:none">← Voltar para o Feed</a>
+            &nbsp;·&nbsp;
+            <a href="/fundacao" style="color:var(--green);text-decoration:none">Ver Fundação →</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 PLEGMA DAG | The Architecture of Absolute Justice</p>
+    </footer>
+</div>
+
+<script>
+function votar(btn, tipo) {
+    const count = btn.querySelector('.vcount');
+    const raw = count.textContent.replace('.','').replace('K','000');
+    const n = parseInt(raw) || 0;
+    if (btn.dataset.voted) {
+        count.textContent = formatNum(tipo > 0 ? n - 1 : n + 1);
+        delete btn.dataset.voted;
+        btn.style.borderColor = ''; btn.style.color = '';
+    } else {
+        count.textContent = formatNum(tipo > 0 ? n + 1 : n - 1);
+        btn.dataset.voted = '1';
+        btn.style.borderColor = tipo > 0 ? 'rgba(35,209,139,0.5)' : 'rgba(239,68,68,0.5)';
+        btn.style.color = tipo > 0 ? 'var(--green)' : 'var(--red)';
+    }
+}
+function formatNum(n) {
+    n = Math.max(0, n);
+    if (n >= 1000) return (n/1000).toFixed(1).replace('.0','') + 'K';
+    return n;
+}
+</script>
+
+<!-- Auto-translate: detecta idioma do navegador e traduz automaticamente -->
+<div id="google_translate_element" style="display:none"></div>
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({ pageLanguage: 'pt', autoDisplay: false }, 'google_translate_element');
+  var lang = ((navigator.language || navigator.userLanguage || 'pt').split('-')[0]).toLowerCase();
+  if (lang !== 'pt') {
+    setTimeout(function() {
+      var sel = document.querySelector('.goog-te-combo');
+      if (sel) { sel.value = lang; sel.dispatchEvent(new Event('change')); }
+    }, 800);
+  }
+}
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

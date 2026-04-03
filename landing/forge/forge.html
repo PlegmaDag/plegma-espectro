@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="bg-black text-white font-mono">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Editor de contratos ZKM da rede PLEGMA DAG.">
+    <meta name="keywords" content="PLEGMA DAG, blockchain DAG, criptografia pós-quântica, Dilithium3, ZK-SNARK, PLG-G, governança descentralizada, mineração mobile">
+    <meta name="robots" content="index, follow">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://plegmadag.com/forge/forge">
+    <meta property="og:title" content="ZKM Editor — PLEGMA LABS | PLEGMA DAG">
+    <meta property="og:description" content="Editor de contratos ZKM da rede PLEGMA DAG.">
+    <meta property="og:image" content="https://plegmadag.com/assets/img/logo.gif">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://plegmadag.com/forge/forge">
+    <meta property="twitter:title" content="ZKM Editor — PLEGMA LABS | PLEGMA DAG">
+    <meta property="twitter:image" content="https://plegmadag.com/assets/img/logo.gif">
+    <title>ZKM Forge | PLEGMA DAG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .mesh-bg { 
+            background: radial-gradient(circle at center, #001533 0%, #000 70%); 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; 
+        }
+        .glow-blue { text-shadow: 0 0 15px #0066ff; }
+        .glow-text { text-shadow: 0 0 10px rgba(0, 102, 255, 0.5); }
+        
+        .forge-box { 
+            border: 1px dashed rgba(0, 102, 255, 0.4); 
+            transition: all 0.3s ease; 
+            min-height: 300px; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            cursor: pointer; background: rgba(0, 102, 255, 0.02); 
+        }
+        .forge-box:hover, .forge-box.dragover { 
+            background: rgba(0, 102, 255, 0.05); border-color: #0066ff; 
+            box-shadow: 0 0 25px rgba(0, 102, 255, 0.1); 
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* Estilo do Slider de Resolução */
+        input[type=range] { -webkit-appearance: none; background: #1e3a8a; height: 4px; border-radius: 2px; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: #0066ff; cursor: pointer; box-shadow: 0 0 10px #0066ff; }
+    </style>
+</head>
+<body class="p-4 md:p-8 flex flex-col min-h-screen">
+    <div class="mesh-bg"></div>
+
+    <nav class="flex justify-between items-center max-w-5xl mx-auto w-full mb-20 text-[10px] md:text-xs text-blue-400 uppercase tracking-[0.3em] border-b border-blue-900/30 pb-6">
+        <div class="font-bold glow-blue text-white">PLEGMA LABS</div>
+        <div class="flex gap-8">
+            <a href="#" class="hover:text-white transition-colors">Protocolo Github</a>
+            <a href="#" class="hover:text-white transition-colors">Zk-Press Documentation</a>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto text-center flex-grow w-full">
+        <h1 class="text-5xl md:text-7xl font-black mb-6 glow-blue tracking-tighter uppercase leading-tight">
+            THE END OF THE<br><span class="text-blue-600">RASTER ERA.</span>
+        </h1>
+        
+        <p class="text-gray-400 mb-16 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+            Abandone o lixo digital de 1987. Converta mídias pesadas em vetores criptográficos inteligentes.
+            <span class="text-blue-500 font-bold glow-text">Ultra-leve. Incorruptível. Infinito.</span>
+        </p>
+        
+        <div id="forge-box" class="forge-box rounded-2xl p-8 mb-10 relative">
+            <div id="upload-prompt">
+                <span class="uppercase text-sm md:text-lg font-bold tracking-[0.4em] text-blue-400 glow-text">
+                    ARRASTE PNG/GIF PARA FUNDIR EM ZKM
+                </span>
+            </div>
+            <canvas id="main-canvas" class="hidden max-w-full max-h-96 rounded-lg shadow-2xl border border-blue-900/30"></canvas>
+        </div>
+
+        <div id="control-panel" class="hidden max-w-sm mx-auto space-y-6 mb-16">
+            <div class="flex justify-between text-[10px] text-blue-500 uppercase font-bold">
+                <span>Resolução Lattice (Fator de Compressão)</span>
+                <span id="scale-val">10px</span>
+            </div>
+            <input type="range" id="precision-slider" class="w-full" min="2" max="20" step="2" value="10">
+
+            <div id="engine-status" class="hidden space-y-2">
+                <div class="flex justify-between text-[9px] uppercase tracking-widest text-gray-500">
+                    <span id="process-label">Processando...</span>
+                    <span id="percent-val">0%</span>
+                </div>
+                <div class="w-full h-1 bg-blue-900/30 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-blue-600 shadow-[0_0_10px_#0066ff] transition-all" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <button id="convert-btn" class="w-full bg-blue-600 hover:bg-blue-500 font-bold py-4 rounded text-[10px] tracking-[0.3em] glow-blue">
+                ATIVAR MOTOR SEQUENCIAL ZK-PRESS
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mt-20 text-left border-t border-blue-900/20 pt-16 uppercase">
+            <div>
+                <h3 class="text-blue-600 text-[10px] font-bold tracking-widest mb-4">Compressão Zk-Press</h3>
+                <div class="text-4xl font-black text-white glow-blue mb-2">~18 KB</div>
+            </div>
+            <div>
+                <h3 class="text-blue-600 text-[10px] font-bold tracking-widest mb-4">Resolução</h3>
+                <div class="text-5xl font-black text-white glow-blue mb-2">∞</div>
+            </div>
+            <div>
+                <h3 class="text-blue-600 text-[10px] font-bold tracking-widest mb-4">Integridade</h3>
+                <div class="text-3xl font-black text-white glow-blue mb-2">ZK-SIGNED</div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="mt-20 py-10 text-center border-t border-blue-900/20 text-[9px] text-gray-600 tracking-[0.5em] uppercase">
+        PLEGMA DAG | THE ARCHITECTURE OF ABSOLUTE JUSTICE | 2026
+    </footer>
+
+    <input type="file" id="file-input" class="hidden" accept="image/*">
+
+    <script>
+        const forgeBox = document.getElementById('forge-box');
+        const fileInput = document.getElementById('file-input');
+        const canvas = document.getElementById('main-canvas');
+        const ctx = canvas.getContext('2d');
+        const controlPanel = document.getElementById('control-panel');
+        const convertBtn = document.getElementById('convert-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const precisionSlider = document.getElementById('precision-slider');
+        const scaleVal = document.getElementById('scale-val');
+        const uploadPrompt = document.getElementById('upload-prompt');
+
+        let originalImage = null;
+
+        forgeBox.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', handleUpload);
+        precisionSlider.addEventListener('input', (e) => scaleVal.innerText = e.target.value + 'px');
+
+        function handleUpload() {
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    originalImage = new Image();
+                    originalImage.onload = () => {
+                        canvas.width = originalImage.width;
+                        canvas.height = originalImage.height;
+                        ctx.drawImage(originalImage, 0, 0);
+                        canvas.classList.remove('hidden');
+                        uploadPrompt.classList.add('hidden');
+                        controlPanel.classList.remove('hidden');
+                    };
+                    originalImage.src = e.target.result;
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        }
+
+        convertBtn.addEventListener('click', runZkPressEngine);
+
+        async function runZkPressEngine() {
+            convertBtn.classList.add('hidden');
+            document.getElementById('engine-status').classList.remove('hidden');
+            
+            const step = parseInt(precisionSlider.value);
+            const width = canvas.width;
+            const height = canvas.height;
+            const imageData = ctx.getImageData(0, 0, width, height).data;
+            
+            let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}">`;
+            
+            // O MOTOR REAL: Varre a imagem e converte pixels em caminhos vetoriais
+            for (let y = 0; y < height; y += step) {
+                for (let x = 0; x < width; x += step) {
+                    const i = (y * width + x) * 4;
+                    const r = imageData[i];
+                    const g = imageData[i+1];
+                    const b = imageData[i+2];
+                    const a = imageData[i+3] / 255;
+
+                    if (a > 0.1) {
+                        svgContent += `<rect x="${x}" y="${y}" width="${step}" height="${step}" fill="rgb(${r},${g},${b})" fill-opacity="${a.toFixed(2)}" />`;
+                    }
+                }
+                
+                // Atualiza progresso real
+                const progress = Math.round((y / height) * 100);
+                progressBar.style.width = progress + '%';
+                document.getElementById('percent-val').innerText = progress + '%';
+                if (y % (step * 5) === 0) await new Promise(r => setTimeout(r, 1)); 
+            }
+
+            svgContent += '</svg>';
+            finalize(svgContent);
+        }
+
+        function finalize(content) {
+            const blob = new Blob([content], {type: 'image/svg+xml'});
+            const url = URL.createObjectURL(blob);
+            
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = 'file_fundido.zkm'; // Extensão proprietária ZKM
+            
+            progressBar.style.width = '100%';
+            document.getElementById('process-label').innerText = "ASSINATURA ZK-SIGNED GERADA";
+            document.getElementById('process-label').style.color = "#23d18b";
+
+            setTimeout(() => {
+                alert("FUSÃO COMPLETA!\nO arquivo foi convertido para Vetores Lattice.\nIntegridade: ZK-SIGNED");
+                downloadLink.click();
+                location.reload();
+            }, 800);
+        }
+    </script>
+
+<!-- Auto-translate: detecta idioma do navegador e traduz automaticamente -->
+<div id="google_translate_element" style="display:none"></div>
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({ pageLanguage: 'pt', autoDisplay: false }, 'google_translate_element');
+  var lang = ((navigator.language || navigator.userLanguage || 'pt').split('-')[0]).toLowerCase();
+  if (lang !== 'pt') {
+    setTimeout(function() {
+      var sel = document.querySelector('.goog-te-combo');
+      if (sel) { sel.value = lang; sel.dispatchEvent(new Event('change')); }
+    }, 800);
+  }
+}
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

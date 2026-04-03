@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A Fundação PLEGMA financia projetos que devolvem soberania digital e financeira às pessoas. 10% de cada recompensa automaticamente destinados.">
+    <meta name="keywords" content="PLEGMA DAG, blockchain DAG, criptografia pós-quântica, Dilithium3, ZK-SNARK, PLG-G, governança descentralizada, mineração mobile">
+    <meta name="robots" content="index, follow">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://plegmadag.com/fundacao/">
+    <meta property="og:title" content="Fundação PLEGMA | PLEGMA DAG">
+    <meta property="og:description" content="A Fundação PLEGMA financia projetos que devolvem soberania digital e financeira às pessoas. 10% de cada recompensa automaticamente destinados.">
+    <meta property="og:image" content="https://plegmadag.com/assets/img/logo.gif">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://plegmadag.com/fundacao/">
+    <meta property="twitter:title" content="Fundação PLEGMA | PLEGMA DAG">
+    <meta property="twitter:image" content="https://plegmadag.com/assets/img/logo.gif">
+    <link rel="icon" type="image/svg+xml" href="/assets/img/favicon-fundacao.svg">
+    <title>PLEGMA | Fundação</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    <script src="/auth.js"></script>
+    <style>
+        :root {
+            --bg: #000; --bg2: #050a14;
+            --cyan: #00F2FF; --cyan2: rgba(0,242,255,0.08);
+            --green: #23d18b; --amber: #f59e0b; --red: #ef4444; --purple: #a78bfa;
+            --border: rgba(0,242,255,0.12); --border2: rgba(0,242,255,0.25);
+            --text: #e2e8f0; --text2: #64748b; --text3: #94a3b8;
+            --glow: 0 0 20px rgba(0,242,255,0.3); --glow-sm: 0 0 8px rgba(0,242,255,0.2);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: 'Space Mono', monospace; min-height: 100vh; overflow-x: hidden; }
+        body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(0,242,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,242,255,0.03) 1px, transparent 1px); background-size: 40px 40px; z-index: 0; pointer-events: none; }
+        .page { position: relative; z-index: 1; }
+
+        nav { display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 60px; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 100; }
+        .nav-brand { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--cyan); text-shadow: var(--glow-sm); text-decoration: none; letter-spacing: 2px; }
+        .nav-links { display: flex; gap: 24px; align-items: center; }
+        .nav-link { font-size: 0.7rem; color: var(--text2); text-decoration: none; letter-spacing: 2px; text-transform: uppercase; transition: color 0.2s; }
+        .nav-link:hover, .nav-link.active { color: var(--cyan); }
+
+        .hero { padding: 80px 40px 60px; text-align: center; border-bottom: 1px solid var(--border); }
+        .hero-tag { font-size: 0.7rem; color: var(--green); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 20px; }
+        .hero h1 { font-family: 'Montserrat', sans-serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; color: var(--cyan); text-shadow: var(--glow); line-height: 1.1; margin-bottom: 20px; }
+        .hero p { font-size: 0.9rem; color: var(--text3); max-width: 600px; margin: 0 auto; line-height: 1.8; }
+
+        .main { max-width: 900px; margin: 0 auto; padding: 60px 40px; }
+        .section-title { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; color: var(--cyan); margin-bottom: 30px; display: flex; align-items: center; gap: 16px; }
+        .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border2); }
+
+        /* Pilares */
+        .pillars { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 60px; }
+        .pilar { background: var(--cyan2); border: 1px solid var(--border); border-radius: 6px; padding: 28px; transition: border-color 0.2s, box-shadow 0.2s; }
+        .pilar:hover { border-color: var(--cyan); box-shadow: var(--glow-sm); }
+        .pilar .pilar-icon { font-size: 1.8rem; margin-bottom: 14px; }
+        .pilar h3 { font-size: 0.85rem; letter-spacing: 1px; color: var(--cyan); margin-bottom: 10px; text-transform: uppercase; }
+        .pilar p { font-size: 0.78rem; color: var(--text3); line-height: 1.7; }
+
+        /* Critérios */
+        .criterios-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 28px; margin-bottom: 60px; }
+        .criterio-item { display: flex; gap: 16px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid var(--border); }
+        .criterio-item:last-child { border-bottom: none; }
+        .criterio-label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--green); min-width: 100px; padding-top: 2px; }
+        .criterio-desc { font-size: 0.78rem; color: var(--text3); line-height: 1.7; }
+
+        /* Exclusão */
+        .exclusao-box { background: rgba(239,68,68,0.04); border: 1px solid rgba(239,68,68,0.2); border-radius: 6px; padding: 28px; margin-bottom: 60px; }
+        .exclusao-box h4 { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--red); margin-bottom: 20px; }
+        .exclusao-item { display: flex; gap: 14px; padding: 10px 0; border-bottom: 1px solid rgba(239,68,68,0.1); font-size: 0.78rem; color: var(--text3); line-height: 1.6; }
+        .exclusao-item:last-child { border-bottom: none; }
+        .exclusao-item::before { content: '✕'; color: var(--red); font-size: 0.7rem; padding-top: 2px; flex-shrink: 0; }
+        .criterio-invisibilidade { margin-top: 20px; padding: 16px; background: rgba(0,0,0,0.4); border-left: 3px solid var(--red); font-size: 0.78rem; color: var(--text3); line-height: 1.7; }
+
+        /* Formulário */
+        .form-wrapper { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 36px; margin-bottom: 60px; }
+        .form-group { margin-bottom: 28px; }
+        .form-label { display: block; font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: var(--cyan); margin-bottom: 12px; }
+        .form-input, .form-select, .form-textarea {
+            width: 100%; background: rgba(0,242,255,0.04); border: 1px solid var(--border);
+            color: var(--text); padding: 12px 16px; font-family: 'Space Mono', monospace;
+            font-size: 0.78rem; border-radius: 4px; outline: none; transition: border-color 0.2s;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--cyan); box-shadow: var(--glow-sm); }
+        .form-select option { background: #0a1428; }
+        .form-textarea { resize: vertical; min-height: 80px; }
+        .form-radio-group { display: flex; flex-direction: column; gap: 10px; }
+        .form-radio { display: flex; align-items: center; gap: 10px; font-size: 0.78rem; color: var(--text3); cursor: pointer; }
+        .form-radio input { accent-color: var(--cyan); }
+        .form-hint { font-size: 0.65rem; color: var(--text2); margin-top: 6px; line-height: 1.6; }
+        .proof-box { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.25); border-radius: 4px; padding: 16px; margin-top: 12px; font-size: 0.75rem; color: var(--amber); line-height: 1.7; }
+        .terms-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+        .terms-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 0.78rem; color: var(--text3); line-height: 1.6; }
+        .terms-list li::before { content: '◆'; color: var(--cyan); font-size: 0.6rem; padding-top: 4px; flex-shrink: 0; }
+        .btn-submit { width: 100%; background: var(--green); color: #000; border: none; padding: 14px; font-family: 'Space Mono', monospace; font-weight: 700; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; border-radius: 4px; margin-top: 12px; transition: filter 0.2s; }
+        .btn-submit:hover { filter: brightness(1.1); }
+
+        /* Transparência */
+        .live-feed { background: #050505; border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-bottom: 60px; font-family: 'Space Mono', monospace; }
+        .live-feed .feed-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+        .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        .feed-header span { font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: var(--green); }
+        .feed-item { display: flex; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.75rem; }
+        .feed-item:last-child { border-bottom: none; }
+        .feed-addr { color: var(--cyan); }
+        .feed-arrow { color: var(--text2); }
+        .feed-amount { color: var(--green); }
+        .feed-proj { color: var(--text3); }
+        .feed-link { color: var(--text2); font-size: 0.65rem; margin-left: auto; text-decoration: none; }
+        .feed-link:hover { color: var(--cyan); }
+
+        /* Selos */
+        .selos-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 60px; }
+        .selo { background: var(--cyan2); border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px; font-size: 0.65rem; color: var(--text3); letter-spacing: 1px; }
+        .selo.green { border-color: rgba(35,209,139,0.3); color: var(--green); }
+        .selo.amber { border-color: rgba(245,158,11,0.3); color: var(--amber); }
+
+        footer { border-top: 1px solid var(--border); padding: 40px; text-align: center; }
+        footer p { font-size: 0.65rem; color: var(--text2); letter-spacing: 4px; text-transform: uppercase; }
+
+        /* Tech Seals */
+        .tech-seals-wrap { max-width: 900px; margin: 0 auto; padding: 0 40px 40px; }
+        .tech-seals-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tech-seal { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; font-size: 0.6rem; letter-spacing: 1px; font-family: 'Space Mono', monospace; transition: border-color 0.2s; }
+        .tech-seal:hover { border-color: var(--border2); }
+        .seal-left { background: rgba(255,255,255,0.03); color: var(--text2); padding: 4px 8px; border-right: 1px solid var(--border); white-space: nowrap; }
+        .seal-right { padding: 4px 8px; white-space: nowrap; font-weight: 700; }
+        .seal-cyan { background: rgba(0,242,255,0.08); color: var(--cyan); }
+        .seal-green { background: rgba(35,209,139,0.08); color: var(--green); }
+        .seal-amber { background: rgba(245,158,11,0.08); color: var(--amber); }
+        .seal-purple { background: rgba(167,139,250,0.08); color: var(--purple); }
+
+        @media (max-width: 600px) {
+            nav { padding: 0 20px; } .hero { padding: 60px 20px 40px; } .main { padding: 40px 20px; } .nav-links { gap: 14px; }
+            .tech-seals-wrap { padding: 0 20px 30px; }
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 50px 20px 40px !important; }
+            .main, .content, .page-wrap { padding: 30px 20px !important; max-width: 100% !important; }
+            h1 { font-size: clamp(1.6rem, 7vw, 2.4rem) !important; }
+            .grid-2, .grid-3, .cards-grid, .benefits-grid, .pillars { grid-template-columns: 1fr !important; }
+            table { font-size: 0.7rem; }
+            table th, table td { padding: 8px 6px; }
+        }
+
+        /* ═══ HAMBURGER MENU MOBILE ═══ */
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; background: none; border: none; z-index: 200; }
+        .hamburger span { display: block; width: 22px; height: 2px; background: var(--cyan); border-radius: 2px; transition: all 0.3s; }
+        .nav-open .hamburger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .nav-open .hamburger span:nth-child(2) { opacity: 0; }
+        .nav-open .hamburger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        @media (max-width: 768px) {
+            nav { padding: 0 20px; }
+            .hamburger { display: flex; }
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 60px; right: 0; left: 0;
+                background: rgba(0,0,0,0.97);
+                border-bottom: 1px solid var(--border);
+                flex-direction: column;
+                padding: 20px;
+                gap: 4px;
+                z-index: 150;
+                backdrop-filter: blur(20px);
+            }
+            .nav-open .nav-links { display: flex; }
+            .nav-link { font-size: 0.75rem; padding: 12px 16px; border-radius: 4px; width: 100%; text-align: left; }
+            .nav-link:hover { background: var(--cyan2, rgba(0,242,255,0.08)); }
+            .nav-btn { width: 100%; text-align: center; padding: 12px 16px; margin-top: 8px; }
+        }
+        /* ═══ SOCIAL LINKS ═══ */
+        .social-links { display: flex; gap: 14px; justify-content: center; align-items: center; margin: 18px 0 14px; }
+        .social-links a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid rgba(0,242,255,0.18); border-radius: 6px; background: rgba(0,242,255,0.05); color: rgba(255,255,255,0.4); transition: all 0.2s; }
+        .social-links a:hover { color: #00f2ff; border-color: rgba(0,242,255,0.55); background: rgba(0,242,255,0.12); box-shadow: 0 0 14px rgba(0,242,255,0.22); }
+        .social-links a svg { display: block; }
+    </style>
+</head>
+<body>
+<div class="page">
+    <nav>
+        <a href="/" class="nav-brand" style="display:flex;align-items:center;gap:10px"><img src="/assets/img/logo.gif" alt="PLEGMA" style="height:36px;filter:drop-shadow(0 0 6px rgba(0,242,255,0.5))"><span>PLEGMA DAG</span></a>
+        <button class="hamburger" onclick="this.closest('nav').classList.toggle('nav-open')" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links">
+            <a href="/financas" class="nav-link">FINANÇAS</a>
+            <a href="/fundacao" class="nav-link active">FUNDAÇÃO</a>
+            <a href="/social" class="nav-link">REDE</a>
+            <a href="/blog" class="nav-link">BLOG</a>
+            <a href="/labs" class="nav-link">LABS</a>
+            <a href="/genesis" class="nav-link">GENESIS</a>
+            <a href="/servicos" class="nav-link">SERVIÇOS</a>
+            <a href="/podcast" class="nav-link">PODCAST</a>
+            <a href="/dashboard" class="nav-link">DASHBOARD</a>
+        </div>
+    </nav>
+
+    <!-- ═══ BANNER PRÉ-LANÇAMENTO ═══ -->
+    <style>.launch-banner{display:flex;align-items:center;gap:14px;background:rgba(239,68,68,0.06);border-bottom:1px solid rgba(239,68,68,0.25);padding:10px 40px;font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:1px;text-transform:uppercase;color:#ef4444;}.launch-dot{width:8px;height:8px;border-radius:50%;background:#ef4444;flex-shrink:0;animation:pulsered 1.4s ease-in-out infinite;}@keyframes pulsered{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.65);}60%{box-shadow:0 0 0 8px rgba(239,68,68,0);}}.launch-text{flex:1;line-height:1.6;}.launch-notify{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.45);color:#ef4444;padding:5px 16px;border-radius:3px;text-decoration:none;font-size:0.65rem;letter-spacing:2px;transition:all 0.2s;white-space:nowrap;}.launch-notify:hover{background:#ef4444;color:#000;}@media(max-width:600px){.launch-banner{padding:10px 16px;gap:10px;flex-wrap:wrap;}.launch-text{font-size:0.6rem;}}</style>
+    <div class="launch-banner">
+        <span class="launch-dot"></span>
+        <span class="launch-text">Plataforma em pré-lançamento — funcionalidades ativas somente na data oficial de abertura da Rede PLEGMA</span>
+        <a class="launch-notify" href="mailto:plegmadag@proton.me?subject=Notifique-me%20%E2%80%94%20PLEGMA%20DAG&body=Ol%C3%A1%2C%0A%0ANotifique-me%20quando%20houver%20data%20definida%20para%20o%20lan%C3%A7amento%20da%20Rede%20PLEGMA%20DAG.%0A%0AObrigado.">✉ AVISE-ME</a>
+    </div>
+
+    <section class="hero">
+        <div class="hero-tag">Protocolo de Impacto Humanitário Direto</div>
+        <h1>Fundação<br>PLEGMA</h1>
+        <p>Não somos uma instituição de caridade. Somos uma ponte tecnológica que conecta gratidão diretamente ao resgate da dignidade humana. Cada $PLG doado tem um destino claro: <strong>Salvar, Nutrir e Educar.</strong></p>
+        <div style="margin-top:24px;padding:14px 20px;border:1px solid rgba(0,242,255,0.3);border-radius:6px;background:rgba(0,242,255,0.04);font-family:'Space Mono',monospace;font-size:0.72rem;line-height:1.8;text-align:left;max-width:600px;margin-left:auto;margin-right:auto">
+            <span style="color:#00F2FF;letter-spacing:2px;font-size:0.65rem">⬡ TRANSPARÊNCIA TOTAL</span><br>
+            A Fundação PLEGMA <strong>não possui carteira própria.</strong><br>
+            Os fundos doados vão <strong>diretamente</strong> para a carteira da entidade beneficiada — sem intermediários, sem custódia, sem taxas institucionais. A Fundação atua como protocolo de validação e visibilidade, não como gestora de recursos.
+        </div>
+    </section>
+
+    <main class="main">
+
+        <!-- Os Três Pilares -->
+        <div class="section-title">Os Três Pilares</div>
+        <div class="pillars">
+            <div class="pilar">
+                <div class="pilar-icon">🛡️</div>
+                <h3>Proteção à Infância</h3>
+                <p>Combate ao abandono, exploração e suporte à saúde infantil. Projetos que resgatam crianças da invisibilidade sistêmica.</p>
+            </div>
+            <div class="pilar">
+                <div class="pilar-icon">🌱</div>
+                <h3>Combate à Fome</h3>
+                <p>Nutrição imediata e soberania alimentar em zonas de risco. Nenhuma família espera por burocracia para comer.</p>
+            </div>
+            <div class="pilar">
+                <div class="pilar-icon">🔓</div>
+                <h3>Libertação Humana</h3>
+                <p>Resgate de vítimas de trabalho escravo, tráfico humano e situações de extrema vulnerabilidade. Devolver a dignidade a quem teve tudo tirado.</p>
+            </div>
+        </div>
+
+        <!-- Critérios de Admissão -->
+        <div class="section-title">Critérios de Admissão</div>
+        <div class="criterios-box">
+            <div class="criterio-item">
+                <span class="criterio-label">Segmento</span>
+                <span class="criterio-desc">Proteção à Infância / Combate à Fome / Libertação Humana. Projetos fora desses três pilares não são admitidos.</span>
+            </div>
+            <div class="criterio-item">
+                <span class="criterio-label">Prova de Impacto</span>
+                <span class="criterio-desc">Relatórios ou registros de ações reais. Sem projetos apenas no papel.</span>
+            </div>
+            <div class="criterio-item">
+                <span class="criterio-label">Transparência</span>
+                <span class="criterio-desc">Endereço PLEGMA público obrigatório. Auditoria em tempo real no Grafo por qualquer pessoa.</span>
+            </div>
+            <div class="criterio-item">
+                <span class="criterio-label">Resgate Humano</span>
+                <span class="criterio-desc">Descrição clara de como o projeto retira pessoas de vulnerabilidade extrema.</span>
+            </div>
+        </div>
+
+        <!-- Exclusão -->
+        <div class="section-title">Termo de Exclusão</div>
+        <div class="exclusao-box">
+            <h4>Não Admitidos</h4>
+            <div class="exclusao-item">Grandes ONGs multinacionais com financiamento corporativo volumoso ou apoio governamental massivo. O foco são os pequenos.</div>
+            <div class="exclusao-item">Projetos ecológicos ou ambientais. Reconhecemos a causa, mas esta fundação é dedicada exclusivamente ao resgate humano direto.</div>
+            <div class="exclusao-item">Iniciativas culturais, artísticas ou esportivas. Fora do escopo de urgência.</div>
+            <div class="exclusao-item">Causas políticas ou religiosas. Não aceitamos propaganda ideológica ou proselitismo de qualquer natureza.</div>
+            <div class="criterio-invisibilidade">
+                <strong style="color:var(--red)">O Critério da Invisibilidade:</strong> A PLEGMA DAG existe para dar voz ao que é ignorado. Se o projeto já é financiado por grandes bancos ou governos, não precisa da nossa infraestrutura. Somos o motor de quem não tem motor.
+            </div>
+        </div>
+
+        <!-- Formulário de Inscrição -->
+        <div class="section-title">Inscrição de Projeto</div>
+        <div class="form-wrapper">
+            <div class="form-group">
+                <label class="form-label">01. Segmento de Atuação</label>
+                <div class="form-radio-group" id="fg-segmento">
+                    <label class="form-radio"><input type="radio" name="segmento" value="infancia"> Proteção à Infância</label>
+                    <label class="form-radio"><input type="radio" name="segmento" value="fome"> Combate à Fome</label>
+                    <label class="form-radio"><input type="radio" name="segmento" value="libertacao"> Libertação Humana (resgate de trabalho escravo / tráfico)</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">02. Dados do Projeto</label>
+                <input id="fg-nome" type="text" class="form-input" placeholder="Nome da Instituição / Projeto" style="margin-bottom:10px">
+                <input id="fg-tempo" type="text" class="form-input" placeholder="Tempo de Atuação Física (ex: 3 anos)" style="margin-bottom:10px">
+                <input id="fg-local" type="text" class="form-input" placeholder="Localização Geográfica (Cidade, País)" style="margin-bottom:10px">
+                <textarea id="fg-desc" class="form-textarea" placeholder="Descrição do Impacto (máx. 280 caracteres)" maxlength="280"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">03. Carteira de Recebimento da Entidade</label>
+                <p class="form-hint" style="margin-bottom:10px">As doações vão diretamente para esta carteira. A Fundação PLEGMA não intermedia nem custodia nenhum recurso.</p>
+                <input id="fg-carteira" type="text" class="form-input" placeholder="Chave Pública PLEGMA da Entidade (PLG...)" style="margin-bottom:10px">
+                <input id="fg-responsavel" type="text" class="form-input" placeholder="Responsável Técnico (nome completo)">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">04. Redes Sociais <span style="color:var(--red);font-size:0.65rem">* OBRIGATÓRIO</span></label>
+                <p class="form-hint" style="margin-bottom:14px">As redes sociais serão usadas para avaliação e aprovação do projeto. Informe ao menos uma. Perfis ativos e com histórico real têm prioridade na análise.</p>
+                <div style="display:flex;flex-direction:column;gap:10px">
+                    <div style="display:flex;align-items:center;gap:10px">
+                        <span style="font-size:0.7rem;color:var(--text2);min-width:100px;letter-spacing:1px">INSTAGRAM</span>
+                        <input id="fg-instagram" type="text" class="form-input" placeholder="instagram.com/seu-projeto" style="margin:0">
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px">
+                        <span style="font-size:0.7rem;color:var(--text2);min-width:100px;letter-spacing:1px">FACEBOOK</span>
+                        <input id="fg-facebook" type="text" class="form-input" placeholder="facebook.com/seu-projeto" style="margin:0">
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px">
+                        <span style="font-size:0.7rem;color:var(--text2);min-width:100px;letter-spacing:1px">YOUTUBE</span>
+                        <input id="fg-youtube" type="text" class="form-input" placeholder="youtube.com/@seu-projeto" style="margin:0">
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px">
+                        <span style="font-size:0.7rem;color:var(--text2);min-width:100px;letter-spacing:1px">TIKTOK</span>
+                        <input id="fg-tiktok" type="text" class="form-input" placeholder="tiktok.com/@seu-projeto" style="margin:0">
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px">
+                        <span style="font-size:0.7rem;color:var(--text2);min-width:100px;letter-spacing:1px">SITE / OUTRO</span>
+                        <input id="fg-site" type="text" class="form-input" placeholder="seu-projeto.org.br" style="margin:0">
+                    </div>
+                </div>
+                <div style="margin-top:14px;padding:12px 16px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:4px;font-size:0.72rem;color:var(--amber);line-height:1.7">
+                    ⚠ Projetos sem presença digital verificável serão reprovados na triagem inicial. Redes com histórico de atividade real e impacto documentado têm prioridade.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">05. Prova de Vida <span style="color:var(--red);font-size:0.65rem">* OBRIGATÓRIO</span></label>
+                <div class="proof-box">
+                    A inscrição exige um vídeo curto da sede ou da ação social citando o código de sincronização:<br>
+                    <strong style="color:#fff;letter-spacing:2px">PLEGMA_ZKDAG_MAINNET_GENESIS_2026</strong><br>
+                    Garante que o recurso chegue a mãos humanas reais.
+                </div>
+                <p class="form-hint" style="margin-top:10px">Cole o link do vídeo abaixo (YouTube não listado, Google Drive, etc.):</p>
+                <input id="fg-video" type="text" class="form-input" placeholder="https://..." style="margin-top:8px">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">06. Termos de Compromisso Imutável</label>
+                <ul class="terms-list">
+                    <li>Transparência Total: Todas as doações recebidas são públicas no DAG e auditáveis por qualquer pessoa.</li>
+                    <li>Prestação de Contas: Atualizações de progresso no Labs para manter o Selo "Auditado".</li>
+                    <li>Desintermediação: A responsabilidade pelo uso do recurso é 100% da instituição. A PLEGMA não é gestora, é infraestrutura.</li>
+                </ul>
+            </div>
+
+            <!-- Honeypot: invisível para humanos, bots preenchem -->
+            <div style="position:absolute;left:-9999px;opacity:0;pointer-events:none" aria-hidden="true">
+                <input id="fg-hp" type="text" name="website_url" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div id="form-feedback" style="display:none;margin-top:16px;padding:14px 18px;border-radius:4px;font-size:0.78rem;line-height:1.6"></div>
+
+            <button id="btn-submit" class="btn-submit">Submeter Inscrição</button>
+        </div>
+
+        <!-- Feed ao Vivo -->
+        <div class="section-title">Transparência em Tempo Real</div>
+        <div class="live-feed">
+            <div class="feed-header">
+                <div class="live-dot"></div>
+                <span>Últimas Doações Processadas</span>
+            </div>
+            <div class="feed-item">
+                <span class="feed-addr">PLG...88aa</span>
+                <span class="feed-arrow">→</span>
+                <span class="feed-amount">1.5 $PLG</span>
+                <span class="feed-arrow">→</span>
+                <span class="feed-proj">Projeto Educar Local</span>
+                <a href="#" class="feed-link">[ Ver no Grafo ]</a>
+            </div>
+            <div class="feed-item">
+                <span class="feed-addr">PLG...cc21</span>
+                <span class="feed-arrow">→</span>
+                <span class="feed-amount">0.8 $PLG</span>
+                <span class="feed-arrow">→</span>
+                <span class="feed-proj">Cozinha Comunitária X</span>
+                <a href="#" class="feed-link">[ Ver no Grafo ]</a>
+            </div>
+            <div class="feed-item">
+                <span class="feed-addr">PLG...ff55</span>
+                <span class="feed-arrow">→</span>
+                <span class="feed-amount">2.0 $PLG</span>
+                <span class="feed-arrow">→</span>
+                <span class="feed-proj">Resgate Infância Sul</span>
+                <a href="#" class="feed-link">[ Ver no Grafo ]</a>
+            </div>
+        </div>
+
+        <!-- Selos -->
+        <div class="section-title">Selos da Fundação</div>
+        <div class="selos-grid">
+            <span class="selo green">[Humanitarian Focus]</span>
+            <span class="selo">[Zero Waste Policy]</span>
+            <span class="selo">[Full On-Chain Audit]</span>
+            <span class="selo">[Grassroots Only]</span>
+            <span class="selo">[P2P Direct Donation]</span>
+            <span class="selo">[Anti-Corruption Design]</span>
+            <span class="selo amber">[Selo Resgate]</span>
+            <span class="selo amber">[Selo Nutre]</span>
+            <span class="selo green">[Selo Semente]</span>
+            <span class="selo green">[Selo Futuro]</span>
+            <span class="selo">[Mission Accomplished]</span>
+            <span class="selo">[Plegma Family]</span>
+        </div>
+
+    </main>
+
+    <!-- Selos de Tecnologia -->
+    <div class="tech-seals-wrap">
+        <div class="section-title">Tecnologias da Rede PLEGMA</div>
+        <div class="tech-seals-grid">
+            <div class="tech-seal"><span class="seal-left">segurança</span><span class="seal-right seal-cyan">Crystals-Dilithium3</span></div>
+            <div class="tech-seal"><span class="seal-left">padrão</span><span class="seal-right seal-cyan">NIST FIPS 204</span></div>
+            <div class="tech-seal"><span class="seal-left">hash</span><span class="seal-right seal-cyan">BLAKE3</span></div>
+            <div class="tech-seal"><span class="seal-left">provas</span><span class="seal-right seal-cyan">ZK-SNARK · 22KB</span></div>
+            <div class="tech-seal"><span class="seal-left">rede</span><span class="seal-right seal-green">DAG · Acyclic Graph</span></div>
+            <div class="tech-seal"><span class="seal-left">criptografia</span><span class="seal-right seal-purple">Lattice-Based</span></div>
+            <div class="tech-seal"><span class="seal-left">mineração</span><span class="seal-right seal-green">Mobile-First</span></div>
+            <div class="tech-seal"><span class="seal-left">distribuição</span><span class="seal-right seal-green">Zero Pre-Mine</span></div>
+            <div class="tech-seal"><span class="seal-left">energia</span><span class="seal-right seal-green">Eficiência Extrema</span></div>
+            <div class="tech-seal"><span class="seal-left">supply</span><span class="seal-right seal-amber">21B $PLG · Fixed</span></div>
+            <div class="tech-seal"><span class="seal-left">governança</span><span class="seal-right seal-purple">1 Person · 1 Vote</span></div>
+            <div class="tech-seal"><span class="seal-left">lockup</span><span class="seal-right seal-amber">30-Day Lock</span></div>
+        </div>
+    </div>
+
+    <footer>
+    <p>&copy; 2026 PLEGMA DAG | The Architecture of Absolute Justice</p>
+    <div class="social-links">
+        <a href="https://x.com/plegmadag" target="_blank" rel="noopener" title="X (Twitter)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="https://t.me/plegma_dag" target="_blank" rel="noopener" title="Telegram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        </a>
+        <a href="https://discord.gg/MFsJqyBBJ" target="_blank" rel="noopener" title="Discord">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057.1 18.08.116 18.102.136 18.116a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+        </a>
+        <a href="https://github.com/PlegmaDag" target="_blank" rel="noopener" title="GitHub">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        </a>
+        <a href="https://www.instagram.com/plegmadag/" target="_blank" rel="noopener" title="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        </a>
+        <a href="/social" title="PLG — Sua Rede de Conexões">
+            <svg width="18" height="18" viewBox="0 0 6000 6000" fill="currentColor" style="fill-rule:evenodd;clip-rule:evenodd" xmlns="http://www.w3.org/2000/svg"><path d="M1808 4633c475,-3 951,0 1427,-1 499,0 825,11 1246,-181 606,-277 1097,-807 1277,-1576 98,-421 64,-847 -63,-1241 -116,-356 -298,-631 -547,-885 -121,-123 -243,-225 -394,-316 -147,-89 -305,-172 -491,-230 -431,-135 -863,-101 -1333,-101 -474,1 -948,0 -1422,0 -219,0 -501,-15 -712,4 -213,19 -375,141 -463,256 -135,176 -139,315 -140,573 0,238 0,475 0,712l1 2853c-1,420 -79,874 250,1182 473,441 1185,175 1333,-362 51,-186 32,-481 31,-687zm-276 -2047c1,0 4,-1 5,2l229 105 1 -163 -235 56zm2678 108l174 -76c27,-11 45,-15 65,-35l-240 -54 1 165zm-2424 -1372c16,32 45,52 71,77l213 219c43,44 99,107 144,144 41,33 122,107 141,147 -40,55 -185,171 -263,215l-239 -239c-28,-29 -50,-61 -86,-78l0 472c-58,33 -268,81 -346,89l0 -688 -265 705c30,18 49,40 61,78 391,-21 774,-165 1063,-392 130,-102 233,-229 338,-381 63,-92 205,-367 239,-492 -10,-15 -39,-53 -54,-69l-1017 193zm1336 -136c12,99 183,415 233,493 185,293 473,535 802,654 159,57 422,121 605,131 11,-37 33,-61 58,-78l-261 -712 -2 694c-110,-11 -249,-53 -347,-88l0 -476c-68,33 -248,271 -323,320 -56,-23 -239,-180 -266,-215 77,-97 509,-508 569,-584l-1024 -201c-11,40 -16,43 -44,62zm-562 2027c36,73 47,139 1,212 26,43 44,50 77,88 43,49 225,257 258,278 92,-46 115,-15 195,-2l203 -220c15,-17 23,-30 38,-47 30,-35 35,-26 82,-89 -36,-129 -43,-101 5,-227l-200 -239c-20,-25 -48,-64 -66,-83 -34,18 -57,50 -83,79 -27,28 -53,52 -81,78l-160 -156 -204 243c-20,26 -50,59 -65,85zm-1300 -652c46,32 222,79 293,108 453,182 667,444 734,479 89,-35 108,-30 195,-4 30,-37 256,-304 271,-337l-181 -193c-22,-22 -44,-37 -66,-60 -83,-88 -158,-172 -245,-255 6,-9 2,-4 12,-14l53 -40c25,-18 41,-32 67,-52 29,-22 34,-26 63,-56 22,-23 41,-47 68,-60 41,33 75,78 113,117 42,43 72,73 121,116 38,33 77,77 113,115 31,32 87,98 118,119 69,-54 429,-446 478,-468 27,40 80,85 119,117 24,20 42,33 66,52 31,24 47,27 64,54 -121,114 -245,256 -365,378 -45,45 -97,79 -128,130l203 249c22,26 45,61 71,85 128,-31 94,-20 202,10 26,-30 63,-63 99,-95 174,-154 402,-295 623,-385 58,-23 263,-87 296,-110 -484,-69 -777,-163 -1084,-415 -286,-236 -474,-547 -603,-904l-81 2c-74,180 -148,351 -243,500 -109,170 -211,271 -356,398 -283,249 -625,351 -1090,419zm-186 180c-248,18 -298,-236 -173,-347 49,-44 86,-49 166,-53l311 -847c-34,-39 -74,-69 -79,-153 -10,-153 124,-241 243,-211 70,18 106,54 133,109 110,-14 1079,-199 1112,-218 24,-53 22,-84 63,-124 73,-71 198,-71 274,-3 36,32 41,81 69,127 40,22 991,201 1109,218 102,-198 386,-121 379,94 -3,88 -43,115 -80,161l312 847c320,-5 296,429 -10,399 -25,54 -343,767 -347,804 -14,114 37,112 -51,177 -70,52 -199,142 -293,166l-2 -923c66,-44 255,-138 346,-166l0 473 254 -573 -36 -41c-171,36 -419,148 -556,226 -256,147 -416,313 -453,334 9,35 21,59 23,97 2,35 -18,84 -14,100 4,19 253,236 303,286 19,20 42,36 63,54l1 134c-70,-43 -391,-369 -452,-396 -63,54 -136,29 -202,10l-244 269c-21,21 -64,73 -80,94 68,141 -9,297 -165,305 -129,7 -268,-116 -183,-305 -72,-88 -176,-190 -242,-269 -28,-34 -58,-58 -81,-96 -108,30 -107,38 -214,-4l-326 288c-23,23 -27,31 -51,51 -12,9 -17,13 -28,22l-39 27c1,-151 -9,-123 80,-197 28,-23 39,-42 70,-66l141 -129c129,-118 67,-31 62,-161 -2,-43 14,-76 24,-112 -69,-56 -132,-118 -210,-177 -78,-59 -153,-106 -240,-158 -112,-67 -415,-204 -559,-229l-35 41 251 573 3 -470c72,19 296,125 345,164l1 1286c441,-1 883,0 1324,0 455,1 801,32 1197,-135 616,-259 1061,-852 1132,-1527 91,-871 -370,-1496 -838,-1805 -296,-194 -604,-294 -1034,-294 -877,1 -1775,6 -2650,0 -227,-2 -317,134 -317,346 1,223 0,446 0,669l0 3319c1,259 -31,386 112,560 199,240 727,185 727,-332 0,-443 0,-886 0,-1329 0,-52 3,-109 1,-161 -2,-49 -24,-82 -42,-125l-305 -694z"/></svg>
+        </a>
+    </div>
+    <div class="footer-legal">
+        <a href="/termos">Termos de Uso</a>
+        <a href="/privacidade">Privacidade</a>
+        <a href="/cookies">Cookies</a>
+        <a href="/quem-somos">Quem Somos</a>
+    </div>
+</footer>
+</div>
+
+<script>
+(function() {
+  var btn = document.getElementById('btn-submit');
+  var fb  = document.getElementById('form-feedback');
+
+  function mostrarFeedback(msg, ok) {
+    fb.textContent = msg;
+    fb.style.display = 'block';
+    fb.style.background = ok ? 'rgba(0,255,136,0.07)' : 'rgba(239,68,68,0.07)';
+    fb.style.border = ok ? '1px solid rgba(0,255,136,0.3)' : '1px solid rgba(239,68,68,0.3)';
+    fb.style.color  = ok ? 'var(--green)' : 'var(--red)';
+    fb.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  btn.addEventListener('click', async function() {
+    var segmento = (document.querySelector('input[name="segmento"]:checked') || {}).value || '';
+    var nome     = document.getElementById('fg-nome').value.trim();
+    var tempo    = document.getElementById('fg-tempo').value.trim();
+    var local    = document.getElementById('fg-local').value.trim();
+    var desc     = document.getElementById('fg-desc').value.trim();
+    var carteira = document.getElementById('fg-carteira').value.trim();
+    var resp     = document.getElementById('fg-responsavel').value.trim();
+    var insta    = document.getElementById('fg-instagram').value.trim();
+    var face     = document.getElementById('fg-facebook').value.trim();
+    var yt       = document.getElementById('fg-youtube').value.trim();
+    var tiktok   = document.getElementById('fg-tiktok').value.trim();
+    var site     = document.getElementById('fg-site').value.trim();
+    var video    = document.getElementById('fg-video').value.trim();
+    var hp       = document.getElementById('fg-hp').value;
+
+    if (!segmento) { mostrarFeedback('Selecione o segmento de atuação.', false); return; }
+    if (!nome)     { mostrarFeedback('Informe o nome da instituição / projeto.', false); return; }
+    if (!tempo)    { mostrarFeedback('Informe o tempo de atuação física.', false); return; }
+    if (!local)    { mostrarFeedback('Informe a localização geográfica.', false); return; }
+    if (!desc)     { mostrarFeedback('Informe a descrição do impacto.', false); return; }
+    if (!carteira) { mostrarFeedback('Informe a carteira de recebimento da entidade.', false); return; }
+    if (!resp)     { mostrarFeedback('Informe o responsável técnico.', false); return; }
+    if (!insta && !face && !yt && !tiktok && !site) {
+      mostrarFeedback('Informe ao menos uma rede social.', false); return;
+    }
+    if (!video) { mostrarFeedback('Informe o link do vídeo de prova de vida.', false); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'ENVIANDO...';
+
+    try {
+      var res = await fetch('https://api.plegmadag.com/api/fundacao/inscricao', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          website_url  : hp,
+          segmento     : segmento,
+          nome_projeto : nome,
+          tempo_atuacao: tempo,
+          localizacao  : local,
+          descricao    : desc,
+          carteira_plg : carteira,
+          responsavel  : resp,
+          instagram    : insta,
+          facebook     : face,
+          youtube      : yt,
+          tiktok       : tiktok,
+          site         : site,
+          link_video   : video
+        })
+      });
+      var json = await res.json();
+      if (res.ok && json.status === 'ok') {
+        mostrarFeedback('✓ Inscrição enviada com sucesso! Protocolo #' + json.id + '. Nossa equipe irá analisar e entrar em contato.', true);
+        btn.textContent = 'INSCRICÃO ENVIADA';
+      } else {
+        mostrarFeedback('Erro: ' + (json.erro || 'Tente novamente.'), false);
+        btn.disabled = false;
+        btn.textContent = 'Submeter Inscrição';
+      }
+    } catch(e) {
+      mostrarFeedback('Falha de conexão com o servidor. Tente novamente.', false);
+      btn.disabled = false;
+      btn.textContent = 'Submeter Inscrição';
+    }
+  });
+})();
+</script>
+
+<!-- Auto-translate: detecta idioma do navegador e traduz automaticamente -->
+<div id="google_translate_element" style="display:none"></div>
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({ pageLanguage: 'pt', autoDisplay: false }, 'google_translate_element');
+  var lang = ((navigator.language || navigator.userLanguage || 'pt').split('-')[0]).toLowerCase();
+  if (lang !== 'pt') {
+    setTimeout(function() {
+      var sel = document.querySelector('.goog-te-combo');
+      if (sel) { sel.value = lang; sel.dispatchEvent(new Event('change')); }
+    }, 800);
+  }
+}
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

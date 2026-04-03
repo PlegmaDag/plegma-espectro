@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="bg-black text-white font-mono">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Forja de contratos e provas ZK da rede PLEGMA. Crie, audite e publique contratos open source com a comunidade.">
+    <meta name="keywords" content="PLEGMA DAG, blockchain DAG, criptografia pós-quântica, Dilithium3, ZK-SNARK, PLG-G, governança descentralizada, mineração mobile">
+    <meta name="robots" content="index, follow">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://plegmadag.com/forge/">
+    <meta property="og:title" content="ZKM Forge — PLEGMA LABS | PLEGMA DAG">
+    <meta property="og:description" content="Forja de contratos e provas ZK da rede PLEGMA. Crie, audite e publique contratos open source com a comunidade.">
+    <meta property="og:image" content="https://plegmadag.com/assets/img/logo.gif">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://plegmadag.com/forge/">
+    <meta property="twitter:title" content="ZKM Forge — PLEGMA LABS | PLEGMA DAG">
+    <meta property="twitter:image" content="https://plegmadag.com/assets/img/logo.gif">
+    <title>ZKM Forge | PLEGMA LABS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    <!-- omggif: decodifica GIF animado frame a frame (~8KB, sem dependências) -->
+    <script src="https://cdn.jsdelivr.net/npm/omggif@1.0.10/omggif.js"></script>
+    <style>
+        .mesh-bg { background: radial-gradient(circle at center, #001533 0%, #000 70%); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        .glow-blue  { text-shadow: 0 0 15px #0066ff; }
+        .glow-text  { text-shadow: 0 0 10px rgba(0,102,255,0.5); }
+        .glow-green { text-shadow: 0 0 10px #23d18b; color: #23d18b; }
+        .forge-box  { border: 1px dashed rgba(0,102,255,0.4); transition: all 0.3s; min-height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; background: rgba(0,102,255,0.02); }
+        .forge-box:hover, .forge-box.dragover { background: rgba(0,102,255,0.05); border-color: #0066ff; box-shadow: 0 0 25px rgba(0,102,255,0.1); }
+        .hidden { display: none !important; }
+        input[type=range] { -webkit-appearance: none; background: #1e3a8a; height: 4px; border-radius: 2px; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: #0066ff; cursor: pointer; box-shadow: 0 0 10px #0066ff; }
+    </style>
+</head>
+<body class="p-4 md:p-8 flex flex-col min-h-screen">
+<div class="mesh-bg"></div>
+
+<nav class="flex justify-between items-center max-w-5xl mx-auto w-full mb-20 text-[10px] md:text-xs text-blue-400 uppercase tracking-[0.3em] border-b border-blue-900/30 pb-6">
+    <a href="/" class="glow-blue text-white hover:text-blue-400 transition-colors flex items-center gap-2" style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.1rem;letter-spacing:2px;text-decoration:none"><img src="/assets/img/logo.gif" alt="PLEGMA" style="height:32px;filter:drop-shadow(0 0 6px rgba(0,242,255,0.5))"><span>PLEGMA DAG</span></a>
+    <div class="flex gap-8">
+        <a href="#" class="hover:text-white transition-colors">Github</a>
+        <a href="view.html" class="hover:text-white transition-colors text-cyan-500">ZKM Viewer →</a>
+    </div>
+</nav>
+
+<main class="max-w-4xl mx-auto text-center flex-grow w-full">
+    <h1 class="text-5xl md:text-7xl font-black mb-6 glow-blue tracking-tighter uppercase leading-tight">
+        THE END OF THE<br><span class="text-blue-600">RASTER ERA.</span>
+    </h1>
+    <p class="text-gray-400 mb-16 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+        Converta PNG e GIF animado em vetores criptográficos com prova matemática SHA-256.
+        <span class="text-blue-500 font-bold glow-text">Ultra-leve. Incorruptível. Verificável.</span>
+    </p>
+
+    <!-- DROP ZONE -->
+    <div id="forge-box" class="forge-box rounded-2xl p-8 mb-10 relative"
+         ondragover="event.preventDefault(); this.classList.add('dragover')"
+         ondragleave="this.classList.remove('dragover')"
+         ondrop="handleDrop(event)">
+        <div id="upload-prompt" class="text-center">
+            <div class="text-4xl mb-4 opacity-30">⬡</div>
+            <span class="uppercase text-sm md:text-lg font-bold tracking-[0.4em] text-blue-400 glow-text block mb-3">
+                ARRASTE PNG / GIF PARA FUNDIR
+            </span>
+            <span class="text-[10px] text-gray-600 tracking-widest">OU CLIQUE PARA SELECIONAR</span>
+        </div>
+        <!-- Preview do arquivo carregado -->
+        <div id="preview-area" class="hidden w-full text-center">
+            <canvas id="preview-canvas" class="max-w-full max-h-64 rounded-lg border border-blue-900/30 mx-auto block"></canvas>
+            <div id="file-info" class="mt-4 text-[10px] text-blue-400 tracking-widest uppercase"></div>
+            <div id="gif-badge" class="hidden mt-2 text-[10px] text-cyan-400 tracking-widest">⬡ GIF ANIMADO DETECTADO — TODOS OS FRAMES SERÃO PROCESSADOS</div>
+        </div>
+    </div>
+
+    <!-- PAINEL DE CONTROLE -->
+    <div id="control-panel" class="hidden max-w-sm mx-auto space-y-6 mb-16">
+        <div class="flex justify-between text-[10px] text-blue-500 uppercase font-bold">
+            <span>Resolução Lattice (Fator de Compressão)</span>
+            <span id="scale-val">10px</span>
+        </div>
+        <input type="range" id="precision-slider" class="w-full" min="2" max="20" step="2" value="10">
+        <div class="text-[9px] text-gray-600 tracking-widest text-left">
+            Valor menor = mais detalhes, arquivo maior. Valor maior = mais compressão, menos detalhes.
+        </div>
+
+        <!-- Barra de progresso -->
+        <div id="engine-status" class="hidden space-y-2">
+            <div class="flex justify-between text-[9px] uppercase tracking-widest text-gray-500">
+                <span id="process-label">Processando...</span>
+                <span id="percent-val">0%</span>
+            </div>
+            <div class="w-full h-1 bg-blue-900/30 rounded-full overflow-hidden">
+                <div id="progress-bar" class="h-full bg-blue-600 shadow-[0_0_10px_#0066ff] transition-all duration-100" style="width:0%"></div>
+            </div>
+            <div id="frame-info" class="text-[9px] text-gray-600 tracking-widest"></div>
+        </div>
+
+        <!-- Resultado -->
+        <div id="result-panel" class="hidden space-y-3 border border-green-900/40 rounded-lg p-4 bg-green-900/5">
+            <div class="text-[10px] uppercase tracking-widest glow-green font-bold">✓ FUSÃO COMPLETA</div>
+            <div id="result-stats" class="text-[9px] text-gray-400 space-y-1 text-left"></div>
+            <button id="download-btn" class="w-full bg-green-600/20 hover:bg-green-600/40 border border-green-500/40 font-bold py-3 rounded text-[10px] tracking-[0.3em] text-green-400 transition-all">
+                BAIXAR .ZKM
+            </button>
+            <button onclick="location.reload()" class="w-full border border-blue-900/40 py-2 rounded text-[9px] tracking-widest text-gray-600 hover:text-gray-400 transition-all">
+                NOVA FUSÃO
+            </button>
+        </div>
+
+        <button id="convert-btn" class="w-full bg-blue-600 hover:bg-blue-500 font-bold py-4 rounded text-[10px] tracking-[0.3em] glow-blue transition-all">
+            ATIVAR MOTOR ZK-PRESS
+        </button>
+    </div>
+
+    <!-- STATS -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mt-20 text-left border-t border-blue-900/20 pt-16 uppercase">
+        <div>
+            <h3 class="text-blue-600 text-[10px] font-bold tracking-widest mb-4">Protocolo</h3>
+            <div class="text-3xl font-black text-white glow-blue mb-2">ZKM1</div>
+            <div class="text-[9px] text-gray-600 tracking-widest">Formato binário proprietário</div>
+        </div>
+        <div>
+            <h3 class="text-blue-600 text-[10px] font-bold tracking-widest mb-4">Prova</h3>
+            <div class="text-3xl font-black text-white glow-blue mb-2">SHA-256</div>
+            <div class="text-[9px] text-gray-600 tracking-widest">Integridade verificável</div>
+        </div>
+        <div>
+            <h3 class="text-blue-600 text-[10px] font-bold tracking-widest mb-4">Suporte</h3>
+            <div class="text-3xl font-black text-white glow-blue mb-2">PNG + GIF</div>
+            <div class="text-[9px] text-gray-600 tracking-widest">Animação preservada</div>
+        </div>
+    </div>
+</main>
+
+<footer class="mt-20 py-10 text-center border-t border-blue-900/20 text-[9px] text-gray-600 tracking-[0.5em] uppercase">
+    PLEGMA DAG | THE ARCHITECTURE OF ABSOLUTE JUSTICE | 2026
+</footer>
+
+<input type="file" id="file-input" class="hidden" accept="image/png,image/gif">
+
+<script>
+// ============================================================================
+// CONSTANTES DO PROTOCOLO ZKM1
+// ============================================================================
+const MAGIC        = [90, 75, 77, 49]; // "ZKM1"
+const BLOCK_SIZE   = 8;
+const FLAG_STATIC  = 0;
+const FLAG_ANIMATED= 1;
+
+// ============================================================================
+// UI
+// ============================================================================
+const forgeBox      = document.getElementById('forge-box');
+const fileInput     = document.getElementById('file-input');
+const previewCanvas = document.getElementById('preview-canvas');
+const previewCtx    = previewCanvas.getContext('2d');
+const controlPanel  = document.getElementById('control-panel');
+const convertBtn    = document.getElementById('convert-btn');
+const progressBar   = document.getElementById('progress-bar');
+const precisionSlider = document.getElementById('precision-slider');
+const scaleVal      = document.getElementById('scale-val');
+
+let sourceData = null; // { type: 'png'|'gif', width, height, frames: [{delayMs, imageData}] }
+
+forgeBox.addEventListener('click', () => { if (!sourceData) fileInput.click(); });
+fileInput.addEventListener('change', () => handleFile(fileInput.files[0]));
+precisionSlider.addEventListener('input', e => scaleVal.innerText = e.target.value + 'px');
+convertBtn.addEventListener('click', runForge);
+
+function handleDrop(e) {
+    e.preventDefault();
+    forgeBox.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file) handleFile(file);
+}
+
+// ============================================================================
+// CARREGAMENTO DO ARQUIVO
+// ============================================================================
+async function handleFile(file) {
+    if (!file) return;
+    const isGif = file.type === 'image/gif';
+
+    document.getElementById('upload-prompt').classList.add('hidden');
+    document.getElementById('preview-area').classList.remove('hidden');
+
+    if (isGif) {
+        await loadGif(file);
+    } else {
+        await loadPng(file);
+    }
+}
+
+async function loadPng(file) {
+    return new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const img = new Image();
+            img.onload = () => {
+                previewCanvas.width  = img.width;
+                previewCanvas.height = img.height;
+                previewCtx.drawImage(img, 0, 0);
+                const imageData = previewCtx.getImageData(0, 0, img.width, img.height);
+
+                sourceData = {
+                    type: 'png',
+                    width: img.width,
+                    height: img.height,
+                    frames: [{ delayMs: 0, imageData }]
+                };
+
+                document.getElementById('file-info').textContent =
+                    `PNG · ${img.width}×${img.height}px · ${(file.size/1024).toFixed(1)} KB`;
+                controlPanel.classList.remove('hidden');
+                resolve();
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+async function loadGif(file) {
+    return new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = e => {
+            try {
+                const buffer   = e.target.result;
+                const uintBuf  = new Uint8Array(buffer);
+                const gr       = new GifReader(uintBuf);
+                const numFrames= gr.numFrames();
+                const width    = gr.width;
+                const height   = gr.height;
+
+                previewCanvas.width  = width;
+                previewCanvas.height = height;
+
+                const frames = [];
+                // Canvas offscreen para compor frames GIF (cada frame é delta)
+                const offCanvas = document.createElement('canvas');
+                offCanvas.width = width; offCanvas.height = height;
+                const offCtx = offCanvas.getContext('2d');
+
+                for (let f = 0; f < numFrames; f++) {
+                    const info   = gr.frameInfo(f);
+                    const pixels = new Uint8ClampedArray(width * height * 4);
+                    gr.decodeAndBlitFrameRGBA(f, pixels);
+
+                    // Compõe sobre o frame anterior (GIF disposal)
+                    const imgData = new ImageData(pixels, width, height);
+                    offCtx.putImageData(imgData, 0, 0);
+
+                    const composedData = offCtx.getImageData(0, 0, width, height);
+                    const delayMs = Math.max((info.delay || 10) * 10, 20); // GIF delay em centissegundos
+
+                    frames.push({ delayMs, imageData: composedData });
+                }
+
+                // Preview do primeiro frame
+                previewCtx.putImageData(frames[0].imageData, 0, 0);
+
+                sourceData = { type: 'gif', width, height, frames };
+                document.getElementById('file-info').textContent =
+                    `GIF · ${width}×${height}px · ${numFrames} frames · ${(file.size/1024).toFixed(1)} KB`;
+                document.getElementById('gif-badge').classList.remove('hidden');
+                controlPanel.classList.remove('hidden');
+                resolve();
+            } catch(err) {
+                document.getElementById('file-info').textContent = 'Erro ao decodificar GIF: ' + err.message;
+                resolve();
+            }
+        };
+        reader.readAsArrayBuffer(file);
+    });
+}
+
+// ============================================================================
+// MOTOR ZK-PRESS — GERA O BINÁRIO .ZKM
+// ============================================================================
+async function runForge() {
+    if (!sourceData) return;
+
+    convertBtn.classList.add('hidden');
+    document.getElementById('engine-status').classList.remove('hidden');
+
+    const step     = parseInt(precisionSlider.value);
+    const { width, height, frames, type } = sourceData;
+    const isAnim   = type === 'gif' && frames.length > 1;
+
+    // ---- Calcula tamanho total do buffer ----
+    // Header: 4(magic) + 2(w) + 2(h) + 1(step) + 1(frames) + 1(flags) + 2(reservado) = 13
+    // Por frame: 2(delay) + 4(blockCount) + N*8(blocks)
+    // Prova: 32 bytes
+
+    const allFrameBuffers = [];
+    let totalPayloadBytes = 13; // header
+
+    for (let f = 0; f < frames.length; f++) {
+        const { delayMs, imageData } = frames[f];
+        const data    = imageData.data;
+        const blocks  = [];
+
+        for (let y = 0; y < height; y += step) {
+            for (let x = 0; x < width; x += step) {
+                const i = (y * width + x) * 4;
+                const a = data[i+3];
+                if (a > 10) { // ignora pixels quase transparentes
+                    blocks.push({ x, y, r: data[i], g: data[i+1], b: data[i+2], a });
+                }
+            }
+        }
+
+        allFrameBuffers.push({ delayMs, blocks });
+        totalPayloadBytes += 2 + 4 + blocks.length * BLOCK_SIZE; // delay + count + blocos
+
+        // Progresso
+        const pct = Math.round(((f + 1) / frames.length) * 80);
+        progressBar.style.width = pct + '%';
+        document.getElementById('percent-val').innerText = pct + '%';
+        document.getElementById('frame-info').textContent =
+            `Frame ${f+1} / ${frames.length} — ${blocks.length} blocos`;
+        await new Promise(r => setTimeout(r, 1)); // yield para UI
+    }
+
+    // ---- Monta o buffer binário ----
+    const buffer  = new ArrayBuffer(totalPayloadBytes + 32); // +32 para prova
+    const view    = new DataView(buffer);
+    const bytes   = new Uint8Array(buffer);
+
+    // Header
+    bytes[0] = 90; bytes[1] = 75; bytes[2] = 77; bytes[3] = 49; // ZKM1
+    view.setUint16(4, width,  false);
+    view.setUint16(6, height, false);
+    bytes[8]  = step;
+    bytes[9]  = Math.min(frames.length, 255);
+    bytes[10] = isAnim ? 1 : 0;
+    bytes[11] = 0; bytes[12] = 0; // reservado
+
+    let offset = 13;
+    for (const { delayMs, blocks } of allFrameBuffers) {
+        view.setUint16(offset, delayMs, false);        offset += 2;
+        view.setUint32(offset, blocks.length, false);  offset += 4;
+        for (const { x, y, r, g, b, a } of blocks) {
+            view.setUint16(offset,   x, false); offset += 2;
+            view.setUint16(offset,   y, false); offset += 2;
+            bytes[offset++] = r;
+            bytes[offset++] = g;
+            bytes[offset++] = b;
+            bytes[offset++] = a;
+        }
+    }
+
+    // ---- Gera prova SHA-256 ----
+    document.getElementById('process-label').textContent = 'Gerando prova SHA-256...';
+    progressBar.style.width = '90%';
+    document.getElementById('percent-val').innerText = '90%';
+    await new Promise(r => setTimeout(r, 10));
+
+    const payload    = new Uint8Array(buffer, 0, totalPayloadBytes);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', payload);
+    const hashBytes  = new Uint8Array(hashBuffer);
+
+    // Escreve prova no final
+    for (let i = 0; i < 32; i++) bytes[totalPayloadBytes + i] = hashBytes[i];
+
+    // ---- Finaliza ----
+    progressBar.style.width = '100%';
+    document.getElementById('percent-val').innerText = '100%';
+    document.getElementById('process-label').textContent = 'PROVA ZK-SIGNED GERADA';
+    document.getElementById('process-label').style.color = '#23d18b';
+
+    const originalKB = sourceData.frames.reduce((s, f) => s + f.imageData.data.length / 1024, 0);
+    const zkmKB      = buffer.byteLength / 1024;
+    const proofHex   = Array.from(hashBytes).map(b => b.toString(16).padStart(2,'0')).join('').substring(0, 32) + '...';
+
+    document.getElementById('result-stats').innerHTML = `
+        <div>Frames processados: <span class="text-white">${frames.length}</span></div>
+        <div>Tamanho original:   <span class="text-white">${originalKB.toFixed(1)} KB</span></div>
+        <div>Tamanho ZKM:        <span class="text-white">${zkmKB.toFixed(1)} KB</span></div>
+        <div>Compressão:         <span class="text-white">${((1 - zkmKB/originalKB)*100).toFixed(0)}%</span></div>
+        <div class="mt-2 break-all">SHA-256: <span class="text-green-400 text-[8px]">${proofHex}</span></div>
+    `;
+
+    const blob = new Blob([buffer], { type: 'application/octet-stream' });
+    const url  = URL.createObjectURL(blob);
+
+    document.getElementById('download-btn').onclick = () => {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'arquivo.zkm';
+        a.click();
+    };
+
+    document.getElementById('engine-status').classList.add('hidden');
+    document.getElementById('result-panel').classList.remove('hidden');
+}
+</script>
+
+<!-- Auto-translate: detecta idioma do navegador e traduz automaticamente -->
+<div id="google_translate_element" style="display:none"></div>
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({ pageLanguage: 'pt', autoDisplay: false }, 'google_translate_element');
+  var lang = ((navigator.language || navigator.userLanguage || 'pt').split('-')[0]).toLowerCase();
+  if (lang !== 'pt') {
+    setTimeout(function() {
+      var sel = document.querySelector('.goog-te-combo');
+      if (sel) { sel.value = lang; sel.dispatchEvent(new Event('change')); }
+    }, 800);
+  }
+}
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

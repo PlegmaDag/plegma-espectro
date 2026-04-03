@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="kA" x1="20%" y1="5%" x2="80%" y2="95%">
+      <stop offset="0%"   stop-color="#c8f0ff"/>
+      <stop offset="30%"  stop-color="#00c8e8"/>
+      <stop offset="70%"  stop-color="#0077bb"/>
+      <stop offset="100%" stop-color="#003366"/>
+    </linearGradient>
+    <linearGradient id="kB" x1="80%" y1="5%" x2="20%" y2="95%">
+      <stop offset="0%"   stop-color="#e0f8ff"/>
+      <stop offset="35%"  stop-color="#00b4d8"/>
+      <stop offset="75%"  stop-color="#0055aa"/>
+      <stop offset="100%" stop-color="#001a44"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- LOOP ESQUERDO -->
+  <path d="M100,100
+    C100,80 90,52 72,42
+    C54,32 32,38 22,54
+    C12,70 18,92 34,104
+    C50,116 74,112 100,100 Z"
+    fill="none" stroke="url(#kA)" stroke-width="13"
+    stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+
+  <!-- LOOP DIREITO -->
+  <path d="M100,100
+    C100,120 110,148 128,158
+    C146,168 168,162 178,146
+    C188,130 182,108 166,96
+    C150,84 126,88 100,100 Z"
+    fill="none" stroke="url(#kA)" stroke-width="13"
+    stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+
+  <!-- LOOP SUPERIOR -->
+  <path d="M100,100
+    C80,100 52,90 42,72
+    C32,54 38,32 54,22
+    C70,12 92,18 104,34
+    C116,50 112,74 100,100 Z"
+    fill="none" stroke="url(#kB)" stroke-width="13"
+    stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+
+  <!-- LOOP INFERIOR -->
+  <path d="M100,100
+    C120,100 148,110 158,128
+    C168,146 162,168 146,178
+    C130,188 108,182 96,166
+    C84,150 88,126 100,100 Z"
+    fill="none" stroke="url(#kB)" stroke-width="13"
+    stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+
+  <!-- Cruzamentos: segmentos de cobertura para efeito trama (over/under) -->
+  <!-- Centro -->
+  <circle cx="100" cy="100" r="7" fill="#000" opacity="0.85"/>
+  <!-- Cruzamento sup-esq -->
+  <circle cx="62"  cy="62"  r="6" fill="#000" opacity="0.7"/>
+  <!-- Cruzamento sup-dir -->
+  <circle cx="138" cy="62"  r="6" fill="#000" opacity="0.7"/>
+  <!-- Cruzamento inf-esq -->
+  <circle cx="62"  cy="138" r="6" fill="#000" opacity="0.7"/>
+  <!-- Cruzamento inf-dir -->
+  <circle cx="138" cy="138" r="6" fill="#000" opacity="0.7"/>
+
+  <!-- Reluz (highlight) dos loops -->
+  <path d="M100,100 C100,82 91,56 74,45 C62,37 47,40 38,51"
+    fill="none" stroke="rgba(200,245,255,0.35)" stroke-width="4"
+    stroke-linecap="round"/>
+  <path d="M100,100 C80,100 54,91 43,74 C35,62 38,47 49,38"
+    fill="none" stroke="rgba(200,245,255,0.35)" stroke-width="4"
+    stroke-linecap="round"/>
+</svg>

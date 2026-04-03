@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Visualizador de contratos e provas ZK da rede PLEGMA DAG.">
+    <meta name="keywords" content="PLEGMA DAG, blockchain DAG, criptografia pós-quântica, Dilithium3, ZK-SNARK, PLG-G, governança descentralizada, mineração mobile">
+    <meta name="robots" content="index, follow">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://plegmadag.com/forge/view">
+    <meta property="og:title" content="ZKM Viewer — PLEGMA LABS | PLEGMA DAG">
+    <meta property="og:description" content="Visualizador de contratos e provas ZK da rede PLEGMA DAG.">
+    <meta property="og:image" content="https://plegmadag.com/assets/img/logo.gif">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://plegmadag.com/forge/view">
+    <meta property="twitter:title" content="ZKM Viewer — PLEGMA LABS | PLEGMA DAG">
+    <meta property="twitter:image" content="https://plegmadag.com/assets/img/logo.gif">
+    <title>ZKM Viewer | PLEGMA LABS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- O PLAYER ZKM — este é o único script necessário em qualquer site -->
+    <script src="zkm-player.js"></script>
+    <style>
+        .mesh-bg { background: radial-gradient(circle at center, #001533 0%, #000 70%); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        .glow-blue  { text-shadow: 0 0 15px #0066ff; }
+        .glow-cyan  { text-shadow: 0 0 10px #00F2FF; color: #00F2FF; }
+        .hidden { display: none !important; }
+        .drop-zone { border: 2px dashed rgba(0,242,255,0.2); transition: all 0.3s; min-height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
+        .drop-zone:hover, .drop-zone.dragover { background: rgba(0,242,255,0.03); border-color: #00F2FF; box-shadow: 0 0 30px rgba(0,242,255,0.08); }
+        .code-block { background: rgba(0,242,255,0.03); border: 1px solid rgba(0,242,255,0.15); border-radius: 8px; padding: 16px; font-family: monospace; font-size: 12px; color: #aaa; text-align: left; }
+        .code-block .kw  { color: #00F2FF; }
+        .code-block .str { color: #23d18b; }
+        .code-block .cmt { color: #444; }
+    </style>
+</head>
+<body class="p-4 md:p-8 flex flex-col min-h-screen bg-black text-white font-mono">
+<div class="mesh-bg"></div>
+
+<nav class="flex justify-between items-center max-w-5xl mx-auto w-full mb-16 text-[10px] md:text-xs text-blue-400 uppercase tracking-[0.3em] border-b border-blue-900/30 pb-6">
+    <a href="/labs" class="font-bold glow-blue text-white hover:text-blue-400 transition-colors">PLEGMA LABS</a>
+    <div class="flex gap-8">
+        <a href="index.html" class="hover:text-white transition-colors text-blue-400">← ZKM Forge</a>
+        <a href="#embed" class="hover:text-white transition-colors">Como Embedar</a>
+    </div>
+</nav>
+
+<main class="max-w-4xl mx-auto text-center flex-grow w-full">
+
+    <h2 class="text-3xl md:text-5xl font-black mb-4 glow-blue tracking-tighter uppercase">
+        ZKM VIEWER
+    </h2>
+    <p class="text-gray-500 mb-12 text-[11px] tracking-widest uppercase">
+        Carregue um arquivo .zkm — prova verificada automaticamente
+    </p>
+
+    <!-- DROP ZONE DO VIEWER -->
+    <div id="drop-zone" class="drop-zone rounded-2xl p-8 mb-12 relative"
+         ondragover="event.preventDefault(); this.classList.add('dragover')"
+         ondragleave="this.classList.remove('dragover')"
+         ondrop="handleDrop(event)">
+
+        <div id="viewer-prompt" class="text-center">
+            <div class="text-5xl mb-4 opacity-20">⬡</div>
+            <div class="text-[11px] tracking-[0.5em] text-cyan-700 uppercase mb-2">Sincronizar arquivo .zkm</div>
+            <div class="text-[9px] text-gray-700 tracking-widest">Arraste ou clique para selecionar</div>
+        </div>
+
+        <!-- O player ZKM vai ser inserido aqui dinamicamente -->
+        <div id="player-mount" class="hidden w-full flex justify-center items-center flex-col gap-4">
+            <div id="zkm-player-container" class="flex justify-center"></div>
+            <button onclick="resetViewer()"
+                class="text-[9px] tracking-widest text-gray-600 hover:text-gray-400 border border-gray-800 hover:border-gray-600 px-4 py-2 rounded transition-all uppercase">
+                REINICIAR [X]
+            </button>
+        </div>
+    </div>
+
+    <!-- EMBED GUIDE -->
+    <section id="embed" class="text-left mt-20 border-t border-blue-900/20 pt-16">
+        <h3 class="text-[10px] font-bold tracking-[0.4em] text-blue-500 uppercase mb-8">Como usar em qualquer site</h3>
+
+        <div class="space-y-6">
+
+            <div>
+                <div class="text-[9px] text-gray-600 uppercase tracking-widest mb-3">1. Inclua o player</div>
+                <div class="code-block">
+                    <span class="kw">&lt;script</span> src=<span class="str">"zkm-player.js"</span><span class="kw">&gt;&lt;/script&gt;</span>
+                </div>
+            </div>
+
+            <div>
+                <div class="text-[9px] text-gray-600 uppercase tracking-widest mb-3">2. Use como tag HTML nativa</div>
+                <div class="code-block">
+                    <span class="cmt">&lt;!-- Tag Web Component — funciona como &lt;img&gt; --&gt;</span><br>
+                    <span class="kw">&lt;zkm-img</span> src=<span class="str">"minha-imagem.zkm"</span> width=<span class="str">"400"</span><span class="kw">&gt;&lt;/zkm-img&gt;</span>
+                </div>
+            </div>
+
+            <div>
+                <div class="text-[9px] text-gray-600 uppercase tracking-widest mb-3">3. Ou via JavaScript</div>
+                <div class="code-block">
+                    <span class="cmt">// Renderiza em qualquer elemento pelo seletor CSS</span><br>
+                    <span class="kw">ZKM</span>.render(<span class="str">'minha-imagem.zkm'</span>, <span class="str">'#meu-container'</span>);
+                </div>
+            </div>
+
+            <div>
+                <div class="text-[9px] text-gray-600 uppercase tracking-widest mb-3">4. O que acontece automaticamente</div>
+                <div class="space-y-2">
+                    <div class="flex items-start gap-3 text-[10px] text-gray-400">
+                        <span class="text-cyan-500 mt-0.5">⬡</span>
+                        <span>Prova SHA-256 verificada no carregamento — exibe <span class="text-green-400">ZK-VERIFIED ✓</span> ou <span class="text-red-400">PROVA INVÁLIDA ✗</span></span>
+                    </div>
+                    <div class="flex items-start gap-3 text-[10px] text-gray-400">
+                        <span class="text-cyan-500 mt-0.5">⬡</span>
+                        <span>Animação de montagem no primeiro carregamento (pixels aparecem gradualmente)</span>
+                    </div>
+                    <div class="flex items-start gap-3 text-[10px] text-gray-400">
+                        <span class="text-cyan-500 mt-0.5">⬡</span>
+                        <span>GIF animado reproduz com timing original + efeito visual ZKM</span>
+                    </div>
+                    <div class="flex items-start gap-3 text-[10px] text-gray-400">
+                        <span class="text-cyan-500 mt-0.5">⬡</span>
+                        <span>Shadow DOM isolado — sem conflito com CSS do site hospedeiro</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<footer class="mt-20 py-10 text-center border-t border-blue-900/20 text-[9px] text-gray-600 tracking-[0.5em] uppercase">
+    PLEGMA DAG | THE ARCHITECTURE OF ABSOLUTE JUSTICE | 2026
+</footer>
+
+<input type="file" id="zkm-input" class="hidden" accept=".zkm">
+
+<script>
+    const dropZone  = document.getElementById('drop-zone');
+    const zkmInput  = document.getElementById('zkm-input');
+    let   objectURL = null;
+
+    dropZone.addEventListener('click', e => {
+        if (!document.getElementById('player-mount').classList.contains('hidden')) return;
+        zkmInput.click();
+    });
+
+    zkmInput.addEventListener('change', e => {
+        if (e.target.files[0]) loadZKM(e.target.files[0]);
+    });
+
+    function handleDrop(e) {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        const file = e.dataTransfer.files[0];
+        if (file && file.name.endsWith('.zkm')) loadZKM(file);
+    }
+
+    function loadZKM(file) {
+        // Revoga URL anterior
+        if (objectURL) URL.revokeObjectURL(objectURL);
+        objectURL = URL.createObjectURL(file);
+
+        document.getElementById('viewer-prompt').classList.add('hidden');
+        document.getElementById('player-mount').classList.remove('hidden');
+
+        const container = document.getElementById('zkm-player-container');
+        container.innerHTML = '';
+
+        // Cria o Web Component <zkm-img>
+        const player = document.createElement('zkm-img');
+        player.setAttribute('src', objectURL);
+        player.setAttribute('width', '480');
+        container.appendChild(player);
+    }
+
+    function resetViewer() {
+        if (objectURL) { URL.revokeObjectURL(objectURL); objectURL = null; }
+        document.getElementById('viewer-prompt').classList.remove('hidden');
+        document.getElementById('player-mount').classList.add('hidden');
+        document.getElementById('zkm-player-container').innerHTML = '';
+        zkmInput.value = '';
+    }
+</script>
+
+<!-- Auto-translate: detecta idioma do navegador e traduz automaticamente -->
+<div id="google_translate_element" style="display:none"></div>
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({ pageLanguage: 'pt', autoDisplay: false }, 'google_translate_element');
+  var lang = ((navigator.language || navigator.userLanguage || 'pt').split('-')[0]).toLowerCase();
+  if (lang !== 'pt') {
+    setTimeout(function() {
+      var sel = document.querySelector('.goog-te-combo');
+      if (sel) { sel.value = lang; sel.dispatchEvent(new Event('change')); }
+    }, 800);
+  }
+}
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

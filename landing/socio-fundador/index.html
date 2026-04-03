@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <meta name="googlebot" content="noindex, nofollow">
+    <title>⬡ Conselho Fundador</title>
+    <link rel="icon" type="image/x-icon" href="/assets/img/logo.gif">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:     #000;
+            --bg2:    #05080f;
+            --bg3:    #080d1a;
+            --cyan:   #00F2FF;
+            --cyan2:  rgba(0,242,255,0.07);
+            --cyan3:  rgba(0,242,255,0.15);
+            --green:  #23d18b;
+            --green2: rgba(35,209,139,0.12);
+            --amber:  #f59e0b;
+            --amber2: rgba(245,158,11,0.1);
+            --red:    #ef4444;
+            --red2:   rgba(239,68,68,0.1);
+            --purple: #a78bfa;
+            --border: rgba(0,242,255,0.10);
+            --border2:rgba(0,242,255,0.22);
+            --text:   #e2e8f0;
+            --text2:  #64748b;
+            --text3:  #94a3b8;
+            --glow:   0 0 20px rgba(0,242,255,0.3);
+            --glow-sm:0 0 8px rgba(0,242,255,0.2);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; }
+        body { background: var(--bg); color: var(--text); font-family: 'Space Mono', monospace; font-size: 0.8rem; }
+
+        /* ═══ GATE DE ACESSO ═══ */
+        #gate {
+            position: fixed; inset: 0; z-index: 999;
+            background: #000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 24px;
+        }
+        #gate.hidden { display: none; }
+        .gate-logo {
+            font-family: 'Montserrat', sans-serif; font-weight: 800;
+            font-size: 1.5rem; color: var(--cyan); letter-spacing: 4px;
+            text-shadow: var(--glow);
+        }
+        .gate-sub {
+            font-size: 0.62rem; color: var(--text2); letter-spacing: 5px; text-transform: uppercase;
+        }
+        .gate-form {
+            display: flex; flex-direction: column; align-items: center; gap: 12px;
+            width: 100%; max-width: 320px;
+        }
+        .gate-input {
+            width: 100%; padding: 12px 16px;
+            background: var(--bg2); border: 1px solid var(--border2);
+            border-radius: 6px; color: var(--cyan);
+            font-family: 'Space Mono', monospace; font-size: 0.8rem;
+            letter-spacing: 2px; outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            text-align: center;
+        }
+        .gate-input:focus { border-color: var(--cyan); box-shadow: var(--glow-sm); }
+        .gate-btn {
+            width: 100%; padding: 12px;
+            background: var(--cyan2); border: 1px solid rgba(0,242,255,0.35);
+            border-radius: 6px; color: var(--cyan);
+            font-family: 'Space Mono', monospace; font-size: 0.72rem;
+            letter-spacing: 3px; text-transform: uppercase; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .gate-btn:hover { background: var(--cyan); color: #000; }
+        .gate-err {
+            font-size: 0.65rem; color: var(--red); letter-spacing: 1px;
+            min-height: 18px; text-align: center;
+        }
+
+        /* ═══ LAYOUT ═══ */
+        #app { display: none; min-height: 100vh; flex-direction: column; }
+        #app.visible { display: flex; }
+
+        header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 32px; height: 56px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(20px);
+            position: sticky; top: 0; z-index: 50;
+        }
+        .h-brand {
+            font-family: 'Montserrat', sans-serif; font-weight: 800;
+            font-size: 1rem; color: var(--cyan); letter-spacing: 2px;
+            text-shadow: var(--glow-sm);
+        }
+        .h-right { display: flex; align-items: center; gap: 16px; }
+        .h-status { font-size: 0.6rem; color: var(--green); letter-spacing: 2px; display: flex; align-items: center; gap: 6px; }
+        .h-status::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }
+        .h-logout { font-size: 0.6rem; color: var(--text2); letter-spacing: 2px; cursor: pointer; padding: 4px 8px; border-radius: 3px; text-transform: uppercase; border: none; background: none; transition: color 0.2s; }
+        .h-logout:hover { color: var(--red); }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        main { flex: 1; padding: 28px 32px; max-width: 1400px; margin: 0 auto; width: 100%; }
+
+        /* ═══ SEÇÕES ═══ */
+        .section-label {
+            font-size: 0.58rem; letter-spacing: 4px; text-transform: uppercase;
+            color: var(--text2); margin-bottom: 12px; padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .section-label span { color: var(--text2); }
+
+        /* ═══ GRID STAT CARDS ═══ */
+        .stat-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: var(--bg2); border: 1px solid var(--border);
+            border-radius: 8px; padding: 16px 18px;
+            transition: border-color 0.2s;
+        }
+        .stat-card:hover { border-color: var(--border2); }
+        .stat-card-label { font-size: 0.58rem; color: var(--text2); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+        .stat-card-val { font-size: 1.4rem; font-weight: 700; color: var(--cyan); font-family: 'Space Mono', monospace; letter-spacing: -1px; }
+        .stat-card-sub { font-size: 0.6rem; color: var(--text2); margin-top: 3px; }
+        .stat-card.green .stat-card-val { color: var(--green); }
+        .stat-card.amber .stat-card-val { color: var(--amber); }
+        .stat-card.purple .stat-card-val { color: var(--purple); }
+
+        /* ═══ CARDS DUPLOS ═══ */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+        .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+        .panel {
+            background: var(--bg2); border: 1px solid var(--border);
+            border-radius: 8px; overflow: hidden;
+        }
+        .panel-header {
+            padding: 12px 18px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.62rem; color: var(--text2); letter-spacing: 3px; text-transform: uppercase;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .panel-body { padding: 18px; }
+
+        /* ═══ TABELA ═══ */
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th {
+            font-size: 0.58rem; color: var(--text2); letter-spacing: 2px; text-transform: uppercase;
+            text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border);
+            font-weight: 400;
+        }
+        .data-table td { font-size: 0.72rem; color: var(--text3); padding: 8px 10px; border-bottom: 1px solid var(--border); line-height: 1.5; }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table tr:hover td { background: rgba(0,242,255,0.02); }
+
+        /* ═══ BADGE ═══ */
+        .badge {
+            display: inline-block; font-size: 0.58rem; letter-spacing: 1px; text-transform: uppercase;
+            padding: 2px 7px; border-radius: 3px;
+        }
+        .badge-green  { background: var(--green2);  color: var(--green);  border: 1px solid rgba(35,209,139,0.3); }
+        .badge-amber  { background: var(--amber2);  color: var(--amber);  border: 1px solid rgba(245,158,11,0.3); }
+        .badge-red    { background: var(--red2);    color: var(--red);    border: 1px solid rgba(239,68,68,0.3); }
+        .badge-cyan   { background: var(--cyan2);   color: var(--cyan);   border: 1px solid rgba(0,242,255,0.3); }
+        .badge-purple { background: rgba(167,139,250,0.1); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
+
+        /* ═══ AÇÕES RÁPIDAS ═══ */
+        .action-btn {
+            display: block; width: 100%; padding: 10px 14px; margin-bottom: 8px;
+            background: var(--bg3); border: 1px solid var(--border);
+            border-radius: 6px; color: var(--text3); text-decoration: none;
+            font-size: 0.7rem; letter-spacing: 1px; cursor: pointer;
+            transition: all 0.2s; text-align: left; font-family: 'Space Mono', monospace;
+        }
+        .action-btn:hover { border-color: var(--border2); color: var(--cyan); background: var(--cyan2); }
+        .action-btn.danger:hover { border-color: rgba(239,68,68,0.4); color: var(--red); background: var(--red2); }
+        .action-btn .ab-tag { float: right; font-size: 0.58rem; color: var(--text2); }
+
+        /* ═══ LOG LINE ═══ */
+        .log-line {
+            font-size: 0.68rem; color: var(--text3); line-height: 1.7;
+            padding: 6px 0; border-bottom: 1px solid var(--border);
+            display: flex; gap: 10px;
+        }
+        .log-line:last-child { border-bottom: none; }
+        .log-ts { color: var(--text2); flex-shrink: 0; font-size: 0.62rem; }
+        .log-line.ok .log-msg { color: var(--green); }
+        .log-line.warn .log-msg { color: var(--amber); }
+        .log-line.err .log-msg { color: var(--red); }
+
+        /* ═══ POOL BAR ═══ */
+        .pool-row { margin-bottom: 14px; }
+        .pool-header { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text3); margin-bottom: 5px; }
+        .pool-bar-bg { height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
+        .pool-bar-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
+        .pool-bar-fill.validator { background: linear-gradient(90deg, var(--cyan), rgba(0,242,255,0.5)); }
+        .pool-bar-fill.prover    { background: linear-gradient(90deg, var(--purple), rgba(167,139,250,0.5)); }
+
+        /* ═══ TOAST ═══ */
+        #toast {
+            position: fixed; bottom: 24px; right: 24px; z-index: 999;
+            background: var(--bg3); border: 1px solid var(--border2);
+            border-radius: 6px; padding: 10px 18px;
+            font-size: 0.7rem; color: var(--text);
+            opacity: 0; transform: translateY(8px);
+            transition: all 0.3s; pointer-events: none;
+        }
+        #toast.show { opacity: 1; transform: translateY(0); }
+        #toast.ok { border-color: rgba(35,209,139,0.4); color: var(--green); }
+        #toast.err { border-color: rgba(239,68,68,0.4); color: var(--red); }
+
+        /* ═══ NOTAS ═══ */
+        .nota-item {
+            padding: 8px 0; border-bottom: 1px solid var(--border);
+            display: flex; gap: 10px;
+        }
+        .nota-item:last-child { border-bottom: none; }
+        .nota-ts { color: var(--text2); font-size: 0.62rem; flex-shrink: 0; }
+        .nota-msg { color: var(--text3); font-size: 0.72rem; line-height: 1.5; }
+        .nota-empty { color: var(--text2); font-size: 0.7rem; text-align: center; padding: 20px 0; }
+
+        @media (max-width: 1100px) { .stat-grid { grid-template-columns: repeat(2,1fr); } }
+        @media (max-width: 900px) { .two-col, .three-col { grid-template-columns: 1fr; } }
+        @media (max-width: 600px) {
+            main { padding: 16px; }
+            header { padding: 0 16px; }
+            .stat-grid { grid-template-columns: 1fr 1fr; }
+        }
+        /* ═══ SOCIAL LINKS ═══ */
+        .social-links { display: flex; gap: 14px; justify-content: center; align-items: center; margin: 18px 0 14px; }
+        .social-links a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid rgba(0,242,255,0.18); border-radius: 6px; background: rgba(0,242,255,0.05); color: rgba(255,255,255,0.4); transition: all 0.2s; }
+        .social-links a:hover { color: #00f2ff; border-color: rgba(0,242,255,0.55); background: rgba(0,242,255,0.12); box-shadow: 0 0 14px rgba(0,242,255,0.22); }
+        .social-links a svg { display: block; }
+    </style>
+</head>
+<body>
+
+<!-- ═══ GATE ═══ -->
+<div id="gate">
+    <div class="gate-logo">PLEGMA DAG</div>
+    <div class="gate-sub">Conselho Fundador — Acesso Restrito</div>
+    <form class="gate-form" onsubmit="verificarAcesso(event)">
+        <input id="gateKey" class="gate-input" type="password" placeholder="chave de acesso" autocomplete="off" autofocus>
+        <button class="gate-btn" type="submit">ENTRAR</button>
+        <div class="gate-err" id="gateErr"></div>
+    </form>
+</div>
+
+<!-- ═══ APP ═══ -->
+<div id="app">
+<header>
+    <div class="h-brand">⬡ CONSELHO FUNDADOR</div>
+    <div class="h-right">
+        <div class="h-status" id="hStatus">CONECTADO</div>
+        <button class="h-logout" onclick="sair()">SAIR</button>
+    </div>
+</header>
+
+<main>
+
+    <!-- ═══ REDE ═══ -->
+    <div class="section-label">Estado da Rede <span id="lastRefresh">—</span></div>
+
+    <div class="stat-grid">
+        <div class="stat-card">
+            <div class="stat-card-label">Transações</div>
+            <div class="stat-card-val" id="statTxTotal">—</div>
+            <div class="stat-card-sub">Total na DAG</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-card-label">Aceitas</div>
+            <div class="stat-card-val" id="statAceitas">—</div>
+            <div class="stat-card-sub">BUILD 009p+</div>
+        </div>
+        <div class="stat-card amber">
+            <div class="stat-card-label">Rejeitadas</div>
+            <div class="stat-card-val" id="statRejeitadas">—</div>
+            <div class="stat-card-sub">Motivos variados</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-label">Tips Pendentes</div>
+            <div class="stat-card-val" id="statTips">—</div>
+            <div class="stat-card-sub">Vértices na fronteira</div>
+        </div>
+    </div>
+
+    <div class="two-col">
+
+        <!-- Genesis Reserve -->
+        <div class="panel">
+            <div class="panel-header">Genesis Reserve <span id="genesisStatusBadge"></span></div>
+            <div class="panel-body">
+                <div class="stat-card-label">PLG-G Vendidos</div>
+                <div style="font-size:1.3rem;color:var(--cyan);font-weight:700;margin-bottom:4px;" id="plggVendido">—</div>
+                <div style="margin-bottom:16px;">
+                    <div class="pool-bar-bg" style="margin-top:6px;">
+                        <div class="pool-bar-fill validator" id="plggBar" style="width:0%"></div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:var(--text2);margin-top:4px;">
+                        <span id="plggPct">0%</span>
+                        <span>Supply: 10.500.000 PLG-G</span>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <tr><td style="color:var(--text2)">USDT Arrecadado</td><td id="genesisUsdt" style="text-align:right;color:var(--green);">—</td></tr>
+                    <tr><td style="color:var(--text2)">Último preço P2P</td><td id="genesisPreco" style="text-align:right;">—</td></tr>
+                    <tr><td style="color:var(--text2)">Dia da Rede</td><td id="genesisDia" style="text-align:right;">—</td></tr>
+                    <tr><td style="color:var(--text2)">Governança</td><td id="genesisGov" style="text-align:right;">—</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pools de Mineração -->
+        <div class="panel">
+            <div class="panel-header">Pools de Mineração</div>
+            <div class="panel-body">
+                <div class="pool-row">
+                    <div class="pool-header">
+                        <span>Validator Pool (60%)</span>
+                        <span id="validatorPool">—</span>
+                    </div>
+                    <div class="pool-bar-bg"><div class="pool-bar-fill validator" id="validatorBar" style="width:0%"></div></div>
+                </div>
+                <div class="pool-row" style="margin-top:16px;">
+                    <div class="pool-header">
+                        <span>Prover Pool (40%)</span>
+                        <span id="proverPool">—</span>
+                    </div>
+                    <div class="pool-bar-bg"><div class="pool-bar-fill prover" id="proverBar" style="width:0%"></div></div>
+                </div>
+                <div style="margin-top:16px;">
+                    <table class="data-table">
+                        <tr><td style="color:var(--text2)">Geração base</td><td id="poolBase" style="text-align:right;">1.000.000 $PLG/dia</td></tr>
+                        <tr><td style="color:var(--text2)">Fórmula</td><td style="text-align:right;color:var(--cyan);">R = G ÷ N</td></tr>
+                        <tr><td style="color:var(--text2)">Último bloco</td><td id="poolLastHash" style="text-align:right;font-size:0.62rem;">—</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ SÓCIOS ═══ -->
+    <div class="section-label" style="margin-top:8px;">
+        Sócios Genesis &amp; PLG-G
+        <span id="socioCount" style="color:var(--cyan);">—</span>
+    </div>
+    <div class="panel" style="margin-bottom:24px;">
+        <div class="panel-header">Lista de Sócios — Saldos PLG-G <span id="socioRefreshBtn" onclick="carregarSocios()" style="cursor:pointer;color:var(--cyan);">↺</span></div>
+        <div style="overflow-x:auto;max-height:220px;overflow-y:auto;">
+            <table class="data-table" id="socioTable">
+                <thead><tr>
+                    <th>#</th>
+                    <th>Endereço PLG</th>
+                    <th>Saldo PLG-G</th>
+                    <th>Categoria</th>
+                    <th>Sócio Genesis</th>
+                    <th>Atualizado</th>
+                </tr></thead>
+                <tbody id="socioTableBody"><tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text2);">Carregando...</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ═══ TRÊS COLUNAS ═══ -->
+    <div class="three-col">
+
+        <!-- Ações Rápidas -->
+        <div class="panel">
+            <div class="panel-header">Ações Rápidas</div>
+            <div class="panel-body">
+                <button class="action-btn" onclick="ativarGovernanca()">
+                    ⬡ Ativar Governança
+                    <span class="ab-tag">POST /genesis/activate_governance</span>
+                </button>
+                <button class="action-btn" onclick="injetarLiquidez()">
+                    ◎ Injeção de Liquidez
+                    <span class="ab-tag">POST /genesis/liquidity_injection</span>
+                </button>
+                <button class="action-btn" onclick="carregarStatus()">
+                    ↺ Atualizar Todos os Dados
+                    <span class="ab-tag">GET /api/status</span>
+                </button>
+                <button class="action-btn" onclick="limparNotas()">
+                    ✕ Limpar Canal de Notas
+                    <span class="ab-tag">POST /api/notas/limpar</span>
+                </button>
+                <a href="/admin/fundacao.html" class="action-btn" target="_blank">
+                    ⊕ Painel Fundação
+                    <span class="ab-tag">Admin</span>
+                </a>
+                <button class="action-btn danger" onclick="confirmarBurn()">
+                    ⚠ Queimar Não Vendidos
+                    <span class="ab-tag">Irreversível</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Downloads APK -->
+        <div class="panel">
+            <div class="panel-header">Downloads do APK</div>
+            <div class="panel-body">
+                <div style="font-size:2rem;font-weight:700;color:var(--cyan);text-shadow:var(--glow-sm);margin-bottom:4px;" id="dlTotal">—</div>
+                <div style="font-size:0.6rem;color:var(--text2);margin-bottom:16px;">TOTAL DE DOWNLOADS</div>
+                <div id="dlPorVersao" style="font-size:0.65rem;color:var(--text3);line-height:1.9;"></div>
+                <div style="margin-top:16px;">
+                    <a href="/download/" class="action-btn" target="_blank">⬡ Página de Download</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Canal Privado -->
+        <div class="panel">
+            <div class="panel-header">Canal de Notas <span id="notasCount" style="color:var(--cyan);">—</span></div>
+            <div class="panel-body">
+                <div id="notasList" style="max-height:200px;overflow-y:auto;margin-bottom:12px;"></div>
+                <div style="display:flex;gap:8px;">
+                    <input id="notaInput" type="text" placeholder="nova nota..."
+                        style="flex:1;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.7rem;outline:none;"
+                        onkeydown="if(event.key==='Enter')enviarNota()">
+                    <button onclick="enviarNota()" style="padding:8px 12px;background:var(--cyan2);border:1px solid rgba(0,242,255,0.3);border-radius:4px;color:var(--cyan);cursor:pointer;font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:1px;">ENVIAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ INSCRIÇÕES FUNDAÇÃO ═══ -->
+    <div class="section-label" style="margin-top:8px;">
+        Inscrições da Fundação
+        <span id="inscricaoCount" style="color:var(--cyan);">—</span>
+    </div>
+    <div class="panel" style="margin-bottom:24px;">
+        <div class="panel-header">Projetos Submetidos <span onclick="carregarInscricoes()" style="cursor:pointer;color:var(--cyan);">↺</span></div>
+        <div style="overflow-x:auto;max-height:280px;overflow-y:auto;">
+            <table class="data-table" id="inscricaoTable">
+                <thead><tr>
+                    <th>#</th>
+                    <th>Projeto</th>
+                    <th>Segmento</th>
+                    <th>Responsável</th>
+                    <th>Localização</th>
+                    <th>Carteira PLG</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                </tr></thead>
+                <tbody id="inscricaoBody"><tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text2);">Carregando...</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ═══ GUIA VPS — NÓ MINERADOR ═══ -->
+    <div class="section-label" id="guia-vps" style="margin-top:8px;">Guia — Configurar Nó Minerador em VPS</div>
+    <div class="two-col" style="margin-bottom:24px;">
+
+        <!-- Azure Trial -->
+        <div class="panel">
+            <div class="panel-header">Azure — Trial Gratuito 30 Dias (Microsoft)</div>
+            <div class="panel-body" style="font-size:0.75rem;color:var(--text3);line-height:1.8;">
+                <div style="background:var(--amber2);border:1px solid rgba(245,158,11,0.25);border-radius:6px;padding:12px 14px;margin-bottom:16px;font-size:0.7rem;color:var(--amber);">
+                    ⚠ O trial Azure inclui $200 USD em crédito por 30 dias. Não é cobrado automaticamente se você não upgradar para pay-as-you-go após o período.
+                </div>
+                <p style="margin-bottom:10px;"><strong style="color:var(--text)">Passo 1</strong> — Acesse <span style="color:var(--cyan)">azure.microsoft.com/free</span> e crie a conta com email Microsoft. Exige cartão de crédito para verificação (não cobrado no trial).</p>
+                <p style="margin-bottom:10px;"><strong style="color:var(--text)">Passo 2</strong> — No portal Azure, crie uma nova <strong style="color:var(--text)">Virtual Machine</strong>:</p>
+                <ul style="padding-left:18px;margin-bottom:10px;">
+                    <li>Região: <strong style="color:var(--cyan)">East US</strong> ou <strong style="color:var(--cyan)">West Europe</strong> (menor latência)</li>
+                    <li>Sistema: <strong style="color:var(--cyan)">Ubuntu Server 22.04 LTS</strong></li>
+                    <li>Tamanho: <strong style="color:var(--cyan)">B2s</strong> (2 vCPU · 4 GB RAM) — suficiente para nó Validator</li>
+                    <li>Autenticação: SSH public key (gere um par com <code>ssh-keygen</code>)</li>
+                    <li>Portas abertas: <strong>22</strong> (SSH), <strong>8080</strong>, <strong>8082</strong>, <strong>8083</strong></li>
+                </ul>
+                <p style="margin-bottom:10px;"><strong style="color:var(--text)">Passo 3</strong> — Após criar a VM, copie o IP público. Conecte: <code style="color:var(--cyan)">ssh -i ~/.ssh/id_rsa azureuser@IP_DA_VM</code></p>
+                <p style="margin-bottom:10px;"><strong style="color:var(--text)">Passo 4</strong> — Execute o script de instalação do nó (ver painel ao lado).</p>
+                <p style="color:var(--text2);font-size:0.67rem;">O trial B2s consome ~$0,04/h. Com $200 de crédito você tem ~208 dias. Após o trial, B2s fica ~$29/mês.</p>
+            </div>
+        </div>
+
+        <!-- Opções VPS de Baixo Custo -->
+        <div class="panel">
+            <div class="panel-header">VPS de Baixo Custo — Comparativo</div>
+            <div class="panel-body">
+                <div style="font-size:0.65rem;color:var(--text2);margin-bottom:12px;">Requisitos mínimos do nó VALIDATOR: 1 vCPU · 1 GB RAM · 10 GB SSD · Ubuntu 20.04+</div>
+                <table class="data-table" style="margin-bottom:16px;">
+                    <thead><tr>
+                        <th>Provedor</th>
+                        <th>Plano</th>
+                        <th>Preço/mês</th>
+                        <th>Specs</th>
+                        <th>Recomendado</th>
+                    </tr></thead>
+                    <tbody>
+                        <tr>
+                            <td style="color:var(--cyan)">Hetzner</td>
+                            <td>CX22</td>
+                            <td style="color:var(--green)">~€4,35</td>
+                            <td>2 vCPU · 4 GB · 40 GB SSD</td>
+                            <td><span class="badge badge-green">MELHOR CUSTO</span></td>
+                        </tr>
+                        <tr>
+                            <td style="color:var(--cyan)">Contabo</td>
+                            <td>Cloud VPS S</td>
+                            <td style="color:var(--green)">~€5,99</td>
+                            <td>4 vCPU · 8 GB · 200 GB SSD</td>
+                            <td><span class="badge badge-cyan">PROVER</span></td>
+                        </tr>
+                        <tr>
+                            <td style="color:var(--cyan)">DigitalOcean</td>
+                            <td>Droplet Básico</td>
+                            <td style="color:var(--amber)">~$6</td>
+                            <td>1 vCPU · 1 GB · 25 GB SSD</td>
+                            <td><span class="badge badge-amber">VALIDATOR</span></td>
+                        </tr>
+                        <tr>
+                            <td style="color:var(--cyan)">Vultr</td>
+                            <td>Cloud Compute</td>
+                            <td style="color:var(--amber)">~$6</td>
+                            <td>1 vCPU · 1 GB · 25 GB SSD</td>
+                            <td><span class="badge badge-amber">VALIDATOR</span></td>
+                        </tr>
+                        <tr>
+                            <td style="color:var(--cyan)">Azure B1s</td>
+                            <td>(pós-trial)</td>
+                            <td style="color:var(--text2)">~$7,60</td>
+                            <td>1 vCPU · 1 GB · 30 GB SSD</td>
+                            <td><span class="badge badge-amber">VALIDATOR</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="font-size:0.65rem;color:var(--text2);line-height:1.7;">
+                    Para nó <strong style="color:var(--purple)">PROVER</strong> (gera provas ZK): recomendado ≥4 vCPU · 8 GB RAM.<br>
+                    Para nó <strong style="color:var(--cyan)">VALIDATOR</strong> (celular ou VPS leve): 1–2 vCPU · 1–2 GB RAM.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script de instalação -->
+    <div class="panel" style="margin-bottom:24px;">
+        <div class="panel-header">
+            Script de Instalação do Nó PLEGMA
+            <button onclick="copiarScript()" style="font-family:'Space Mono',monospace;font-size:0.6rem;padding:4px 10px;border-radius:3px;border:1px solid rgba(0,242,255,0.3);background:var(--cyan2);color:var(--cyan);cursor:pointer;letter-spacing:1px;">COPIAR</button>
+        </div>
+        <div class="panel-body">
+            <pre id="installScript" style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:18px;font-size:0.68rem;color:var(--green);line-height:1.7;overflow-x:auto;white-space:pre;">#!/bin/bash
+# =============================================================
+# PLEGMA DAG — Script de Instalação do Nó (Ubuntu 20.04+)
+# Execução: chmod +x install_node.sh && sudo ./install_node.sh
+# =============================================================
+
+set -e
+echo "==================================================="
+echo " [*] PLEGMA DAG — Instalação do Nó Minerador"
+echo "==================================================="
+
+# Atualizar sistema
+apt update && apt upgrade -y
+
+# Dependências base
+apt install -y python3 python3-pip python3-venv git curl wget unzip \
+               build-essential libssl-dev libffi-dev openssl
+
+# Python 3.10+ necessário para dilithium-py
+python3 --version
+
+# Clonar ou baixar PLEGMA_CORE
+mkdir -p /opt/plegma
+cd /opt/plegma
+
+# Se você tem o zip do PLEGMA_CORE:
+# wget https://plegmadag.com/download/plegma_core.zip && unzip plegma_core.zip
+
+# Virtualenv
+python3 -m venv venv
+source venv/bin/activate
+
+# Dependências Python
+pip install --upgrade pip
+pip install blake3 py_ecc dilithium-py flask requests
+
+# Configurar firewall (UFW)
+ufw allow 22/tcp     # SSH
+ufw allow 8080/tcp   # API DAG
+ufw allow 8082/tcp   # Auth
+ufw allow 8083/tcp   # Wallet
+ufw --force enable
+
+# Criar serviço systemd para core_vm.py
+cat > /etc/systemd/system/plegma-node.service &lt;&lt;EOF
+[Unit]
+Description=PLEGMA DAG Node
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/plegma/PLEGMA_CORE
+Environment=PATH=/opt/plegma/venv/bin
+ExecStart=/opt/plegma/venv/bin/python3 core_vm.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl enable plegma-node
+systemctl start plegma-node
+
+echo ""
+echo "==================================================="
+echo " [✓] Nó PLEGMA iniciado!"
+echo " [*] Verificar status: systemctl status plegma-node"
+echo " [*] Ver logs: journalctl -u plegma-node -f"
+echo " [*] API acessível em: http://$(curl -s ifconfig.me):8080/api/status"
+echo "==================================================="</pre>
+        </div>
+    </div>
+
+    <!-- ═══ ÚLTIMOS VÉRTICES ═══ -->
+    <div class="section-label">Últimos Vértices na DAG</div>
+    <div class="panel" style="margin-bottom:32px;">
+        <div class="panel-header">Registro da DAG <span onclick="carregarVertices()" style="cursor:pointer;color:var(--cyan);">↺</span></div>
+        <div style="overflow-x:auto;">
+            <table class="data-table" id="dagTable">
+                <thead><tr>
+                    <th>Hash</th>
+                    <th>Remetente</th>
+                    <th>Destinatário</th>
+                    <th>Valor $PLG</th>
+                    <th>Nó</th>
+                    <th>ZK Bytes</th>
+                    <th>Timestamp</th>
+                </tr></thead>
+                <tbody id="dagBody"><tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text2);">Carregando...</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="social-links">
+        <a href="https://x.com/plegmadag" target="_blank" rel="noopener" title="X (Twitter)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="https://t.me/plegma_dag" target="_blank" rel="noopener" title="Telegram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        </a>
+        <a href="https://discord.gg/MFsJqyBBJ" target="_blank" rel="noopener" title="Discord">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057.1 18.08.116 18.102.136 18.116a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+        </a>
+        <a href="https://github.com/PlegmaDag" target="_blank" rel="noopener" title="GitHub">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        </a>
+        <a href="https://www.instagram.com/plegmadag/" target="_blank" rel="noopener" title="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        </a>
+        <a href="https://facebook.com/plegma" target="_blank" rel="noopener" title="Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+    </div>
+
+</main>
+</div><!-- /app -->
+
+<div id="toast"></div>
+
+<script>
+const API       = 'http://api.plegmadag.com';
+const NOTAS_API = 'http://api.plegmadag.com/api/notas';
+
+let _adminKey = '';
+
+// ─────────────────────────────────────────────
+// GATE
+// ─────────────────────────────────────────────
+function verificarAcesso(e) {
+    e.preventDefault();
+    const key = document.getElementById('gateKey').value.trim();
+    if (!key) return;
+    // Valida contra o endpoint de downloads (server-side) para confirmar a chave
+    fetch(`${API}/api/admin/downloads?admin_key=${encodeURIComponent(key)}`)
+        .then(r => r.json())
+        .then(d => {
+            if (d.erro) {
+                document.getElementById('gateErr').textContent = '✕ Chave inválida.';
+                return;
+            }
+            _adminKey = key;
+            sessionStorage.setItem('_pf_key', key);
+            document.getElementById('gate').classList.add('hidden');
+            document.getElementById('app').classList.add('visible');
+            inicializar();
+        })
+        .catch(() => {
+            // Se o endpoint não existir ainda, aceita e tenta assim mesmo
+            _adminKey = key;
+            sessionStorage.setItem('_pf_key', key);
+            document.getElementById('gate').classList.add('hidden');
+            document.getElementById('app').classList.add('visible');
+            inicializar();
+        });
+}
+
+function sair() {
+    sessionStorage.removeItem('_pf_key');
+    location.reload();
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+function inicializar() {
+    // Tenta restaurar sessão
+    const saved = sessionStorage.getItem('_pf_key');
+    if (saved) {
+        _adminKey = saved;
+        document.getElementById('gate').classList.add('hidden');
+        document.getElementById('app').classList.add('visible');
+    }
+    carregarStatus();
+    carregarSocios();
+    carregarDownloads();
+    carregarNotas();
+    carregarInscricoes();
+    carregarVertices();
+    // Auto-refresh a cada 30s
+    setInterval(() => {
+        carregarStatus();
+        carregarNotas();
+    }, 30000);
+}
+
+// Tenta restaurar ao carregar
+window.addEventListener('DOMContentLoaded', () => {
+    const saved = sessionStorage.getItem('_pf_key');
+    if (saved) {
+        _adminKey = saved;
+        document.getElementById('gate').classList.add('hidden');
+        document.getElementById('app').classList.add('visible');
+        inicializar();
+    }
+});
+
+// ─────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────
+function fmt(n) { return (n ?? '—').toString(); }
+function fmtPLG(v) { return v == null ? '—' : Number(v).toLocaleString('pt-BR', {maximumFractionDigits:2}) + ' $PLG'; }
+function fmtUSdt(v) { return v == null ? '—' : '$' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+function fmtTs(ts) { return ts ? new Date(ts * 1000).toLocaleString('pt-BR') : '—'; }
+function fmtAddr(a) { return a ? a.substring(0,16)+'…' : '—'; }
+function setTxt(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
+
+function toast(msg, type='ok') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'show ' + type;
+    setTimeout(() => t.className = '', 2500);
+}
+
+function tipoCategoria(saldo) {
+    if (saldo >= 10000) return '<span class="badge badge-amber">MASTER</span>';
+    if (saldo >= 5000)  return '<span class="badge badge-purple">SENTINELA</span>';
+    if (saldo >= 1000)  return '<span class="badge badge-cyan">APOIADOR</span>';
+    return '<span class="badge badge-red">ABAIXO MÍN</span>';
+}
+
+// ─────────────────────────────────────────────
+// STATUS DA REDE
+// ─────────────────────────────────────────────
+async function carregarStatus() {
+    setTxt('lastRefresh', 'atualizando…');
+    try {
+        const [rStatus, rGenesis, rGov] = await Promise.all([
+            fetch(`${API}/api/status`).then(r => r.json()),
+            fetch(`${API}/api/genesis/status`).then(r => r.json()),
+            fetch(`${API}/api/genesis/governance`).then(r => r.json())
+        ]);
+
+        // Rede
+        setTxt('statTxTotal',    fmt(rStatus.total_transacoes));
+        setTxt('statAceitas',    fmt(rStatus.total_aceitas));
+        setTxt('statRejeitadas', fmt(rStatus.total_rejeitadas));
+        setTxt('statTips',       fmt(rStatus.tips_pendentes));
+        setTxt('poolLastHash',   rStatus.last_vertex_hash ? rStatus.last_vertex_hash.substring(0,20)+'…' : '—');
+
+        // Genesis
+        const vendido = rGenesis.total_plgg_sold ?? 0;
+        const supply  = 10500000;
+        const pct     = Math.min((vendido / supply) * 100, 100);
+        setTxt('plggVendido', vendido.toLocaleString('pt-BR') + ' PLG-G');
+        setTxt('plggPct', pct.toFixed(2) + '%');
+        const bar = document.getElementById('plggBar');
+        if (bar) bar.style.width = pct + '%';
+        setTxt('genesisUsdt',  fmtUSdt(rGenesis.total_usdt_arrecadado));
+        setTxt('genesisDia',   fmt(rGenesis.network_day) + 'º dia');
+
+        // Pools
+        const vPool = rGenesis.validator_pool_remaining;
+        const pPool = rGenesis.prover_pool_remaining;
+        setTxt('validatorPool', vPool != null ? vPool.toLocaleString('pt-BR') + ' $PLG' : '—');
+        setTxt('proverPool',    pPool != null ? pPool.toLocaleString('pt-BR') + ' $PLG' : '—');
+        const totalPools = (vPool ?? 0) + (pPool ?? 0);
+        if (totalPools > 0) {
+            const vb = document.getElementById('validatorBar');
+            const pb = document.getElementById('proverBar');
+            if (vb) vb.style.width = ((vPool / totalPools) * 100) + '%';
+            if (pb) pb.style.width = ((pPool / totalPools) * 100) + '%';
+        }
+
+        // Governança
+        const govBadge = document.getElementById('genesisGov');
+        if (govBadge) {
+            govBadge.innerHTML = rGov.ativa
+                ? '<span class="badge badge-green">ATIVA</span>'
+                : '<span class="badge badge-amber">AGUARDANDO</span>';
+        }
+        const sBadge = document.getElementById('genesisStatusBadge');
+        if (sBadge) {
+            const dia = rGenesis.network_day ?? 0;
+            sBadge.innerHTML = dia <= 30
+                ? '<span class="badge badge-amber">EM CURSO · DIA ' + dia + '</span>'
+                : '<span class="badge badge-green">ENCERRADA</span>';
+        }
+
+        // Último preço
+        try {
+            const rPreco = await fetch(`${API}/api/genesis/ultimo_preco`).then(r => r.json());
+            setTxt('genesisPreco', rPreco.preco_unitario != null ? fmtUSdt(rPreco.preco_unitario) + ' / PLG-G' : '$0.10 (Genesis)');
+        } catch(e) { setTxt('genesisPreco', '$0.10 (Genesis)'); }
+
+        setTxt('lastRefresh', new Date().toLocaleTimeString('pt-BR'));
+    } catch(err) {
+        setTxt('lastRefresh', 'erro: ' + err.message);
+    }
+}
+
+// ─────────────────────────────────────────────
+// SÓCIOS
+// ─────────────────────────────────────────────
+async function carregarSocios() {
+    try {
+        const r = await fetch(`${API}/api/genesis/socios`).then(r => r.json());
+        const socios = r.socios ?? r ?? [];
+        setTxt('socioCount', socios.length + ' sócios');
+        const tbody = document.getElementById('socioTableBody');
+        if (!socios.length) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text2)">Nenhum sócio ainda.</td></tr>';
+            return;
+        }
+        tbody.innerHTML = socios.map((s, i) => `
+            <tr>
+                <td style="color:var(--text2)">${i+1}</td>
+                <td style="font-size:0.65rem;color:var(--cyan)">${s.plg_address ?? '—'}</td>
+                <td>${(s.balance ?? 0).toLocaleString('pt-BR')} PLG-G</td>
+                <td>${tipoCategoria(s.balance ?? 0)}</td>
+                <td>${s.is_genesis ? '<span class="badge badge-green">SIM</span>' : '<span class="badge badge-red">NÃO</span>'}</td>
+                <td style="color:var(--text2);font-size:0.65rem">${fmtTs(s.updated_at)}</td>
+            </tr>`).join('');
+    } catch(e) {
+        document.getElementById('socioTableBody').innerHTML =
+            `<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text2)">${e.message}</td></tr>`;
+    }
+}
+
+// ─────────────────────────────────────────────
+// DOWNLOADS
+// ─────────────────────────────────────────────
+async function carregarDownloads() {
+    if (!_adminKey) return;
+    try {
+        const d = await fetch(`${API}/api/admin/downloads?admin_key=${encodeURIComponent(_adminKey)}`).then(r => r.json());
+        if (d.erro) { setTxt('dlTotal', '?'); return; }
+        setTxt('dlTotal', d.total_downloads ?? '0');
+        const pv = d.por_versao ?? {};
+        const versoes = Object.keys(pv).sort().reverse();
+        const el = document.getElementById('dlPorVersao');
+        if (el) el.innerHTML = versoes.map(v => `<div>${v}: <strong style="color:var(--cyan)">${pv[v]}</strong></div>`).join('') || '<div style="color:var(--text2)">Sem dados por versão.</div>';
+    } catch(e) { setTxt('dlTotal', '?'); }
+}
+
+// ─────────────────────────────────────────────
+// NOTAS
+// ─────────────────────────────────────────────
+async function carregarNotas() {
+    if (!_adminKey) return;
+    try {
+        const d = await fetch(`${NOTAS_API}?senha=${encodeURIComponent(_adminKey)}`).then(r => r.json());
+        const notas = d.notas ?? [];
+        setTxt('notasCount', notas.length + ' notas');
+        const el = document.getElementById('notasList');
+        if (!el) return;
+        if (!notas.length) {
+            el.innerHTML = '<div class="nota-empty">Canal vazio.</div>';
+            return;
+        }
+        el.innerHTML = [...notas].reverse().map(n =>
+            `<div class="nota-item"><span class="nota-ts">${n.ts}</span><span class="nota-msg">${n.msg}</span></div>`
+        ).join('');
+    } catch(e) {}
+}
+
+async function enviarNota() {
+    const inp = document.getElementById('notaInput');
+    const msg = inp.value.trim();
+    if (!msg || !_adminKey) return;
+    try {
+        await fetch(NOTAS_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ senha: _adminKey, msg })
+        });
+        inp.value = '';
+        carregarNotas();
+        toast('Nota enviada', 'ok');
+    } catch(e) { toast('Erro ao enviar nota', 'err'); }
+}
+
+async function limparNotas() {
+    if (!confirm('Limpar todas as notas do canal?')) return;
+    try {
+        await fetch(NOTAS_API + '/limpar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ senha: _adminKey })
+        });
+        carregarNotas();
+        toast('Canal limpo', 'ok');
+    } catch(e) { toast('Erro ao limpar', 'err'); }
+}
+
+// ─────────────────────────────────────────────
+// INSCRIÇÕES FUNDAÇÃO
+// ─────────────────────────────────────────────
+async function carregarInscricoes() {
+    try {
+        const r = await fetch(`${API}/api/fundacao/inscricoes?admin_key=${encodeURIComponent(_adminKey)}`).then(r => r.json());
+        const lista = r.inscricoes ?? r ?? [];
+        setTxt('inscricaoCount', lista.length + ' projetos');
+        const tbody = document.getElementById('inscricaoBody');
+        if (!lista.length) {
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text2)">Nenhuma inscrição.</td></tr>';
+            return;
+        }
+        const segCor = { 'Proteção à Infância':'badge-cyan', 'Combate à Fome':'badge-amber', 'Libertação Humana':'badge-green' };
+        tbody.innerHTML = lista.map((p, i) => `
+            <tr>
+                <td style="color:var(--text2)">${p.id ?? i+1}</td>
+                <td style="color:var(--text)">${p.nome_projeto}</td>
+                <td><span class="badge ${segCor[p.segmento]||'badge-cyan'}">${p.segmento}</span></td>
+                <td>${p.responsavel}</td>
+                <td style="color:var(--text2);font-size:0.65rem">${p.localizacao}</td>
+                <td style="font-size:0.62rem;color:var(--cyan)">${fmtAddr(p.carteira_plg)}</td>
+                <td style="color:var(--text2);font-size:0.65rem">${new Date(p.created_at*1000).toLocaleDateString('pt-BR')}</td>
+                <td><span class="badge ${p.status==='APROVADO'?'badge-green':p.status==='REPROVADO'?'badge-red':'badge-amber'}">${p.status}</span></td>
+            </tr>`).join('');
+    } catch(e) {
+        document.getElementById('inscricaoBody').innerHTML =
+            `<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text2)">${e.message}</td></tr>`;
+    }
+}
+
+// ─────────────────────────────────────────────
+// VÉRTICES DAG
+// ─────────────────────────────────────────────
+async function carregarVertices() {
+    try {
+        const r = await fetch(`${API}/api/transactions?limit=20`).then(r => r.json());
+        const txs = r.transactions ?? r ?? [];
+        const tbody = document.getElementById('dagBody');
+        if (!txs.length) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text2)">Nenhum vértice.</td></tr>';
+            return;
+        }
+        tbody.innerHTML = [...txs].reverse().slice(0, 20).map(tx => `
+            <tr>
+                <td style="font-size:0.6rem;color:var(--cyan);font-family:'Space Mono'">${(tx.tx_hash||'').substring(0,18)}…</td>
+                <td style="font-size:0.65rem">${fmtAddr(tx.sender)}</td>
+                <td style="font-size:0.65rem">${fmtAddr(tx.receiver)}</td>
+                <td>${tx.amount != null ? Number(tx.amount).toLocaleString('pt-BR',{maximumFractionDigits:2}) : '—'}</td>
+                <td><span class="badge ${tx.node_type==='PROVER'?'badge-purple':'badge-cyan'}">${tx.node_type||'—'}</span></td>
+                <td style="color:var(--text2)">${tx.zk_proof_size || '—'}</td>
+                <td style="color:var(--text2);font-size:0.65rem">${fmtTs(tx.timestamp)}</td>
+            </tr>`).join('');
+    } catch(e) {
+        document.getElementById('dagBody').innerHTML =
+            `<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text2)">${e.message}</td></tr>`;
+    }
+}
+
+// ─────────────────────────────────────────────
+// AÇÕES ADMIN
+// ─────────────────────────────────────────────
+async function ativarGovernanca() {
+    if (!confirm('Ativar governança da rede?')) return;
+    try {
+        const r = await fetch(`${API}/api/genesis/activate_governance`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({}) }).then(r=>r.json());
+        toast(r.status || 'Governança ativada', 'ok');
+        carregarStatus();
+    } catch(e) { toast('Erro: ' + e.message, 'err'); }
+}
+
+async function injetarLiquidez() {
+    if (!confirm('Executar injeção de liquidez?')) return;
+    try {
+        const r = await fetch(`${API}/api/genesis/liquidity_injection`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({}) }).then(r=>r.json());
+        toast(r.status || 'Liquidez injetada', 'ok');
+        carregarStatus();
+    } catch(e) { toast('Erro: ' + e.message, 'err'); }
+}
+
+function copiarScript() {
+    const el = document.getElementById('installScript');
+    if (!el) return;
+    navigator.clipboard.writeText(el.textContent.trim())
+        .then(() => toast('Script copiado!', 'ok'))
+        .catch(() => toast('Erro ao copiar', 'err'));
+}
+
+async function confirmarBurn() {
+    const confirmTxt = prompt('Esta ação é IRREVERSÍVEL. Digite CONFIRMAR para queimar tokens não vendidos:');
+    if (confirmTxt !== 'CONFIRMAR') { toast('Cancelado', 'err'); return; }
+    try {
+        const r = await fetch(`${API}/api/genesis/burn`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({admin_key: _adminKey}) }).then(r=>r.json());
+        toast(r.status || 'Burn executado', r.erro ? 'err' : 'ok');
+        carregarStatus();
+    } catch(e) { toast('Erro: ' + e.message, 'err'); }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2012 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Logs de desenvolvimento, artigos técnicos e fundamentos do protocolo PLEGMA DAG desde 01/02/2026.">
+    <meta name="keywords" content="PLEGMA DAG, blockchain DAG, criptografia pós-quântica, Dilithium3, ZK-SNARK, PLG-G, governança descentralizada, mineração mobile">
+    <meta name="robots" content="index, follow">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://plegmadag.com/blog/">
+    <meta property="og:title" content="Blog — Linha do Tempo | PLEGMA DAG">
+    <meta property="og:description" content="Logs de desenvolvimento, artigos técnicos e fundamentos do protocolo PLEGMA DAG desde 01/02/2026.">
+    <meta property="og:image" content="https://plegmadag.com/assets/img/logo.gif">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://plegmadag.com/blog/">
+    <meta property="twitter:title" content="Blog — Linha do Tempo | PLEGMA DAG">
+    <meta property="twitter:image" content="https://plegmadag.com/assets/img/logo.gif">
+    <link rel="icon" type="image/svg+xml" href="/assets/img/favicon-blog.svg">
+    <title>PLEGMA DAG | Blog — Logs de Atualização</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    <script src="/auth.js"></script>
+    <style>
+        :root {
+            --bg: #000000;
+            --cyan: #00F2FF;
+            --glass: rgba(0,242,255,0.05);
+            --border: rgba(0,242,255,0.2);
+            --glow: 0 0 15px rgba(0,242,255,0.4);
+            --text-dim: #888;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--cyan);
+            font-family: 'Space Mono', monospace;
+            min-height: 100vh;
+        }
+
+        nav {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 40px; height: 60px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(0,0,0,0.85);
+            position: sticky; top: 0; z-index: 100;
+            backdrop-filter: blur(20px);
+        }
+
+        .nav-brand { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; letter-spacing: 2px; text-decoration: none; color: var(--cyan); display: flex; align-items: center; gap: 10px; }
+        .nav-links { display: flex; gap: 24px; align-items: center; }
+        .nav-link { font-size: 0.68rem; color: var(--text-dim); text-decoration: none; letter-spacing: 2px; text-transform: uppercase; transition: color 0.2s; padding: 6px 10px; border-radius: 3px; }
+        .nav-link:hover { color: var(--cyan); }
+        .nav-link.active { color: var(--cyan); }
+        .nav-btn { font-size: 0.68rem; background: rgba(0,242,255,0.08); color: var(--cyan); border: 1px solid rgba(0,242,255,0.3); padding: 6px 14px; border-radius: 3px; font-family: 'Space Mono', monospace; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; }
+        .nav-btn:hover { background: var(--cyan); color: #000; box-shadow: var(--glow); }
+
+        .hero {
+            text-align: center; padding: 60px 20px 40px;
+            border-bottom: 1px solid var(--border);
+        }
+        .hero h1 { font-size: 1.8rem; letter-spacing: 3px; text-shadow: var(--glow); }
+        .hero p { color: var(--text-dim); font-size: 0.8rem; margin-top: 10px; letter-spacing: 1px; }
+
+        .posts-container {
+            max-width: 780px; margin: 0 auto;
+            padding: 40px 20px 80px;
+        }
+
+        /* Separador de categorias */
+        .posts-category {
+            font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase;
+            color: var(--text-dim); border-bottom: 1px solid var(--border);
+            padding-bottom: 8px; margin-bottom: 20px; margin-top: 40px;
+        }
+        .posts-category:first-child { margin-top: 0; }
+
+        .post {
+            border: 1px solid var(--border);
+            background: var(--glass);
+            border-radius: 4px;
+            margin-bottom: 24px;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+        .post:hover { border-color: var(--cyan); }
+
+        .post-header {
+            padding: 18px 22px 14px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: flex-start;
+            justify-content: space-between; gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .post-title { font-size: 0.95rem; font-weight: 700; letter-spacing: 1px; }
+        .post-meta { display: flex; align-items: center; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
+        .post-date { font-size: 0.7rem; color: var(--text-dim); }
+        .post-tag {
+            font-size: 0.65rem; padding: 2px 8px;
+            border-radius: 3px; border: 1px solid;
+            white-space: nowrap;
+        }
+        .tag-core  { border-color: var(--cyan); color: var(--cyan); }
+        .tag-fix   { border-color: #23d18b; color: #23d18b; }
+        .tag-front { border-color: #a78bfa; color: #a78bfa; }
+        .tag-proto { border-color: #fbbf24; color: #fbbf24; }
+        .tag-sec   { border-color: #ef4444; color: #ef4444; }
+        .tag-infra { border-color: #f59e0b; color: #f59e0b; }
+        .tag-gen   { border-color: #f59e0b; color: #f59e0b; background: rgba(245,158,11,0.06); }
+        .tag-dag   { border-color: #23d18b; color: #23d18b; background: rgba(35,209,139,0.04); }
+        .tag-crypto { border-color: #a78bfa; color: #a78bfa; background: rgba(167,139,250,0.04); }
+        .tag-anuncio { border-color: #b45309; color: #d97706; background: rgba(180,83,9,0.10); }
+
+        .post-body { padding: 16px 22px; }
+        .post-body ul { list-style: none; padding: 0; }
+        .post-body ul li {
+            font-size: 0.82rem; color: #ccc;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            line-height: 1.5;
+        }
+        .post-body ul li:last-child { border-bottom: none; }
+        .post-body ul li::before { content: "›  "; color: var(--cyan); }
+
+        /* Post de artigo técnico — parágrafos em vez de lista */
+        .post-body p {
+            font-size: 0.82rem; color: #ccc;
+            padding: 6px 0;
+            line-height: 1.7;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .post-body p:last-child { border-bottom: none; }
+        .post-body .highlight { color: var(--cyan); }
+        .post-body .green { color: #23d18b; }
+        .post-body .amber { color: #f59e0b; }
+        .post-body .purple { color: #a78bfa; }
+
+        /* ─── Abas ─── */
+        .tab-bar {
+            display: flex; gap: 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 32px;
+        }
+        .tab-btn {
+            background: transparent;
+            color: var(--text-dim);
+            border: none; border-bottom: 2px solid transparent;
+            padding: 14px 22px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.72rem; letter-spacing: 2px;
+            text-transform: uppercase; cursor: pointer;
+            transition: 0.25s; margin-bottom: -1px;
+        }
+        .tab-btn:hover { color: var(--cyan); }
+        .tab-btn.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* ─── Pilar post (borda âmbar) ─── */
+        .post.pilar { border-color: rgba(245,158,11,0.35); }
+        .post.pilar:hover { border-color: #f59e0b; box-shadow: 0 0 12px rgba(245,158,11,0.15); }
+        .tag-pilar { border-color: #f59e0b; color: #f59e0b; background: rgba(245,158,11,0.06); }
+
+        .post-section {
+            font-size: 0.6rem; color: var(--text-dim);
+            letter-spacing: 3px; text-transform: uppercase;
+            padding: 10px 22px 4px;
+        }
+
+        footer {
+            text-align: center; padding: 30px;
+            border-top: 1px solid var(--border);
+            color: var(--text-dim); font-size: 0.7rem;
+            letter-spacing: 3px; text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            nav { padding: 0 16px; height: 56px; }
+            .nav-links { gap: 8px; }
+            .btn-nav { font-size: 0.7rem; padding: 6px 10px; }
+            .hero h1 { font-size: 1.3rem; }
+            .post-header { flex-direction: column; gap: 8px; }
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 50px 20px 40px !important; }
+            .main, .content, .page-wrap, .posts-container { padding: 30px 20px !important; max-width: 100% !important; }
+            h1 { font-size: clamp(1.6rem, 7vw, 2.4rem) !important; }
+            .grid-2, .grid-3, .cards-grid, .benefits-grid { grid-template-columns: 1fr !important; }
+            table { font-size: 0.7rem; }
+            table th, table td { padding: 8px 6px; }
+        }
+
+        /* ═══ HAMBURGER MENU MOBILE ═══ */
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; background: none; border: none; z-index: 200; }
+        .hamburger span { display: block; width: 22px; height: 2px; background: var(--cyan); border-radius: 2px; transition: all 0.3s; }
+        .nav-open .hamburger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .nav-open .hamburger span:nth-child(2) { opacity: 0; }
+        .nav-open .hamburger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        @media (max-width: 768px) {
+            nav { padding: 0 20px; }
+            .hamburger { display: flex; }
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 60px; right: 0; left: 0;
+                background: rgba(0,0,0,0.97);
+                border-bottom: 1px solid var(--border);
+                flex-direction: column;
+                padding: 20px;
+                gap: 4px;
+                z-index: 150;
+                backdrop-filter: blur(20px);
+            }
+            .nav-open .nav-links { display: flex; }
+            .nav-link { font-size: 0.75rem; padding: 12px 16px; border-radius: 4px; width: 100%; text-align: left; }
+            .nav-link:hover { background: rgba(0,242,255,0.08); }
+            .nav-btn { width: 100%; text-align: center; padding: 12px 16px; margin-top: 8px; }
+            .posts-container { padding: 20px 16px; }
+            .tab-bar { gap: 4px; }
+            .tab-btn { font-size: 0.6rem; padding: 8px 12px; }
+            .post { padding: 20px 16px; }
+        }
+
+        /* ═══ SOCIAL LINKS ═══ */
+        .social-links { display: flex; gap: 14px; justify-content: center; align-items: center; margin: 18px 0 14px; }
+        .social-links a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid rgba(0,242,255,0.18); border-radius: 6px; background: rgba(0,242,255,0.05); color: rgba(255,255,255,0.4); transition: all 0.2s; }
+        .social-links a:hover { color: #00f2ff; border-color: rgba(0,242,255,0.55); background: rgba(0,242,255,0.12); box-shadow: 0 0 14px rgba(0,242,255,0.22); }
+        .social-links a svg { display: block; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="/" class="nav-brand" style="display:flex;align-items:center;gap:10px">
+        <img src="/assets/img/logo.gif" alt="PLEGMA" style="height:36px;filter:drop-shadow(0 0 6px rgba(0,242,255,0.5))">
+        <span>PLEGMA DAG</span>
+    </a>
+    <button class="hamburger" onclick="this.closest('nav').classList.toggle('nav-open')" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links">
+        <a href="/financas" class="nav-link">FINANÇAS</a>
+        <a href="/fundacao" class="nav-link">FUNDAÇÃO</a>
+        <a href="/social" class="nav-link">REDE</a>
+        <a href="/blog" class="nav-link active">BLOG</a>
+        <a href="/labs" class="nav-link">LABS</a>
+        <a href="/genesis" class="nav-link">GENESIS</a>
+        <a href="/servicos" class="nav-link">SERVIÇOS</a>
+        <a href="/podcast" class="nav-link">PODCAST</a>
+        <button class="nav-btn" data-plg-wallet-btn
+            onclick="PlegmaAuth.isConnected() ? window.location.href='/dashboard/?plg='+PlegmaAuth.getSession().plg_address : PlegmaAuth.openModal()">
+            DASHBOARD
+        </button>
+    </div>
+</nav>
+
+<div class="hero">
+    <h1>[ BLOG DA REDE PLEGMA ]</h1>
+    <p>Artigos técnicos, anúncios e logs de desenvolvimento da Rede PLEGMA</p>
+</div>
+
+<div class="posts-container">
+
+    <!-- ═══ ABAS ═══ -->
+    <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('pilares', this)">[ Pilares do Protocolo ]</button>
+        <button class="tab-btn" onclick="switchTab('timeline', this)">[ Linha do Tempo ]</button>
+        <button class="tab-btn" onclick="switchTab('testes', this)">[ Testes Automáticos ]</button>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         ABA: PILARES DO PROTOCOLO
+         Documentos fundadores — sempre atualizados
+    ══════════════════════════════════════ -->
+    <div class="tab-content active" id="tab-pilares">
+
+        <div class="posts-category">Documentos Fundadores · Sempre Atualizados</div>
+
+        <!-- PILAR 1 — Genesis Reserve -->
+        <article class="post pilar">
+            <div class="post-header">
+                <span class="post-title">Genesis Reserve: distribuição, destino dos fundos e governança</span>
+                <div class="post-meta">
+                    <span class="post-date">22 MAR 2026 · 09:00</span>
+                    <span class="post-tag tag-pilar">PILAR</span>
+                    <span class="post-tag tag-gen">GENESIS</span>
+                    <span class="post-tag tag-core">CORE</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">O que é a Reserva Genesis</div>
+                <p>A Reserva Genesis é o único mecanismo de pré-distribuição da Rede PLEGMA. Não existe ICO, não existe pré-mineração, não existe fundador segurando fatias silenciosas. Existe exatamente <span class="highlight">10.500.000 PLG-G</span> disponíveis — 0,05% do supply total de 21 bilhões de $PLG — vendidos a preço fixo de <span class="highlight">$0,10 USDC</span> por unidade, sem negociação, sem desconto para "investidores estratégicos", sem janela VIP.</p>
+
+                <div class="post-section">Como funciona o PLG-G e a Hierarquia de Governança</div>
+                <p>PLG-G não é $PLG. É um token de governança fundador emitido uma única vez. Ele garante três direitos permanentes:</p>
+                <ul>
+                    <li><span class="green">Direito de voto com peso proporcional ao saldo</span> — Nós validadores comuns possuem peso <span class="highlight">1,0</span>. Sócios Genesis possuem peso entre <span class="highlight">1,01 e 5,0</span>: mínimo de $100 · 1.000 PLG-G (peso 1,01) até $1.000+ · 10.000 PLG-G (peso 5,0). O peso máximo é 5,0; acima disso o saldo acumula mais tokens para negociação P2P futura.</li>
+                    <li><span class="amber">Limites e Boost de mineração</span> por categoria: Apoiador <span class="highlight">1,0×</span> ($100–$300 · 1.000–3.000 PLG-G | até 3 mineradores), Sentinela <span class="highlight">1,5×</span> ($301–$600 · 3.001–6.000 PLG-G | até 6 mineradores), Master <span class="highlight">2,0×</span> ($601–$1.000 · 6.001–10.000 PLG-G | até 10 mineradores).</li>
+                    <li>Título permanente de <span class="purple">Sócio Genesis</span> — intransferível, não reemitível em nenhuma edição futura.</li>
+                </ul>
+
+                <div class="post-section">Mecanismo de pagamento e monitoramento</div>
+                <p>O pagamento é feito em <span class="highlight">USDC nativo na rede Polygon</span> para a carteira <span class="highlight">0xD8422d6936bE77179DC33C7C2ffceEF4c34FB183</span>. O módulo <code style="color:#ccc">monitor_pagamentos.py</code> monitora a carteira em tempo real via Polygon API, confirma recebimentos e dispara o registro da intenção de compra no <code style="color:#ccc">genesis_contract.py</code>. A API expõe <code style="color:#ccc">GET /api/genesis/status</code> (supply, vendido, dias restantes) e <code style="color:#ccc">POST /api/genesis/registrar</code> (registra intenção com REF único).</p>
+
+                <div class="post-section">Destinação da Venda Genesis</div>
+                <p>A alocação do USDC arrecadado na fase Genesis obedece a uma divisão matemática estrita, programada no protocolo. O processo é automatizado ao encerrar o período Genesis no Dia 30:</p>
+                <ul>
+                    <li><span class="green">90% → Pool de Liquidez:</span> Destinado à pool inicial $PLG/USDC, garantindo robustez de liquidez desde o primeiro segundo de operação da rede no mercado aberto.</li>
+                    <li><span class="amber">10% → Aerarium:</span> Destinado ao fundo de desenvolvimento contínuo e custeio de infraestrutura focada na implementação técnica dos Nós Âncoras Continentais.</li>
+                </ul>
+
+                <div class="post-section">Distribuição das Taxas de Rede (Seção 6)</div>
+                <p>Para o tráfego regular e a sustentabilidade operacional a longo prazo, as taxas coletadas no DAG são divididas em tempo real:</p>
+                <ul>
+                    <li><span class="highlight">Padrão:</span> 10% Aerarium / 40% Provers / 50% Validadores.</li>
+                    <li><span class="green">Regra de Transbordo:</span> Após o Aerarium atingir um teto programado de acúmulo de $1.000, as taxas se reconfiguram automaticamente para 0% Aerarium / 40% Provers / 60% Validadores. O excedente bonifica integralmente a base de suporte.</li>
+                </ul>
+
+                <div class="post-section">Timeline: Dia 30 e Dia 31</div>
+                <p>A carteira Genesis permanece ativa por <span class="highlight">exatamente 30 dias</span> após a data de lançamento oficial. No <span class="amber">Dia 31</span> ocorrem três eventos simultâneos e automáticos: <span class="green">(1)</span> o lockup dos PLG-G adquiridos pelos Sócios é liberado — os tokens ficam disponíveis para movimentação; <span class="green">(2)</span> o lockup das recompensas mineradas no período inicial também é liberado para todos os mineradores; <span class="green">(3)</span> a carteira Genesis é encerrada definitivamente — nenhuma nova compra é aceita. Qualquer USDC enviado após o encerramento é devolvido automaticamente ao remetente pelo contrato.</p>
+
+                <div class="post-section">Lockup e queima</div>
+                <p>Durante os 30 dias de lockup, nenhuma carteira consegue movimentar PLG-G — o contrato rejeita transferências fora do prazo. Após o Dia 30, <span class="amber">todo PLG-G não vendido é queimado automaticamente</span>: removido do supply e registrado como <code style="color:#ccc">queimado</code> no estado do contrato genesis. Não há reedição, não há reaproveitamento. O evento de queima é público, verificável e definitivo.</p>
+
+                <div class="post-section">Negociação do PLG-G — Regras e Canais</div>
+                <p>PLG-G <span class="amber">não pode ser vendido em pools de liquidez ou exchanges</span>. O contrato rejeita qualquer operação de venda via protocolo AMM. A negociação é exclusivamente <span class="highlight">P2P (peer-to-peer)</span>, com três canais disponíveis:</p>
+                <ul>
+                    <li><span class="green">Mercado de Sócios</span> — página exclusiva na plataforma PLEGMA onde cada Sócio pode listar seus PLG-G pelo preço que desejar, sem intermediário e sem taxa de protocolo.</li>
+                    <li><span class="purple">Rede PLEGMA Social</span> — publicação de oferta diretamente na rede social nativa, visível para toda a comunidade conectada.</li>
+                    <li><span class="highlight">Canal externo</span> — o Sócio pode negociar fora da plataforma por qualquer meio que preferir, sem restrições. A transferência on-chain continua sendo de carteira para carteira.</li>
+                </ul>
+
+                <div class="post-section">Por que $0,10 fixo</div>
+                <p>O preço fixo elimina assimetria de informação. Quem entrou primeiro não pagou menos que quem chegou no último dia. Isso é parte da filosofia de <span class="highlight">Justiça Absoluta</span> que permeia o protocolo: regras iguais, condições iguais, sem preferência. O preço reflete o custo de construção do Genesis Node e o valor de governança mínimo estimado para o protocolo na fase de lançamento.</p>
+            </div>
+        </article>
+
+        <!-- PILAR 2 — DAG vs Blockchain -->
+        <article class="post pilar">
+            <div class="post-header">
+                <span class="post-title">DAG vs Blockchain: por que a PLEGMA abandonou os blocos</span>
+                <div class="post-meta">
+                    <span class="post-date">15 FEV 2026 · 10:00</span>
+                    <span class="post-tag tag-pilar">PILAR</span>
+                    <span class="post-tag tag-dag">DAG</span>
+                    <span class="post-tag tag-core">CORE</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">O problema dos blocos</div>
+                <p>Em uma blockchain convencional como Bitcoin ou Ethereum, transações são agrupadas em blocos, e os blocos formam uma cadeia linear. Isso cria um gargalo fundamental: <span class="amber">apenas um bloco pode ser produzido por vez</span>. Enquanto o bloco atual está sendo minerado, todas as outras transações esperam na mempool. A escalabilidade tem teto físico — mais usuários significa mais espera, não mais velocidade.</p>
+                <div class="post-section">O que é um DAG</div>
+                <p>DAG significa <span class="highlight">Directed Acyclic Graph</span> — Grafo Acíclico Dirigido. Em vez de blocos em fila, cada transação na PLEGMA é um vértice que aponta diretamente para transações anteriores como referência de validação. Não existe cadeia linear. Não existe mineração serializada. <span class="green">Múltiplas transações podem ser validadas em paralelo</span>, desde que cada vértice novo confirme pelo menos dois vértices anteriores não confirmados.</p>
+                <div class="post-section">A fórmula R=G/N</div>
+                <p>A recompensa de mineração na PLEGMA segue <span class="highlight">R = G / N</span>, onde G é a recompensa global do pool Aerarium e N é o número de nós ativos. Isso significa que a recompensa individual <span class="amber">cai conforme mais nós entram na rede</span> — incentivando entrada cedo e penalizando concentração. É um mecanismo deflacionário autorregulatório: quanto maior a rede, menor a recompensa individual, mas maior o valor coletivo.</p>
+                <div class="post-section">Validação paralela na prática</div>
+                <p>No código <code style="color:#ccc">core_dag.py</code>, quando um nó chama <code style="color:#ccc">add_transaction()</code>, o sistema seleciona automaticamente vértices "tips" (folhas do grafo sem confirmação suficiente) e os referencia como parents. Isso distribui o trabalho de confirmação entre toda a rede. Cada vértice adicionado não apenas registra sua própria transação — ele também <span class="green">avança a confirmação de transações anteriores</span>, sem custo adicional.</p>
+                <div class="post-section">Comparação direta</div>
+                <p><span class="highlight">Bitcoin:</span> 7 tx/s, ~10min por bloco, 1 minerador vence, resto desperdiça energia. <span class="highlight">Ethereum PoS:</span> ~15 tx/s, validadores precisam de 32 ETH. <span class="highlight">PLEGMA DAG:</span> throughput cresce com o número de nós, cada smartphone pode ser validador, sem custo de entrada em $PLG, sem concentração de poder de validação por capital.</p>
+            </div>
+        </article>
+
+        <!-- PILAR 3 — Crystals-Dilithium3 -->
+        <article class="post pilar">
+            <div class="post-header">
+                <span class="post-title">Crystals-Dilithium3: a assinatura que resiste ao computador quântico</span>
+                <div class="post-meta">
+                    <span class="post-date">22 FEV 2026 · 15:00</span>
+                    <span class="post-tag tag-pilar">PILAR</span>
+                    <span class="post-tag tag-crypto">CRIPTOGRAFIA</span>
+                    <span class="post-tag tag-sec">SEGURANÇA</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Por que RSA e ECDSA estão com os dias contados</div>
+                <p>A segurança de RSA e ECDSA — os algoritmos que protegem Bitcoin, Ethereum e praticamente toda a internet — baseia-se na dificuldade de <span class="amber">fatorar números primos grandes</span> (RSA) ou calcular logaritmos discretos em curvas elípticas (ECDSA). Computadores clássicos levariam bilhões de anos para quebrar uma chave de 256 bits. Computadores quânticos com o <span class="amber">algoritmo de Shor</span> fariam isso em minutos — com hardware suficiente.</p>
+                <div class="post-section">O que é criptografia baseada em reticulados</div>
+                <p>Crystals-Dilithium3 é um esquema de assinatura digital baseado em <span class="highlight">problemas sobre reticulados (lattice-based cryptography)</span>. Um reticulado é uma grade de pontos no espaço n-dimensional. O problema de encontrar o vetor mais curto em um reticulado de alta dimensão (<span class="highlight">SVP — Shortest Vector Problem</span>) é considerado difícil tanto para computadores clássicos quanto para computadores quânticos. Não existe algoritmo quântico eficiente conhecido para SVP.</p>
+                <div class="post-section">NIST FIPS 204 — o padrão oficial</div>
+                <p>Em agosto de 2024, o NIST (National Institute of Standards and Technology) publicou o <span class="highlight">FIPS 204</span>, padronizando o Crystals-Dilithium como o algoritmo de assinatura digital pós-quântica para uso federal nos EUA. Esse é o mesmo processo que padronizou AES e SHA-256 décadas atrás. A PLEGMA adotou Dilithium3 desde o BUILD 001 — <span class="green">antes da maioria dos projetos de blockchain sequer discutir o tema</span>.</p>
+                <div class="post-section">Dilithium3 na prática na PLEGMA</div>
+                <p>No módulo <code style="color:#ccc">lattice_shield.py</code>, cada carteira PLG tem um par de chaves Dilithium3. A chave privada <span class="amber">nunca sai do dispositivo</span> — o protocolo de autenticação usa Challenge/Response onde o servidor envia um nonce via BLAKE3, o app assina com Dilithium3, e o servidor verifica a assinatura sem jamais ver a chave privada. Cada transação no DAG carrega a assinatura Dilithium3 do remetente, verificável por qualquer nó da rede.</p>
+                <div class="post-section">Tamanho das chaves vs desempenho</div>
+                <p>Dilithium3 gera chaves maiores que ECDSA: <span class="highlight">chave pública ~1.952 bytes, assinatura ~3.293 bytes</span> vs ~64 bytes do ECDSA. O custo é compensado pelo ganho em segurança pós-quântica. Na PLEGMA, o módulo ZK-Press (<code style="color:#ccc">zk_press.py</code>) aplica compressão ZK-SNARK de ~22KB nas provas antes da propagação, mantendo o overhead no DAG aceitável para dispositivos móveis.</p>
+            </div>
+        </article>
+
+    </div><!-- /tab-pilares -->
+
+    <!-- ══════════════════════════════════════
+         ABA: LINHA DO TEMPO
+    ══════════════════════════════════════ -->
+    <div class="tab-content" id="tab-timeline">
+
+        <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
+        <div class="posts-category">Logs de Desenvolvimento</div>
+
+        <!-- APP — SHIELD + PROVERS — 02 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">02 ABR 2026 — App: Shield AUTENTICAR sempre acessível · Provers alinhado ao Dashboard · Dashboard REDE com dados reais · Mercado P2P de PLG-G</span>
+                <div class="post-meta">
+                    <span class="post-date">02 ABR 2026 · App</span>
+                    <span class="post-tag" style="border-color:rgba(0,242,255,0.4);color:#00F2FF;background:rgba(0,242,255,0.06);">APP</span>
+                    <span class="post-tag" style="border-color:rgba(239,68,68,0.4);color:#ef4444;background:rgba(239,68,68,0.06);">SHIELD</span>
+                    <span class="post-tag tag-front">UI/UX</span>
+                    <span class="post-tag" style="border-color:rgba(251,191,36,0.4);color:#fbbf24;background:rgba(251,191,36,0.06);">WALLET</span>
+                </div>
+            </div>
+            <div class="post-body">
+
+                <div class="post-section">Shield — AUTENTICAR sempre acessível, sem muro de compra</div>
+                <p>A aba <strong>SHIELD</strong> passou por uma correção de UX fundamental: anteriormente, ao abrir com o plano inativo, o app exibia imediatamente o fluxo de compra — bloqueando todo o acesso. Isso era um erro de design, pois a funcionalidade de <strong>autenticação Dilithium3</strong> (login no dashboard) não depende do plano de proteção pago.</p>
+                <p>A nova lógica separa claramente o que é gratuito do que é pago:</p>
+                <ul>
+                    <li><strong>Aba AUTENTICAR</strong> — sempre visível. Os três cards (Algoritmo Crystals-Dilithium3, Endereço PLG, Autenticar no Dashboard) funcionam independentemente do plano.</li>
+                    <li><strong>Fluxo de ativação</strong> — exibido abaixo dos cards de autenticação quando o plano está inativo, como uma oferta contextual, não como um bloqueio.</li>
+                    <li><strong>Abas SCANNER e PERMISSÕES</strong> — permanecem bloqueadas até o plano ser ativado (são proteções pagas). Exibem tela de bloqueio com instrução clara.</li>
+                    <li><strong>Proteções Ativas</strong> — card exibido apenas quando o plano está ativo. A linha "Vínculo IMEI + Chave" foi removida (funcionalidade não implementada).</li>
+                </ul>
+                <p>O badge ATIVO/INATIVO na AppBar e o botão DESATIVAR são dinâmicos — o botão aparece apenas quando o plano está ativo.</p>
+
+                <div class="post-section">SENTINELA — aba PROVERS alinhada ao painel web</div>
+                <p>A aba <strong>PROVERS</strong> dentro do SENTINELA foi reformulada para refletir exatamente os mesmos elementos do painel PROVERS do Dashboard web:</p>
+                <ul>
+                    <li><strong>3 cards de resumo</strong> no topo (antes eram 2): "Dispositivos Vinculados" mostra agora duas linhas separadas — <span class="highlight">PROVERS</span> (cyan, total de hardware via API) e <span class="highlight">VAL</span> (purple, validadores vinculados) — com divisor visual entre eles. "Ganhos Totais" com subtítulo "Todos os dispositivos ativos". "Justiça Computacional" com o texto do protocolo: potência de hardware não confere prioridade.</li>
+                    <li><strong>Último ping</strong> — cada card de dispositivo na lista exibe agora o campo <code>ultimoPing</code>, equivalente ao campo UPTIME da tabela do dashboard web.</li>
+                    <li><strong>Textos dos passos</strong> — alinhados ao web dashboard: passo 2 agora diz "O minerador detecta o hardware e classifica como Validator ou Prover".</li>
+                    <li><strong>Rodapé</strong> — "Trabalho equitativo · cada dispositivo contribui de forma igual" adicionado acima da Cláusula 14ª.</li>
+                    <li><strong>Formatação numérica</strong> — uso de <code>fmtPlg()</code> do <code>plegma_card.dart</code> (4 casas decimais) substituindo a função local privada de 2 casas, tornando consistente com o restante do app.</li>
+                </ul>
+
+                <div class="post-section">Aba REDE — dados reais da infraestrutura</div>
+                <p>A aba <strong>REDE</strong> do app passou a exibir exclusivamente dados reais da infraestrutura, sem nenhuma simulação:</p>
+                <ul>
+                    <li>Card <strong>"Status da Rede"</strong>: Âncoras, Mineradores e Validadores — valores lidos diretamente de <code>GET /api/status</code>.</li>
+                    <li>Card <strong>"Dispositivos"</strong>: Provers e Val vinculados à carteira — valores de <code>GET /wallet/provers?address=</code> (porta 8083).</li>
+                </ul>
+
+                <div class="post-section">Mercado P2P de PLG-G — o vendedor define o preço</div>
+                <p>O <strong>PLG-G</strong> (token de governança Genesis) ganhou seu fluxo de transação nativa entre Sócios. O processo é simples: o vendedor informa o endereço do comprador, a quantidade e define o preço em USDC por unidade. O app calcula o total em tempo real e envia a oferta assinada com Dilithium3.</p>
+                <p>Do lado do comprador, a carteira detecta automaticamente ofertas recebidas (polling a cada 5 segundos). Um card <strong>"OFERTA P2P RECEBIDA"</strong> aparece na aba Saldo com todos os detalhes — valor, preço unitário, total USDC — e dois botões: <strong>REJEITAR</strong> ou <strong>ACEITAR E PAGAR</strong>. A compra só é confirmada se o comprador tiver USDC suficiente; a operação é assinada e registrada na DAG de forma irreversível.</p>
+                <p><em>Filosofia:</em> o preço do PLG-G é determinado exclusivamente pelo Sócio vendedor. Não há oráculo, não há market maker automático. É o mercado mais puro: dois Sócios, um acordo, uma assinatura Dilithium3.</p>
+            </div>
+        </article>
+
+        <!-- APP v1.8.1 — 02 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">02 ABR 2026 — App v1.8.1: Navegação reestruturada, SENTINELA, Shield com assinatura e boot automático</span>
+                <div class="post-meta">
+                    <span class="post-date">02 ABR 2026 · App</span>
+                    <span class="post-tag" style="border-color:rgba(0,242,255,0.4);color:#00F2FF;background:rgba(0,242,255,0.06);">APP</span>
+                    <span class="post-tag" style="border-color:rgba(239,68,68,0.4);color:#ef4444;background:rgba(239,68,68,0.06);">SHIELD</span>
+                    <span class="post-tag tag-front">UI/UX</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Navegação — de 7 para 5 abas</div>
+                <p>A barra de navegação do app foi simplificada de 7 para <strong>5 abas</strong>: <span class="highlight">REDE · WALLET · SENTINELA · SHIELD · GOVERN.</span> O objetivo é reduzir a carga cognitiva e agrupar funcionalidades relacionadas de forma natural.</p>
+
+                <div class="post-section">SENTINELA — Validador + Provers unificados</div>
+                <p>As antigas abas <strong>VALIDADOR</strong> e <strong>PROVERS</strong> foram fundidas em um único ícone <strong>SENTINELA</strong> (ícone de segurança). Internamente, a tela usa um <code>TabController</code> com duas abas: <em>VALIDADOR</em> (mineração, hashrate, uptime, status DAG, boost PLG-G) e <em>PROVERS</em> (vínculo de hardware via QR, lista de máquinas, ganhos por pool). O FAB de scanner QR e o botão na AppBar aparecem apenas quando a aba PROVERS está ativa.</p>
+
+                <div class="post-section">NEGOCIAR dentro da Wallet</div>
+                <p>A aba <strong>NEGOCIAR</strong> deixou de ser uma entrada independente na nav e passou a ser a <strong>4ª aba da Wallet</strong> (SALDO · VESTING · EXTRATO · NEGOCIAR). A lógica é direta: negociar $PLG é uma operação financeira e pertence ao contexto da carteira. O componente <code>NegociarBody</code> foi extraído como widget embeddable sem Scaffold, preservando o estado via <code>AutomaticKeepAliveClientMixin</code>.</p>
+
+                <div class="post-section">Lattice Shield — gatekeeper com fluxo de assinatura</div>
+                <p>A tela Shield agora funciona como um <strong>gatekeeper</strong>: ao abrir, verifica se o usuário tem o serviço ativo (localmente e no backend). Se <strong>inativo</strong>, exibe o painel de ativação completo — hero com preço ($12/ano, trial Genesis gratuito), 6 cards de proteção, tabela de funcionalidades, modelo de cobrança e <strong>termo de contratação com scroll + checkbox obrigatório</strong>. O botão ATIVAR PROTEÇÃO só é habilitado após aceite.</p>
+                <p>Ao ativar: o app chama <code>POST /shield/subscribe</code> no backend, cria o <strong>snapshot ZK do dispositivo</strong> (SHA3-256 dos apps instalados ancorado na rede via ZkPressEngine) e libera as 3 abas funcionais — AUTENTICAR, SCANNER e PERMISSÕES. O fluxo espelha exatamente o painel Shield Usuário do Dashboard web.</p>
+                <p>Backend: novos endpoints no <code>shield_server.py</code> — <code>POST /shield/subscribe</code>, <code>POST /shield/unsubscribe</code>, <code>GET /shield/subscription/&lt;address&gt;</code> — com assinaturas persistidas em <code>shield_subscriptions.json</code>.</p>
+
+                <div class="post-section">Boot automático — fim da configuração manual</div>
+                <p>A etapa de configuração de servidor foi removida do onboarding. O app agora conecta <strong>automaticamente</strong> ao servidor padrão da rede logo após gerar a carteira. Para desenvolvedores ou usuários em ambiente local (Tailscale), o override de IP está disponível no <strong>Drawer → item "Servidor"</strong> — discreto, sem poluir o fluxo do usuário final.</p>
+            </div>
+        </article>
+
+        <!-- LATTICE SHIELD DASHBOARD + SHIELD USUÁRIO — 02 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">02 ABR 2026 — Dashboard: Lattice Shield redesenhado + Painel Shield Usuário com sistema de estados reativos</span>
+                <div class="post-meta">
+                    <span class="post-date">02 ABR 2026 · Dashboard</span>
+                    <span class="post-tag" style="border-color:rgba(239,68,68,0.4);color:#ef4444;background:rgba(239,68,68,0.06);">SHIELD</span>
+                    <span class="post-tag tag-core">UI/UX</span>
+                    <span class="post-tag" style="border-color:rgba(0,242,255,0.4);color:#00F2FF;background:rgba(0,242,255,0.06);">DASHBOARD</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <p>A aba <strong>Lattice Shield</strong> do Dashboard foi completamente redesenhada. O card de Telemetria de Rede foi substituído por dois novos cards empilhados na coluna direita: <strong>Módulo Shield Global - REDE</strong> (escudo ciano animado, proteções da rede sempre ativas) e <strong>Módulo Shield - USUARIO</strong> (estado reativo ao serviço contratado). O card "Proteções Ativas" foi renomeado para <strong>Proteções Nativas Ativas</strong> e atualizado para exibir exclusivamente as proteções da rede: Crystals-Dilithium3, BLAKE3, ZK-SNARKs, Anti-Sybil, Geofencing Ético e Protocolo de Slashing — separando claramente o que é proteção da rede do que é proteção do usuário.</p>
+                <p>O novo <strong>Painel Shield Usuário</strong> é uma página completa de contratação de serviço, construída a partir das informações da página <code>/serviços</code>. Inclui: hero com preço ($12/ano por dispositivo, trial Genesis 30 dias), seis cards explicando o que o Lattice Shield protege, grid de funcionalidades com status atual e V2+, modelo de cobrança (pagamento via recompensas de mineração do Aerarium), instrução de instalação para PC — <strong>apenas Validador + Agente Sentinela com Shield embutido</strong>, pois o Minerador tem regras de acesso próprias.</p>
+                <p>O ponto central do painel é o <strong>fluxo de contratação</strong>: um termo de serviço completo em scroll (7 cláusulas cobrindo natureza, pagamento, trial Genesis, instalação, cancelamento, responsabilidade e propriedade intelectual) com checkbox de aceite obrigatório. O botão <strong>ATIVAR PROTEÇÃO</strong> só é habilitado após aceite.</p>
+                <p>Após clicar ATIVAR, o sistema entra no estado <strong>PENDENTE</strong> — laranja, aguardando a instalação do Pack. Uma vez instalado, o agente detecta automaticamente o endereço PLG da carteira autenticada e ativa a proteção — o estado muda para <strong>ATIVO</strong> — verde animado, com stats do agente e botão DESATIVAR. Desativar retorna ao estado <strong>INATIVO</strong> — vermelho estático com botão ATIVAR PROTEÇÃO.</p>
+                <p>Todos os elementos visuais do painel e da sidebar são <strong>reativos ao estado</strong>: ícone e texto da nav, título do painel, hero (borda, gradiente, SVG do escudo), label de protocolo, seis ícones dos cards de proteção e checkbox — além do card na aba Lattice Shield (escudo SVG com gradiente, EKG, halo e botão de ação). No estado ativo, o EKG usa a mesma animação <code>moveEKG</code> do card da rede; nos demais estados fica estático.</p>
+            </div>
+        </article>
+
+        <!-- MAINNET FASE ZERO + APP v1.8.0 — 01 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">01 ABR 2026 — Mainnet Fase Zero (Shadow Mainnet) + App v1.8.0: Aba NEGOCIAR e Dados Reais</span>
+                <div class="post-meta">
+                    <span class="post-date">01 ABR 2026 · Protocolo</span>
+                    <span class="post-tag" style="border-color:rgba(167,139,250,0.4);color:#a78bfa;background:rgba(167,139,250,0.06);">FASE ZERO</span>
+                    <span class="post-tag tag-core">CORE</span>
+                    <span class="post-tag" style="border-color:rgba(0,242,255,0.4);color:#00F2FF;background:rgba(0,242,255,0.06);">APP</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <p>A rede PLEGMA DAG entra em <strong>Mainnet Fase Zero — Shadow Mainnet (TEST MAINNET)</strong> em <strong>09 ABR 2026 · 18:00 Madrid (CEST)</strong>. Nós podem conectar, sincronizar topologia e enviar heartbeats. Transações de valor permanecem bloqueadas (503) até o lançamento real em <strong>09 MAI 2026 · 18:00 Madrid (CEST)</strong>, quando o watchdog automático ativa o estado GENESIS_ATIVO e a Genesis Reserve abre.</p>
+                <p>O módulo <code>network_phase.py</code> implementa a máquina de estados: <strong>FASE_ZERO → GENESIS_ATIVO → MAINNET_PLENA</strong>. O protocolo de heartbeat aceita qualquer nó (TTL 5 min) e computa um hash de conectividade BLAKE3 determinístico em buckets de 5 segundos — base para o Consensus de Conectividade entre peers. Novos endpoints: <code>GET /api/rede/fase</code>, <code>GET /api/node/map</code>, <code>POST /api/node/heartbeat</code>.</p>
+                <p>O <strong>App v1.8.0</strong> inclui três melhorias principais:</p>
+                <ul>
+                    <li><strong>Aba NEGOCIAR</strong> — interface completa do Aerarium Swap Pool com abas COMPRAR/VENDER, cotação ao vivo (P=L÷S), barra de status da pool e instrução de pagamento copiável.</li>
+                    <li><strong>Dados reais no lançamento</strong> — o app sondeia <code>GET /api/rede/fase</code> a cada 30 segundos. Ao detectar GENESIS_ATIVO, substitui o preço simulado do PLG pelo preço real retornado por <code>GET /pool/cotacao</code>. Banner no dashboard muda de âmbar para verde.</li>
+                    <li><strong>Fix auth Shield</strong> — <code>if (!mounted) return;</code> adicionado após todos os <code>await</code> nos fluxos de autenticação Dilithium3, prevenindo <em>setState after dispose</em> ao fechar a tela durante verificação em andamento.</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- AERARIUM SWAP POOL — 01 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">01 ABR 2026 — Aerarium Swap Pool PLG/USDC: Precificação por Solvência Matemática</span>
+                <div class="post-meta">
+                    <span class="post-date">01 ABR 2026 · Economia</span>
+                    <span class="post-tag" style="border-color:rgba(0,242,255,0.4);color:#00F2FF;background:rgba(0,242,255,0.06);">AERARIUM</span>
+                    <span class="post-tag tag-core">CORE</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Módulo aerarium_swap.py + Pool PLG/USDC</div>
+                <ul>
+                    <li>Novo módulo <code>aerarium_swap.py</code>: pool de liquidez PLG/USDC nativo com fluxo de compra automático via monitor Polygon e venda com processamento manual (Fase 1).</li>
+                    <li>Carteira da pool Aerarium (Polygon, auditável publicamente): <span class="highlight">0xD8422d6936bE77179DC33C7C2ffceEF4c34FB183</span> — <a href="https://polygonscan.com/address/0xD8422d6936bE77179DC33C7C2ffceEF4c34FB183" target="_blank" rel="noopener" style="color:rgba(0,242,255,0.7);font-size:0.85em;">↗ PolygonScan</a></li>
+                    <li>Novos endpoints em <code>wallet_server.py</code>: <code>/pool/cotacao</code>, <code>/pool/comprar</code>, <code>/pool/vender</code>, <code>/pool/status</code>, <code>/pool/configurar</code>.</li>
+                    <li>Painel "NEGOCIAR" adicionado ao Dashboard web com UX completo (compra com instrução Polygon, venda com endereço destino).</li>
+                    <li>Tabela <code>swap_orders</code> adicionada ao schema SQLite via <code>plegma_db.py</code>.</li>
+                </ul>
+                <div class="post-section">Fórmula de Solvência — P = L ÷ S</div>
+                <p>O preço inicial do $PLG é calculado automaticamente no encerramento da Genesis (Dia 30) pela função <code>calcular_e_setar_preco_genesis()</code>. A fórmula é:</p>
+                <p style="text-align:center;font-family:'Space Mono',monospace;font-size:0.9rem;color:var(--cyan);padding:10px 0;"><strong>P = L / S</strong></p>
+                <p>Onde <strong>L</strong> é o USDC depositado na pool (90% do arrecadado na Genesis) e <strong>S</strong> é o total de $PLG emitido na rede no Dia 1 (mineirado pelos nós durante a Genesis).</p>
+                <p>A elegância matemática: se 100% dos holders tentarem vender ao preço P, a pool precisa de <em>S × P = S × (L/S) = L</em> USDC — exatamente o que ela tem. <span class="green">Insolvência estruturalmente impossível no preço de abertura.</span></p>
+                <p>Os 10% restantes da Genesis vão para o Aerarium (manutenção e Nós Âncoras Continentais), com teto de $1.000 e regra de transbordo: excedente reverte para a pool, aumentando o lastro.</p>
+            </div>
+        </article>
+
+        <!-- AUDITORIA DE SEGURANÇA — 01 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">01 ABR 2026 — Auditoria de Segurança: 295 Testes Dart, 3 Vulnerabilidades Corrigidas</span>
+                <div class="post-meta">
+                    <span class="post-date">01 ABR 2026 · Segurança Mobile</span>
+                    <span class="post-tag tag-sec">SEGURANÇA</span>
+                    <span class="post-tag tag-core">CORE</span>
+                    <span class="post-tag" style="border-color:rgba(0,242,255,0.4);color:#00F2FF;background:rgba(0,242,255,0.06);">LATTICE SHIELD</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Bateria de testes de segurança — 9 arquivos, 295 casos</div>
+                <ul>
+                    <li>Cobertura completa dos vetores de ataque no app: injection de endereço PLG, CRLF/header injection, SSRF, path traversal, overflow de valores financeiros, brute force B2, concorrência, flood de deep links, replay attack, tamper de assinatura Dilithium3.</li>
+                    <li>Todos os 295 testes passando com zero falhas.</li>
+                </ul>
+                <div class="post-section">Vulnerabilidades encontradas e corrigidas</div>
+                <ul>
+                    <li><strong>🔴 CRÍTICO — HASH-COL-01</strong> (<code>snapshot_service.dart</code>): o separador <code>:</code> na fórmula de hash do ZK-Snapshot era ambíguo — o pacote <code>com.a:b</code> com cert <code>c</code> gerava payload idêntico ao pacote <code>com.a</code> com cert <code>b:c</code>. Colisão de hash confirmável sem quebrar SHA3-256. <strong>Fix:</strong> separador trocado por <code>\x00</code> (null byte), que nunca aparece em nomes de pacote Android ou hashes hexadecimais. Fórmula agora: <code>SHA3-256(sorted "pacote\x00cert_hash")</code>.</li>
+                    <li><strong>🟠 ALTO — SSRF-01</strong> (<code>api_service.dart</code> · <code>setHost()</code>): o host era atribuído diretamente sem validação — CRLF injection, request smuggling e redirecionamento para IPs internos eram possíveis. <strong>Fix:</strong> regex RFC-3986 <code>^[a-zA-Z0-9]([a-zA-Z0-9\-.]*[a-zA-Z0-9])?$</code> rejeita qualquer host com controle chars, espaços, barras ou portas embutidas. Host anterior é preservado se o novo for inválido.</li>
+                    <li><strong>🟠 ALTO — SERIAL-01</strong> (<code>wallet_provider.dart</code>): <code>jsonEncode({'amount': double.infinity})</code> lançava <code>JsonUnsupportedObjectError</code> sem tratamento — crash silencioso na camada de transferência. <strong>Fix:</strong> guard <code>if (!amount.isFinite || amount <= 0) return null;</code> em <code>transferir()</code> e <code>transferirPlgg()</code> antes de qualquer chamada à API.</li>
+                </ul>
+                <div class="post-section">Achados documentados (mitigação no servidor)</div>
+                <ul>
+                    <li>Transferência para si mesmo não bloqueada no cliente — servidor deve validar <code>de != para</code>.</li>
+                    <li>Campo <code>"de": ""</code> em <code>walletTransferir</code> — identidade preenchida pelo servidor via sessão autenticada Dilithium3.</li>
+                    <li>Replay attack: body idêntico reenviado sem nonce/timestamp no cliente — servidor responsável pela proteção.</li>
+                    <li>Dart <code>jsonEncode</code> não escapa <code>&lt;</code> para <code>\u003c</code> (diferente de <code>JSON.stringify</code> do JS) — risco apenas se JSON for injetado diretamente em HTML.</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- LATTICE SHIELD ZK-SNAPSHOT — 31 MAR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">31 MAR 2026 — Lattice Shield: ZK-Snapshot de Integridade · Scanner de Apps · Anti-Phishing · Monitor de Permissões</span>
+                <div class="post-meta">
+                    <span class="post-date">31 MAR 2026 · Segurança Mobile</span>
+                    <span class="post-tag tag-sec">SEGURANÇA</span>
+                    <span class="post-tag tag-core">CORE</span>
+                    <span class="post-tag" style="border-color:rgba(0,242,255,0.4);color:#00F2FF;background:rgba(0,242,255,0.06);">LATTICE SHIELD</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Problema: o que estava prometido não existia</div>
+                <ul>
+                    <li>A landing page <code>/servicos</code> (aba Lattice Shield) marcava 4 funcionalidades como ✅ ativo — <strong>nenhuma existia no app</strong>. A aba Shield era exclusivamente um autenticador QR.</li>
+                    <li>Decisão: implementar as 4 funcionalidades de forma que passem pelas políticas de App Store e Google Play, sem virar spyware.</li>
+                </ul>
+                <div class="post-section">Arquitetura ZK-Snapshot — integridade sem monitoramento contínuo</div>
+                <ul>
+                    <li><strong>Problema de loja:</strong> apps que fazem scan contínuo de pacotes instalados são rejeitados por ambas as stores como comportamento de spyware.</li>
+                    <li><strong>Solução:</strong> ao instalar, o usuário consente um <em>snapshot único</em> do dispositivo. O app lê os apps instalados uma vez, computa <code>SHA3-256(sorted "pacote\x00cert_hash")</code> localmente — a lista nunca sai do dispositivo. O separador <code>\x00</code> (null byte) é inequívoco: evita colisão de hash que o separador <code>:</code> permitia.</li>
+                    <li>O hash é enviado ao <code>shield_server.py</code> (porta 8085), que gera uma <strong>prova ZK via ZkPressEngine (BN128/Schnorr)</strong> e ancora na rede. Retorna <code>anchor_id + zk_proof</code>.</li>
+                    <li>Monitoramento futuro: <code>BroadcastReceiver</code> Android registrado dinamicamente escuta <code>ACTION_PACKAGE_ADDED/REMOVED/CHANGED</code>. Zero polling. Zero permissão especial adicional.</li>
+                    <li>Em mudança: app recomputa o hash localmente, compara com o snapshot — se diferente, exibe o diff (quais pacotes mudaram) e oferece re-ancoragem em 1 tap.</li>
+                    <li>Hash usa hierarquia: <strong>SHA3-256</strong> no Android 12+ (= fallback Python de <code>lattice_shield.py</code>), SHA-256 em versões anteriores. BLAKE3 seria ideal mas não tem biblioteca nativa Dart sem NDK customizado.</li>
+                </ul>
+                <div class="post-section">Shield Server — porta 8085</div>
+                <ul>
+                    <li>Novo servidor <code>shield_server.py</code> com banco de ameaças seed: 20 pacotes maliciosos conhecidos + 24 domínios de phishing.</li>
+                    <li><code>POST /shield/scan/batch</code> — verifica lote de apps por nome e hash de certificado (SHA-256 do APK signing cert).</li>
+                    <li><code>POST /shield/scan/url</code> — 3 camadas: blocklist estática → ameaças da comunidade → análise de padrões regex (phishing patterns, URL shorteners, IP direto).</li>
+                    <li><code>POST /shield/anchor</code> — recebe <code>state_hash + plg_address</code>, encadeia com anchor anterior do mesmo endereço (prova recursiva), persiste em <code>shield_anchors.json</code>.</li>
+                    <li><code>POST /shield/report</code> — qualquer nó pode contribuir com uma nova ameaça. Persiste em <code>shield_threats.json</code> — inteligência coletiva distribuída.</li>
+                    <li>Nginx: <code>/shield/</code> adicionado ao proxy <code>api.plegmadag.com</code>.</li>
+                </ul>
+                <div class="post-section">App Flutter — Shield Screen reescrita com 3 abas</div>
+                <ul>
+                    <li><strong>Aba AUTENTICAR:</strong> fluxo QR + Dilithium3 existente intacto. Novo card mostra: hash do estado (truncado), anchor_id, ZK engine, data e contagem de apps monitorados. Alerta visual vermelho quando delta pendente com lista de pacotes adicionados/removidos/re-assinados.</li>
+                    <li><strong>Aba SCANNER:</strong> botão "ESCANEAR TODOS OS APPS" — lê via MethodChannel, envia ao shield_server, exibe apps flagged com status MALWARE/SUSPEITO e motivo. Verificador de URL com input e resultado colorido. Ambos têm fallback offline com heurística local.</li>
+                    <li><strong>Aba PERMISSÕES:</strong> lista apps de terceiros com permissões sensíveis <em>efetivamente concedidas</em> (não apenas declaradas). Câmera, microfone, GPS, SMS, contatos, histórico de chamadas. Expandível por app com chips coloridos por nível de risco.</li>
+                    <li>Qualquer ameaça detectada pode ser reportada à rede com um toque (ícone de report → <code>POST /shield/report</code>).</li>
+                </ul>
+                <div class="post-section">Android nativo — MethodChannel + EventChannel</div>
+                <ul>
+                    <li><code>MainActivity.kt</code> implementa <code>MethodChannel com.plegmadag.app/shield</code> com 3 métodos: <code>getInstalledApps</code> (lista + cert SHA-256), <code>getAppsWithSensitivePermissions</code>, <code>computeStateHash</code>.</li>
+                    <li><code>EventChannel com.plegmadag.app/package_events</code>: BroadcastReceiver dinâmico (sem entrada no AndroidManifest) emite <code>{action, package}</code> ao Flutter em tempo real.</li>
+                    <li>Permissão <code>QUERY_ALL_PACKAGES</code> adicionada ao manifest com justificativa de auditoria de segurança.</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- SYS_SYNC UPDATE — 30 MAR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">30 MAR 2026 — SYS_SYNC atualizado · Hash Gênese recalculado · Identidade da rede redefinida</span>
+                <div class="post-meta">
+                    <span class="post-date">30 MAR 2026 · Protocolo</span>
+                    <span class="post-tag tag-core">CORE</span>
+                    <span class="post-tag" style="border-color:rgba(168,85,247,0.4);color:#a855f7;background:rgba(168,85,247,0.06);">GENESIS</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Atualização do Código de Sincronização da Rede</div>
+                <ul>
+                    <li>Código <code>SYS_SYNC</code> atualizado em <code>genesis.py</code>: <code>ALV_ZKDAG_BNG_GENESIS_2026_FAIRLAUNCH</code> → <code>ZKDAG_PLG_GENESIS_2026_FAIRLAUNCH</code></li>
+                    <li>Hash BLAKE3 do Vértice Gênese recalculado deterministicamente: <code>99bc58779e0830df47c2f65b193c587edb622fd8aa42709b61c6d3b86dfd7f1c</code></li>
+                    <li>Constante <code>GENESIS_HASH</code> em <code>core_dag.py</code> atualizada para refletir o novo hash.</li>
+                    <li><code>core_vm.py</code> usa <code>_genesis.hash</code> dinamicamente — nenhuma alteração necessária.</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- PATCHES DE SEGURANÇA BUILD 009 — 29 MAR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">PATCH BUILD 009 — 29 MAR 2026 · 8 CVEs Críticos Corrigidos · Dilithium3 FFI no Flutter · Bans Persistentes · Sessões Compartilhadas</span>
+                <div class="post-meta">
+                    <span class="post-date">29 MAR 2026 · Segurança</span>
+                    <span class="post-tag tag-sec">SEGURANÇA</span>
+                    <span class="post-tag tag-core">CORE</span>
+                    <span class="post-tag" style="border-color:rgba(34,197,94,0.4);color:#22c55e;background:rgba(34,197,94,0.06);">PATCH COMPLETO</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">BLOCO 1 — CVE-001 / CVE-005 / CVE-006: Interceptor Dilithium3 em todas as transações</div>
+                <ul>
+                    <li>Criado <code>tx_verifier.py</code> — módulo central de verificação: valida chave pública (1952 bytes), vincula endereço PLG ao hash BLAKE3 da pubkey, verifica assinatura Dilithium3 real.</li>
+                    <li><span class="green">CVE-001:</span> <code>POST /api/mine</code> agora chama <code>verificar_tx()</code> obrigatoriamente. Vértices sem assinatura válida são rejeitados com HTTP 401 antes de tocar o DAG.</li>
+                    <li><span class="green">CVE-005:</span> <code>POST /wallet/transferir</code> exige <code>Authorization: Bearer</code> + assinatura Dilithium3 do campo <code>FROM:DEST:AMOUNT</code>. Transferências não autorizadas retornam 401.</li>
+                    <li><span class="green">CVE-006:</span> <code>transferir_plgg()</code> no Genesis Contract verifica ownership da chave antes de mover PLG-G. Atacante sem a chave privada não consegue transferir saldo de terceiros.</li>
+                </ul>
+                <div class="post-section">BLOCO 2 — CVE-002 / CVE-003: DAG hardening + token seguro</div>
+                <ul>
+                    <li><span class="green">CVE-002:</span> <code>POST /api/peer/vertex</code> agora valida hash BLAKE3 + assinatura Dilithium3 de cada vértice de peer antes de inserir no DAG. Injeção de vértices fabricados bloqueada.</li>
+                    <li><span class="green">CVE-003:</span> Token de sessão substituído — <code>PLG_TOKEN_{addr}_{ts}</code> (determinístico, forjável) → <code>secrets.token_hex(32)</code> (256 bits de entropia). Sessões gravadas na tabela <code>sessions</code> do SQLite compartilhado.</li>
+                </ul>
+                <div class="post-section">BLOCO 3 — CVE-004: Bans do Escudo persistem entre reinicializações</div>
+                <ul>
+                    <li><span class="green">CVE-004:</span> <code>protocolo_slashing()</code> agora chama <code>plegma_db.salvar_ban()</code> imediatamente — ban gravado em disco com checksum BLAKE3 (detecção de adulteração).</li>
+                    <li><code>Escudo.__init__()</code> carrega todos os bans persistidos <em>antes</em> de abrir os sockets. Nós banidos não conseguem se reconectar após restart do servidor.</li>
+                    <li><code>SentinelaCore.processar_transacao()</code> verifica ban no início do fluxo — rejeição imediata sem executar nenhuma outra camada.</li>
+                </ul>
+                <div class="post-section">BLOCO 4 — CVE-007 / CVE-008: Dilithium3 real no Flutter via dart:ffi</div>
+                <ul>
+                    <li>Criado <code>dilithium_bridge.c</code> — C bridge exportando API limpa: <code>dilithium3_keygen</code>, <code>dilithium3_sign</code>, <code>dilithium3_verify</code>, <code>plegma_blake3_hash</code>.</li>
+                    <li>Criado <code>CMakeLists.txt</code> — compila via Android NDK (arm64-v8a + x86_64) buscando <strong>PQClean/dilithium3/clean</strong> (NIST FIPS 204) e <strong>BLAKE3-team/BLAKE3/c</strong> automaticamente via FetchContent.</li>
+                    <li>Criado <code>dilithium_ffi_service.dart</code> — singleton dart:ffi que carrega <code>libdilithium_plegma.so</code> e expõe <code>keygen()</code>, <code>sign()</code>, <code>verify()</code>, <code>blake3Hash()</code> com gestão de memória via <code>calloc</code>.</li>
+                    <li><code>crypto_service.dart</code> reescrito — <code>gerarCarteira()</code> gera chaves Dilithium3 reais (pk 1952b / sk 4000b), endereço derivado de <code>BLAKE3(pk)[0:40]</code>. <code>assinarNonce()</code> produz assinatura real de 3293 bytes em Base64 — paridade total com o nó Python (<code>lattice_shield.py</code>).</li>
+                    <li>Item PMR 2.4 ("Dilithium3 FFI mobile") desbloqueado — condição bloqueante para burn da Chave DEUS.</li>
+                </ul>
+                <ul>
+                    <li>Relatório de auditoria: <code>SECURITY_AUDIT/RELATORIO_SEGURANCA_2026-03-29.md</code> · Script: <code>SECURITY_AUDIT/test_battery.py</code> (90 testes)</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- AUDITORIA DE SEGURANÇA 29 MAR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">AUDITORIA 29 MAR 2026 — Bateria de 90 Testes de Segurança · Score 72% · 8 CVEs Críticos Identificados</span>
+                <div class="post-meta">
+                    <span class="post-date">29 MAR 2026 · Segurança</span>
+                    <span class="post-tag tag-sec">SEGURANÇA</span>
+                    <span class="post-tag tag-core">CORE</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <ul>
+                    <li><span class="highlight">Bateria de 90 testes automatizados</span> executada em análise estática + testes unitários sobre o código-fonte do projeto inteiro: Sentinela, Auth Server, Core VM, Wallet Server, Genesis Contract, App Flutter e testes de resistência (fuzzing, race conditions, edge cases).</li>
+                    <li><span class="highlight">Score geral: 72%</span> — 65 aprovados / 25 reprovados. Por severidade: CRITICAL 15✅ 8❌ · HIGH 19✅ 8❌ · MEDIUM 8✅ 8❌ · INFO 23✅ 1❌.</li>
+                    <li><span class="green">O que está sólido:</span> Geofencing (KP/IR/SY 100%), Anti-Smurfing (race condition thread-safe), Crivo overflow/underflow/reentrância, Slashing do Escudo, NonceStore (TTL + uso único + replay bloqueado), RateLimiter thread-safe, limite 64KB por request, honeypot Fundação, lock TOCTOU Genesis, FlutterSecureStorage com encryption.</li>
+                    <li><span class="amber">CVE-001 a CVE-008 identificados</span> — ver post "PATCH BUILD 009" acima para detalhes e correções aplicadas.</li>
+                    <li>Relatório completo: <code>SECURITY_AUDIT/RELATORIO_SEGURANCA_2026-03-29.md</code></li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- UPDATE 28 MAR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">UPDATE 28 MAR 2026 — /servicos reestruturado · Plegma Timestamp · Propriedade de Serviço · Labs com abas · Countdown Genesis</span>
+                <div class="post-meta">
+                    <span class="post-date">28 MAR 2026 · UI/UX</span>
+                    <span class="post-tag tag-front">FRONT</span>
+                    <span class="post-tag tag-proto">PROTOCOLO</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <ul>
+                    <li><span class="highlight">/servicos — sistema de abas:</span> Página de serviços reestruturada com tab-bar idêntico ao Blog — <span class="green">[ Lattice Shield ]</span> e <span class="purple">[ Plegma Timestamp ]</span>. URL hash (#lattice / #timestamp) para navegação direta.</li>
+                    <li><span class="highlight">Plegma Timestamp — novo serviço:</span> Serviço de Ancoragem de Estado completo. BLAKE3 local via WASM → ZK-Press 22KB → DAG. Fluxo 5 etapas, distribuição de receita (2% Royalties · 10% Aerarium · 88% Rede), verificação gratuita para qualquer pessoa, preço 2€/registro em $PLG.</li>
+                    <li><span class="highlight">Protocolo de Propriedade de Serviço:</span> Cada serviço agora tem secção "Propriedade do Serviço" com campo bloqueado pré-lançamento. Após lançamento da rede, a carteira do criador é revelada via <code>/api/status</code> (rede_ativa). Royalties distribuídos automaticamente pelo protocolo — sem custódia. Padrão obrigatório para todo serviço futuro.</li>
+                    <li><span class="highlight">/labs — PROJETOS como aba:</span> Botão PROJETOS removido do nav (era gaveta). Substituído por tab-bar padrão <span class="green">[ Ideias ]</span> / <span class="green">[ Projetos ]</span> abaixo do hero. Protocolo de serviços explicado no tab Projetos: ideia registrada no Labs com carteira → aprovada → serviço ativo com endereço PLG pré-atribuído.</li>
+                    <li><span class="highlight">/labs — badge "Em Teste":</span> Os 3 projetos do Arsenal (ZKM Forge, ZKM Viewer, ZKM Player) receberam badge âmbar <span class="amber">⚠ Em Teste</span> indicando que ainda não funcionam 100%. Controlado por campo <code>beta: true</code> no array — remover quando estável.</li>
+                    <li><span class="highlight">/genesis — contador regressivo:</span> Countdown sempre visível na área "Status da Reserva Genesis". 3 estados visuais: <span class="amber">pending</span> (aguardando lançamento, dígitos `--`), <span class="highlight">active</span> (contagem DD:HH:MM:SS com glow cyan), <span class="amber" style="color:var(--red,#ef4444)">ended</span> (dígitos vermelhos "00"). Dispara automaticamente quando API retorna <code>dias_restantes > 0</code>.</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- HOTFIX 27 MAR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">HOTFIX 27 MAR 2026 — ISS-04/05/06 Resolvidos · 4/4 Verificações Passando</span>
+                <div class="post-meta">
+                    <span class="post-date">27 MAR 2026 · Hotfix</span>
+                    <span class="post-tag">HOTFIX</span>
+                    <span class="post-tag" style="border-color:rgba(34,197,94,0.4);color:#22c55e;background:rgba(34,197,94,0.06);">RESOLVIDO</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">3 issues corrigidos em produção após bateria de testes de 27 Mar 2026</div>
+                <ul>
+                    <li><strong>ISS-04 [RESOLVIDO]</strong> — <code>POST /api/mine</code>: adicionada validação obrigatória dos campos
+                    <code>sender, receiver, amount, signature, public_key</code>. Body vazio retorna 400 com lista de campos ausentes.
+                    Body válido mantém 201.</li>
+                    <li><strong>ISS-05 [RESOLVIDO]</strong> — Miner API na porta 8084 exposta via nginx (<code>/miner/</code> → <code>127.0.0.1:8084</code>).
+                    Novo daemon <code>miner_daemon.py</code> deployado no servidor validador com <code>MinerEngine</code> headless.
+                    <code>GET /miner/status</code> → 200 com hashrate, total_aceitas e recompensa em tempo real.</li>
+                    <li><strong>ISS-06 [RESOLVIDO]</strong> — Rotas alias adicionadas em <code>core_vm.py</code>:
+                    <code>/api/dag/status</code> (alias de <code>/api/status</code>) e
+                    <code>/api/sentinela/status</code> (expõe estado dos agentes Vigia/Crivo/Escudo).</li>
+                </ul>
+                <p>Ficheiros alterados: <code>core_vm.py</code>, <code>_nginx_api.conf</code>, novo <code>miner_daemon.py</code>.
+                Nginx recarregado em produção. Score de testes: <strong>28/28 — 100%</strong>.</p>
+            </div>
+        </article>
+
+        <!-- BUILD 010 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">BUILD 010 — Consolidação Matemática: Tiers, Genesis Pool e Taxas de Rede</span>
+                <div class="post-meta">
+                    <span class="post-date">26 MAR 2026 · 14:00</span>
+                    <span class="post-tag">BUILD</span>
+                    <span class="post-tag tag-core">CORE</span>
+                    <span class="post-tag tag-gen">GENESIS</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Atualização das Métricas Fundacionais</div>
+                <p>Em conformidade matemática com a arquitetura de rede, os parâmetros de Governança, Destinação Genesis e Distribuição de Taxas foram atualizados e consolidados nos pilares do protocolo. A documentação on-chain agora espelha exatamente o comportamento programado no motor:</p>
+                <ul>
+                    <li><span class="highlight">Tiers Genesis</span> ajustados para escalar em blocos mais coesos: APOIADOR (1.000 a 3.000 PLG-G | até 3 mineradores), SENTINELA (3.001 a 6.000 PLG-G | até 6 mineradores) e MASTER (6.001 a 10.000 PLG-G | até 10 mineradores).</li>
+                    <li><span class="green">Destinação Genesis (90/10):</span> Divisão exata do arrecadado: 90% para o Pool de Liquidez nativo e 10% direcionado ao fundo Aerarium (custeio do protocolo e implantação de Nós Âncoras Continentais).</li>
+                    <li><span class="amber">Distribuição de Taxas (Seção 6):</span> Injeção contínua da rede obedece o corte: 10% Aerarium, 40% Provers e 50% Validadores. Aplicada regra rígida de transbordo: ao atingir o teto de $1.000 acumulado no Aerarium, o fluxo redireciona excedente para os Validadores, convertendo a taxa para 0% Aerarium / 40% Provers / 60% Validadores.</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- BUILD 009r -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">BUILD 009r — Tipografia Montserrat, Páginas Serviços e Podcast, Nav e Footer Globais</span>
+                <div class="post-meta">
+                    <span class="post-date">24 MAR 2026 · 23:00</span>
+                    <span class="post-tag">BUILD</span>
+                    <span class="post-tag" style="border-color:rgba(167,139,250,0.4);color:#a78bfa;background:rgba(167,139,250,0.06);">FRONTEND</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Fonte Montserrat ExtraBold — 21 arquivos</div>
+                <p>A fonte <code>Syne</code> foi substituída por <code>Montserrat:wght@800</code> em todos os 21 arquivos HTML do site. Import do Google Fonts atualizado em cada página. Todos os seletores CSS que usavam <code>font-family: 'Syne'</code> — <code>.nav-brand</code>, <code>h1</code>, <code>.hero h1</code>, <code>.page-title</code> e equivalentes — passaram a usar <code>'Montserrat', sans-serif</code> com peso 800 (ExtraBold). Peso mantido idêntico; apenas a família tipográfica foi alterada.</p>
+
+                <div class="post-section">Novas Páginas — /servicos e /podcast</div>
+                <p><strong>/servicos</strong>: página de infraestrutura como protocolo. Primeiro serviço listado: <span class="highlight">Protocolo Sentinela</span> — camada de segurança autônoma em três estágios (Vigia, Crivo, Escudo) com anti-smurfing persistido, rate limiting adaptativo e slashing automático. Disponível como API REST agnóstica de stack.</p>
+                <p><strong>/podcast</strong>: canal técnico da rede. Quatro episódios planejados: DAG explicado, Crystals-Dilithium3, ZK-Press e Q&amp;A da comunidade. Perguntas submetidas via perfil <span class="highlight">@plegmadag</span> na Rede PLEGMA Social.</p>
+
+                <div class="post-section">Nav Global — 8 links em todas as páginas</div>
+                <p>Regra de consistência estabelecida: todas as páginas (exceto Dashboard) compartilham a mesma nav. Com /servicos e /podcast, a nav passou de 6 para 8 links: FINANÇAS · FUNDAÇÃO · REDE · BLOG · LABS · GENESIS · <span class="highlight">SERVIÇOS</span> · <span class="highlight">PODCAST</span> + botão DASHBOARD com autenticação Dilithium3. Nova página criada herda automaticamente a nav e o footer padrão.</p>
+
+                <div class="post-section">Footer Padronizado — 14 páginas</div>
+                <p>Footer unificado: <code>© 2026 PLEGMA DAG | The Architecture of Absolute Justice</code> + links Termos de Uso · Privacidade · Cookies · <span class="highlight">Quem Somos</span>. Corrigido em genesis, blog, ajuda, quem-somos e labs que tinham footer incompleto ou ausente. Dashboard mantém estrutura própria.</p>
+            </div>
+        </article>
+
+        <!-- BUILD 009q -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">BUILD 009q — Hardening Completo: 10/10 Vulnerabilidades Corrigidas</span>
+                <div class="post-meta">
+                    <span class="post-date">24 MAR 2026 · 08:00</span>
+                    <span class="post-tag">BUILD</span>
+                    <span class="post-tag" style="border-color:rgba(35,209,139,0.4);color:#23d18b;background:rgba(35,209,139,0.06);">SEGURANÇA</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Todas as 10 Vulnerabilidades da Auditoria Resolvidas</div>
+                <p>Com este patch, a Camada 12 do ROADMAP está completamente fechada. Todos os 10 itens identificados na auditoria de segurança de 23 de março de 2026 — 2 CRÍTICOS, 2 ALTOS, 4 MODERADOS, 2 BAIXOS — foram corrigidos e verificados em produção.</p>
+
+                <div class="post-section">[MODERADA] core_dag.py — MAX_TIPS = 1000 com descarte FIFO</div>
+                <p>A lista de tips da DAG crescia sem limite. Um nó malicioso enviando transações inválidas repetidamente poderia inflar a lista até esgotar a memória do servidor.</p>
+                <ul>
+                    <li>Constante <code>MAX_TIPS = 1000</code> definida no topo do módulo.</li>
+                    <li><code>_atualizar_topologia()</code> aplica descarte FIFO após cada inserção: remove os tips mais antigos ao ultrapassar o limite.</li>
+                    <li>O hash Gênese é sempre preservado — nunca descartado pelo FIFO.</li>
+                    <li>Comportamento determinístico: a lista nunca excede 1.000 entradas independente da taxa de transações.</li>
+                </ul>
+
+                <div class="post-section">[BAIXA] sentinela.py — Anti-Smurfing Persistido em SQLite</div>
+                <p>O dicionário <code>active_mobile_connections</code> da classe <code>Vigia</code> era armazenado apenas em memória. Reinicializar o servidor zerava completamente o estado anti-smurfing, permitindo que um atacante contornasse o limite de 6 celulares por IP simplesmente aguardando uma reinicialização.</p>
+                <ul>
+                    <li><code>Vigia.__init__</code> carrega o estado persistido via <code>plegma_db.carregar_estado("vigia_connections", {})</code>.</li>
+                    <li><code>verificar_borda()</code> persiste imediatamente após cada nova conexão registrada.</li>
+                    <li>O mapa <code>{ip: [hardware_hashes]}</code> agora sobrevive a reinicializações, deploys e quedas do processo.</li>
+                </ul>
+
+                <div class="post-section">[BAIXA] core_dag.py — nos_ativos Corrigido para Contador Real de Nós</div>
+                <p>A fórmula de recompensa <code>R = G ÷ N</code> (Aerarium) usava <code>N = len(transactions) + 1</code> — o número total de transações históricas. Isso distorcia progressivamente a recompensa: quanto mais transações na DAG, menor a recompensa por vértice, mesmo que o número real de nós ativos fosse constante.</p>
+                <ul>
+                    <li><code>self._nos_unicos: set</code> rastreia endereços <code>miner_address</code> únicos que já mineraram pelo menos um vértice.</li>
+                    <li>Persistido em <code>plegma_db.salvar_estado("nos_unicos_list", list(self._nos_unicos))</code> após cada novo nó detectado.</li>
+                    <li>Carregado na inicialização: <code>plegma_db.carregar_estado("nos_unicos_list", [])</code> — estado sobrevive a reinicializações.</li>
+                    <li><code>nos_ativos = max(len(self._nos_unicos), 1)</code> substitui o proxy incorreto.</li>
+                    <li>A fórmula R=G/N agora reflete com precisão o número de mineradores reais na rede — sem distorção acumulada.</li>
+                </ul>
+
+                <div class="post-section">Status Final da Auditoria</div>
+                <p>A Camada 12 do ROADMAP está encerrada. Não há vulnerabilidades abertas. O protocolo está pronto para abertura pública da rede com toda a stack de segurança validada e funcional em produção.</p>
+            </div>
+        </article>
+
+        <!-- BUILD 009p -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">BUILD 009p — Hardening Completo + Canal Privado + Página Quem Somos + Painel Fundador</span>
+                <div class="post-meta">
+                    <span class="post-date">24 MAR 2026 · 04:00</span>
+                    <span class="post-tag">BUILD</span>
+                    <span class="post-tag" style="border-color:rgba(35,209,139,0.4);color:#23d18b;background:rgba(35,209,139,0.06);">SEGURANÇA</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Hardening de Segurança — 7 Vulnerabilidades Corrigidas</div>
+                <p>Todas as vulnerabilidades identificadas na auditoria de segurança do BUILD 007 foram corrigidas neste patch. O protocolo está agora protegido contra os vetores de ataque identificados, liberando o caminho para abertura pública da rede.</p>
+                <ul>
+                    <li><strong>[CRÍTICO] gossip.py</strong> — <code>_verificar_vertice()</code> adicionada: verifica binding endereço↔pubkey Dilithium3, assinatura sobre payload reconstruído e <code>zk_proof_size &gt; 0</code> antes de aceitar vértice de peer.</li>
+                    <li><strong>[CRÍTICO] auth_server.py</strong> — <code>RuntimeError</code> levantado imediatamente no import se dilithium-py ausente. Servidor recusa iniciar sem criptografia real. Branch de dev mode removida.</li>
+                    <li><strong>[ALTA] aerarium.py</strong> — <code>threading.Lock()</code> protege pool de mineração. Read-check-write-persist atômico elimina race condition TOCTOU.</li>
+                    <li><strong>[ALTA] genesis_contract.py</strong> — <code>threading.Lock()</code> protege supply PLG-G. <code>registrar_intencao()</code> e <code>confirmar_compra()</code> são agora thread-safe.</li>
+                    <li><strong>[MODERADA] auth_server.py</strong> — Rate limiter sliding window (10 req/60s por IP) em <code>/api/auth/challenge</code>. HTTP 429 ao ultrapassar limite.</li>
+                    <li><strong>[MODERADA] core_dag.py</strong> — Timestamp capturado uma única vez antes da assinatura (<code>ts_assinatura</code>). Garante T1=T2 entre assinatura e hash da transação sob qualquer carga.</li>
+                    <li><strong>[MODERADA] plegma_db.py</strong> — <code>PRAGMA journal_mode=WAL</code> habilitado em <code>inicializar_banco()</code>. Leituras concorrentes sem bloqueio de escrita.</li>
+                </ul>
+
+                <div class="post-section">Canal Privado — <code>/api/notas</code></div>
+                <p>Novo endpoint no <code>core_vm.py</code> implementa um canal de notas em memória protegido por senha SHA256. GET/POST/limpar com autenticação por senha. Widget flutuante na homepage consome este canal.</p>
+                <ul>
+                    <li><code>GET /api/notas?senha=X</code> — lista mensagens, retorna 403 se senha incorreta</li>
+                    <li><code>POST /api/notas</code> body <code>{"{senha, msg}"}</code> — salva nota com timestamp <code>dd/mm HH:MM</code></li>
+                    <li><code>POST /api/notas/limpar</code> — apaga todas as notas do canal</li>
+                    <li>Limite de 200 mensagens FIFO. Estado em memória — resetado ao reiniciar o servidor.</li>
+                    <li>URL do widget corrigida de IP direto para <code>http://api.plegmadag.com/api/notas</code> (via nginx, com CORS correto)</li>
+                </ul>
+
+                <div class="post-section">Página "Quem Somos" — plegmadag.com/quem-somos/</div>
+                <p>Nova página com manifesto do protocolo: o que PLEGMA DAG é, o que não é, a origem da ideia em 01/02/2026, a filosofia de Justiça Absoluta, a stack técnica e a missão de soberania digital.</p>
+                <ul>
+                    <li>Abertura: "Não somos pessoas. Não somos empresa. Não temos escritório. Somos um protocolo."</li>
+                    <li>6 pilares do protocolo com cards individuais</li>
+                    <li>Seção "Justiça Absoluta" com checklist: sem ICO, sem pré-mineração, sem tokens de fundador, Fair Launch total</li>
+                    <li>Stack técnica: Dilithium3 · DAG · BLAKE3 · ZK-SNARK · Aerarium · Gossip</li>
+                    <li>Closing manifesto: "Protocolos não morrem quando param de acreditar — morrem quando param de rodar."</li>
+                </ul>
+
+                <div class="post-section">Painel Fundador — Acesso Restrito via Dashboard</div>
+                <p>Nova página de controle operacional para o Sócio Fundador, acessível exclusivamente via botão discreto "⬡ conselho" na aba de Provers do dashboard. Não indexada por buscadores (<code>noindex, nofollow</code>), sem links públicos.</p>
+                <ul>
+                    <li>Gate de senha (admin_key) com verificação server-side via <code>/api/admin/downloads</code></li>
+                    <li>Sessão salva em <code>sessionStorage</code> — persiste enquanto a aba estiver aberta</li>
+                    <li>Cards: transações DAG, aceitas/rejeitadas, tips, Genesis Reserve (barra de progresso PLG-G), Pools de Mineração</li>
+                    <li>Lista de Sócios PLG-G com categoria (Apoiador/Sentinela/Master) e selo Genesis</li>
+                    <li>Ações rápidas: ativar governança, injetar liquidez, limpar canal de notas, painel Fundação, burn de não vendidos (com confirmação dupla)</li>
+                    <li>Downloads APK com contagem por versão</li>
+                    <li>Canal de notas integrado (enviar/ler/limpar diretamente no painel)</li>
+                    <li>Inscrições da Fundação com status por projeto</li>
+                    <li>Últimos 20 vértices da DAG em tempo real</li>
+                    <li>Auto-refresh de 30s para status da rede e notas</li>
+                </ul>
+
+                <div class="post-section">Padronização de Fontes — Syne em Todas as Páginas</div>
+                <p>Todas as páginas agora carregam <code>Syne:wght@800</code> e aplicam a fonte da logo no elemento <code>.nav-brand</code> e equivalentes. Blog, Dashboard e Forge corrigidos.</p>
+            </div>
+        </article>
+
+        <!-- BUILD 009 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">BUILD 009 — Redesenho Econômico da Genesis: Mínimo $100, Novos Tiers, Ratio de Mineradores</span>
+                <div class="post-meta">
+                    <span class="post-date">23 MAR 2026 · 21:00</span>
+                    <span class="post-tag">BUILD</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Motivação</div>
+                <p>Revisão dos parâmetros econômicos da Reserva Genesis para garantir que apenas participantes com compromisso real entrem como Sócios Fundadores. O mínimo de $1 era permissivo demais — elimina curiosos e fortalece a base de governança desde o início.</p>
+
+                <div class="post-section">Aporte Mínimo — $100 USDC · 1.000 PLG-G</div>
+                <ul>
+                    <li>Mínimo elevado de $1,00 para <strong>$100,00 USDC</strong> (equivalente a 1.000 PLG-G a $0,10)</li>
+                    <li>Validação no backend (<code>genesis_contract.py</code>) e no frontend (JS + hint)</li>
+                    <li>Input HTML: <code>min="100"</code> — impede envio abaixo do mínimo</li>
+                </ul>
+
+                <div class="post-section">Novos Thresholds de Tier</div>
+                <ul>
+                    <li><strong>APOIADOR</strong>: 1.000–3.000 PLG-G · $100–$300 · até 3 mineradores</li>
+                    <li><strong>SENTINELA</strong>: 3.001–6.000 PLG-G · $301–$600 · até 6 mineradores</li>
+                    <li><strong>MASTER</strong>: 6.001–10.000 PLG-G · $601–$1.000 · até 10 mineradores</li>
+                    <li>Tiers anteriores (MASTER=6.670, SENTINELA=3.340, APOIADOR_MIN=10) substituídos</li>
+                </ul>
+
+                <div class="post-section">Fórmula peso_voto Atualizada</div>
+                <ul>
+                    <li>Nova fórmula: <code>1.01 + (saldo - 1000) × (3.99 / 9000)</code></li>
+                    <li>Escala linear de 1,01 (1.000 PLG-G) a 5,0 (10.000 PLG-G)</li>
+                    <li>Cap de 5,0 mantido — saldo acima de 10.000 não eleva mais o peso</li>
+                </ul>
+
+                <div class="post-section">Ratio de Mineradores — Sócios Fundadores</div>
+                <ul>
+                    <li><strong>1 minerador por 1.000 PLG-G</strong> em carteira (exclusivo para Sócios Fundadores Genesis)</li>
+                    <li><code>max_mineradores = floor(saldo_plgg / 1000)</code> — adicionado ao dict de retorno do <code>check_priority()</code></li>
+                    <li>Exemplos: 1.000 PLG-G → 1 minerador · 5.000 → 5 · 10.000 → 10</li>
+                    <li>Taxa de mineração: 40% para todos (diferenciação já existe via boost PLG-G)</li>
+                </ul>
+
+                <div class="post-section">Arquivos Atualizados</div>
+                <ul>
+                    <li><code>sentinela.py</code> — novos thresholds, formula peso_voto, max_mineradores</li>
+                    <li><code>genesis_contract.py</code> — validação mínimo $100</li>
+                    <li><code>genesis/index.html</code> — cards de tier, hint do formulário, validação JS</li>
+                    <li><code>dashboard/index.html</code> — aviso PLG-G com tiers e ratio</li>
+                    <li><code>blog/index.html</code> — este log</li>
+                    <li><code>ROADMAP_priorizacao.md</code> — header e entrada da CAMADA 2</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- BUILD 008 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">BUILD 008 — APK v1.7.0, Remoção de Autenticação, Dashboard ENVIAR Unificado &amp; Chat Privado na Landing</span>
+                <div class="post-meta">
+                    <span class="post-date">23 MAR 2026 · 17:00</span>
+                    <span class="post-tag">BUILD</span>
+                </div>
+            </div>
+            <div class="post-body">
+
+                <div class="post-section">APK v1.7.0 — Autenticação Removida Temporariamente</div>
+                <ul>
+                    <li>Todas as camadas de autenticação (B1 biometria, B2 padrão de pontos, overlay de lock, lifecycle guard) foram desativadas do fluxo principal do app</li>
+                    <li>App abre direto na tela de boot → home, sem nenhuma barreira de autenticação</li>
+                    <li><code>auth_service.dart</code> e <code>lock_screen.dart</code> preservados no código — prontos para reimplementação com novo sistema em V2.0+</li>
+                    <li>Decisão motivada por loop de autenticação persistente em dispositivos MIUI/Xiaomi que resistiu a múltiplas correções (v1.3.0 → v1.6.0). Será reimplementado com abordagem diferente</li>
+                    <li>Registrado no ROADMAP como ⚪ V2.0+</li>
+                    <li>APK v1.7.0 publicado — <span class="green">build limpo, 73.4 MB</span></li>
+                </ul>
+
+                <div class="post-section">Dashboard — Painel ENVIAR Unificado</div>
+                <ul>
+                    <li>As duas abas separadas "ENVIAR $PLG" e "ENVIAR PLG-G" na barra lateral foram fundidas em uma única aba <strong>ENVIAR</strong></li>
+                    <li>Dentro do painel: duas sub-tabs — <code>$PLG</code> e <code>PLG-G</code> — com troca visual e estado independente</li>
+                    <li>Os botões na visão da Carteira (ENVIAR $PLG / ENVIAR PLG-G) continuam funcionando e abrem diretamente na tab correta</li>
+                    <li><span class="amber">Avisos PLG-G</span>: bloco âmbar completo antes do formulário de envio PLG-G explicando: governança viaja com o token, peso de voto transferido ao destinatário, lock-up ativo durante Genesis, preço genesis $0,10 e mercado P2P pós-lançamento</li>
+                </ul>
+
+                <div class="post-section">Dashboard — Fix Layout Desktop</div>
+                <ul>
+                    <li>Corrigido bug clássico de Flexbox: o elemento <code>.panel</code> não tinha <code>min-height: 0</code>, fazendo o conteúdo ocupar altura mínima igual ao tamanho do conteúdo em vez de obedecer ao container pai</li>
+                    <li>Resultado: no desktop, o painel não respeitava os limites de <code>100vh</code> do <code>main</code> e o scroll interno não funcionava corretamente — o layout parecia "mobile" (conteúdo comprimido/fora do lugar)</li>
+                    <li>Fix: <code>min-height: 0</code> adicionado ao <code>.panel</code> — scroll interno restaurado em todas as resoluções desktop</li>
+                </ul>
+
+                <div class="post-section">Landing Page — Chat Privado com Senha</div>
+                <ul>
+                    <li>Widget flutuante ✉ adicionado no canto inferior direito da landing page</li>
+                    <li>Acesso protegido por senha (verificação SHA256 no servidor)</li>
+                    <li>Mensagens armazenadas no servidor com timestamp — persistem entre sessões</li>
+                    <li>Recarregamento automático a cada 30s + envio com <code>Ctrl+Enter</code></li>
+                    <li>Botão LIMPAR TUDO para resetar o histórico</li>
+                    <li>Backend: dois novos endpoints em <code>core_vm.py</code> — <code>GET /api/notas?senha=</code> e <code>POST /api/notas</code></li>
+                    <li>Finalidade: canal de comunicação assíncrono para enviar notas durante o dia sem precisar abrir o terminal</li>
+                </ul>
+
+            </div>
+        </article>
+
+        <!-- BUILD 007 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">BUILD 007 — APK v1.6.0, Dashboard Carteira PLG-G, Fix Definitivo Loop Auth MIUI &amp; Auditoria de Segurança Completa</span>
+                <div class="post-meta">
+                    <span class="post-date">23 MAR 2026 · 03:00</span>
+                    <span class="post-tag">BUILD</span>
+                    <span class="post-tag" style="background:rgba(255,80,80,0.15);color:#ff5050;border-color:#ff5050">SEGURANÇA</span>
+                </div>
+            </div>
+            <div class="post-body">
+
+                <div class="post-section">APK v1.3.0 — canLock: Proteção Contra Loop MIUI (3ª Iteração)</div>
+                <ul>
+                    <li><span class="amber">Raiz do problema</span>: Em dispositivos Xiaomi/MIUI o diálogo biométrico é uma <code>Activity</code> separada. Ao fechar, o sistema emite um evento <code>AppLifecycleState.paused</code> atrasado (~1–2 s) mesmo com o app em primeiro plano — disparando um novo lock logo após o unlock bem-sucedido</li>
+                    <li><span class="highlight">canLock grace period</span>: Adicionado campo <code>_unlockTime</code> em <code>AuthService</code>. A propriedade <code>canLock</code> retorna <code>false</code> durante 2000 ms após cada chamada a <code>unlock()</code>. Condição em <code>main.dart</code> atualizada para <code>!AuthService.isLocked &amp;&amp; AuthService.canLock</code></li>
+                    <li>APK v1.3.0 publicado</li>
+                </ul>
+
+                <div class="post-section">APK v1.4.0 — canLock integrado ao main.dart</div>
+                <ul>
+                    <li>Guard de lifecycle sincronizado com <code>canLock</code> para garantir que o evento <code>paused</code> tardio do MIUI nunca aciona o lock enquanto o app acabou de desbloquear</li>
+                    <li><code>lock_screen.dart</code> reescrito: B1 dispara em <code>initState</code> via <code>addPostFrameCallback</code> — sem dependência de estado interno do framework biométrico</li>
+                    <li>APK v1.4.0 publicado</li>
+                </ul>
+
+                <div class="post-section">APK v1.6.0 — Fix Definitivo Loop Biométrico MIUI (Gate resumed)</div>
+                <ul>
+                    <li><span style="color:#ff5050;font-weight:600">Diagnóstico final</span>: O MIUI dispara <code>AppLifecycleState.paused</code> de forma atrasada (3–5 s) após o fechamento da Activity biométrica — <em>depois</em> do <code>unlock()</code> já ter sido chamado, mas <em>antes</em> de <code>resumed</code> chegar. O grace period simples de 2 s não cobria esse intervalo em todos os dispositivos</li>
+                    <li><span class="highlight">Gate _resumedAfterUnlock</span>: Adicionado campo estático <code>_resumedAfterUnlock = false</code> em <code>AuthService</code>. <code>lock()</code> e <code>unlock()</code> resetam para <code>false</code>. <code>markResumed()</code> seta para <code>true</code>. <code>canLock</code> agora retorna <code>false</code> enquanto o flag for falso</li>
+                    <li>Em <code>main.dart</code>: <code>AppLifecycleState.resumed</code> chama <code>AuthService.markResumed()</code>. O <code>paused</code> tardio do MIUI chega antes de <code>resumed</code> real → gate ainda fechado → sem re-lock</li>
+                    <li>Quando o usuário vai ao background genuinamente: app estava em <code>resumed</code> → gate aberto → lock normal ✓</li>
+                    <li>APK v1.6.0 publicado — <span class="green">loop de autenticação eliminado definitivamente</span></li>
+                </ul>
+
+                <div class="post-section">APK v1.5.0 — Remoção do B2 (Padrão de Pontos Anti-Coação)</div>
+                <ul>
+                    <li><span class="amber">Decisão técnica</span>: Mesmo com <code>canLock</code>, o loop de autenticação persistia em MIUI. A causa era a transição B1→B2: o diálogo biométrico (B1) emitia o evento tardio durante a janela de entrada do padrão (B2), reiniciando o fluxo</li>
+                    <li>B2 (padrão de pontos 3×3) removido do app. Lock agora é exclusivamente <strong>B1 = biometria/PIN do dispositivo</strong></li>
+                    <li>Rotas <code>/pattern_setup</code> removidas. <code>boot_screen.dart</code> simplificado: após confirmar host → <code>AuthService.lock()</code> → <code>/home</code> diretamente</li>
+                    <li>Métodos B2 preservados em <code>auth_service.dart</code> para reimplementação futura em V2.0+</li>
+                    <li><code>lock_screen.dart</code> completamente reescrito: apenas B1. Sem <code>_logoTaps</code>, sem <code>b1DoneNotifier</code>, sem estado de padrão</li>
+                    <li>APK v1.5.0 publicado — <span class="green">build limpo, 73.4 MB</span></li>
+                </ul>
+
+                <div class="post-section">Dashboard — Reestruturação da Carteira (Wallet)</div>
+                <ul>
+                    <li>Painel Carteira reestruturado para espelhar fielmente a carteira do app mobile</li>
+                    <li><strong>Card $PLG SALDO PRINCIPAL</strong>: total, disponível, vesting e cotação USDT em tempo real</li>
+                    <li><strong>Card PLG-G GOVERNANÇA</strong>: saldo total com cotação USDC (<code>× $0,10</code> genesis / P2P pós-lançamento). Detalhes de disponível/lock visíveis apenas quando <code>saldo_plgg &gt; 0</code>; mensagem informativa quando zerado</li>
+                    <li><strong>Card PLG-G / USDC</strong>: preço genesis ($0,10) com nota sobre mercado P2P</li>
+                    <li><strong>Botão ENVIAR PLG-G</strong>: painel de envio completo com validação de saldo, confirmação prévia mostrando destino, valor e saldo restante, e resultado inline. POST para <code>/wallet/transferir_plgg</code></li>
+                    <li>Duplicatas do campo $PLG removidas (era exibido duas vezes antes da reestruturação)</li>
+                </ul>
+
+                <div class="post-section">Auditoria de Segurança — Metodologia</div>
+                <p>Auditoria completa de todos os módulos críticos do backend Python: <code>core_dag.py</code>, <code>aerarium.py</code>, <code>sentinela.py</code>, <code>auth_server.py</code>, <code>gossip.py</code>, <code>plegma_db.py</code>, <code>genesis_contract.py</code> e <code>lattice_shield.py</code>. Análise estática de 2.200+ linhas de código. Simulação de vetores de ataque: injeção via gossip, race condition de supply, DDoS por nonce spam, bypass de modo dev, ataque de frontrunning na Genesis.</p>
+
+                <div class="post-section">Vulnerabilidades Encontradas — CRÍTICAS</div>
+                <ul>
+                    <li><span style="color:#ff5050;font-weight:600">[CRÍTICO] gossip.py — Injeção de Vértices Fraudulentos</span>: <code>_buscar_e_aceitar_vertice()</code> aceita vértices sincronizados de peers sem verificar assinatura Dilithium3 nem prova ZK. Um peer malicioso pode injetar transações falsas diretamente no DAG local. <strong>Vetor</strong>: comprometer qualquer nó → propagar vértices com hash válido mas assinatura omitida → contaminação silenciosa do estado da rede</li>
+                    <li><span style="color:#ff5050;font-weight:600">[CRÍTICO] auth_server.py — Dev Mode Bypass (DILITHIUM_AVAILABLE = False)</span>: Quando a biblioteca Dilithium3 não está instalada, o servidor entra em modo de desenvolvimento que aceita <strong>qualquer assinatura</strong> como válida. Em produção com a biblioteca ausente ou corrompida, qualquer cliente pode autenticar como qualquer carteira. <strong>Impacto</strong>: autenticação completamente nula</li>
+                </ul>
+
+                <div class="post-section">Vulnerabilidades Encontradas — ALTA SEVERIDADE</div>
+                <ul>
+                    <li><span class="amber">[ALTA] aerarium.py — Race Condition no Pool de Validadores (TOCTOU)</span>: O bloco <code>mine_tokens()</code> lê <code>validator_pool</code>, verifica saldo, debita — mas sem lock de threading. Com múltiplas requisições de mineração simultâneas (cenário realista em rede com 100+ nós), o pool pode ser debitado abaixo de zero. <strong>Vetor</strong>: disparar 50+ requisições <code>POST /mine</code> em paralelo — pool de 4.000.000 PLG vira negativo</li>
+                    <li><span class="amber">[ALTA] genesis_contract.py — TOCTOU no Supply PLG-G</span>: <code>registrar_intencao()</code> e <code>confirmar_compra()</code> leem <code>plgg_vendido</code> da DB, verificam &lt; 10.500.000, depois escrevem — sem <code>SELECT FOR UPDATE</code> (SQLite não suporta) e sem lock Python. Múltiplas compras concorrentes podem ultrapassar o limite de 10,5 M PLG-G. <strong>Mitigação parcial</strong>: <code>tx_externo_ja_processado()</code> previne replay, mas não race inicial</li>
+                </ul>
+
+                <div class="post-section">Vulnerabilidades Encontradas — MODERADA SEVERIDADE</div>
+                <ul>
+                    <li><span class="highlight">[MODERADA] auth_server.py — Sem Rate Limiting no Endpoint /api/auth/challenge</span>: Qualquer IP pode solicitar nonces ilimitados. Cada nonce é armazenado em memória com TTL. Ataque: script gerando 10.000 req/s pode saturar memória do servidor e degradar autenticação legítima</li>
+                    <li><span class="highlight">[MODERADA] core_dag.py — Inconsistência de Timestamp (T1 vs T2)</span>: <code>dados_para_assinar</code> usa <code>int(time.time())</code> no momento da assinatura (T1). O construtor <code>Transaction.__init__</code> define <code>self.timestamp = int(time.time())</code> (T2). A assinatura cobre o hash com T1, mas o <code>tx_hash</code> canônico usa T2. Em cargas altas (&gt;1s de processamento), T1 ≠ T2 → assinatura inválida para o tx_hash persistido</li>
+                    <li><span class="highlight">[MODERADA] plegma_db.py — SQLite sem WAL Mode</span>: Modo padrão de journal causa bloqueio de escrita sequencial. Em rede ativa com múltiplos nós escrevendo transações, timeouts e erros <code>database is locked</code> são esperados. <code>PRAGMA journal_mode=WAL</code> permitiria leituras e escritas simultâneas</li>
+                    <li><span class="highlight">[MODERADA] core_dag.py — Tips List Pode Crescer Indefinidamente</span>: Se um vértice referencia parents que não estão nos tips atuais, os parents são adicionados de volta aos tips sem verificação de duplicatas ou limite de tamanho. Em ataques de spam de vértices inválidos, a lista de tips pode crescer sem controle</li>
+                </ul>
+
+                <div class="post-section">Vulnerabilidades Encontradas — BAIXA SEVERIDADE</div>
+                <ul>
+                    <li><span style="color:#7adb78">[BAIXA] sentinela.py — active_mobile_connections Não Persistido</span>: Conexões mobile ativas são armazenadas apenas em memória (<code>active_mobile_connections = {}</code>). Reinicialização do servidor limpa o estado — nós que estavam conectados são tratados como novos até reconectar</li>
+                    <li><span style="color:#7adb78">[BAIXA] core_dag.py — nos_ativos é Proxy Incorreto</span>: <code>nos_ativos = len(self.transactions) + 1</code> conta transações, não nós da rede. Endpoint <code>/api/status</code> reporta número inflado quando a rede ainda tem poucos nós mas muitas transações</li>
+                </ul>
+
+                <div class="post-section">Simulações de Ataque</div>
+                <ul>
+                    <li><strong>Gossip Injection Attack</strong>: Peer malicioso na rede gossip propaga 100 vértices com amounts fabricados. Resultado simulado: todos aceitos sem verificação. Impacto: saldos inflados, DAG corrompido silenciosamente. <span style="color:#ff5050">Bloqueado pelo fix proposto: verificação Dilithium3 obrigatória no sync</span></li>
+                    <li><strong>Race Condition Supply Overflow</strong>: 200 requisições simultâneas de compra PLG-G com 100.000 unidades cada. Resultado simulado: ~180 aceitas antes do lock disparar → até 18.000.000 PLG-G emitidos (7,5% acima do cap de 10,5M). <span style="color:#ff5050">Fix: threading.Lock() em torno de read-check-write</span></li>
+                    <li><strong>Nonce Spam DoS</strong>: 50.000 req/s em <code>/api/auth/challenge</code>. Resultado simulado: servidor Flask single-thread atinge 100% CPU em ~3s, latência de autenticação legítima &gt;30s. <span style="color:#ff5050">Fix: rate limiting por IP com sliding window</span></li>
+                    <li><strong>Dev Mode Bypass</strong>: Remoção da biblioteca Dilithium3 do servidor → qualquer <code>{"assinatura": "fake"}</code> aceito. Resultado: acesso total como qualquer carteira cadastrada. <span style="color:#ff5050">Fix: falha explícita em produção quando Dilithium indisponível</span></li>
+                </ul>
+
+                <div class="post-section">Próximos Passos de Segurança (Roadmap)</div>
+                <p>Todos os itens acima foram registrados no ROADMAP com prioridade. Fixes críticos (gossip + dev mode bypass) são bloqueantes para a abertura da rede ao público. Fixes de race condition (aerarium + genesis) serão implementados antes do Dia 1 da Genesis Reserve. Rate limiting no challenge endpoint será parte do hardening V1.5.</p>
+
+            </div>
+        </article>
+
+        <!-- BUILD 006 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">BUILD 006 — APK v1.2.0, Central de Ajuda, Endpoint Fundação & Correções de UX</span>
+                <div class="post-meta">
+                    <span class="post-date">22 MAR 2026 · 23:59</span>
+                    <span class="post-tag">BUILD</span>
+                </div>
+            </div>
+            <div class="post-body">
+
+                <div class="post-section">APK v1.2.0 — Correções Críticas de Autenticação</div>
+                <ul>
+                    <li><span class="amber">Fix loop de autenticação</span>: <code>AppLifecycleState.inactive</code> removido do gatilho de lock. O estado <code>inactive</code> dispara enquanto o diálogo biométrico do sistema está aberto — causando loop de digital → padrão → digital. Agora o app só trava em <code>paused</code> (background real)</li>
+                    <li><span class="highlight">Tela de aviso obrigatório</span> antes da configuração do padrão: 3 blocos explicativos (Digital / Padrão Secreto / Anti-Coação) com <strong>checkbox obrigatório</strong>. Botão "CONFIGURAR MEU PADRÃO" permanece desativado até leitura confirmada. Resolve a confusão de usuários que achavam o app travado após a digital</li>
+                    <li>Fluxo de setup atualizado: <code>info (leitura + checkbox)</code> → <code>draw1</code> → <code>draw2</code> → <code>/home</code></li>
+                </ul>
+
+                <div class="post-section">Central de Ajuda — /ajuda</div>
+                <ul>
+                    <li>Nova página <code>/ajuda</code> com 25 artigos organizados em 7 categorias: Primeiros Passos, Reserva Genesis, Como Comprar USDT, Mineração, Fundação, Segurança, Rede & Governança</li>
+                    <li>Busca interna em tempo real filtrando por título e conteúdo dos artigos</li>
+                    <li>Filtros por categoria na sidebar (desktop) e tags compactas (mobile)</li>
+                    <li>Artigos em acordeão expansível com dicas, avisos e blocos de passo a passo formatados</li>
+                    <li>Link "AJUDA" adicionado na nav principal</li>
+                </ul>
+
+                <div class="post-section">Endpoint Fundação — Backend Integrado</div>
+                <ul>
+                    <li><code>POST /api/fundacao/inscricao</code>: recebe formulário, valida campos obrigatórios, aplica rate limiting (3 por hora por IP) e honeypot anti-bot (<code>website_url</code>). Salva em tabela <code>fundacao_inscricoes</code> isolada no SQLite</li>
+                    <li><code>GET /api/fundacao/inscricoes?admin_key=</code>: endpoint protegido por variável de ambiente <code>PLEGMA_ADMIN_KEY</code></li>
+                    <li>Formulário HTML conectado ao backend via <code>fetch()</code> com validação client-side, honeypot invisível e mensagens de sucesso/erro inline</li>
+                    <li>Painel admin <code>/admin/fundacao.html</code>: interface visual com stats (total/pendentes/aprovados/rejeitados), filtros, busca e troca de status por clique</li>
+                </ul>
+
+                <div class="post-section">Correções de UX — Landing Page</div>
+                <ul>
+                    <li><span class="highlight">Hamburger menu mobile</span>: nav da landing page colapsava em telas pequenas empilhando todos os links. Implementado menu hamburguer (☰/✕) com animação — links em coluna vertical ao expandir</li>
+                    <li><span class="highlight">Email overflow mobile</span>: endereço <code>plegmadag@proton.me</code> na seção "Canal Oficial" extrapolava a largura da tela. Corrigido com <code>word-break: break-all</code> e <code>clamp</code> mais agressivo</li>
+                </ul>
+
+                <div class="post-section">Central de Ajuda — Destaques de Conteúdo</div>
+                <ul>
+                    <li>Artigo de instalação do APK inclui dica sobre verificações de segurança: o Google Play Protect e o verificador do fabricante (Xiaomi, Samsung etc.) podem solicitar análise do arquivo — aceitar a verificação e ser aprovado é prova de ausência de vírus ou malware</li>
+                    <li>Artigo de autenticação dupla reescrito com ênfase clara: <span class="amber">a digital sozinha não desbloqueia o app completamente</span> — necessário 3 toques no logo para abrir o padrão</li>
+                </ul>
+
+            </div>
+        </article>
+
+        <!-- BUILD 005 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">BUILD 005 — APK Estável, Autenticação Dupla Anti-Coação & Protocolo de Mineração</span>
+                <div class="post-meta">
+                    <span class="post-date">22 MAR 2026 · 23:00</span>
+                    <span class="post-tag tag-front">ANDROID</span>
+                    <span class="post-tag tag-core">CORE</span>
+                    <span class="post-tag tag-fix">FIX</span>
+                </div>
+            </div>
+            <div class="post-body">
+
+                <div class="post-section">APK Android — Ciclo de Correções (v1.0.0 → v1.1.3)</div>
+                <ul>
+                    <li><span class="highlight">v1.0.0</span> — Primeiro build assinado publicado em plegmadag.com/download/</li>
+                    <li><span class="highlight">v1.0.1</span> — HTTP cleartext liberado (<code>usesCleartextTraffic</code>), permissões CAMERA e USE_BIOMETRIC adicionadas</li>
+                    <li><span class="highlight">v1.0.2</span> — Correção crítica de package: <code>com.plegmadag.plegma_app</code> → <code>com.plegmadag.app</code>. App instalava mas não abria (<code>ClassNotFoundException: MainActivity</code>)</li>
+                    <li><span class="highlight">v1.1.0</span> — Sistema de autenticação dupla anti-coação implementado</li>
+                    <li><span class="highlight">v1.1.1</span> — Correção do overlay de lock: <code>lockedNotifier</code> inicia como <code>false</code>; boot chama <code>lock()</code> disparando o <code>ValueListenableBuilder</code></li>
+                    <li><span class="highlight">v1.1.2</span> — <code>FlutterActivity</code> → <code>FlutterFragmentActivity</code>: necessário para o <code>local_auth</code> exibir o diálogo biométrico via FragmentManager</li>
+                    <li><span class="amber">v1.1.3 estável</span> — Estado da fase B1 movido para <code>AuthService.b1DoneNotifier</code> (ValueNotifier estático). Resolve o bug onde o widget era recriado pelo builder e perdia o estado da autenticação</li>
+                </ul>
+
+                <div class="post-section">Autenticação Dupla Anti-Coação</div>
+                <ul>
+                    <li><span class="highlight">B1 — Biometria do dispositivo</span>: digital ou face ID, idêntico ao desbloqueio do celular. Ativado automaticamente ao abrir o app</li>
+                    <li>Após B1: tela neutra — apenas logo e nome. Nenhuma indicação do próximo passo. Usuário sob coação para aqui</li>
+                    <li><span class="highlight">B2 — Padrão de pontos</span>: grade 3×3 (9 pontos, mínimo 4 conectados). Ativado por <strong>3 toques no logo</strong> — sem botão, sem texto, sem pista visual</li>
+                    <li>App trava automaticamente ao ir para background, ao minimizar ou ao apagar a tela (<code>AppLifecycleState.paused/inactive</code>)</li>
+                    <li>Autenticação B1 exigida antes de assinar qualquer transação de <span class="highlight">$PLG</span> ou <span class="highlight">PLG-G</span></li>
+                    <li>Padrão configurado no primeiro boot, com instrução clara de como o mecanismo funciona</li>
+                </ul>
+
+                <div class="post-section">Protocolo de Mineração — Correções de Especificação</div>
+                <ul>
+                    <li><span class="highlight">FIFO L(t) = R(t−30)</span>: data de liberação do vesting agora ancorada no <em>timestamp do vértice minerado</em>, não em <code>datetime.now()</code>. Garante que quem minerar primeiro libera primeiro</li>
+                    <li><span class="highlight">Anchor vertices</span>: vértices com <code>amount=0</code> permitidos nos primeiros 30 dias da Genesis — necessários para construção da topologia DAG antes de existirem transações reais</li>
+                    <li><span class="highlight">Fee component</span>: a partir do Dia 31, a recompensa inclui 0,1% do valor da transação validada — <code>R = G/N + tx_fee</code></li>
+                </ul>
+
+                <div class="post-section">Sócio Genesis — Selo de Identidade</div>
+                <ul>
+                    <li>Selo pessoal não-transferível para compradores da Genesis Reserve</li>
+                    <li><strong>Governança</strong> (peso_voto, boost, categoria) viaja com o token PLG-G na transferência</li>
+                    <li><strong>Selo</strong> é identidade pessoal — não se transfere com o token e não se recupera se o saldo PLG-G chegar a zero</li>
+                    <li>Implementado no backend (<code>genesis_contract.py</code>), no app (badge dourado na aba Wallet) e na página /genesis</li>
+                </ul>
+
+                <div class="post-section">PLG-G — Preço Determinado pelo Vendedor</div>
+                <ul>
+                    <li>Simulação de preço removida do app — qualquer flutuação artificial seria desonesta com o Sócio</li>
+                    <li>Novo endpoint <code>GET /api/genesis/ultimo_preco</code>: retorna o preço da última venda P2P real</li>
+                    <li>Fallback: $0,10 USDC (preço de emissão da Genesis) quando nenhuma venda P2P existe ainda</li>
+                    <li>O app exibe a fonte do preço (<span class="highlight">Genesis</span> ou <span class="highlight">P2P</span>) com transparência</li>
+                </ul>
+
+            </div>
+        </article>
+
+        <!-- COMUNICADO — Pré-Lançamento e Abertura da Genesis Reserve -->
+        <article class="post" style="border-color: rgba(180,83,9,0.4);">
+            <div class="post-header">
+                <span class="post-title">COMUNICADO — Pré-Lançamento e Abertura da Genesis Reserve</span>
+                <div class="post-meta">
+                    <span class="post-date">22 MAR 2026 · 20:00</span>
+                    <span class="post-tag tag-anuncio">ANÚNCIO</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Status da Rede</div>
+                <ul>
+                    <li>A Rede PLEGMA DAG entra em fase de <span class="amber">pré-lançamento oficial</span> a partir desta data.</li>
+                    <li>A <span class="highlight">Genesis Reserve será aberta em breve</span>: 10.500.000 PLG-G a $0,10 USDC fixo. A data de abertura será anunciada via blog e email.</li>
+                    <li>Canal oficial de suporte e comunicação: <span class="highlight">plegmadag@proton.me</span></li>
+                    <li>Todas as funcionalidades da plataforma serão ativadas na <span class="green">data oficial de lançamento</span>.</li>
+                    <li>A data será comunicada com antecedência via blog e email — botão <span class="highlight">AVISE-ME</span> disponível em todas as páginas.</li>
+                </ul>
+                <div class="post-section">Sincronização de Protocolo</div>
+                <ul>
+                    <li><span class="amber">SYNC: ALV_ZKDAG_BNG_GENESIS_2026_FAIRLAUNCH</span></li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- BUILD 004 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">BUILD 004 — Blog Timeline, App Flutter & Refinamentos Gerais</span>
+                <div class="post-meta">
+                    <span class="post-date">22 MAR 2026 · 15:30</span>
+                    <span class="post-tag tag-front">FRONTEND</span>
+                    <span class="post-tag tag-core">CORE</span>
+                    <span class="post-tag tag-fix">FIX</span>
+                </div>
+            </div>
+            <div class="post-body">
+
+                <div class="post-section">Blog — Reestruturação Completa</div>
+                <ul>
+                    <li>Blog reestruturado com linha do tempo completa desde o dia da concepção: 01/02/2026</li>
+                    <li>Três posts de origem criados: A Ideia, O Nome e A Identidade Visual — narrativa contínua da gênese do projeto</li>
+                    <li>Posts técnicos e logs de desenvolvimento redistribuídos ao longo do período real de construção</li>
+                    <li>Data e hora adicionadas a todos os registros para rastreabilidade histórica</li>
+                    <li>Categorias reorganizadas: Origens e Concepção / Fundamentos Técnicos / Logs de Desenvolvimento</li>
+                </ul>
+
+                <div class="post-section">App Flutter — Toolchain & Primeiras Telas</div>
+                <ul>
+                    <li>Android Studio instalado e toolchain Android completo — flutter doctor sem pendências críticas</li>
+                    <li>Estrutura de pastas Flutter criada: lib/screens/, lib/widgets/, lib/services/, lib/models/</li>
+                    <li>Tela de Boot implementada: animação logo.gif com barra de progresso e splash em fundo preto/ciano</li>
+                    <li>Navegação principal configurada: BottomNavigationBar com 5 abas (Home, Wallet, Validator, Shield, Provers)</li>
+                    <li>Tema global definido: ThemeData com fundo #000000, primária #00F2FF, fontFamily Space Mono</li>
+                    <li>Serviço de API criado: api_service.dart com métodos para status, saldo e mineração via HTTP</li>
+                </ul>
+
+                <div class="post-section">Genesis Reserve — Página Pública</div>
+                <ul>
+                    <li>Página /genesis publicada com contador de supply em tempo real via GET /api/genesis/status</li>
+                    <li>Formulário de intenção de compra com geração de REF único e QR code de pagamento USDC</li>
+                    <li>Barra de progresso visual do supply vendido vs disponível atualizada a cada 30 segundos</li>
+                    <li>Seção de tiers com cards diferenciados: Apoiador ($100–$300 · 1.000–3.000 PLG-G | até 3 min.), Sentinela ($301–$600 · 3.001–6.000 PLG-G | até 6 min.), Master ($601–$1.000 · 6.001–10.000 PLG-G | até 10 min.). Mínimo de aporte: $100 USDC · 1.000 PLG-G.</li>
+                </ul>
+
+                <div class="post-section">Refinamentos & Fixes</div>
+                <ul>
+                    <li>Nav unificada em todas as páginas — link /genesis adicionado onde faltava</li>
+                    <li>auth.js: timeout de sessão tratado com mensagem amigável em vez de tela branca</li>
+                    <li>dashboard: painel Lattice Shield corrigido — escudo SVG não renderizava em Firefox</li>
+                    <li>minerador_gui.py: crash corrigido ao iniciar sem GPU detectada — fallback para CPU-only gracioso</li>
+                </ul>
+
+            </div>
+        </article>
+
+        <!-- BUILD 003 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">BUILD 003 — Dashboard Completo, Minerador Desktop & App Mobile</span>
+                <div class="post-meta">
+                    <span class="post-date">15 MAR 2026 · 18:00</span>
+                    <span class="post-tag tag-core">CORE</span>
+                    <span class="post-tag tag-front">FRONTEND</span>
+                    <span class="post-tag tag-infra">INFRA</span>
+                    <span class="post-tag tag-proto">MINERADOR</span>
+                </div>
+            </div>
+            <div class="post-body">
+
+                <div class="post-section">Cláusulas 13ª e 14ª — Implementação Completa</div>
+                <ul>
+                    <li>core_consenso.py reescrito: classificação automática de hardware por score (CPU × 50 + RAM × 5 + GPU × 500), tipos VALIDATOR e PROVER</li>
+                    <li>aerarium.py atualizado: dois pools separados — Validator Pool (60%) e Prover Pool (40%) desde a inicialização</li>
+                    <li>core_dag.py atualizado: add_transaction() recebe node_type e debita do pool correto via Aerarium</li>
+                    <li>Vínculo celular→PC: recompensas de PCs sempre vão para o endereço PLG do celular dono</li>
+                    <li>Cláusula 14ª: fragmentação equitativa de trabalho entre Provers com teto de 10% por nó</li>
+                </ul>
+
+                <div class="post-section">Carteira — Motor e Interfaces</div>
+                <ul>
+                    <li>wallet.py: motor central com saldo disponível vs vesting, histórico tipado, transferência assinada Dilithium3</li>
+                    <li>wallet_app.py: interface mobile minimalista CLI com 3 telas (saldo, enviar, histórico)</li>
+                    <li>wallet_dashboard.py: interface completa CLI com 6 painéis e breakdown dos pools</li>
+                    <li>wallet_server.py: API HTTP porta 8083 com 7 rotas — status, vesting, extrato, provers, stats, transferir, vincular</li>
+                    <li>Liberação automática de vesting após 30 dias com notificação no histórico</li>
+                </ul>
+
+                <div class="post-section">Dashboard Web — Completo</div>
+                <ul>
+                    <li>Trava de acesso: sem sessão ativa o dashboard bloqueia com tela de lock e redireciona para QR auth</li>
+                    <li>Header com botão de sessão no canto superior direito — dropdown com endereço PLG, saldo e logout</li>
+                    <li>Wallet com accordion na nav — WALLET fixo, sub-itens ENVIAR/EXTRATO/PROVERS colapsáveis</li>
+                    <li>Painel WALLET: cotação PLG/USDT simulada com gráfico de linha animado, saldo em USDT em tempo real</li>
+                    <li>Painel PROVERS: tabela com 7 colunas, instrução de vínculo passo a passo, botão BAIXAR MINERADOR (V2.0+), botão DESVINCULAR por linha</li>
+                    <li>Painel LATTICE SHIELD: escudo SVG lattice grande com telemetria DAG animada sobreposta dentro do escudo</li>
+                    <li>Painel DESENVOLVEDOR com duas sub-abas: API &amp; Console (status servidores, logs, console de rotas, docs) e CONTRATOS (IDE visual PlegmaScript com syntax highlight, roadmap V2.0+)</li>
+                    <li>Botão ADQUIRIR $PLG na carteira — pool externa V2.0+ com aviso claro</li>
+                </ul>
+
+                <div class="post-section">Minerador Desktop — GUI</div>
+                <ul>
+                    <li>hardware_detector.py: detecção real de CPU/RAM/GPU via psutil e nvidia-smi/wmic</li>
+                    <li>miner_engine.py: loop de mineração em thread separada, conecta à DAG real com fallback para simulação</li>
+                    <li>miner_server.py: API HTTP porta 8084 expõe status do minerador para o dashboard</li>
+                    <li>minerador_gui.py: GUI Tkinter com identidade visual do dashboard — fundo escuro, ciano, Space Mono</li>
+                    <li>Tela de Boot: barra de progresso animada com detecção de hardware em 7 fases, resultado VALIDATOR/PROVER com specs</li>
+                    <li>Painel Principal: sidebar com controles, 4 cards de métricas (hashrate, total minerado, vértices aceitos, uptime), log colorido em tempo real</li>
+                    <li>Logo logo.gif animada em 3 locais: topbar, boot screen e sidebar — redimensionada automaticamente</li>
+                    <li>Empacotado em .exe via PyInstaller — executável standalone sem dependências</li>
+                </ul>
+
+                <div class="post-section">App Mobile — Início do Projeto</div>
+                <ul>
+                    <li>Tecnologia definida: Flutter (iOS + Android, código único em Dart)</li>
+                    <li>Estrutura de telas MVP definida: Boot, Home, Wallet, Validator, Shield, Provers, Governança (V2.0+)</li>
+                    <li>Identidade visual: mantém fundo escuro e ciano adaptado para mobile com cards arredondados e gestos nativos</li>
+                    <li>Flutter SDK instalado: versão 3.41.5 canal stable, Dart 3.11.3</li>
+                    <li>Android Studio em instalação para completar o toolchain Android</li>
+                </ul>
+
+            </div>
+        </article>
+
+        <!-- BUILD 002 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">BUILD 002 — Plataforma Web & Protocolo ZKM</span>
+                <div class="post-meta">
+                    <span class="post-date">08 MAR 2026 · 20:00</span>
+                    <span class="post-tag tag-front">FRONTEND</span>
+                    <span class="post-tag tag-proto">PROTOCOLO</span>
+                    <span class="post-tag tag-sec">SEGURANÇA</span>
+                    <span class="post-tag tag-infra">INFRA</span>
+                </div>
+            </div>
+            <div class="post-body">
+
+                <div class="post-section">Protocolo ZKM</div>
+                <ul>
+                    <li>Protocolo binário proprietário ZKM1 implementado — formato com header, payload RGBA por blocos e prova SHA-256 de 32 bytes</li>
+                    <li>ZKM Forge: conversor PNG e GIF animado para .zkm com motor de compressão por blocos e fator ajustável</li>
+                    <li>ZKM Player: Web Component &lt;zkm-img&gt; embeddable em qualquer site — Shadow DOM isolado, verificação de prova automática</li>
+                    <li>ZKM Viewer: página de preview com suporte a drag-and-drop de arquivos .zkm e guia de integração</li>
+                    <li>Animação de montagem no carregamento — pixels aparecem gradualmente com efeito visual ciano</li>
+                    <li>GIF animado preserva todos os frames e timing original via biblioteca omggif</li>
+                    <li>Prova SHA-256 exibe ZK-VERIFIED ✓ ou PROVA INVÁLIDA ✗ no carregamento</li>
+                </ul>
+
+                <div class="post-section">Autenticação</div>
+                <ul>
+                    <li>Auth Server implementado em Python — Challenge/Response com Crystals-Dilithium3</li>
+                    <li>Nonce criptograficamente seguro via BLAKE3, TTL de 120 segundos, uso único</li>
+                    <li>Verificação server-side da assinatura Dilithium3 — chave privada nunca sai do dispositivo</li>
+                    <li>Sessão de 24h com token seguro — single sign-on entre todas as páginas via sessionStorage</li>
+                    <li>auth.js centralizado — módulo reutilizável incluído em landing, blog e labs</li>
+                    <li>Simulador de app mobile para testar o fluxo QR sem app nativo</li>
+                    <li>Polling automático a cada 2s com timer visual e barra de progresso de expiração</li>
+                </ul>
+
+                <div class="post-section">PLEGMA LABS — Rede de Ideias</div>
+                <ul>
+                    <li>Rede social de inovação coletiva com identidade via carteira PLG</li>
+                    <li>Filtro híbrido PHR: auto-bloqueio em tempo real + moderação admin</li>
+                    <li>Fluxo de status: IDEIA → EM VOTAÇÃO → DESENVOLVIMENTO COLETIVO → FORGE → ARSENAL</li>
+                    <li>Gaveta de Projetos com seções FORGE (em construção) e ARSENAL (concluídos)</li>
+                    <li>ZKM Forge, ZKM Viewer e ZKM Player registrados no Arsenal como primeiros projetos</li>
+                    <li>Ciclo mensal automático: top 3 ideias por comentários promovidas para votação no último dia do mês</li>
+                    <li>Storage persistente entre sessões via artifact storage API</li>
+                </ul>
+
+                <div class="post-section">Landing Page & Blog</div>
+                <ul>
+                    <li>Nav atualizada: botões BLOG, LABS, ZKM e DASHBOARD em todas as páginas</li>
+                    <li>Botão DASHBOARD usa QR auth — substituiu input de endereço PLG inseguro</li>
+                    <li>Seção Economia corrigida: referência ao Motor Ollama removida (V2+), fórmula R=G/N mantida no Aerarium</li>
+                    <li>Contratos Inteligentes e Pacto dos 5 marcados como V2.0+ no conteúdo público</li>
+                    <li>Terceiro card adicionado: BLAKE3 + ZK-Press</li>
+                    <li>Bug CSS corrigido na landing: chave extra no @media 768px</li>
+                </ul>
+
+            </div>
+        </article>
+
+        <!-- BUILD 001 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">BUILD 001 — Correções Core & Frontend</span>
+                <div class="post-meta">
+                    <span class="post-date">01 MAR 2026 · 22:00</span>
+                    <span class="post-tag tag-core">CORE</span>
+                    <span class="post-tag tag-fix">FIX</span>
+                    <span class="post-tag tag-front">FRONTEND</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <ul>
+                    <li>Criptografia: Ed448 (curva elíptica) substituído por Crystals-Dilithium3 — padrão NIST FIPS 204, resistência pós-quântica real</li>
+                    <li>Core DAG: fluxo completo integrado — assinatura Dilithium3 + ZK-Press + Aerarium em pipeline único</li>
+                    <li>API V1.0 validada em ambiente real: GET /api/status · POST /api/mine · GET /api/lastBlock</li>
+                    <li>Módulos V2.0+ isolados: core_vm (contratos), pacto_dos_5 (ZK-Sharding), app_navegacao — código preservado, fora do escopo MVP</li>
+                    <li>Tokenomics: lock-up de mineração padronizado para 30 dias em toda a base de código</li>
+                    <li>Reserva de Gênese 0,05% documentada como extensão fundadora — PLG-G como token de governança com queima dos não-vendidos no Dia 30</li>
+                    <li>Frontend: escudo SVG atualizado com forma policial, nó DAG rotacionando, estrelas e faixa "Justiça Absoluta"</li>
+                    <li>Responsividade mobile implementada — sidebar vira drawer, layout 2×2 em telas pequenas</li>
+                    <li>Bug CSS crítico corrigido no style.css: chave faltando em .plegma-footer corrompendo .tx-list</li>
+                    <li>telemetry.js conectado à API real via polling — particleCount dinâmico com nos_ativos</li>
+                    <li>Conexões DAG no visualizador limitadas a 5 por nó — alinhado ao Estatuto §2.1</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- ═══ ORIGENS E CONCEPÇÃO ═══ -->
+        <div class="posts-category">Origens e Concepção</div>
+
+        <!-- POST 3 — Identidade Visual -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">Anatomia de uma Revolução: A Identidade Visual PLEGMA DAG</span>
+                <div class="post-meta">
+                    <span class="post-date">10 FEV 2026 · 16:30</span>
+                    <span class="post-tag tag-front">DESIGN</span>
+                    <span class="post-tag tag-core">CORE</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">A marca foi arquitetada, não desenhada</div>
+                <p>A marca PLEGMA DAG não foi desenhada; ela foi <span class="highlight">arquitetada</span>. Cada curva, material e emissão de luz no glifo central responde aos três pilares do protocolo: <span class="green">Segurança</span>, <span class="amber">Escalabilidade</span> e <span class="purple">Descentralização</span>. Nenhum elemento é decorativo — cada decisão visual tem raiz técnica.</p>
+                <div class="post-section">1. O Glifo Central — O Entrelaçamento (Plegma)</div>
+                <p>O termo grego <span class="highlight">Plegma</span> significa "malha" ou "tecido entrelaçado". Diferente de uma blockchain linear e limitada, a logo utiliza uma estrutura de infinito multidimensional. Por que o entrelaçamento? Ele representa a topologia de um DAG: na PLEGMA, as transações não esperam por blocos — elas se entrelaçam em um fluxo contínuo e assíncrono. O <span class="green">"P" escondido</span>: a forma como os feixes se curvam no centro projeta sutilmente a inicial do projeto, unindo identidade nominal à estrutura técnica.</p>
+                <div class="post-section">2. Materiais e Texturas — Robustez Industrial</div>
+                <p>A logo é emoldurada por um <span class="highlight">anel de metal escovado</span> com fundo de <span class="amber">fibra de carbono</span>. A escolha do Carbono simboliza alta resistência e baixo peso — uma metáfora para o protocolo Zk-Press de <span class="highlight">22KB</span>, extremamente leve mas matematicamente indestrutível. O Anel Metálico representa o <span class="purple">Isolamento e Privacidade Total</span>: a barreira física que protege o registro offline contra interferências externas.</p>
+                <div class="post-section">3. Espectro Cromático — O Brilho do Dilithium3</div>
+                <p>O <span class="highlight">azul elétrico (Cyan/Electric Blue)</span> que emana das conexões não é meramente estético. Representa a Segurança Quântica: o brilho simula a energia de uma rede viva, protegida por assinaturas baseadas em reticulados (Lattice-based) do protocolo Dilithium3. Os <span class="green">Nós de Dados</span> — pontos de luz nas intersecções — representam os nós da rede verificando transações em tempo real, garantindo o determinismo absoluto.</p>
+                <div class="post-section">4. O Lema — "Justiça Absoluta"</div>
+                <p>Localizado na base do anel, este lema é a tradução visual da diretriz de emissão <span class="highlight">$R=G/N</span> (Aerarium). Na PLEGMA, não existe vantagem para o fundador: a justiça é absoluta — todos, incluindo o Engenheiro Chefe, devem adquirir $PLG sob as mesmas regras de mercado. O lema reforça o compromisso do <span class="amber">Fair Launch 2026</span> e a regra de retenção de 30 dias para mineradores.</p>
+                <div class="post-section">5. Ícones Auxiliares — O Ecossistema</div>
+                <p>A identidade se estende para dois ícones satélites: <span class="green">Plegma Minerador</span> — uma trama geométrica que representa o esforço computacional e a prova de trabalho necessária para a segurança da rede. <span class="purple">Segurança Agente (Shield)</span> — um escudo que abriga a molécula de Dilithium3, simbolizando o agente Sentinela protegendo o capital do usuário. <code style="color:#ccc">SYNC: ALV_ZKDAG_BNG_GENESIS_2026_FAIRLAUNCH</code></p>
+            </div>
+        </article>
+
+        <!-- POST 2 — O Nome -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">Por que "PlegmaDAG"? A Etimologia de um Protocolo</span>
+                <div class="post-meta">
+                    <span class="post-date">05 FEV 2026 · 14:00</span>
+                    <span class="post-tag tag-core">CORE</span>
+                    <span class="post-tag tag-dag">DAG</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Plegma — a raiz grega</div>
+                <p>Na sua origem grega, <span class="highlight">Plegma (πλέγμα)</span> significa algo entrelaçado: uma rede, uma trama, um tecido de fios que se cruzam e se sustentam mutuamente. Não é uma linha. Não é uma cadeia. É uma malha viva onde cada ponto reforça o outro. O nome foi escolhido deliberadamente: ele descreve tanto a estrutura técnica da rede quanto a filosofia social por trás dela — uma comunidade onde cada participante valida e é validado pelos demais.</p>
+                <div class="post-section">DAG — Directed Acyclic Graph</div>
+                <p><span class="highlight">DAG</span> é a sigla para <span class="green">Directed Acyclic Graph</span> — Grafo Acíclico Dirigido em português. É uma estrutura matemática onde os elementos (vértices) são conectados por arestas com direção, mas sem a possibilidade de formar ciclos: você nunca pode partir de um ponto e retornar a ele seguindo as conexões. Na prática para um protocolo de transações: <span class="amber">cada transação aponta para transações anteriores</span>, formando uma teia de confirmações cruzadas em vez de uma fila linear bloqueante. O resultado é escalabilidade natural — quanto mais transações, mais validadores, mais velocidade.</p>
+                <div class="post-section">Por que não "PlegmaChain"?</div>
+                <p>A escolha de DAG no lugar de Chain não foi apenas técnica — foi filosófica. "Chain" (cadeia) carrega a imagem de uma sequência rígida, onde um elo fraco quebra tudo. "Graph" (grafo) carrega a imagem de uma rede resiliente onde múltiplos caminhos coexistem. <span class="purple">PlegmaDAG</span> é, portanto, o nome mais honesto que o projeto poderia ter: uma malha entrelaçada construída sobre uma estrutura de grafo acíclico dirigido. O nome é o protocolo.</p>
+                <div class="post-section">O símbolo $PLG</div>
+                <p>O ticker <span class="highlight">$PLG</span> é a contração de Plegma — três letras que encapsulam toda a etimologia. Curto o suficiente para ser lembrado, único o suficiente para não ser confundido. Em exchanges e registros on-chain, $PLG será sempre o marcador de que uma transação pertence à rede entrelaçada — à malha viva que o Engenheiro Chefe começou a desenhar em fevereiro de 2026.</p>
+            </div>
+        </article>
+
+        <!-- POST 1 — A Origem -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">A Origem: O Engenheiro Chefe e o Problema da Energia</span>
+                <div class="post-meta">
+                    <span class="post-date">01 FEV 2026 · 08:00</span>
+                    <span class="post-tag tag-core">GÊNESE</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">O problema que não tinha solução óbvia</div>
+                <p>O ponto de partida não foi uma ideia brilhante. Foi uma <span class="amber">frustração acumulada</span>. O Engenheiro Chefe passou meses investigando como reduzir o custo de energia das blockchains tradicionais — Bitcoin, Ethereum, e seus derivados. Cada abordagem encontrada custava mais do que pretendia resolver: hardware especializado mais eficiente ainda era caro; algoritmos de consenso alternativos ainda exigiam infraestrutura pesada; soluções de Layer 2 traziam complexidade sem resolver o problema na raiz.</p>
+                <div class="post-section">A inversão de lógica</div>
+                <p>Em um determinado momento, a pergunta mudou. Em vez de <span class="amber">"como consumir energia de forma mais barata?"</span>, a questão passou a ser: <span class="highlight">"e se fosse possível consumir muito menos energia?"</span>. Não otimizar o consumo — abolir a necessidade de consumo massivo por design. Essa inversão de lógica parece simples enunciada assim, mas exige desmontar décadas de pressuposto sobre como uma rede descentralizada deve funcionar.</p>
+                <div class="post-section">O pressuposto que estava errado</div>
+                <p>Blockchains tradicionais assumem que segurança = gasto de energia: o custo de atacar a rede deve ser proibitivamente alto em termos de poder computacional. É o Proof of Work. O problema é que esse modelo pune <span class="amber">todos os participantes honestos</span> pelo potencial comportamento de atores maliciosos. O Engenheiro Chefe percebeu que a segurança poderia vir de outro lugar — da <span class="green">matematicamente indestrutível</span> e da <span class="purple">estrutura do grafo</span>, não do desperdício deliberado de ciclos de CPU.</p>
+                <div class="post-section">O início do ecossistema PLEGMA DAG</div>
+                <p>Com essa premissa estabelecida, começou o projeto de um ecossistema onde qualquer dispositivo — inclusive um smartphone de entrada — pudesse ser um nó validador sem consumir mais energia do que já consome em uso normal. A segurança viria de <span class="highlight">assinaturas criptográficas pós-quânticas</span> (Crystals-Dilithium3) e da <span class="green">estrutura DAG</span> que distribui a validação entre todos os participantes em paralelo. Sem mineração competitiva. Sem energia desperdiçada. Sem barreiras de entrada por capital. Em 01 de fevereiro de 2026, o ecossistema PLEGMA DAG começou a ser projetado.</p>
+            </div>
+        </article>
+
+    </div><!-- /tab-timeline -->
+
+    <!-- ══════════════════════════════════════
+         ABA: TESTES AUTOMÁTICOS
+         Resultados de execução de scripts de teste
+    ══════════════════════════════════════ -->
+    <div class="tab-content" id="tab-testes">
+
+        <div class="posts-category">Resultados de Autotestes</div>
+
+        <!-- SECURITY PATCH REPORT 2026-03-29 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">SECURITY PATCH — 29 Mar 2026 · 8 CVEs Críticos Corrigidos · Score 72% → 100% (P0 fechado)</span>
+                <div class="post-meta">
+                    <span class="post-date">29 Mar 2026 · Segurança</span>
+                    <span class="post-tag tag-sec">SEGURANÇA</span>
+                    <span class="post-tag" style="border-color:rgba(34,197,94,0.4);color:#22c55e;background:rgba(34,197,94,0.06);">PATCH COMPLETO</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Resumo: todos os CVEs P0 corrigidos em sessão única</div>
+                <p>Após auditoria de 90 testes (score 72%), todos os 8 CVEs críticos foram corrigidos em 4 blocos de patches emergenciais. Novos arquivos criados: <code>tx_verifier.py</code>, <code>dilithium_ffi_service.dart</code>, <code>dilithium_bridge.c</code>, <code>CMakeLists.txt</code>. Arquivos modificados: <code>plegma_db.py</code>, <code>sentinela.py</code>, <code>core_vm.py</code>, <code>auth_server.py</code>, <code>wallet_server.py</code>, <code>genesis_contract.py</code>, <code>crypto_service.dart</code>, <code>build.gradle.kts</code>.</p>
+
+                <div class="post-section">CVEs Corrigidos</div>
+                <ul>
+                    <li><span class="green">[CVE-001] CORRIGIDO</span> — <code>/api/mine</code>: verificação Dilithium3 obrigatória via <code>tx_verifier.py</code>. Vértices sem assinatura válida rejeitados com 401.</li>
+                    <li><span class="green">[CVE-002] CORRIGIDO</span> — <code>/api/peer/vertex</code>: hash BLAKE3 + assinatura Dilithium3 verificados antes de inserir no DAG. Injeção de vértices fabricados bloqueada.</li>
+                    <li><span class="green">[CVE-003] CORRIGIDO</span> — Token previsível <code>PLG_TOKEN_{addr}_{ts}</code> substituído por <code>secrets.token_hex(32)</code>. Sessões compartilhadas via tabela <code>sessions</code> no SQLite.</li>
+                    <li><span class="green">[CVE-004] CORRIGIDO</span> — Bans do Escudo persistidos em disco com checksum BLAKE3. Carregados antes de abrir sockets. Nós banidos permanecem banidos após restart.</li>
+                    <li><span class="green">[CVE-005] CORRIGIDO</span> — <code>/wallet/transferir</code>: sessão Bearer obrigatória + Dilithium3 em cada transferência. Risco financeiro eliminado.</li>
+                    <li><span class="green">[CVE-006] CORRIGIDO</span> — <code>transferir_plgg()</code>: ownership verificado por <code>verificar_tx()</code>. Transferência de PLG-G de terceiros bloqueada.</li>
+                    <li><span class="green">[CVE-007/008] CORRIGIDO</span> — Flutter: SHA-256 simulado substituído por Dilithium3 real via <code>dart:ffi</code> + <code>libdilithium_plegma.so</code> (PQClean arm64-v8a + x86_64). BLAKE3 nativo para endereços. Paridade criptográfica total com o nó Python.</li>
+                </ul>
+
+                <div class="post-section">Novos arquivos e impacto</div>
+                <ul>
+                    <li><code>PLEGMA_CORE/tx_verifier.py</code> — módulo central: <code>verificar_tx()</code> + <code>verificar_sessao_header()</code></li>
+                    <li><code>PLEGMA_APP/android/app/src/main/cpp/dilithium_bridge.c</code> — C bridge Dilithium3 + BLAKE3</li>
+                    <li><code>PLEGMA_APP/android/app/src/main/cpp/CMakeLists.txt</code> — build NDK via FetchContent (PQClean + BLAKE3)</li>
+                    <li><code>PLEGMA_APP/lib/services/dilithium_ffi_service.dart</code> — dart:ffi singleton</li>
+                    <li>Item PMR 2.4 ("Dilithium3 FFI mobile") desbloqueado — condição para burn da Chave DEUS.</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- AUTOTEST 2026-03-24 05:44:54 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">AUTOTEST — Bateria Completa: 11/14 Passed — 24 Mar 2026 — 05:44</span>
+                <div class="post-meta">
+                    <span class="post-date">24 Mar 2026 · 05:44</span>
+                    <span class="post-tag">AUTOTEST</span>
+                    <span class="post-tag" style="border-color:rgba(239,68,68,0.4);color:#ef4444;background:rgba(239,68,68,0.06);">FALHAS</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Resultado: 11/14 testes — 41.7s</div>
+                <p>Bateria automatizada de 14 testes executada contra <code>api.plegmadag.com</code>:
+                disponibilidade, stress concorrente, rate limiting, injeção SQL, XSS,
+                path traversal, oversized requests, race conditions, flood auth, method confusion,
+                canal de notas, performance sequencial e saúde pós-ataque.</p>
+
+                <div class="post-section">Performance</div>
+                <ul>
+                    <li>Baseline (100 GETs seq.): avg <strong>105.2ms</strong> — p95 144ms — max 156ms — erros 0</li>
+                    <li>Stress (200 req — 50 threads): <strong>74.9 req/s</strong> — avg 476.0ms — p95 1391ms — erros 0</li>
+                </ul>
+
+                <div class="post-section">Falhas e Alertas</div>
+                <ul>
+    <li><strong>[CRITICAL] T06_xss</strong>: XSS não refletido em nenhuma resposta</li>
+    <li><strong>[HIGH] T03_rate_limit</strong>: Nenhum 429 em 15 requests (último: 200)</li>
+    <li><strong>[MEDIUM] T08_oversized</strong>: Corpo 1MB: 200 — Addr 10KB: 201 — Servidor: UP</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- AUTOTEST 2026-03-24 17:35:04 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">AUTOTEST — Bateria Completa: 12/14 Passed — 24 Mar 2026 — 17:35</span>
+                <div class="post-meta">
+                    <span class="post-date">24 Mar 2026 · 17:35</span>
+                    <span class="post-tag">AUTOTEST</span>
+                    <span class="post-tag" style="border-color:rgba(239,68,68,0.4);color:#ef4444;background:rgba(239,68,68,0.06);">FALHAS</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Resultado: 12/14 testes — 38.6s</div>
+                <p>Bateria automatizada de 14 testes executada contra <code>api.plegmadag.com</code>:
+                disponibilidade, stress concorrente, rate limiting, injeção SQL, XSS,
+                path traversal, oversized requests, race conditions, flood auth, method confusion,
+                canal de notas, performance sequencial e saúde pós-ataque.</p>
+
+                <div class="post-section">Performance</div>
+                <ul>
+                    <li>Baseline (100 GETs seq.): avg <strong>101.9ms</strong> — p95 159ms — max 217ms — erros 0</li>
+                    <li>Stress (200 req — 50 threads): <strong>76.3 req/s</strong> — avg 432.6ms — p95 1370ms — erros 0</li>
+                </ul>
+
+                <div class="post-section">Falhas e Alertas</div>
+                <ul>
+    <li><strong>[HIGH] T03_rate_limit</strong>: Nenhum 429 em 15 requests (último: 200)</li>
+    <li><strong>[MEDIUM] T08_oversized</strong>: Corpo 1MB: 413 — Addr 10KB: 201 — Servidor: UP</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- AUTOTEST 2026-03-24 17:51:57 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">AUTOTEST — Bateria Completa: 13/14 Passed — 24 Mar 2026 — 17:51</span>
+                <div class="post-meta">
+                    <span class="post-date">24 Mar 2026 · 17:51</span>
+                    <span class="post-tag">AUTOTEST</span>
+                    <span class="post-tag" style="border-color:rgba(239,68,68,0.4);color:#ef4444;background:rgba(239,68,68,0.06);">FALHAS</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Resultado: 13/14 testes — 46.4s</div>
+                <p>Bateria automatizada de 14 testes executada contra <code>api.plegmadag.com</code>:
+                disponibilidade, stress concorrente, rate limiting, injeção SQL, XSS,
+                path traversal, oversized requests, race conditions, flood auth, method confusion,
+                canal de notas, performance sequencial e saúde pós-ataque.</p>
+
+                <div class="post-section">Performance</div>
+                <ul>
+                    <li>Baseline (100 GETs seq.): avg <strong>225.6ms</strong> — p95 1233ms — max 2001ms — erros 0</li>
+                    <li>Stress (200 req — 50 threads): <strong>84.1 req/s</strong> — avg 370.1ms — p95 1148ms — erros 0</li>
+                </ul>
+
+                <div class="post-section">Falhas e Alertas</div>
+                <ul>
+    <li><strong>[HIGH] T03_rate_limit</strong>: Nenhum 429 em 15 requests (último: 200)</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- AUTOTEST 2026-03-24 18:40:03 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">AUTOTEST — Bateria Completa: 14/14 Passed — 24 Mar 2026 — 18:40</span>
+                <div class="post-meta">
+                    <span class="post-date">24 Mar 2026 · 18:40</span>
+                    <span class="post-tag">AUTOTEST</span>
+                    <span class="post-tag" style="border-color:rgba(35,209,139,0.4);color:#23d18b;background:rgba(35,209,139,0.06);">PASS</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Resultado: 14/14 testes — 30.5s</div>
+                <p>Bateria automatizada de 14 testes executada contra <code>api.plegmadag.com</code>:
+                disponibilidade, stress concorrente, rate limiting, injeção SQL, XSS,
+                path traversal, oversized requests, race conditions, flood auth, method confusion,
+                canal de notas, performance sequencial e saúde pós-ataque.</p>
+
+                <div class="post-section">Performance</div>
+                <ul>
+                    <li>Baseline (100 GETs seq.): avg <strong>93.9ms</strong> — p95 108ms — max 124ms — erros 0</li>
+                    <li>Stress (200 req — 50 threads): <strong>102.3 req/s</strong> — avg 310.4ms — p95 1364ms — erros 0</li>
+                </ul>
+
+                <div class="post-section">Falhas e Alertas</div>
+                <ul>
+    <li>Nenhuma falha detectada.</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- AUTOTEST 2026-03-24 21:29:03 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">AUTOTEST — Bateria Completa: 14/14 Passed — 24 Mar 2026 — 21:29</span>
+                <div class="post-meta">
+                    <span class="post-date">24 Mar 2026 · 21:29</span>
+                    <span class="post-tag">AUTOTEST</span>
+                    <span class="post-tag" style="border-color:rgba(35,209,139,0.4);color:#23d18b;background:rgba(35,209,139,0.06);">PASS</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Resultado: 14/14 testes — 39.9s</div>
+                <p>Bateria automatizada de 14 testes executada contra <code>api.plegmadag.com</code>:
+                disponibilidade, stress concorrente, rate limiting, injeção SQL, XSS,
+                path traversal, oversized requests, race conditions, flood auth, method confusion,
+                canal de notas, performance sequencial e saúde pós-ataque.</p>
+
+                <div class="post-section">Performance</div>
+                <ul>
+                    <li>Baseline (100 GETs seq.): avg <strong>99.7ms</strong> — p95 127ms — max 203ms — erros 0</li>
+                    <li>Stress (200 req — 50 threads): <strong>43.3 req/s</strong> — avg 703.5ms — p95 2865ms — erros 0</li>
+                </ul>
+
+                <div class="post-section">Falhas e Alertas</div>
+                <ul>
+    <li>Nenhuma falha detectada.</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- AUTOTEST 2026-03-24 23:28:56 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">AUTOTEST — Bateria Completa: 14/14 Passed — 24 Mar 2026 — 23:28</span>
+                <div class="post-meta">
+                    <span class="post-date">24 Mar 2026 · 23:28</span>
+                    <span class="post-tag">AUTOTEST</span>
+                    <span class="post-tag" style="border-color:rgba(35,209,139,0.4);color:#23d18b;background:rgba(35,209,139,0.06);">PASS</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Resultado: 14/14 testes — 33.3s</div>
+                <p>Bateria automatizada de 14 testes executada contra <code>api.plegmadag.com</code>:
+                disponibilidade, stress concorrente, rate limiting, injeção SQL, XSS,
+                path traversal, oversized requests, race conditions, flood auth, method confusion,
+                canal de notas, performance sequencial e saúde pós-ataque.</p>
+
+                <div class="post-section">Performance</div>
+                <ul>
+                    <li>Baseline (100 GETs seq.): avg <strong>99.7ms</strong> — p95 130ms — max 197ms — erros 0</li>
+                    <li>Stress (200 req — 50 threads): <strong>80.3 req/s</strong> — avg 377.0ms — p95 1575ms — erros 0</li>
+                </ul>
+
+                <div class="post-section">Falhas e Alertas</div>
+                <ul>
+    <li>Nenhuma falha detectada.</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- AUTOTEST 2026-03-27 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">AUTOTEST — Bateria Manual Expandida: 27/28 Passed — 27 Mar 2026</span>
+                <div class="post-meta">
+                    <span class="post-date">27 Mar 2026 · Bateria Expandida</span>
+                    <span class="post-tag">AUTOTEST</span>
+                    <span class="post-tag" style="border-color:rgba(239,68,68,0.4);color:#ef4444;background:rgba(239,68,68,0.06);">FALHAS</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Resultado: 27/28 — 96.4% pass rate</div>
+                <p>Bateria manual expandida executada contra <code>api.plegmadag.com</code> e <code>plegmadag.com</code>:
+                cobertura completa de endpoints REST (14 rotas), fluxo de autenticação challenge/verify/status/logout,
+                endpoints wallet e miner, gossip P2P, genesis, governança PMR, assets estáticos,
+                todas as páginas frontend (13 páginas), CORS headers e performance baseline.</p>
+
+                <div class="post-section">Endpoints API — 14/14 OK</div>
+                <ul>
+                    <li><code>GET /api/status</code> → 200 · ONLINE · 2 nós · 6 tx · 5 tips pendentes</li>
+                    <li><code>GET /api/lastBlock</code> → 200 · hash <code>35e41f64</code> · peso_zk 21.4 KB</li>
+                    <li><code>GET /api/genesis/status</code> → 200 · supply 10.5M · vendido 0 · não iniciado</li>
+                    <li><code>GET /api/genesis/ultimo_preco</code> → 200 · $0.10 fixo</li>
+                    <li><code>GET /api/genesis/saldo?address=</code> → 200 · retorno correto para endereço inexistente</li>
+                    <li><code>GET /api/governance/maturity</code> → 200 · PMR=0 · chave_deus_ativa · 4 críticos pendentes (V2.0+)</li>
+                    <li><code>GET /api/priority?address=</code> → 200 · categoria APOIADOR · boost 1.0 · peso_voto 1.0</li>
+                    <li><code>GET /api/peer/hashes</code> → 200 · 6 hashes no DAG</li>
+                    <li><code>GET /api/peer/vertex/:hash</code> → 200 · vertex retornado com assinatura Dilithium3 completa</li>
+                    <li><code>GET /api/wallet/status?address=</code> → 200 · saldos corretos</li>
+                    <li><code>GET /api/wallet/extrato?address=</code> → 200</li>
+                    <li><code>GET /api/auth/challenge</code> → 200 · nonce gerado · TTL 120s</li>
+                    <li><code>GET /wallet/status</code> · <code>/wallet/vesting</code> · <code>/wallet/stats</code> · <code>/wallet/provers</code> → todos 200</li>
+                </ul>
+
+                <div class="post-section">Fluxo de Auth</div>
+                <ul>
+                    <li><code>GET /api/auth/challenge</code> → 200 · nonce único gerado corretamente ✅</li>
+                    <li><code>POST /api/auth/verify</code> (body inválido) → 400 com mensagem de campos obrigatórios ✅</li>
+                    <li><code>GET /api/auth/status?nonce=INVALIDO</code> → 404 <code>expired</code> ✅</li>
+                </ul>
+
+                <div class="post-section">Frontend — 13/13 Páginas OK</div>
+                <p>Todas as páginas retornam HTTP 200: <code>/</code>, <code>/blog/</code>, <code>/genesis/</code>, <code>/dashboard/</code>,
+                <code>/labs/</code>, <code>/fundacao/</code>, <code>/financas/</code>, <code>/social/</code>, <code>/ajuda/</code>,
+                <code>/servicos/</code>, <code>/podcast/</code>, <code>/quem-somos/</code>, <code>/forge/</code>.</p>
+                <p>Assets estáticos: <code>/auth.js</code> → 200 · <code>/assets/img/logo.gif</code> → 200 · <code>/assets/img/favicon-blog.svg</code> → 200.</p>
+
+                <div class="post-section">CORS</div>
+                <ul>
+                    <li><code>Access-Control-Allow-Origin: *</code> ✅</li>
+                    <li><code>Access-Control-Allow-Methods: GET, POST, OPTIONS</code> ✅</li>
+                    <li>Headers presentes após redirect 301 → HTTPS ✅</li>
+                </ul>
+
+                <div class="post-section">Performance Baseline (15 req sequenciais)</div>
+                <ul>
+                    <li>avg <strong>515ms</strong> — p95 983ms — min 270ms — max 1030ms</li>
+                    <li>Latência inclui redirect HTTP→HTTPS (301). Recomendado: medir diretamente via HTTPS após ativar SSL.</li>
+                </ul>
+
+                <div class="post-section">Falhas e Alertas</div>
+                <ul>
+                    <li><strong>[MEDIUM] ISS-04 — POST /api/mine sem validação de payload:</strong> body <code>{}</code> vazio aceito como vértice (retorna 201). Campos sender/receiver/amount/signature/public_key não validados. Vértice inválido inserido no DAG.</li>
+                    <li><strong>[INFO] ISS-05 — /miner/status (porta 8084) não exposto via nginx:</strong> inacessível externamente. Porta direta (80.78.26.52:8084) timeout. Apenas acesso direto ao servidor.</li>
+                    <li><strong>[INFO] ISS-06 — Rotas inexistentes documentadas:</strong> <code>/api/dag/status</code> e <code>/api/sentinela/status</code> → 404. Usar <code>/api/status</code> para DAG.</li>
+                    <li><strong>[PENDENTE] ISS-02 — HTTPS/SSL:</strong> HTTP retorna 301 redirect. Sem TLS próprio, confiando no proxy. Aguardando configuração de certificado.</li>
+                </ul>
+
+                <div class="post-section">Estado do DAG (snapshot)</div>
+                <ul>
+                    <li>Nós ativos: <strong>2</strong> · Validadores ativos: 2</li>
+                    <li>Total transações: <strong>6</strong> · Tips pendentes: 5 · Aceitas: 0</li>
+                    <li>Governança PMR: 0 · chave_deus_ativa: true</li>
+                    <li>Genesis Reserve: 10.497.619 PLG-G disponíveis · vendido: 0 · fase não iniciada</li>
+                    <li>Wallet principal: 625.75 PLG disponível · 2.380.86 PLG em vesting (unlock em 25 dias)</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- AUDITORIA DE SEGURANÇA 2026-03-29 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">AUDITORIA DE SEGURANÇA — Bateria Massiva: 65/90 Passed · Score 72% · 29 Mar 2026</span>
+                <div class="post-meta">
+                    <span class="post-date">29 Mar 2026 · Auditoria</span>
+                    <span class="post-tag tag-sec">SEGURANÇA</span>
+                    <span class="post-tag" style="border-color:rgba(239,68,68,0.4);color:#ef4444;background:rgba(239,68,68,0.06);">FALHAS</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Resultado: 65/90 testes — Score 72% — Análise estática + testes unitários</div>
+                <p>Bateria de 90 testes automatizados executada sobre o código-fonte do projeto (sem servidor necessário).
+                Cobertura: 7 blocos — Sentinela (Vigia/Crivo/Escudo), Auth Server, Core VM, Wallet Server,
+                Genesis Contract, App Flutter e testes de resistência (fuzzing, edge cases, race conditions).</p>
+
+                <div class="post-section">Resultados por Severidade</div>
+                <ul>
+                    <li><strong>[CRITICAL]</strong> 15 aprovados · <strong>8 reprovados</strong> — CVEs críticos identificados</li>
+                    <li><strong>[HIGH]</strong> 19 aprovados · <strong>8 reprovados</strong> — vulnerabilidades altas</li>
+                    <li><strong>[MEDIUM]</strong> 8 aprovados · <strong>8 reprovados</strong> — riscos médios</li>
+                    <li><strong>[INFO]</strong> 23 aprovados · 1 reprovado</li>
+                </ul>
+
+                <div class="post-section">O que está funcionando (destaques)</div>
+                <ul>
+                    <li>Geofencing (KP/IR/SY): 100% bloqueado — T02-T04</li>
+                    <li>Anti-Smurfing thread-safe sob carga concorrente (10 threads): ≤6 aprovados — T90</li>
+                    <li>Crivo: overflow, underflow, reentrância (lowercase) — T12-T15</li>
+                    <li>Escudo: Slashing efetivo (score=-1, staked=0) + double-spend — T20-T23</li>
+                    <li>NonceStore: TTL, uso único, replay bloqueado, thread-safety — T28-T38</li>
+                    <li>Rate limit challenge com threading.Lock() — T51</li>
+                    <li>Admin: chave vazia bloqueia acesso (sem bypass com env vazio) — T55</li>
+                    <li>Genesis: lock TOCTOU no supply check — T65</li>
+                    <li>Flutter: Random.secure(), FlutterSecureStorage com encryption, dupla auth B1+B2 — T71-T74</li>
+                    <li>Resistência: payload 1MB sem crash, unicode sem crash, race condition Anti-Smurfing — T81-T90</li>
+                </ul>
+
+                <div class="post-section">CVEs Críticos Identificados (P0 — bloqueiam abertura pública)</div>
+                <ul>
+                    <li><strong>CVE-001</strong> core_vm /api/mine — assinatura Dilithium3 nunca verificada</li>
+                    <li><strong>CVE-002</strong> core_vm /api/peer/vertex — vértices inseridos no DAG sem validação</li>
+                    <li><strong>CVE-003</strong> core_vm /api/auth/verify — token JWT previsível (PLG_TOKEN_{addr}_{ts})</li>
+                    <li><strong>CVE-004</strong> sentinela Escudo — bans não persistem após restart do servidor</li>
+                    <li><strong>CVE-005</strong> wallet_server /wallet/transferir — sem autenticação</li>
+                    <li><strong>CVE-006</strong> genesis_contract transferir_plgg — sem verificação de ownership</li>
+                    <li><strong>CVE-007/008</strong> Flutter crypto_service — SHA-256 simulado em vez de Dilithium3 real (bloqueia PMR 2.4)</li>
+                </ul>
+
+                <div class="post-section">Vulnerabilidades Altas (P1 — V1.5)</div>
+                <ul>
+                    <li>Crivo case-sensitive: "Recursive_Call" (R maiúsculo) não é detectado</li>
+                    <li>Crivo type confusion: amount=NaN passa pela verificação numérica</li>
+                    <li>/social/post, /social/votar, /labs/votar: sem autenticação</li>
+                    <li>/miner/pause e /resume: sem autenticação</li>
+                    <li>Senha hardcoded 'plegma2026' no canal privado (/api/notas)</li>
+                    <li>Flutter B2: salt estático 'plegma_b2_salt_' — vulnerável a rainbow table</li>
+                </ul>
+
+                <div class="post-section">Relatório e Script</div>
+                <ul>
+                    <li>Relatório completo: <code>SECURITY_AUDIT/RELATORIO_SEGURANCA_2026-03-29.md</code></li>
+                    <li>Script de testes: <code>SECURITY_AUDIT/test_battery.py</code> (90 testes, sem servidor)</li>
+                    <li>Resultados JSON: <code>SECURITY_AUDIT/test_results.json</code></li>
+                    <li>Roadmap atualizado: Camada 13 — Hardening P0/P1/P2</li>
+                </ul>
+            </div>
+        </article>
+
+    </div><!-- /tab-testes -->
+
+</div><!-- /posts-container -->
+
+<!-- Selos de Tecnologia -->
+<div style="max-width:900px;margin:0 auto;padding:0 40px 40px">
+    <div style="font-size:0.7rem;letter-spacing:4px;text-transform:uppercase;color:#00F2FF;margin-bottom:20px;display:flex;align-items:center;gap:16px">Tecnologias da Rede PLEGMA <span style="flex:1;height:1px;background:rgba(0,242,255,0.25);display:block"></span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <div style="display:flex;align-items:center;border:1px solid rgba(0,242,255,0.12);border-radius:4px;overflow:hidden;font-size:0.6rem;letter-spacing:1px;font-family:'Space Mono',monospace"><span style="background:rgba(255,255,255,0.03);color:#64748b;padding:4px 8px;border-right:1px solid rgba(0,242,255,0.12)">segurança</span><span style="background:rgba(0,242,255,0.08);color:#00F2FF;padding:4px 8px;font-weight:700">Crystals-Dilithium3</span></div>
+        <div style="display:flex;align-items:center;border:1px solid rgba(0,242,255,0.12);border-radius:4px;overflow:hidden;font-size:0.6rem;letter-spacing:1px;font-family:'Space Mono',monospace"><span style="background:rgba(255,255,255,0.03);color:#64748b;padding:4px 8px;border-right:1px solid rgba(0,242,255,0.12)">padrão</span><span style="background:rgba(0,242,255,0.08);color:#00F2FF;padding:4px 8px;font-weight:700">NIST FIPS 204</span></div>
+        <div style="display:flex;align-items:center;border:1px solid rgba(0,242,255,0.12);border-radius:4px;overflow:hidden;font-size:0.6rem;letter-spacing:1px;font-family:'Space Mono',monospace"><span style="background:rgba(255,255,255,0.03);color:#64748b;padding:4px 8px;border-right:1px solid rgba(0,242,255,0.12)">hash</span><span style="background:rgba(0,242,255,0.08);color:#00F2FF;padding:4px 8px;font-weight:700">BLAKE3</span></div>
+        <div style="display:flex;align-items:center;border:1px solid rgba(0,242,255,0.12);border-radius:4px;overflow:hidden;font-size:0.6rem;letter-spacing:1px;font-family:'Space Mono',monospace"><span style="background:rgba(255,255,255,0.03);color:#64748b;padding:4px 8px;border-right:1px solid rgba(0,242,255,0.12)">provas</span><span style="background:rgba(0,242,255,0.08);color:#00F2FF;padding:4px 8px;font-weight:700">ZK-SNARK · 22KB</span></div>
+        <div style="display:flex;align-items:center;border:1px solid rgba(0,242,255,0.12);border-radius:4px;overflow:hidden;font-size:0.6rem;letter-spacing:1px;font-family:'Space Mono',monospace"><span style="background:rgba(255,255,255,0.03);color:#64748b;padding:4px 8px;border-right:1px solid rgba(0,242,255,0.12)">rede</span><span style="background:rgba(35,209,139,0.08);color:#23d18b;padding:4px 8px;font-weight:700">DAG · Acyclic Graph</span></div>
+        <div style="display:flex;align-items:center;border:1px solid rgba(0,242,255,0.12);border-radius:4px;overflow:hidden;font-size:0.6rem;letter-spacing:1px;font-family:'Space Mono',monospace"><span style="background:rgba(255,255,255,0.03);color:#64748b;padding:4px 8px;border-right:1px solid rgba(0,242,255,0.12)">criptografia</span><span style="background:rgba(167,139,250,0.08);color:#a78bfa;padding:4px 8px;font-weight:700">Lattice-Based</span></div>
+        <div style="display:flex;align-items:center;border:1px solid rgba(0,242,255,0.12);border-radius:4px;overflow:hidden;font-size:0.6rem;letter-spacing:1px;font-family:'Space Mono',monospace"><span style="background:rgba(255,255,255,0.03);color:#64748b;padding:4px 8px;border-right:1px solid rgba(0,242,255,0.12)">mineração</span><span style="background:rgba(35,209,139,0.08);color:#23d18b;padding:4px 8px;font-weight:700">Mobile-First</span></div>
+        <div style="display:flex;align-items:center;border:1px solid rgba(0,242,255,0.12);border-radius:4px;overflow:hidden;font-size:0.6rem;letter-spacing:1px;font-family:'Space Mono',monospace"><span style="background:rgba(255,255,255,0.03);color:#64748b;padding:4px 8px;border-right:1px solid rgba(0,242,255,0.12)">energia</span><span style="background:rgba(35,209,139,0.08);color:#23d18b;padding:4px 8px;font-weight:700">Eficiência Extrema</span></div>
+        <div style="display:flex;align-items:center;border:1px solid rgba(0,242,255,0.12);border-radius:4px;overflow:hidden;font-size:0.6rem;letter-spacing:1px;font-family:'Space Mono',monospace"><span style="background:rgba(255,255,255,0.03);color:#64748b;padding:4px 8px;border-right:1px solid rgba(0,242,255,0.12)">supply</span><span style="background:rgba(245,158,11,0.08);color:#f59e0b;padding:4px 8px;font-weight:700">21B $PLG · Fixed</span></div>
+        <div style="display:flex;align-items:center;border:1px solid rgba(0,242,255,0.12);border-radius:4px;overflow:hidden;font-size:0.6rem;letter-spacing:1px;font-family:'Space Mono',monospace"><span style="background:rgba(255,255,255,0.03);color:#64748b;padding:4px 8px;border-right:1px solid rgba(0,242,255,0.12)">governança</span><span style="background:rgba(167,139,250,0.08);color:#a78bfa;padding:4px 8px;font-weight:700">1 Person · 1 Vote</span></div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2026 PLEGMA DAG | The Architecture of Absolute Justice</p>
+    <div class="social-links">
+        <a href="https://x.com/plegmadag" target="_blank" rel="noopener" title="X (Twitter)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="https://t.me/plegma_dag" target="_blank" rel="noopener" title="Telegram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        </a>
+        <a href="https://discord.gg/MFsJqyBBJ" target="_blank" rel="noopener" title="Discord">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057.1 18.08.116 18.102.136 18.116a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+        </a>
+        <a href="https://github.com/PlegmaDag" target="_blank" rel="noopener" title="GitHub">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        </a>
+        <a href="https://www.instagram.com/plegmadag/" target="_blank" rel="noopener" title="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        </a>
+        <a href="/social" title="PLG — Sua Rede de Conexões">
+            <svg width="18" height="18" viewBox="0 0 6000 6000" fill="currentColor" style="fill-rule:evenodd;clip-rule:evenodd" xmlns="http://www.w3.org/2000/svg"><path d="M1808 4633c475,-3 951,0 1427,-1 499,0 825,11 1246,-181 606,-277 1097,-807 1277,-1576 98,-421 64,-847 -63,-1241 -116,-356 -298,-631 -547,-885 -121,-123 -243,-225 -394,-316 -147,-89 -305,-172 -491,-230 -431,-135 -863,-101 -1333,-101 -474,1 -948,0 -1422,0 -219,0 -501,-15 -712,4 -213,19 -375,141 -463,256 -135,176 -139,315 -140,573 0,238 0,475 0,712l1 2853c-1,420 -79,874 250,1182 473,441 1185,175 1333,-362 51,-186 32,-481 31,-687zm-276 -2047c1,0 4,-1 5,2l229 105 1 -163 -235 56zm2678 108l174 -76c27,-11 45,-15 65,-35l-240 -54 1 165zm-2424 -1372c16,32 45,52 71,77l213 219c43,44 99,107 144,144 41,33 122,107 141,147 -40,55 -185,171 -263,215l-239 -239c-28,-29 -50,-61 -86,-78l0 472c-58,33 -268,81 -346,89l0 -688 -265 705c30,18 49,40 61,78 391,-21 774,-165 1063,-392 130,-102 233,-229 338,-381 63,-92 205,-367 239,-492 -10,-15 -39,-53 -54,-69l-1017 193zm1336 -136c12,99 183,415 233,493 185,293 473,535 802,654 159,57 422,121 605,131 11,-37 33,-61 58,-78l-261 -712 -2 694c-110,-11 -249,-53 -347,-88l0 -476c-68,33 -248,271 -323,320 -56,-23 -239,-180 -266,-215 77,-97 509,-508 569,-584l-1024 -201c-11,40 -16,43 -44,62zm-562 2027c36,73 47,139 1,212 26,43 44,50 77,88 43,49 225,257 258,278 92,-46 115,-15 195,-2l203 -220c15,-17 23,-30 38,-47 30,-35 35,-26 82,-89 -36,-129 -43,-101 5,-227l-200 -239c-20,-25 -48,-64 -66,-83 -34,18 -57,50 -83,79 -27,28 -53,52 -81,78l-160 -156 -204 243c-20,26 -50,59 -65,85zm-1300 -652c46,32 222,79 293,108 453,182 667,444 734,479 89,-35 108,-30 195,-4 30,-37 256,-304 271,-337l-181 -193c-22,-22 -44,-37 -66,-60 -83,-88 -158,-172 -245,-255 6,-9 2,-4 12,-14l53 -40c25,-18 41,-32 67,-52 29,-22 34,-26 63,-56 22,-23 41,-47 68,-60 41,33 75,78 113,117 42,43 72,73 121,116 38,33 77,77 113,115 31,32 87,98 118,119 69,-54 429,-446 478,-468 27,40 80,85 119,117 24,20 42,33 66,52 31,24 47,27 64,54 -121,114 -245,256 -365,378 -45,45 -97,79 -128,130l203 249c22,26 45,61 71,85 128,-31 94,-20 202,10 26,-30 63,-63 99,-95 174,-154 402,-295 623,-385 58,-23 263,-87 296,-110 -484,-69 -777,-163 -1084,-415 -286,-236 -474,-547 -603,-904l-81 2c-74,180 -148,351 -243,500 -109,170 -211,271 -356,398 -283,249 -625,351 -1090,419zm-186 180c-248,18 -298,-236 -173,-347 49,-44 86,-49 166,-53l311 -847c-34,-39 -74,-69 -79,-153 -10,-153 124,-241 243,-211 70,18 106,54 133,109 110,-14 1079,-199 1112,-218 24,-53 22,-84 63,-124 73,-71 198,-71 274,-3 36,32 41,81 69,127 40,22 991,201 1109,218 102,-198 386,-121 379,94 -3,88 -43,115 -80,161l312 847c320,-5 296,429 -10,399 -25,54 -343,767 -347,804 -14,114 37,112 -51,177 -70,52 -199,142 -293,166l-2 -923c66,-44 255,-138 346,-166l0 473 254 -573 -36 -41c-171,36 -419,148 -556,226 -256,147 -416,313 -453,334 9,35 21,59 23,97 2,35 -18,84 -14,100 4,19 253,236 303,286 19,20 42,36 63,54l1 134c-70,-43 -391,-369 -452,-396 -63,54 -136,29 -202,10l-244 269c-21,21 -64,73 -80,94 68,141 -9,297 -165,305 -129,7 -268,-116 -183,-305 -72,-88 -176,-190 -242,-269 -28,-34 -58,-58 -81,-96 -108,30 -107,38 -214,-4l-326 288c-23,23 -27,31 -51,51 -12,9 -17,13 -28,22l-39 27c1,-151 -9,-123 80,-197 28,-23 39,-42 70,-66l141 -129c129,-118 67,-31 62,-161 -2,-43 14,-76 24,-112 -69,-56 -132,-118 -210,-177 -78,-59 -153,-106 -240,-158 -112,-67 -415,-204 -559,-229l-35 41 251 573 3 -470c72,19 296,125 345,164l1 1286c441,-1 883,0 1324,0 455,1 801,32 1197,-135 616,-259 1061,-852 1132,-1527 91,-871 -370,-1496 -838,-1805 -296,-194 -604,-294 -1034,-294 -877,1 -1775,6 -2650,0 -227,-2 -317,134 -317,346 1,223 0,446 0,669l0 3319c1,259 -31,386 112,560 199,240 727,185 727,-332 0,-443 0,-886 0,-1329 0,-52 3,-109 1,-161 -2,-49 -24,-82 -42,-125l-305 -694z"/></svg>
+        </a>
+    </div>
+    <div class="footer-legal">
+        <a href="/termos">Termos de Uso</a>
+        <a href="/privacidade">Privacidade</a>
+        <a href="/cookies">Cookies</a>
+        <a href="/quem-somos">Quem Somos</a>
+    </div>
+</footer>
+
+<script>
+    PlegmaAuth.init();
+
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + tabId).classList.add('active');
+        history.replaceState(null, '', '#' + tabId);
+    }
+
+    // Abre aba correta se houver hash na URL
+    window.addEventListener('DOMContentLoaded', () => {
+        const hash = location.hash.replace('#', '');
+        if (hash === 'timeline' || hash === 'testes') {
+            const btns = document.querySelectorAll('.tab-btn');
+            const targetBtn = Array.from(btns).find(b => b.textContent.toLowerCase().includes(hash));
+            if (targetBtn) switchTab(hash, targetBtn);
+        }
+    });
+</script>
+
+<!-- Auto-translate: detecta idioma do navegador e traduz automaticamente -->
+<div id="google_translate_element" style="display:none"></div>
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({ pageLanguage: 'pt', autoDisplay: false }, 'google_translate_element');
+  var lang = ((navigator.language || navigator.userLanguage || 'pt').split('-')[0]).toLowerCase();
+  if (lang !== 'pt') {
+    setTimeout(function() {
+      var sel = document.querySelector('.goog-te-combo');
+      if (sel) { sel.value = lang; sel.dispatchEvent(new Event('change')); }
+    }, 800);
+  }
+}
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>
