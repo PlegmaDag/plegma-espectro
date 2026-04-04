@@ -398,6 +398,107 @@
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
 
+        <!-- AUDITORIA BUILD 009 · ROADMAP SYNC · CANAL NOTAS EXTINTO · FFI DILITHIUM3 — 05 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">05 ABR 2026 — Auditoria BUILD 009 completa · Canal privado extinto · Dilithium3 FFI confirmado · Roadmaps sincronizados</span>
+                <div class="post-tags">
+                    <span class="tag">SEGURANÇA</span>
+                    <span class="tag">BUILD</span>
+                    <span class="tag">INFRA</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">BUILD 009p/q — Verificação completa dos 10 CVEs</div>
+                <p>Todos os 10 fixes da auditoria BUILD 009 foram verificados diretamente no código-fonte e confirmados como implementados. A tabela de severidade da CAMADA 12 foi limpa: indicadores 🔴 CRÍTICO, 🟠 ALTA e 🟡 MODERADA substituídos por 🟢 RESOLVIDO em todos os itens.</p>
+
+                <div class="post-section">HIGH-004 — Canal <code>/api/notas</code> extinto</div>
+                <p>O canal de notas privadas foi removido inteiramente do protocolo. Código eliminado de <code>core_vm.py</code> (bloco de variáveis, store, lock, função de verificação e 3 rotas GET/POST/limpar) e de <code>socio-fundador/index.html</code> (painel, JS e CSS). A superfície de ataque foi eliminada na raiz.</p>
+
+                <div class="post-section">Dilithium3 real via FFI C — confirmado implementado</div>
+                <p><code>libdilithium_plegma.so</code> encontrado compilado para arm64-v8a, armeabi-v7a e x86_64 nas builds intermediárias do APK. <code>dilithium_bridge.c</code> e <code>CMakeLists.txt</code> presentes. <code>DilithiumFfiService</code> e <code>CryptoService</code> fazem bridge completo com fallback pure-Dart quando a <code>.so</code> não está disponível. Item movido de V2.0+ para ✅ IMPLEMENTADO.</p>
+
+                <div class="post-section">Shield subscription proxy — confirmado ativo</div>
+                <p>O proxy reverso <code>/shield/ → http://127.0.0.1:8085</code> já estava configurado no nginx. A rota <code>GET /shield/subscription/&lt;addr&gt;</code> está ativa em <code>shield_server.py</code>. Item removido do backlog.</p>
+
+                <div class="post-section">Roadmaps sincronizados</div>
+                <p>Ambos os arquivos de roadmap (<code>PROJECT_MEMORY/11_known_issues_roadmap.md</code> e <code>DOCS/ROADMAP_priorizacao.md</code>) foram auditados e corrigidos: App Flutter atualizado para v1.9.1, B1 biométrica marcada como ✅, Shield Pack PC v0.9.0-beta adicionado, Dilithium3 FFI movido. Backlog V1.5 expandido com os 4 itens pendentes reais.</p>
+            </div>
+        </article>
+
+        <!-- SHIELD PACK PAINEL · ATIVAÇÃO · NOTIFICAÇÕES · GANHOS SESSÃO — 04 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">04 ABR 2026 — Shield Pack PC v0.9.0-beta: Painel 4 abas · Ativação animada · Notificações Windows · Ganhos de sessão</span>
+                <div class="post-meta">
+                    <span class="post-tag">SHIELD</span>
+                    <span class="post-tag">UI/UX</span>
+                    <span class="post-tag">ZK</span>
+                    <span class="post-tag">BUILD</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">
+                    <h3>Janela de Ativação Animada</h3>
+                    <p>Novo módulo <code>activation_window.py</code> exibido entre o setup dialog e o system tray. Enquanto o <code>LocalShieldEngine</code> constrói o snapshot inicial de processos e ancora o hash ZK na rede, a janela mostra 3 passos animados com barra de progresso. Fecha automaticamente ao receber o sinal <code>boot_ready.is_set()</code>, exibindo "ESCUDO ATIVO — PROTEGIDO" por 1.8s antes de minimizar para a bandeja.</p>
+                </div>
+                <div class="post-section">
+                    <h3>Painel Local com 4 Abas</h3>
+                    <p>O clique na bandeja abre um painel tkinter com instância única (singleton via flag atômico — race condition eliminado). As 4 abas:</p>
+                    <ul>
+                        <li><strong>SCANNER</strong> — processos no baseline, deltas verificados, ameaças detectadas com detalhes de risco</li>
+                        <li><strong>VERIFICADOR URL</strong> — campo de entrada com verificação local offline-first; resultado SEGURO / SUSPEITO / BLOQUEADO com motivo</li>
+                        <li><strong>PERMISSÕES</strong> — estado de cada módulo (scanner, anti-phishing, ZK, nó Sentinela); confirma que dados não saem do dispositivo</li>
+                        <li><strong>VALIDADOR</strong> — ganhos da sessão atual + tempo ativo (atualiza a cada 5s), Node ID, categoria, heartbeats, âncoras ZK, ZK hash atual</li>
+                    </ul>
+                </div>
+                <div class="post-section">
+                    <h3>Ganhos de Sessão no Validador</h3>
+                    <p>O <code>ValidatorNode</code> agora rastreia <code>ganhos_sessao</code> e <code>session_start</code> puramente em memória — zera ao encerrar o agente, inicia do zero na próxima sessão. Acumula a cada heartbeat confirmado e a cada âncora ZK aceita pela rede. Se o servidor retornar o campo <code>recompensa</code> no JSON de resposta do anchor, usa o valor real; caso contrário aplica taxa estimada por categoria (MASTER: 0.030 PLG/âncora, SENTINELA: 0.015, APOIADOR: 0.005). Saldo acumulado histórico permanece na carteira do app mobile.</p>
+                </div>
+                <div class="post-section">
+                    <h3>Notificações de Ameaça</h3>
+                    <p>Ao detectar processo malicioso ou URL de phishing no clipboard, o agente dispara: (1) som nativo <code>winsound.MessageBeep(MB_ICONEXCLAMATION)</code> no Windows; (2) notificação balloon via PowerShell <code>System.Windows.Forms.NotifyIcon</code> com título, descrição e nível de risco. Sem dependências extras — usa APIs nativas do SO. No Linux: <code>notify-send</code> + <code>paplay</code>.</p>
+                </div>
+                <div class="post-section">
+                    <h3>Correções de UI e Arquitetura</h3>
+                    <p>Contraste do painel aumentado (labels e valores com maior diferenciação visual). Singleton do painel corrigido: flag <code>_panel_open</code> setado atomicamente em <code>on_panel()</code> antes de iniciar a thread, eliminando race condition que permitia múltiplas instâncias simultâneas. Label Dilithium substituído por "ZK SHA3-256 (local)" — o MVP usa SHA3-256 encadeado como prova de estado; Dilithium3 real via liboqs FFI está no roadmap V2.0.</p>
+                </div>
+            </div>
+        </article>
+
+        <!-- SHIELD PACK BUILD · SHA3 · ON_ANCHOR WIRING · DEPLOY — 04 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">04 ABR 2026 — Shield Pack v0.9.0-beta: Build Windows publicado · SHA3-256 unificado · Callback ZK-delta conectado à rede</span>
+                <div class="post-meta">
+                    <span class="post-tag">SHIELD</span>
+                    <span class="post-tag">ZK</span>
+                    <span class="post-tag">BUILD</span>
+                    <span class="post-tag">INFRA</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">
+                    <div class="post-section-title">SHA3-256 — Padrão Unificado no Shield Pack PC</div>
+                    <p>As funções de prova do motor local foram migradas de SHA-256 para <strong>SHA3-256</strong>, unificando o padrão criptográfico do projeto: Flutter (pointycastle), Python (core_vm, shield_server) e agora o Shield Pack PC usam o mesmo algoritmo. As funções afetadas são <code>_proc_fingerprint</code>, <code>compute_state_hash</code>, <code>compute_zk_proof</code> e <code>compute_threat_proof</code> em <code>local_shield.py</code>, além do <code>_build_node_id</code> do <code>ValidatorNode</code>.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Wiring Completo do Callback on_anchor</div>
+                    <p>O ciclo ZK-delta do <code>LocalShieldEngine</code> agora está totalmente conectado à rede via padrão callback. O <code>ValidatorNode</code> expõe o método público <code>on_anchor(state_hash, proof, n_procs)</code>: quando <code>n_procs == -1</code> sinaliza ameaça detectada (→ <code>client.report_threat()</code> para a lista negra da rede); quando <code>n_procs &gt;= 0</code> ancora estado limpo (→ <code>client.anchor_state()</code>). Um loop de re-anchor periódico (5 min) usa <code>engine.state_hash</code> e <code>engine.baseline_size</code> para resiliência quando o servidor estava offline no boot.</p>
+                    <p>A ordem de construção no agente principal foi corrigida: <code>ValidatorNode</code> é instanciado antes do engine (recebe <code>on_anchor</code> como referência), depois <code>set_engine(engine)</code> injeta o motor para o loop periódico — sem referência circular.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Build Windows: 30.6 MB · Python 3.14 · PyInstaller 6.18</div>
+                    <p>O <code>build_windows.ps1</code> foi corrigido (Python 3.14.3, <code>python -m PyInstaller</code>) e executado com sucesso. O pacote gerado — <code>plegma-shield-pack-0.9.0-beta-windows.zip</code> (30.6 MB) com executável onedir PyInstaller — foi enviado ao servidor e está disponível para download no painel Shield do dashboard.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Fix deploy.ps1 — CRLF via SSH</div>
+                    <p>O heredoc PowerShell enviado ao servidor via SSH carregava caracteres <code>\r</code> que corrompiam o nome do serviço no <code>systemctl restart nginx</code>. Corrigido adicionando <code>.Replace("\`r\`n", "\`n")</code> na cadeia antes do pipe SSH — nginx volta a reiniciar corretamente no deploy.</p>
+                </div>
+            </div>
+        </article>
+
         <!-- PLEGMA SHIELD PACK v0.9.0-beta — PC WINDOWS/LINUX — 04 ABR 2026 -->
         <article class="post">
             <div class="post-header">

@@ -213,12 +213,6 @@
         #toast.ok { border-color: rgba(35,209,139,0.4); color: var(--green); }
         #toast.err { border-color: rgba(239,68,68,0.4); color: var(--red); }
 
-        /* ═══ NOTAS ═══ */
-        .nota-item {
-            padding: 8px 0; border-bottom: 1px solid var(--border);
-            display: flex; gap: 10px;
-        }
-        .nota-item:last-child { border-bottom: none; }
         .nota-ts { color: var(--text2); font-size: 0.62rem; flex-shrink: 0; }
         .nota-msg { color: var(--text3); font-size: 0.72rem; line-height: 1.5; }
         .nota-empty { color: var(--text2); font-size: 0.7rem; text-align: center; padding: 20px 0; }
@@ -384,10 +378,6 @@
                     ↺ Atualizar Todos os Dados
                     <span class="ab-tag">GET /api/status</span>
                 </button>
-                <button class="action-btn" onclick="limparNotas()">
-                    ✕ Limpar Canal de Notas
-                    <span class="ab-tag">POST /api/notas/limpar</span>
-                </button>
                 <a href="/admin/fundacao.html" class="action-btn" target="_blank">
                     ⊕ Painel Fundação
                     <span class="ab-tag">Admin</span>
@@ -412,19 +402,6 @@
             </div>
         </div>
 
-        <!-- Canal Privado -->
-        <div class="panel">
-            <div class="panel-header">Canal de Notas <span id="notasCount" style="color:var(--cyan);">—</span></div>
-            <div class="panel-body">
-                <div id="notasList" style="max-height:200px;overflow-y:auto;margin-bottom:12px;"></div>
-                <div style="display:flex;gap:8px;">
-                    <input id="notaInput" type="text" placeholder="nova nota..."
-                        style="flex:1;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.7rem;outline:none;"
-                        onkeydown="if(event.key==='Enter')enviarNota()">
-                    <button onclick="enviarNota()" style="padding:8px 12px;background:var(--cyan2);border:1px solid rgba(0,242,255,0.3);border-radius:4px;color:var(--cyan);cursor:pointer;font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:1px;">ENVIAR</button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- ═══ INSCRIÇÕES FUNDAÇÃO ═══ -->
@@ -667,7 +644,6 @@ echo "==================================================="</pre>
 
 <script>
 const API       = 'http://api.plegmadag.com';
-const NOTAS_API = 'http://api.plegmadag.com/api/notas';
 
 let _adminKey = '';
 
@@ -721,13 +697,11 @@ function inicializar() {
     carregarStatus();
     carregarSocios();
     carregarDownloads();
-    carregarNotas();
     carregarInscricoes();
     carregarVertices();
     // Auto-refresh a cada 30s
     setInterval(() => {
         carregarStatus();
-        carregarNotas();
     }, 30000);
 }
 
@@ -878,56 +852,6 @@ async function carregarDownloads() {
         const el = document.getElementById('dlPorVersao');
         if (el) el.innerHTML = versoes.map(v => `<div>${v}: <strong style="color:var(--cyan)">${pv[v]}</strong></div>`).join('') || '<div style="color:var(--text2)">Sem dados por versão.</div>';
     } catch(e) { setTxt('dlTotal', '?'); }
-}
-
-// ─────────────────────────────────────────────
-// NOTAS
-// ─────────────────────────────────────────────
-async function carregarNotas() {
-    if (!_adminKey) return;
-    try {
-        const d = await fetch(`${NOTAS_API}?senha=${encodeURIComponent(_adminKey)}`).then(r => r.json());
-        const notas = d.notas ?? [];
-        setTxt('notasCount', notas.length + ' notas');
-        const el = document.getElementById('notasList');
-        if (!el) return;
-        if (!notas.length) {
-            el.innerHTML = '<div class="nota-empty">Canal vazio.</div>';
-            return;
-        }
-        el.innerHTML = [...notas].reverse().map(n =>
-            `<div class="nota-item"><span class="nota-ts">${n.ts}</span><span class="nota-msg">${n.msg}</span></div>`
-        ).join('');
-    } catch(e) {}
-}
-
-async function enviarNota() {
-    const inp = document.getElementById('notaInput');
-    const msg = inp.value.trim();
-    if (!msg || !_adminKey) return;
-    try {
-        await fetch(NOTAS_API, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ senha: _adminKey, msg })
-        });
-        inp.value = '';
-        carregarNotas();
-        toast('Nota enviada', 'ok');
-    } catch(e) { toast('Erro ao enviar nota', 'err'); }
-}
-
-async function limparNotas() {
-    if (!confirm('Limpar todas as notas do canal?')) return;
-    try {
-        await fetch(NOTAS_API + '/limpar', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ senha: _adminKey })
-        });
-        carregarNotas();
-        toast('Canal limpo', 'ok');
-    } catch(e) { toast('Erro ao limpar', 'err'); }
 }
 
 // ─────────────────────────────────────────────
