@@ -398,6 +398,68 @@
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
 
+        <!-- APP v1.9.1 — SHIELD FIX · RECOVERY · SHA3 · GENESIS DATES — 04 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">04 ABR 2026 — App v1.9.1: Shield UI fix · Recuperação de conta via seed phrase · SHA3-256 · Reserva Genesis 09/05–08/06</span>
+                <div class="post-meta">
+                    <span class="post-date">04 ABR 2026 · App</span>
+                    <span class="post-tag" style="border-color:rgba(239,68,68,0.4);color:#ef4444;background:rgba(239,68,68,0.06);">SHIELD</span>
+                    <span class="post-tag" style="border-color:rgba(167,139,250,0.4);color:#a78bfa;background:rgba(167,139,250,0.06);">ZK</span>
+                    <span class="post-tag tag-front">APP</span>
+                    <span class="post-tag" style="border-color:rgba(239,68,68,0.4);color:#ef4444;background:rgba(239,68,68,0.06);">AUTH</span>
+                    <span class="post-tag" style="border-color:rgba(245,158,11,0.4);color:#f59e0b;background:rgba(245,158,11,0.06);">GENESIS</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Shield — Remoção do card de status avulso</div>
+                <p>A aba Lattice Shield exibia dois elementos de cor sobrepostos: um card de status vermelho flutuante (<code>_SaldoStatusCard</code>) acima do container principal, e o <code>_PaymentSelector</code> dentro do card Lattice. O card avulso foi removido — o elemento correto é o seletor de método de pagamento dentro do hero card, que já muda de cor (verde → validador ativo, laranja → saldo OK, vermelho → insuficiente).</p>
+                <p>Adicionalmente, foi introduzido um <strong>fallback local de genesis</strong>: caso o <code>shield_server.py</code> esteja inacessível, o app verifica a data local. Se dentro do período de reserva Genesis, a opção "GRÁTIS — Fase Genesis" é exibida automaticamente, sem depender de resposta do servidor. Isso evita que o UI bloqueie o usuário durante instabilidades de rede.</p>
+
+                <div class="post-section">Reserva Genesis — 09 Mai a 08 Jun 2026</div>
+                <p>As datas oficiais da Reserva Genesis foram definidas: início <strong>09 de Maio de 2026</strong>, duração de 30 dias, término <strong>08 de Junho de 2026</strong>. O <code>shield_server.py</code> foi atualizado com <code>GENESIS_START_TS = 1746748800</code> (09 Mai 2026 00:00 UTC). Durante este período, a ativação do Lattice Shield é gratuita para todos os participantes da Reserva.</p>
+
+                <div class="post-section">Recuperação de conta via seed phrase</div>
+                <p>O fluxo de boot foi atualizado: quando nenhuma carteira é detectada no dispositivo, o app agora apresenta duas opções — <strong>CRIAR NOVA CARTEIRA</strong> e <strong>RECUPERAR CONTA</strong>. Anteriormente a geração era imediata e automática.</p>
+                <p>A nova <code>RecoverAccountScreen</code> permite que o usuário insira suas 12 palavras em uma grade 3×4. O hash SHA3-256 é calculado inteiramente no dispositivo (<code>"plegma_seed_v1_" + frase</code>) e apenas o hash trafega para a rede via <code>GET /api/wallet/seed-backup?seed_hash=&lt;hex64&gt;</code>. Se encontrado, exibe o endereço PLG associado, o ID da âncora ZK e a data de registro — confirmando identidade sem expor a frase. A recuperação completa da chave de assinatura aguarda o <strong>Pacto dos 5 Nós</strong> (Shamir Secret Sharing, V2.0).</p>
+
+                <div class="post-section">SHA3-256 — Unificação do algoritmo de hash da seed</div>
+                <p>O campo <code>seed_hash</code> estava sendo gerado com SHA-2 (256 bits, família Merkle-Damgård) no Flutter via pacote <code>crypto</code>, enquanto o restante do stack Python (<code>auth_server.py</code>) já usava <code>hashlib.sha3_256</code> (Keccak, construção de esponja). O Flutter foi migrado para <code>SHA3Digest(256)</code> via <code>pointycastle: ^3.9.1</code> — agora ambos os lados produzem o mesmo hex de 64 chars. Coerente com o posicionamento pós-quântico do protocolo.</p>
+            </div>
+        </article>
+
+        <!-- APP v1.9 — LOCK SCREEN + SEED PHRASE + ZK BACKUP — 04 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">04 ABR 2026 — App v1.9: Lock Screen ativo · Seed Phrase Manager · ZK 22KB backup de recuperação · Biometria em transações</span>
+                <div class="post-meta">
+                    <span class="post-date">04 ABR 2026 · App</span>
+                    <span class="post-tag" style="border-color:rgba(239,68,68,0.4);color:#ef4444;background:rgba(239,68,68,0.06);">AUTH</span>
+                    <span class="post-tag" style="border-color:rgba(167,139,250,0.4);color:#a78bfa;background:rgba(167,139,250,0.06);">ZK</span>
+                    <span class="post-tag tag-front">APP</span>
+                    <span class="post-tag" style="border-color:rgba(0,242,255,0.4);color:#00F2FF;background:rgba(0,242,255,0.06);">INFRA</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Lock Screen — Biometria ativada com proteção MIUI</div>
+                <p>O bloqueio por biometria, que estava desativado desde o MVP por um bug de loop no MIUI, foi reativado com uma abordagem revisada. O <strong>HomeScreen</strong> agora implementa <code>WidgetsBindingObserver</code>: quando o app vai para background (<code>paused/inactive</code>), dispara automaticamente o lock; quando retorna ao foreground (<code>resumed</code>), reabre o gate para o próximo ciclo.</p>
+                <p>O problema original do MIUI era o diálogo biométrico emitindo um <code>AppLifecycleState.paused</code> atrasado (3-5s após o unlock) — criando um loop infinito. A solução usa um gate duplo: <strong>grace period de 2000ms</strong> pós-unlock e um flag <code>_resumedAfterUnlock</code> que exige um <code>resumed</code> real antes de aceitar qualquer novo lock. O <code>paused</code> tardio do MIUI chega antes do <code>resumed</code> → gate fechado → sem loop.</p>
+                <p>A exibição usa um <code>ValueListenableBuilder</code> que sobrepõe a <code>LockScreen</code> sobre o <code>IndexedStack</code> do app — o estado de todas as abas é preservado durante o bloqueio.</p>
+
+                <div class="post-section">Seed Phrase Manager — 12 palavras no primeiro boot</div>
+                <p>No primeiro boot, após a geração do par de chaves Dilithium3, o app agora exibe uma tela dedicada de <strong>frase de recuperação</strong> antes de entrar no app. A tela é obrigatória — não pode ser fechada pelo botão voltar.</p>
+                <p>As 12 palavras são geradas com <code>Random.secure()</code> a partir de uma wordlist de <strong>256 palavras BIP39-compatible</strong> (sem repetição por sessão). A grade 3×4 começa oculta — o usuário precisa tocar para revelar, prevenindo shoulder surfing. Há um botão de cópia para clipboard (com aviso para apagar depois) e um checkbox obrigatório de confirmação antes de prosseguir.</p>
+                <p>As palavras são armazenadas no <strong>Keystore Android / Keychain iOS</strong> via <code>flutter_secure_storage</code>. A frase em si nunca sai do dispositivo.</p>
+
+                <div class="post-section">ZK 22KB — Backup de recuperação na rede PLEGMA</div>
+                <p>Ao confirmar a frase, o app ancora um payload de <strong>22KB exatos</strong> na rede via <code>POST /api/wallet/seed-backup</code>. O payload contém apenas o <strong>SHA-256 da frase</strong> (com prefixo de domínio), o endereço PLG e um nonce — a frase em claro jamais trafega pela rede.</p>
+                <p>O servidor persiste o registro na tabela <code>seed_backups</code> do <code>plegma_data.db</code> e retorna um <code>anchor_id</code> único (<code>zk_seed_xxxxxxxxxxxxxxxx</code>). O backup fica disponível para consulta via <code>GET /api/wallet/seed-backup?seed_hash=&lt;hex64&gt;</code>. O endpoint é tolerante a falhas de rede: se offline, o anchor é registrado localmente e o fluxo continua normalmente.</p>
+
+                <div class="post-section">Biometria obrigatória em todas as transações</div>
+                <p>A função <code>_executar()</code> da tela de negociação (compra e venda de PLG) agora exige confirmação biométrica antes de submeter qualquer ordem à pool Aerarium. As telas de envio de PLG e PLG-G já tinham biometria desde versões anteriores — agora a cobertura é total.</p>
+            </div>
+        </article>
+
         <!-- APP v1.8.5 — UX SENTINELA + SHIELD PAGAMENTO — 03 ABR 2026 -->
         <article class="post">
             <div class="post-header">
