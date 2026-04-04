@@ -2876,11 +2876,52 @@
     }
 
     function suDownload(btn) {
-        // Placeholder — download real quando o pack estiver disponível
+        var isWin   = navigator.userAgent.toLowerCase().indexOf('win') > -1;
+        var isLinux = navigator.userAgent.toLowerCase().indexOf('linux') > -1 &&
+                      navigator.userAgent.toLowerCase().indexOf('android') === -1;
+        var baseUrl = 'https://plegmadag.com/dashboard/files/';
+        var file    = isWin
+            ? 'plegma-shield-pack-0.9.0-beta-windows.zip'
+            : (isLinux
+                ? 'plegma-shield-pack-0.9.0-beta-linux-x64.tar.gz'
+                : null);
+
+        if (!file) {
+            showToast('Plataforma não suportada. Use Windows ou Linux x64.', 'error');
+            return;
+        }
+
         var orig = btn.innerHTML;
-        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> EM BREVE';
-        btn.disabled = true; btn.style.opacity = '0.5'; btn.style.cursor = 'not-allowed';
-        setTimeout(function(){ btn.innerHTML = orig; btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer'; }, 2500);
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> BAIXANDO...';
+        btn.disabled = true; btn.style.opacity = '0.7'; btn.style.cursor = 'wait';
+
+        // Registra download na API
+        var plgAddr = document.getElementById('sidebarAddr') ?
+            (window._connectedAddress || '') : '';
+        if (plgAddr && window.DAG_API) {
+            fetch(window.DAG_API + '/api/admin/download_register', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    plg_address: plgAddr,
+                    version: '0.9.0-beta',
+                    platform: isWin ? 'windows' : 'linux'
+                })
+            }).catch(function(){});
+        }
+
+        setTimeout(function(){
+            var a = document.createElement('a');
+            a.href = baseUrl + file;
+            a.download = file;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            btn.innerHTML = orig;
+            btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer';
+            showToast('Download iniciado — ' + file, 'ok');
+        }, 600);
     }
 
     // =========================================================================

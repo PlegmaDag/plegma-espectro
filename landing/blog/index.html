@@ -398,6 +398,47 @@
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
 
+        <!-- PLEGMA SHIELD PACK v0.9.0-beta — PC WINDOWS/LINUX — 04 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">04 ABR 2026 — PLEGMA SHIELD PACK v0.9.0-beta: Agente Sentinela para PC · Windows 10/11 · Linux x64 · System Tray · Scanner de Processos · Anti-Phishing · Nó Validador</span>
+                <div class="post-meta">
+                    <span class="post-tag">SHIELD</span>
+                    <span class="post-tag">PC</span>
+                    <span class="post-tag">BUILD</span>
+                    <span class="post-tag">INFRA</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">
+                    <div class="post-section-title">PLEGMA SHIELD PACK — Agente PC v0.9.0-beta</div>
+                    <p>O Lattice Shield chega ao desktop. O <strong>PLEGMA SHIELD PACK</strong> é uma aplicação Python compilada com PyInstaller que transforma qualquer PC em um nó Sentinela ativo da rede — ao mesmo tempo que protege o próprio dispositivo com as mesmas camadas de segurança do protocolo PLEGMA DAG.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Arquitetura do Agente</div>
+                    <p>O agente é composto por quatro módulos independentes orquestrados pelo entry point principal:</p>
+                    <ul>
+                        <li><strong>LocalShieldEngine</strong> — varre processos em execução a cada 60 segundos via <code>psutil</code> e monitora a área de transferência a cada 3 segundos. Detecta keyloggers, RATs, ransomware e URLs de phishing por blacklist estática + heurística de padrões regex.</li>
+                        <li><strong>ValidatorNode</strong> — envia heartbeat à rede a cada 30 segundos via <code>GET /api/priority</code>. A cada 5 minutos ancora um snapshot ZK do estado de processos em <code>POST /shield/anchor</code>, encadeando provas recursivas BN128.</li>
+                        <li><strong>PlegmaClient</strong> — cliente HTTP puro (<code>urllib</code>) para <code>api.plegmadag.com</code> e <code>shield_server</code> (porta 8085), com fallback para IP direto.</li>
+                        <li><strong>TrayApp</strong> — ícone de escudo na bandeja do sistema (<code>pystray</code> + <code>Pillow</code>), gerado programaticamente. Muda de cor: cyan = protegido, vermelho = inativo, cinza = offline. Menu: Dashboard, Status, Configurar, Encerrar.</li>
+                    </ul>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Primeiro Boot e Configuração</div>
+                    <p>Na primeira execução, uma janela tkinter solicita o endereço PLG da carteira do usuário. A configuração é salva em <code>~/.plegma_shield/config.json</code>. O agente verifica a assinatura ativa via <code>GET /shield/subscription/&lt;addr&gt;</code> e informa no log se o Shield não estiver ativo para aquele endereço.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Build e Distribuição</div>
+                    <p>Dois scripts de build via PyInstaller: <code>build_windows.ps1</code> (gera <code>.exe</code> + <code>.zip</code> ~45 MB) e <code>build_linux.sh</code> (gera binário + <code>.tar.gz</code>). O <code>deploy.ps1</code> da landing foi atualizado com lógica idêntica à do APK: detecta novos builds em <code>PLEGMA_SHIELD_PACK\</code>, copia para <code>dashboard\files\</code>, verifica existência no servidor antes de subir via SCP, mantém apenas os 2 mais recentes de cada extensão.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Dashboard — Botão de Download Ativo</div>
+                    <p>A função <code>suDownload()</code> no painel Shield Usuário detecta a plataforma do navegador e inicia o download do arquivo correto: <code>.zip</code> para Windows, <code>.tar.gz</code> para Linux. Um endpoint <code>POST /api/admin/download_register</code> registra cada download com versão, plataforma e endereço PLG em <code>shield_downloads.log</code> no servidor.</p>
+                </div>
+            </div>
+        </article>
+
         <!-- APP v1.9.1 — SHIELD FIX · RECOVERY · SHA3 · GENESIS DATES — 04 ABR 2026 -->
         <article class="post">
             <div class="post-header">
