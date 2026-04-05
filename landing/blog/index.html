@@ -398,6 +398,87 @@
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
 
+        <!-- ZK DETERMINISMO + HASH GUARD — 05 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">05 ABR 2026 — ZK Determinismo Absoluto · Extirpação de secrets · Hash Guard ptau BLAKE3</span>
+                <div class="post-tags">
+                    <span class="tag">ZK</span>
+                    <span class="tag">CRIPTO</span>
+                    <span class="tag">INFRA</span>
+                    <span class="tag">AUDITORIA</span>
+                </div>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Witness ZK 100% Determinístico</div>
+                <p>O motor Groth16 em <code>zk_press.py</code> operava com entropia externa via <code>secrets.token_bytes</code> para derivar <code>r_wit</code>, <code>rho</code> e <code>sigma</code>. Esses três escalares foram migrados para derivação BLAKE3 pura com salts estáticos (<code>PLEGMA_ZKDAG_SALT</code>, <code>PLEGMA_RHO_SALT</code>, <code>PLEGMA_SIGMA_SALT</code>). O módulo <code>secrets</code> foi extirpado. Para o mesmo estado DAG, o witness gerado agora é bit a bit idêntico em qualquer nó da rede — requisito fundamental para verificação distribuída.</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Hash Guard do ptau (setup_zk.sh)</div>
+                <p>O <code>setup_zk.sh</code> dependia de download remoto do arquivo <code>pot12_final.ptau</code> (cerimônia Hermez). Uma rotação silenciosa desse arquivo resultaria em um <code>.zkey</code> divergente entre nós, quebrando a verificabilidade do circuito. A correção: o BLAKE3 do ptau validado foi registrado estaticamente no script. Antes de qualquer operação de setup fase 2, o guard computa o hash do arquivo presente em disco e aborta com <code>exit 1</code> em caso de divergência. O determinismo do <code>.zkey</code> agora está ancorado no hash gênese do ptau.</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Auditoria 4 Pilares Estruturais</div>
+                <p>Verificação formal dos pilares críticos: (1) payload de prova ZK &lt; 22.528 bytes ✅ — confirmado ~700–1.100 bytes em runtime, guard em <code>zk_press.py</code> ativo; (2) isolamento Dilithium3 — zero imports <code>ecdsa</code>/<code>secp256k1</code>/<code>rsa</code> nos módulos do protocolo ✅; (3) determinismo do compilador circom — <code>.wasm</code> bit a bit idêntico, <code>.zkey</code> agora blindado pelo Hash Guard ✅; (4) lock-up Aerarium 30 dias — <code>release_date = anchor + timedelta(days=30)</code> + filtro SQL em <code>plegma_db.py</code> ✅.</p>
+            </div>
+        </article>
+
+        <!-- GROTH16/BN128 IMPLANTADO — 05 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">05 ABR 2026 — ZK-SNARK Groth16/BN128 implantado · Circuito PLEGMA_BINDING · Fix FQ12 Python 3.14</span>
+                <div class="post-tags">
+                    <span class="tag">ZK</span>
+                    <span class="tag">CRIPTO</span>
+                    <span class="tag">BUILD</span>
+                </div>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">ZK Engine v3.0 — Groth16 / BN128</div>
+                <p>
+                    <code>zk_press.py</code> foi reescrito do zero: substituiu o protocolo Sigma-PoKDL
+                    (prova de discrete log — semanticamente trivial) pelo <strong>Groth16 SNARK sobre BN128</strong>
+                    com circuito específico para o PLEGMA DAG.
+                </p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Circuito PLEGMA_BINDING</div>
+                <p>
+                    R1CS de 4 constraints sobre 8 variáveis <code>z = [1, state_h, snap_h, b, w, r, w_sq, wr]</code>:
+                </p>
+                <ul>
+                    <li><code>w × w = w_sq</code></li>
+                    <li><code>w × r = wr</code></li>
+                    <li><code>(w_sq + wr) × 1 = snap_h</code> — prova que w(w+r) = H(snapshot)</li>
+                    <li><code>w × state_h = b</code> — binding ao vértice DAG</li>
+                </ul>
+                <p>
+                    Transformação QAP via interpolação de Lagrange. CRS transparente derivada deterministicamente
+                    de <code>BLAKE3("PLEGMA_GROTH16_BN128_CRS_2026_ZKDAG_FAIRLAUNCH")</code>.
+                    Prova final: π_A (G1) + π_B (G2) + π_C (G1) ≈ <strong>980 bytes</strong>,
+                    muito abaixo do limite de 22KB do Estatuto §2.2.
+                </p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Fix FQ12 — Python 3.14 RecursionError</div>
+                <p>
+                    O py_ecc 8.0.0 usa <code>FQ12.__pow__</code> recursivo. Na exponenciação final do pairing
+                    (<code>f ** ((p¹² - 1) / r)</code>) o expoente requer ~3000 chamadas recursivas, excedendo
+                    o stack limit do Python 3.14. Solução: monkey-patch de <code>FQ12.__pow__</code> com
+                    square-and-multiply iterativo, aplicado antes de qualquer import do módulo de pairing.
+                </p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Resultados do self-test</div>
+                <ul>
+                    <li>Geração: ~360ms</li>
+                    <li>Verificação: ~19s (py_ecc Python puro — aceitável server-side)</li>
+                    <li>Prova adulterada: rejeitada corretamente</li>
+                    <li>Encadeamento recursivo: válido</li>
+                </ul>
+            </div>
+        </article>
+
         <!-- AUDITORIA BUILD 009 · ROADMAP SYNC · CANAL NOTAS EXTINTO · FFI DILITHIUM3 — 05 ABR 2026 -->
         <article class="post">
             <div class="post-header">
