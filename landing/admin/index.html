@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow, noarchive">
     <meta name="googlebot" content="noindex, nofollow">
-    <title>⬡ Conselho Fundador</title>
+    <title>⬡ CONSOLE MESTRE</title>
     <link rel="icon" type="image/x-icon" href="/assets/img/logo.gif">
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Montserrat:wght@800&display=swap" rel="stylesheet">
     <style>
@@ -25,31 +25,37 @@
             --purple: #a78bfa;
             --border: rgba(0,242,255,0.10);
             --border2:rgba(0,242,255,0.22);
-            --text:   #e2e8f0;
-            --text2:  #64748b;
-            --text3:  #94a3b8;
+            --text:   #e6edf3;
+            --text2:  #8b949e;
+            --text3:  #b0bec9;
             --glow:   0 0 20px rgba(0,242,255,0.3);
             --glow-sm:0 0 8px rgba(0,242,255,0.2);
+            --glow-red:0 0 16px rgba(239,68,68,0.4);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { height: 100%; }
-        body { background: var(--bg); color: var(--text); font-family: 'Space Mono', monospace; font-size: 0.8rem; }
+        body { background: var(--bg); color: var(--text); font-family: 'Space Mono', monospace; font-size: 0.875rem; }
 
         /* ═══ GATE DE ACESSO ═══ */
         #gate {
             position: fixed; inset: 0; z-index: 999;
             background: #000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            gap: 24px;
+            gap: 20px;
         }
         #gate.hidden { display: none; }
         .gate-logo {
             font-family: 'Montserrat', sans-serif; font-weight: 800;
-            font-size: 1.5rem; color: var(--cyan); letter-spacing: 4px;
-            text-shadow: var(--glow);
+            font-size: 1.5rem; color: var(--red); letter-spacing: 4px;
+            text-shadow: var(--glow-red);
         }
         .gate-sub {
-            font-size: 0.62rem; color: var(--text2); letter-spacing: 5px; text-transform: uppercase;
+            font-size: 0.72rem; color: var(--text2); letter-spacing: 5px; text-transform: uppercase;
+        }
+        .gate-warn {
+            font-size: 0.72rem; color: var(--red); letter-spacing: 1px; text-align: center;
+            background: var(--red2); border: 1px solid rgba(239,68,68,0.25);
+            border-radius: 6px; padding: 10px 20px; max-width: 340px;
         }
         .gate-form {
             display: flex; flex-direction: column; align-items: center; gap: 12px;
@@ -57,27 +63,29 @@
         }
         .gate-input {
             width: 100%; padding: 12px 16px;
-            background: var(--bg2); border: 1px solid var(--border2);
-            border-radius: 6px; color: var(--cyan);
-            font-family: 'Space Mono', monospace; font-size: 0.8rem;
+            background: var(--bg2); border: 1px solid rgba(239,68,68,0.3);
+            border-radius: 6px; color: var(--red);
+            font-family: 'Space Mono', monospace; font-size: 0.875rem;
             letter-spacing: 2px; outline: none;
             transition: border-color 0.2s, box-shadow 0.2s;
             text-align: center;
         }
-        .gate-input:focus { border-color: var(--cyan); box-shadow: var(--glow-sm); }
+        .gate-input:focus { border-color: var(--red); box-shadow: var(--glow-red); }
         .gate-btn {
             width: 100%; padding: 12px;
-            background: var(--cyan2); border: 1px solid rgba(0,242,255,0.35);
-            border-radius: 6px; color: var(--cyan);
-            font-family: 'Space Mono', monospace; font-size: 0.72rem;
+            background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.35);
+            border-radius: 6px; color: var(--red);
+            font-family: 'Space Mono', monospace; font-size: 0.78rem;
             letter-spacing: 3px; text-transform: uppercase; cursor: pointer;
             transition: all 0.2s;
         }
-        .gate-btn:hover { background: var(--cyan); color: #000; }
+        .gate-btn:hover { background: var(--red); color: #fff; }
         .gate-err {
-            font-size: 0.65rem; color: var(--red); letter-spacing: 1px;
+            font-size: 0.72rem; color: var(--red); letter-spacing: 1px;
             min-height: 18px; text-align: center;
         }
+        .gate-back { font-size: 0.70rem; color: var(--text2); cursor: pointer; text-decoration: underline; }
+        .gate-back:hover { color: var(--cyan); }
 
         /* ═══ LAYOUT ═══ */
         #app { display: none; min-height: 100vh; flex-direction: column; }
@@ -98,6 +106,8 @@
         .h-right { display: flex; align-items: center; gap: 16px; }
         .h-status { font-size: 0.6rem; color: var(--green); letter-spacing: 2px; display: flex; align-items: center; gap: 6px; }
         .h-status::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }
+        .h-back  { font-size: 0.6rem; color: var(--text2); letter-spacing: 2px; cursor: pointer; padding: 4px 8px; border-radius: 3px; text-transform: uppercase; text-decoration: none; transition: color 0.2s; }
+        .h-back:hover { color: var(--cyan); }
         .h-logout { font-size: 0.6rem; color: var(--text2); letter-spacing: 2px; cursor: pointer; padding: 4px 8px; border-radius: 3px; text-transform: uppercase; border: none; background: none; transition: color 0.2s; }
         .h-logout:hover { color: var(--red); }
         @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
@@ -106,7 +116,7 @@
 
         /* ═══ SEÇÕES ═══ */
         .section-label {
-            font-size: 0.58rem; letter-spacing: 4px; text-transform: uppercase;
+            font-size: 0.70rem; letter-spacing: 4px; text-transform: uppercase;
             color: var(--text2); margin-bottom: 12px; padding-bottom: 8px;
             border-bottom: 1px solid var(--border);
             display: flex; align-items: center; justify-content: space-between;
@@ -124,7 +134,7 @@
             transition: border-color 0.2s;
         }
         .stat-card:hover { border-color: var(--border2); }
-        .stat-card-label { font-size: 0.58rem; color: var(--text2); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+        .stat-card-label { font-size: 0.70rem; color: var(--text2); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
         .stat-card-val { font-size: 1.4rem; font-weight: 700; color: var(--cyan); font-family: 'Space Mono', monospace; letter-spacing: -1px; }
         .stat-card-sub { font-size: 0.6rem; color: var(--text2); margin-top: 3px; }
         .stat-card.green .stat-card-val { color: var(--green); }
@@ -141,7 +151,7 @@
         .panel-header {
             padding: 12px 18px;
             border-bottom: 1px solid var(--border);
-            font-size: 0.62rem; color: var(--text2); letter-spacing: 3px; text-transform: uppercase;
+            font-size: 0.74rem; color: var(--text2); letter-spacing: 3px; text-transform: uppercase;
             display: flex; align-items: center; justify-content: space-between;
         }
         .panel-body { padding: 18px; }
@@ -149,17 +159,17 @@
         /* ═══ TABELA ═══ */
         .data-table { width: 100%; border-collapse: collapse; }
         .data-table th {
-            font-size: 0.58rem; color: var(--text2); letter-spacing: 2px; text-transform: uppercase;
+            font-size: 0.70rem; color: var(--text2); letter-spacing: 2px; text-transform: uppercase;
             text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border);
             font-weight: 400;
         }
-        .data-table td { font-size: 0.72rem; color: var(--text3); padding: 8px 10px; border-bottom: 1px solid var(--border); line-height: 1.5; }
+        .data-table td { font-size: 0.82rem; color: var(--text3); padding: 8px 10px; border-bottom: 1px solid var(--border); line-height: 1.5; }
         .data-table tr:last-child td { border-bottom: none; }
         .data-table tr:hover td { background: rgba(0,242,255,0.02); }
 
         /* ═══ BADGE ═══ */
         .badge {
-            display: inline-block; font-size: 0.58rem; letter-spacing: 1px; text-transform: uppercase;
+            display: inline-block; font-size: 0.70rem; letter-spacing: 1px; text-transform: uppercase;
             padding: 2px 7px; border-radius: 3px;
         }
         .badge-green  { background: var(--green2);  color: var(--green);  border: 1px solid rgba(35,209,139,0.3); }
@@ -178,23 +188,23 @@
         }
         .action-btn:hover { border-color: var(--border2); color: var(--cyan); background: var(--cyan2); }
         .action-btn.danger:hover { border-color: rgba(239,68,68,0.4); color: var(--red); background: var(--red2); }
-        .action-btn .ab-tag { float: right; font-size: 0.58rem; color: var(--text2); }
+        .action-btn .ab-tag { float: right; font-size: 0.70rem; color: var(--text2); }
 
         /* ═══ LOG LINE ═══ */
         .log-line {
-            font-size: 0.68rem; color: var(--text3); line-height: 1.7;
+            font-size: 0.78rem; color: var(--text3); line-height: 1.7;
             padding: 6px 0; border-bottom: 1px solid var(--border);
             display: flex; gap: 10px;
         }
         .log-line:last-child { border-bottom: none; }
-        .log-ts { color: var(--text2); flex-shrink: 0; font-size: 0.62rem; }
+        .log-ts { color: var(--text2); flex-shrink: 0; font-size: 0.74rem; }
         .log-line.ok .log-msg { color: var(--green); }
         .log-line.warn .log-msg { color: var(--amber); }
         .log-line.err .log-msg { color: var(--red); }
 
         /* ═══ POOL BAR ═══ */
         .pool-row { margin-bottom: 14px; }
-        .pool-header { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text3); margin-bottom: 5px; }
+        .pool-header { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text3); margin-bottom: 5px; }
         .pool-bar-bg { height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
         .pool-bar-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
         .pool-bar-fill.validator { background: linear-gradient(90deg, var(--cyan), rgba(0,242,255,0.5)); }
@@ -213,8 +223,8 @@
         #toast.ok { border-color: rgba(35,209,139,0.4); color: var(--green); }
         #toast.err { border-color: rgba(239,68,68,0.4); color: var(--red); }
 
-        .nota-ts { color: var(--text2); font-size: 0.62rem; flex-shrink: 0; }
-        .nota-msg { color: var(--text3); font-size: 0.72rem; line-height: 1.5; }
+        .nota-ts { color: var(--text2); font-size: 0.74rem; flex-shrink: 0; }
+        .nota-msg { color: var(--text3); font-size: 0.82rem; line-height: 1.5; }
         .nota-empty { color: var(--text2); font-size: 0.7rem; text-align: center; padding: 20px 0; }
 
         @media (max-width: 1100px) { .stat-grid { grid-template-columns: repeat(2,1fr); } }
@@ -233,23 +243,26 @@
 </head>
 <body>
 
-<!-- ═══ GATE ═══ -->
+<!-- ═══ GATE MESTRE ═══ -->
 <div id="gate">
     <div class="gate-logo">PLEGMA DAG</div>
-    <div class="gate-sub">Conselho Fundador — Acesso Restrito</div>
+    <div class="gate-sub">CONSOLE MESTRE — Acesso Máximo</div>
+    <div class="gate-warn">⚠ Área restrita. Ações aqui são irreversíveis.<br>Acesso apenas para o administrador da rede.</div>
     <form class="gate-form" onsubmit="verificarAcesso(event)">
-        <input id="gateKey" class="gate-input" type="password" placeholder="chave de acesso" autocomplete="off" autofocus>
+        <input id="gateKey" class="gate-input" type="password" placeholder="chave mestre" autocomplete="off" autofocus>
         <button class="gate-btn" type="submit">ENTRAR</button>
         <div class="gate-err" id="gateErr"></div>
     </form>
+    <a href="/console/" class="gate-back">← voltar ao CONSOLE</a>
 </div>
 
 <!-- ═══ APP ═══ -->
 <div id="app">
 <header>
-    <div class="h-brand">⬡ CONSELHO FUNDADOR</div>
+    <div class="h-brand">⬡ CONSOLE MESTRE</div>
     <div class="h-right">
-        <div class="h-status" id="hStatus">CONECTADO</div>
+        <div class="h-status" id="hStatus">MESTRE ATIVO</div>
+        <a href="/console/" class="h-back">← CONSOLE</a>
         <button class="h-logout" onclick="sair()">SAIR</button>
     </div>
 </header>
@@ -330,7 +343,7 @@
                     <table class="data-table">
                         <tr><td style="color:var(--text2)">Geração base</td><td id="poolBase" style="text-align:right;">1.000.000 $PLG/dia</td></tr>
                         <tr><td style="color:var(--text2)">Fórmula</td><td style="text-align:right;color:var(--cyan);">R = G ÷ N</td></tr>
-                        <tr><td style="color:var(--text2)">Último bloco</td><td id="poolLastHash" style="text-align:right;font-size:0.62rem;">—</td></tr>
+                        <tr><td style="color:var(--text2)">Último bloco</td><td id="poolLastHash" style="text-align:right;font-size:0.74rem;">—</td></tr>
                     </table>
                 </div>
             </div>
@@ -357,51 +370,6 @@
                 <tbody id="socioTableBody"><tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text2);">Carregando...</td></tr></tbody>
             </table>
         </div>
-    </div>
-
-    <!-- ═══ TRÊS COLUNAS ═══ -->
-    <div class="three-col">
-
-        <!-- Ações Rápidas -->
-        <div class="panel">
-            <div class="panel-header">Ações Rápidas</div>
-            <div class="panel-body">
-                <button class="action-btn" onclick="ativarGovernanca()">
-                    ⬡ Ativar Governança
-                    <span class="ab-tag">POST /genesis/activate_governance</span>
-                </button>
-                <button class="action-btn" onclick="injetarLiquidez()">
-                    ◎ Injeção de Liquidez
-                    <span class="ab-tag">POST /genesis/liquidity_injection</span>
-                </button>
-                <button class="action-btn" onclick="carregarStatus()">
-                    ↺ Atualizar Todos os Dados
-                    <span class="ab-tag">GET /api/status</span>
-                </button>
-                <a href="/admin/fundacao.html" class="action-btn" target="_blank">
-                    ⊕ Painel Fundação
-                    <span class="ab-tag">Admin</span>
-                </a>
-                <button class="action-btn danger" onclick="confirmarBurn()">
-                    ⚠ Queimar Não Vendidos
-                    <span class="ab-tag">Irreversível</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Downloads APK -->
-        <div class="panel">
-            <div class="panel-header">Downloads do APK</div>
-            <div class="panel-body">
-                <div style="font-size:2rem;font-weight:700;color:var(--cyan);text-shadow:var(--glow-sm);margin-bottom:4px;" id="dlTotal">—</div>
-                <div style="font-size:0.6rem;color:var(--text2);margin-bottom:16px;">TOTAL DE DOWNLOADS</div>
-                <div id="dlPorVersao" style="font-size:0.65rem;color:var(--text3);line-height:1.9;"></div>
-                <div style="margin-top:16px;">
-                    <a href="/download/" class="action-btn" target="_blank">⬡ Página de Download</a>
-                </div>
-            </div>
-        </div>
-
     </div>
 
     <!-- ═══ INSCRIÇÕES FUNDAÇÃO ═══ -->
@@ -444,13 +412,13 @@
                 <ul style="padding-left:18px;margin-bottom:10px;">
                     <li>Região: <strong style="color:var(--cyan)">East US</strong> ou <strong style="color:var(--cyan)">West Europe</strong> (menor latência)</li>
                     <li>Sistema: <strong style="color:var(--cyan)">Ubuntu Server 22.04 LTS</strong></li>
-                    <li>Tamanho: <strong style="color:var(--cyan)">B2s</strong> (2 vCPU · 4 GB RAM) — suficiente para nó Validator</li>
+                    <li>Tamanho: <strong style="color:var(--cyan)">B2s</strong> (2 vCPU · 4 GB RAM) — suficiente para nó Minerador</li>
                     <li>Autenticação: SSH public key (gere um par com <code>ssh-keygen</code>)</li>
                     <li>Portas abertas: <strong>22</strong> (SSH), <strong>8080</strong>, <strong>8082</strong>, <strong>8083</strong></li>
                 </ul>
                 <p style="margin-bottom:10px;"><strong style="color:var(--text)">Passo 3</strong> — Após criar a VM, copie o IP público. Conecte: <code style="color:var(--cyan)">ssh -i ~/.ssh/id_rsa azureuser@IP_DA_VM</code></p>
                 <p style="margin-bottom:10px;"><strong style="color:var(--text)">Passo 4</strong> — Execute o script de instalação do nó (ver painel ao lado).</p>
-                <p style="color:var(--text2);font-size:0.67rem;">O trial B2s consome ~$0,04/h. Com $200 de crédito você tem ~208 dias. Após o trial, B2s fica ~$29/mês.</p>
+                <p style="color:var(--text2);font-size:0.75rem;">O trial B2s consome ~$0,04/h. Com $200 de crédito você tem ~208 dias. Após o trial, B2s fica ~$29/mês.</p>
             </div>
         </div>
 
@@ -458,7 +426,7 @@
         <div class="panel">
             <div class="panel-header">VPS de Baixo Custo — Comparativo</div>
             <div class="panel-body">
-                <div style="font-size:0.65rem;color:var(--text2);margin-bottom:12px;">Requisitos mínimos do nó VALIDATOR: 1 vCPU · 1 GB RAM · 10 GB SSD · Ubuntu 20.04+</div>
+                <div style="font-size:0.75rem;color:var(--text2);margin-bottom:12px;">Requisitos mínimos do nó MINERADOR: 2 vCPU · 2 GB RAM · 20 GB SSD · Ubuntu 20.04+ &nbsp;·&nbsp; <span style="color:var(--amber)">Validadores usam celular, tablet ou PC comum — sem VPS</span></div>
                 <table class="data-table" style="margin-bottom:16px;">
                     <thead><tr>
                         <th>Provedor</th>
@@ -487,27 +455,28 @@
                             <td>Droplet Básico</td>
                             <td style="color:var(--amber)">~$6</td>
                             <td>1 vCPU · 1 GB · 25 GB SSD</td>
-                            <td><span class="badge badge-amber">VALIDATOR</span></td>
+                            <td><span class="badge badge-amber">MINERADOR</span></td>
                         </tr>
                         <tr>
                             <td style="color:var(--cyan)">Vultr</td>
                             <td>Cloud Compute</td>
                             <td style="color:var(--amber)">~$6</td>
                             <td>1 vCPU · 1 GB · 25 GB SSD</td>
-                            <td><span class="badge badge-amber">VALIDATOR</span></td>
+                            <td><span class="badge badge-amber">MINERADOR</span></td>
                         </tr>
                         <tr>
                             <td style="color:var(--cyan)">Azure B1s</td>
                             <td>(pós-trial)</td>
                             <td style="color:var(--text2)">~$7,60</td>
                             <td>1 vCPU · 1 GB · 30 GB SSD</td>
-                            <td><span class="badge badge-amber">VALIDATOR</span></td>
+                            <td><span class="badge badge-amber">MINERADOR</span></td>
                         </tr>
                     </tbody>
                 </table>
-                <div style="font-size:0.65rem;color:var(--text2);line-height:1.7;">
-                    Para nó <strong style="color:var(--purple)">PROVER</strong> (gera provas ZK): recomendado ≥4 vCPU · 8 GB RAM.<br>
-                    Para nó <strong style="color:var(--cyan)">VALIDATOR</strong> (celular ou VPS leve): 1–2 vCPU · 1–2 GB RAM.
+                <div style="font-size:0.75rem;color:var(--text2);line-height:1.7;">
+                    Para nó <strong style="color:var(--purple)">PROVER</strong> (gera provas ZK, alta performance): recomendado ≥4 vCPU · 8 GB RAM · VPS dedicado.<br>
+                    Para nó <strong style="color:var(--cyan)">MINERADOR</strong> (mineração padrão): 2 vCPU · 2 GB RAM · VPS básico ou PC dedicado.<br>
+                    <span style="color:var(--amber)">Validador não usa VPS</span> — roda no app mobile (Android), tablet ou PC comum.
                 </div>
             </div>
         </div>
@@ -520,7 +489,7 @@
             <button onclick="copiarScript()" style="font-family:'Space Mono',monospace;font-size:0.6rem;padding:4px 10px;border-radius:3px;border:1px solid rgba(0,242,255,0.3);background:var(--cyan2);color:var(--cyan);cursor:pointer;letter-spacing:1px;">COPIAR</button>
         </div>
         <div class="panel-body">
-            <pre id="installScript" style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:18px;font-size:0.68rem;color:var(--green);line-height:1.7;overflow-x:auto;white-space:pre;">#!/bin/bash
+            <pre id="installScript" style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:18px;font-size:0.78rem;color:var(--green);line-height:1.7;overflow-x:auto;white-space:pre;">#!/bin/bash
 # =============================================================
 # PLEGMA DAG — Script de Instalação do Nó (Ubuntu 20.04+)
 # Execução: chmod +x install_node.sh && sudo ./install_node.sh
@@ -643,9 +612,10 @@ echo "==================================================="</pre>
 <div id="toast"></div>
 
 <script>
-const API       = 'http://api.plegmadag.com';
+const API = 'http://api.plegmadag.com';
 
-let _adminKey = '';
+let _masterKey = '';
+let _adminKey  = '';
 
 // ─────────────────────────────────────────────
 // GATE
@@ -654,7 +624,6 @@ function verificarAcesso(e) {
     e.preventDefault();
     const key = document.getElementById('gateKey').value.trim();
     if (!key) return;
-    // Valida contra o endpoint de downloads (server-side) para confirmar a chave
     fetch(`${API}/api/admin/downloads?admin_key=${encodeURIComponent(key)}`)
         .then(r => r.json())
         .then(d => {
@@ -662,15 +631,16 @@ function verificarAcesso(e) {
                 document.getElementById('gateErr').textContent = '✕ Chave inválida.';
                 return;
             }
-            _adminKey = key;
+            _masterKey = key;
+            _adminKey  = key;
             sessionStorage.setItem('_pf_key', key);
             document.getElementById('gate').classList.add('hidden');
             document.getElementById('app').classList.add('visible');
             inicializar();
         })
         .catch(() => {
-            // Se o endpoint não existir ainda, aceita e tenta assim mesmo
-            _adminKey = key;
+            _masterKey = key;
+            _adminKey  = key;
             sessionStorage.setItem('_pf_key', key);
             document.getElementById('gate').classList.add('hidden');
             document.getElementById('app').classList.add('visible');
@@ -687,29 +657,18 @@ function sair() {
 // INIT
 // ─────────────────────────────────────────────
 function inicializar() {
-    // Tenta restaurar sessão
-    const saved = sessionStorage.getItem('_pf_key');
-    if (saved) {
-        _adminKey = saved;
-        document.getElementById('gate').classList.add('hidden');
-        document.getElementById('app').classList.add('visible');
-    }
     carregarStatus();
     carregarSocios();
-    carregarDownloads();
     carregarInscricoes();
     carregarVertices();
-    // Auto-refresh a cada 30s
-    setInterval(() => {
-        carregarStatus();
-    }, 30000);
+    setInterval(() => { carregarStatus(); }, 30000);
 }
 
-// Tenta restaurar ao carregar
 window.addEventListener('DOMContentLoaded', () => {
     const saved = sessionStorage.getItem('_pf_key');
     if (saved) {
-        _adminKey = saved;
+        _masterKey = saved;
+        _adminKey  = saved;
         document.getElementById('gate').classList.add('hidden');
         document.getElementById('app').classList.add('visible');
         inicializar();
@@ -752,14 +711,12 @@ async function carregarStatus() {
             fetch(`${API}/api/genesis/governance`).then(r => r.json())
         ]);
 
-        // Rede
         setTxt('statTxTotal',    fmt(rStatus.total_transacoes));
         setTxt('statAceitas',    fmt(rStatus.total_aceitas));
         setTxt('statRejeitadas', fmt(rStatus.total_rejeitadas));
         setTxt('statTips',       fmt(rStatus.tips_pendentes));
         setTxt('poolLastHash',   rStatus.last_vertex_hash ? rStatus.last_vertex_hash.substring(0,20)+'…' : '—');
 
-        // Genesis
         const vendido = rGenesis.total_plgg_sold ?? 0;
         const supply  = 10500000;
         const pct     = Math.min((vendido / supply) * 100, 100);
@@ -770,7 +727,6 @@ async function carregarStatus() {
         setTxt('genesisUsdt',  fmtUSdt(rGenesis.total_usdt_arrecadado));
         setTxt('genesisDia',   fmt(rGenesis.network_day) + 'º dia');
 
-        // Pools
         const vPool = rGenesis.validator_pool_remaining;
         const pPool = rGenesis.prover_pool_remaining;
         setTxt('validatorPool', vPool != null ? vPool.toLocaleString('pt-BR') + ' $PLG' : '—');
@@ -783,7 +739,6 @@ async function carregarStatus() {
             if (pb) pb.style.width = ((pPool / totalPools) * 100) + '%';
         }
 
-        // Governança
         const govBadge = document.getElementById('genesisGov');
         if (govBadge) {
             govBadge.innerHTML = rGov.ativa
@@ -798,7 +753,6 @@ async function carregarStatus() {
                 : '<span class="badge badge-green">ENCERRADA</span>';
         }
 
-        // Último preço
         try {
             const rPreco = await fetch(`${API}/api/genesis/ultimo_preco`).then(r => r.json());
             setTxt('genesisPreco', rPreco.preco_unitario != null ? fmtUSdt(rPreco.preco_unitario) + ' / PLG-G' : '$0.10 (Genesis)');
@@ -826,32 +780,16 @@ async function carregarSocios() {
         tbody.innerHTML = socios.map((s, i) => `
             <tr>
                 <td style="color:var(--text2)">${i+1}</td>
-                <td style="font-size:0.65rem;color:var(--cyan)">${s.plg_address ?? '—'}</td>
+                <td style="font-size:0.75rem;color:var(--cyan)">${s.plg_address ?? '—'}</td>
                 <td>${(s.balance ?? 0).toLocaleString('pt-BR')} PLG-G</td>
                 <td>${tipoCategoria(s.balance ?? 0)}</td>
                 <td>${s.is_genesis ? '<span class="badge badge-green">SIM</span>' : '<span class="badge badge-red">NÃO</span>'}</td>
-                <td style="color:var(--text2);font-size:0.65rem">${fmtTs(s.updated_at)}</td>
+                <td style="color:var(--text2);font-size:0.75rem">${fmtTs(s.updated_at)}</td>
             </tr>`).join('');
     } catch(e) {
         document.getElementById('socioTableBody').innerHTML =
             `<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text2)">${e.message}</td></tr>`;
     }
-}
-
-// ─────────────────────────────────────────────
-// DOWNLOADS
-// ─────────────────────────────────────────────
-async function carregarDownloads() {
-    if (!_adminKey) return;
-    try {
-        const d = await fetch(`${API}/api/admin/downloads?admin_key=${encodeURIComponent(_adminKey)}`).then(r => r.json());
-        if (d.erro) { setTxt('dlTotal', '?'); return; }
-        setTxt('dlTotal', d.total_downloads ?? '0');
-        const pv = d.por_versao ?? {};
-        const versoes = Object.keys(pv).sort().reverse();
-        const el = document.getElementById('dlPorVersao');
-        if (el) el.innerHTML = versoes.map(v => `<div>${v}: <strong style="color:var(--cyan)">${pv[v]}</strong></div>`).join('') || '<div style="color:var(--text2)">Sem dados por versão.</div>';
-    } catch(e) { setTxt('dlTotal', '?'); }
 }
 
 // ─────────────────────────────────────────────
@@ -874,9 +812,9 @@ async function carregarInscricoes() {
                 <td style="color:var(--text)">${p.nome_projeto}</td>
                 <td><span class="badge ${segCor[p.segmento]||'badge-cyan'}">${p.segmento}</span></td>
                 <td>${p.responsavel}</td>
-                <td style="color:var(--text2);font-size:0.65rem">${p.localizacao}</td>
-                <td style="font-size:0.62rem;color:var(--cyan)">${fmtAddr(p.carteira_plg)}</td>
-                <td style="color:var(--text2);font-size:0.65rem">${new Date(p.created_at*1000).toLocaleDateString('pt-BR')}</td>
+                <td style="color:var(--text2);font-size:0.75rem">${p.localizacao}</td>
+                <td style="font-size:0.74rem;color:var(--cyan)">${fmtAddr(p.carteira_plg)}</td>
+                <td style="color:var(--text2);font-size:0.75rem">${new Date(p.created_at*1000).toLocaleDateString('pt-BR')}</td>
                 <td><span class="badge ${p.status==='APROVADO'?'badge-green':p.status==='REPROVADO'?'badge-red':'badge-amber'}">${p.status}</span></td>
             </tr>`).join('');
     } catch(e) {
@@ -900,12 +838,12 @@ async function carregarVertices() {
         tbody.innerHTML = [...txs].reverse().slice(0, 20).map(tx => `
             <tr>
                 <td style="font-size:0.6rem;color:var(--cyan);font-family:'Space Mono'">${(tx.tx_hash||'').substring(0,18)}…</td>
-                <td style="font-size:0.65rem">${fmtAddr(tx.sender)}</td>
-                <td style="font-size:0.65rem">${fmtAddr(tx.receiver)}</td>
+                <td style="font-size:0.75rem">${fmtAddr(tx.sender)}</td>
+                <td style="font-size:0.75rem">${fmtAddr(tx.receiver)}</td>
                 <td>${tx.amount != null ? Number(tx.amount).toLocaleString('pt-BR',{maximumFractionDigits:2}) : '—'}</td>
                 <td><span class="badge ${tx.node_type==='PROVER'?'badge-purple':'badge-cyan'}">${tx.node_type||'—'}</span></td>
                 <td style="color:var(--text2)">${tx.zk_proof_size || '—'}</td>
-                <td style="color:var(--text2);font-size:0.65rem">${fmtTs(tx.timestamp)}</td>
+                <td style="color:var(--text2);font-size:0.75rem">${fmtTs(tx.timestamp)}</td>
             </tr>`).join('');
     } catch(e) {
         document.getElementById('dagBody').innerHTML =
@@ -914,42 +852,14 @@ async function carregarVertices() {
 }
 
 // ─────────────────────────────────────────────
-// AÇÕES ADMIN
+// UTILITÁRIOS
 // ─────────────────────────────────────────────
-async function ativarGovernanca() {
-    if (!confirm('Ativar governança da rede?')) return;
-    try {
-        const r = await fetch(`${API}/api/genesis/activate_governance`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({}) }).then(r=>r.json());
-        toast(r.status || 'Governança ativada', 'ok');
-        carregarStatus();
-    } catch(e) { toast('Erro: ' + e.message, 'err'); }
-}
-
-async function injetarLiquidez() {
-    if (!confirm('Executar injeção de liquidez?')) return;
-    try {
-        const r = await fetch(`${API}/api/genesis/liquidity_injection`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({}) }).then(r=>r.json());
-        toast(r.status || 'Liquidez injetada', 'ok');
-        carregarStatus();
-    } catch(e) { toast('Erro: ' + e.message, 'err'); }
-}
-
 function copiarScript() {
     const el = document.getElementById('installScript');
     if (!el) return;
     navigator.clipboard.writeText(el.textContent.trim())
         .then(() => toast('Script copiado!', 'ok'))
         .catch(() => toast('Erro ao copiar', 'err'));
-}
-
-async function confirmarBurn() {
-    const confirmTxt = prompt('Esta ação é IRREVERSÍVEL. Digite CONFIRMAR para queimar tokens não vendidos:');
-    if (confirmTxt !== 'CONFIRMAR') { toast('Cancelado', 'err'); return; }
-    try {
-        const r = await fetch(`${API}/api/genesis/burn`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({admin_key: _adminKey}) }).then(r=>r.json());
-        toast(r.status || 'Burn executado', r.erro ? 'err' : 'ok');
-        carregarStatus();
-    } catch(e) { toast('Erro: ' + e.message, 'err'); }
 }
 </script>
 

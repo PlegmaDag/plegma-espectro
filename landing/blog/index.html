@@ -421,6 +421,42 @@
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
 
+        <!-- CONSOLE MESTRE + CONSOLE REESTRUTURADO — 06 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">06 ABR 2026 — Console Mestre · Console Reestruturado · Medalhas Sócio Genesis · Anime.js</span>
+                <div class="post-tags">
+                    <span class="tag">UI/UX</span>
+                    <span class="tag">INFRA</span>
+                    <span class="tag">TOKENOMICS</span>
+                </div>
+            </div>
+            <div class="post-body">
+
+                <div class="post-section">Console Mestre — `/admin/` como página separada</div>
+                <p>O Console Mestre foi extraído para <code>/admin/index.html</code> como página autônoma, com gate de acesso diferenciado (tema vermelho, aviso de área restrita e link de retorno ao Console). O conteúdo é uma cópia completa do Console — as duas páginas evoluem independentemente a partir daqui, permitindo que o admin acumule funcionalidades exclusivas sem impactar a experiência do sócio.</p>
+
+                <div class="post-section">Burn automático confirmado — botão manual removido</div>
+                <p>Auditoria do <code>aerarium.py</code> confirmou que a deflação 1:1 da Genesis Reserve já ocorre automaticamente a cada <code>mine_tokens()</code> (linhas 168–173): <code>burn = min(reward, genesis_reserve)</code>. O botão "Queimar PLG-G Não Vendidos" e a função <code>confirmarBurn()</code> foram removidos do Console Mestre — ação manual seria redundante e potencialmente perigosa.</p>
+
+                <div class="post-section">Pasta `socio-fundador/` renomeada para `console/`</div>
+                <p>A rota <code>/socio-fundador/</code> foi renomeada para <code>/console/</code> — nome mais direto e coerente com a função da página. Referências atualizadas em <code>admin/index.html</code>, <code>dashboard/index.html</code> e neste blog.</p>
+
+                <div class="post-section">STATUS SÓCIO GENESIS — painel individual no topo do Console</div>
+                <p>A lista coletiva de sócios foi removida do Console do sócio. Em seu lugar, o painel <strong>STATUS SÓCIO GENESIS</strong> exibe o status individual do usuário logado: saldo PLG-G, categoria com boost de mineração, e estado do Selo Sócio Genesis — tudo carregado via <code>GET /api/priority?address=</code>. O gate foi atualizado para aceitar chave + endereço PLG.</p>
+
+                <div class="post-section">3 estados de medalha com Anime.js</div>
+                <p>A identidade visual do status Genesis foi implementada com três estados de medalha animada (rotação 3D via Anime.js, <code>rotateY 360°</code> contínuo):</p>
+                <ul style="margin:8px 0 8px 18px;color:#aaa;font-size:0.85rem;line-height:1.8;">
+                    <li><strong style="color:#FFD700">Dourada girando</strong> — participou da Genesis Reserve, selo ativo (saldo &gt; 0)</li>
+                    <li><strong style="color:#888">Apagada/cinza estática</strong> — tinha Genesis, saldo PLG-G zerou em algum momento — irrecuperável mesmo comprando de volta via P2P</li>
+                    <li><strong style="color:#c8d0d8">Branca girando</strong> — nunca participou da Genesis, adquiriu PLG-G via P2P após encerramento da Reserve</li>
+                </ul>
+                <p>A <strong>categoria</strong> (MASTER / SENTINELA / APOIADOR) é sempre calculada pelo saldo atual, independente do estado da medalha. O título Sócio Genesis é intransferível e irrecuperável — regra implementada diretamente no <code>genesis_contract.py</code> via <code>marcar_status_genesis_perdido()</code>.</p>
+
+            </div>
+        </article>
+
         <!-- MINERADOR v2.0 — REDE REAL + AERARIUM BOOST — 05 ABR 2026 -->
         <article class="post">
             <div class="post-header">
@@ -550,7 +586,7 @@
                 <p>Todos os 10 fixes da auditoria BUILD 009 foram verificados diretamente no código-fonte e confirmados como implementados. A tabela de severidade da CAMADA 12 foi limpa: indicadores 🔴 CRÍTICO, 🟠 ALTA e 🟡 MODERADA substituídos por 🟢 RESOLVIDO em todos os itens.</p>
 
                 <div class="post-section">HIGH-004 — Canal <code>/api/notas</code> extinto</div>
-                <p>O canal de notas privadas foi removido inteiramente do protocolo. Código eliminado de <code>core_vm.py</code> (bloco de variáveis, store, lock, função de verificação e 3 rotas GET/POST/limpar) e de <code>socio-fundador/index.html</code> (painel, JS e CSS). A superfície de ataque foi eliminada na raiz.</p>
+                <p>O canal de notas privadas foi removido inteiramente do protocolo. Código eliminado de <code>core_vm.py</code> (bloco de variáveis, store, lock, função de verificação e 3 rotas GET/POST/limpar) e de <code>console/index.html</code> (painel, JS e CSS). A superfície de ataque foi eliminada na raiz.</p>
 
                 <div class="post-section">Dilithium3 real via FFI C — confirmado implementado</div>
                 <p><code>libdilithium_plegma.so</code> encontrado compilado para arm64-v8a, armeabi-v7a e x86_64 nas builds intermediárias do APK. <code>dilithium_bridge.c</code> e <code>CMakeLists.txt</code> presentes. <code>DilithiumFfiService</code> e <code>CryptoService</code> fazem bridge completo com fallback pure-Dart quando a <code>.so</code> não está disponível. Item movido de V2.0+ para ✅ IMPLEMENTADO.</p>
