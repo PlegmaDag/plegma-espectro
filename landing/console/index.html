@@ -9,6 +9,7 @@
     <link rel="icon" type="image/x-icon" href="/assets/img/logo.gif">
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Montserrat:wght@800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="/auth.js"></script>
     <style>
         :root {
             --bg:     #000;
@@ -36,45 +37,41 @@
         html, body { height: 100%; }
         body { background: var(--bg); color: var(--text); font-family: 'Space Mono', monospace; font-size: 0.875rem; }
 
-        /* ═══ GATE DE ACESSO ═══ */
-        #gate {
+        /* ═══ AUTH LOCK ═══ */
+        #authLock {
             position: fixed; inset: 0; z-index: 999;
             background: #000;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            gap: 24px;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            gap: 20px;
         }
-        #gate.hidden { display: none; }
-        .gate-logo {
+        #authLock.show { display: flex; }
+        .lock-logo {
+            display: flex; flex-direction: column; align-items: center; gap: 12px;
+            margin-bottom: 8px;
+        }
+        .lock-logo svg { width: 64px; height: 64px; filter: drop-shadow(0 0 18px rgba(0,242,255,0.7)); }
+        .lock-logo span {
             font-family: 'Montserrat', sans-serif; font-weight: 800;
-            font-size: 1.5rem; color: var(--cyan); letter-spacing: 4px;
+            font-size: 1.4rem; color: var(--cyan); letter-spacing: 4px;
             text-shadow: var(--glow);
         }
-        .gate-sub {
-            font-size: 0.74rem; color: var(--text2); letter-spacing: 5px; text-transform: uppercase;
+        .lock-sub {
+            font-size: 0.72rem; color: var(--text2); letter-spacing: 5px; text-transform: uppercase;
         }
-        .gate-form {
-            display: flex; flex-direction: column; align-items: center; gap: 12px;
-            width: 100%; max-width: 320px;
+        .lock-msg {
+            font-size: 0.68rem; color: var(--text2); letter-spacing: 3px;
+            text-transform: uppercase; margin-bottom: 4px;
         }
-        .gate-input {
-            width: 100%; padding: 12px 16px;
-            background: var(--bg2); border: 1px solid var(--border2);
-            border-radius: 6px; color: var(--cyan);
-            font-family: 'Space Mono', monospace; font-size: 0.8rem;
-            letter-spacing: 2px; outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            text-align: center;
-        }
-        .gate-input:focus { border-color: var(--cyan); box-shadow: var(--glow-sm); }
-        .gate-btn {
-            width: 100%; padding: 12px;
+        .lock-btn {
+            padding: 13px 32px;
             background: var(--cyan2); border: 1px solid rgba(0,242,255,0.35);
             border-radius: 6px; color: var(--cyan);
             font-family: 'Space Mono', monospace; font-size: 0.82rem;
             letter-spacing: 3px; text-transform: uppercase; cursor: pointer;
             transition: all 0.2s;
         }
-        .gate-btn:hover { background: var(--cyan); color: #000; }
+        .lock-btn:hover { background: var(--cyan); color: #000; filter: brightness(1.1); }
+        /* placeholder mantido para compatibilidade com regras CSS herdadas */
         .gate-err {
             font-size: 0.75rem; color: var(--red); letter-spacing: 1px;
             min-height: 18px; text-align: center;
@@ -92,10 +89,12 @@
             position: sticky; top: 0; z-index: 50;
         }
         .h-brand {
+            display: flex; align-items: center; gap: 10px;
             font-family: 'Montserrat', sans-serif; font-weight: 800;
             font-size: 1rem; color: var(--cyan); letter-spacing: 2px;
-            text-shadow: var(--glow-sm);
+            text-shadow: var(--glow-sm); text-decoration: none;
         }
+        .h-brand img { width: 36px; height: 36px; filter: drop-shadow(0 0 6px rgba(0,242,255,0.5)); }
         .h-right { display: flex; align-items: center; gap: 16px; }
         .h-status { font-size: 0.6rem; color: var(--green); letter-spacing: 2px; display: flex; align-items: center; gap: 6px; }
         .h-status::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }
@@ -265,22 +264,49 @@
 </head>
 <body>
 
-<!-- ═══ GATE ═══ -->
-<div id="gate">
-    <div class="gate-logo">PLEGMA DAG</div>
-    <div class="gate-sub">CONSOLE — Acesso Restrito</div>
-    <form class="gate-form" onsubmit="verificarAcesso(event)">
-        <input id="gateKey" class="gate-input" type="password" placeholder="chave de acesso" autocomplete="off" autofocus>
-        <input id="gatePlg" class="gate-input" type="text" placeholder="endereço PLG..." autocomplete="off" style="letter-spacing:1px;font-size:0.72rem;">
-        <button class="gate-btn" type="submit">ENTRAR</button>
-        <div class="gate-err" id="gateErr"></div>
-    </form>
+<!-- ═══ AUTH LOCK ═══ -->
+<div id="authLock" class="show">
+    <div class="lock-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+            <g transform="translate(4,4)" stroke="#00F2FF" stroke-width="1.5" fill="none">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </g>
+        </svg>
+        <span>PLEGMA</span>
+    </div>
+    <div class="lock-sub">CONSOLE — Acesso Restrito</div>
+    <div class="lock-msg">Autenticação necessária</div>
+    <button class="lock-btn" onclick="PlegmaAuth.openModal()">CONECTAR CARTEIRA</button>
+
+    <div style="margin-top:16px;text-align:center;">
+        <a href="#" onclick="toggleAdminLogin(event)"
+           style="font-size:0.5rem;color:#1e293b;letter-spacing:2px;text-decoration:none;text-transform:uppercase;transition:color .2s;"
+           onmouseover="this.style.color='#475569'" onmouseout="this.style.color='#1e293b'">
+            ▸ acesso admin
+        </a>
+    </div>
+    <div id="adminLoginForm" style="display:none;margin-top:8px;width:260px;">
+        <input type="password" id="adminPassInput"
+               placeholder="senha admin"
+               onkeydown="if(event.key==='Enter')adminLogin()"
+               style="width:100%;background:#050a14;border:1px solid rgba(0,242,255,0.15);color:#e2e8f0;padding:9px 12px;font-family:'Space Mono',monospace;font-size:0.6rem;border-radius:4px;outline:none;margin-bottom:7px;letter-spacing:1px;">
+        <button onclick="adminLogin()"
+                style="width:100%;background:rgba(0,242,255,0.06);border:1px solid rgba(0,242,255,0.2);color:#00F2FF;padding:9px;font-family:'Space Mono',monospace;font-size:0.55rem;letter-spacing:2px;text-transform:uppercase;border-radius:4px;cursor:pointer;">
+            ENTRAR
+        </button>
+        <div id="adminLoginErr" style="font-size:0.55rem;color:#ef4444;margin-top:5px;letter-spacing:1px;display:none;text-align:center;">
+            Senha incorreta.
+        </div>
+    </div>
 </div>
 
 <!-- ═══ APP ═══ -->
 <div id="app">
 <header>
-    <div class="h-brand">⬡ CONSOLE</div>
+    <div class="h-brand">
+        <img src="/assets/img/logo.gif" alt="Plegma">
+        CONSOLE SÓCIO
+    </div>
     <div class="h-right">
         <div class="h-status" id="hStatus">CONECTADO</div>
         <button class="h-logout" onclick="sair()">SAIR</button>
@@ -752,36 +778,48 @@ let _plgAddr   = '';
 let _medalAnim = null;
 
 // ─────────────────────────────────────────────
-// GATE
+// ADMIN LOCAL
 // ─────────────────────────────────────────────
-function verificarAcesso(e) {
+const _ADMIN_HASH = 'b4bce91d2c12a4cfdfef7411559828ed2914fd5434ada11df1c5332f999ad78e';
+
+function toggleAdminLogin(e) {
     e.preventDefault();
-    const key = document.getElementById('gateKey').value.trim();
-    const plg = document.getElementById('gatePlg').value.trim();
-    if (!key) return;
-    fetch(`${API}/api/admin/downloads?admin_key=${encodeURIComponent(key)}`)
-        .then(r => r.json())
-        .then(d => {
-            if (d.erro) { document.getElementById('gateErr').textContent = '✕ Chave inválida.'; return; }
-            _entrar(key, plg);
-        })
-        .catch(() => _entrar(key, plg));
+    const form = document.getElementById('adminLoginForm');
+    const visible = form.style.display !== 'none';
+    form.style.display = visible ? 'none' : 'block';
+    if (!visible) setTimeout(() => document.getElementById('adminPassInput').focus(), 50);
 }
 
-function _entrar(key, plg) {
-    _adminKey = key;
-    _plgAddr  = plg;
-    sessionStorage.setItem('_pf_key', key);
-    if (plg) sessionStorage.setItem('_pf_plg', plg);
-    document.getElementById('gate').classList.add('hidden');
+async function adminLogin() {
+    const pw = document.getElementById('adminPassInput').value;
+    if (!pw) return;
+    const buf  = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+    const hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+    if (hash === _ADMIN_HASH) {
+        document.getElementById('adminPassInput').value = '';
+        document.getElementById('adminLoginErr').style.display  = 'none';
+        document.getElementById('adminLoginForm').style.display = 'none';
+        _entrar('PLG_ADMIN_000000000000000000000000000000000000');
+    } else {
+        document.getElementById('adminLoginErr').style.display = 'block';
+        document.getElementById('adminPassInput').value = '';
+        document.getElementById('adminPassInput').focus();
+    }
+}
+
+// ─────────────────────────────────────────────
+// AUTH LOCK
+// ─────────────────────────────────────────────
+function _entrar(plg) {
+    _plgAddr = plg || '';
+    document.getElementById('authLock').classList.remove('show');
+    document.body.style.overflow = '';
     document.getElementById('app').classList.add('visible');
     inicializar();
 }
 
 function sair() {
-    sessionStorage.removeItem('_pf_key');
-    sessionStorage.removeItem('_pf_plg');
-    location.reload();
+    PlegmaAuth.logout();
 }
 
 // ─────────────────────────────────────────────
@@ -796,14 +834,20 @@ function inicializar() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    const key = sessionStorage.getItem('_pf_key');
-    const plg = sessionStorage.getItem('_pf_plg');
-    if (key) {
-        _adminKey = key;
-        _plgAddr  = plg || '';
-        document.getElementById('gate').classList.add('hidden');
-        document.getElementById('app').classList.add('visible');
-        inicializar();
+    PlegmaAuth.init({
+        onLogin(plgAddress) {
+            _entrar(plgAddress);
+        },
+        onLogout() {
+            document.getElementById('authLock').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+    });
+
+    // Se não há sessão após init, mostra o lock
+    if (!PlegmaAuth.isConnected()) {
+        document.getElementById('authLock').classList.add('show');
+        document.body.style.overflow = 'hidden';
     }
 });
 

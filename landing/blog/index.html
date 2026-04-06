@@ -421,6 +421,47 @@
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
 
+        <!-- PLG-G DNA + QUEIMA GENESIS + CONSOLE AUTH + ADMIN UI — 07 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">07 ABR 2026 — PLG-G Genesis DNA · Queima Instantânea · Console Auth por Carteira · Admin UI</span>
+                <div class="post-meta">
+                    <span class="post-date">07 ABR 2026 · Tokenomics / Auth / UI</span>
+                    <span class="post-tag tag-sec">TOKENOMICS</span>
+                    <span class="post-tag">AUTH</span>
+                    <span class="post-tag tag-ui">UI/UX</span>
+                </div>
+            </div>
+            <div class="post-body">
+
+                <div class="post-section">PLG-G Genesis DNA — genesis_balance vinculado à carteira compradora</div>
+                <p>Implementado o conceito de <strong>DNA do PLG-G Genesis</strong>: ao confirmar uma compra na Genesis Reserve, o sistema calcula <code>dna = SHA3-256(plg_address)</code> e registra o <code>genesis_balance</code> separado do saldo total na tabela <code>plgg_balances</code> (nova coluna via migration automática). O <code>genesis_balance</code> representa exclusivamente os PLG-G comprados diretamente na Genesis — é ele que determina o <strong>título Sócio Genesis</strong> e o estado da medalha. Ao transferir PLG-G para outra carteira, o remetente perde o <code>genesis_balance</code> proporcional: os tokens saem com o DNA e deixam de conferir título no destino.</p>
+                <p>O <strong>boost de mineração</strong> (1,0× / 1,5× / 2,0×) e o <strong>peso de voto</strong> continuam sendo calculados pelo <strong>saldo total</strong> de PLG-G — inclui compras no mercado P2P secundário. Esta é a principal utilidade do PLG-G para compradores do secundário.</p>
+                <ul style="margin:8px 0 8px 18px;color:#aaa;font-size:0.85rem;line-height:1.8;">
+                    <li><strong>genesis_balance > 0 + is_genesis</strong> → medalha dourada girando · título ativo</li>
+                    <li><strong>genesis_balance = 0 + is_genesis</strong> → medalha cinza estática · título perdido (irrecuperável)</li>
+                    <li><strong>saldo_plgg > 0 + !is_genesis</strong> → medalha branca girando · boost ativo · sem título</li>
+                </ul>
+                <p>Funções novas em <code>plegma_db.py</code>: <code>salvar_saldo_plgg_genesis()</code> / <code>carregar_saldo_plgg_genesis()</code>. <code>check_priority()</code> em <code>sentinela.py</code> agora retorna <code>genesis_balance</code> e <code>saldo_plgg</code> como campos distintos.</p>
+
+                <div class="post-section">Queima instantânea — burn 1:1 progressivo corrigido e removido</div>
+                <p>A deflação 1:1 por <code>mine_tokens()</code> (<code>burn = min(reward, genesis_reserve)</code>) foi identificada como erro de implementação e <span class="amber">removida</span>. A regra correta sempre foi: ao encerrar os 30 dias da Genesis Reserve, <span class="green">todo PLG-G não vendido é queimado instantaneamente</span> via <code>queimar_plgg_nao_vendido()</code> — função idempotente (flag no DB impede reexecução). Simultaneamente, os campos <code>genesis_reserve</code> e <code>burned_reserve</code> foram eliminados do <code>AerariumProtocol</code>: não existe reserva de <strong>$PLG</strong> separada no Aerarium — o supply total vai diretamente para os pools Validator (60%) e Prover (40%). Referências removidas de <code>aerarium.py</code>, <code>wallet_server.py</code> e <code>wallet_dashboard.py</code>.</p>
+
+                <div class="post-section">Console Sócio — autenticação por carteira PLG substituindo gate manual</div>
+                <p>O gate do <code>/console/</code> (senha + campo PLG manual) foi substituído pelo sistema unificado de autenticação da rede: <code>PlegmaAuth.init({ onLogin, onLogout })</code>. Ao abrir a página sem sessão ativa, a tela <code>#authLock</code> cobre o conteúdo e exibe o botão <strong>CONECTAR CARTEIRA</strong> — que abre o modal QR/Dilithium3 padrão. Ao autenticar, <code>onLogin(plgAddress)</code> libera o console e popula <code>_plgAddr</code> com o endereço da sessão. O botão <strong>▸ acesso admin</strong> (discreto, quase invisível) permite acesso por senha local via SHA-256 — para uso sem carteira.</p>
+
+                <div class="post-section">Console Mestre — logo, remoção de GUIA e SCRIPT</div>
+                <p>Logo oficial <code>logo.gif</code> adicionada ao header do Console Mestre ao lado do título. A seção <strong>GUIA VPS</strong> (passo a passo Azure trial + tabela comparativa de provedores) e o painel <strong>Script de Instalação do Nó</strong> foram removidos — conteúdo operacional que não pertence ao console de monitoramento.</p>
+
+                <div class="post-section">Tabela de Sócios — agrupada por categoria e título</div>
+                <p>A tabela Lista de Sócios no Console Mestre foi reestruturada: endereço PLG, saldo PLG-G e coluna "Sócio Genesis" (sim/não) removidos. A tabela agora exibe <strong>Categoria</strong> (badge MASTER / SENTINELA / APOIADOR), <strong>Título</strong> (medalha com emoji: 🥇 Sócio Genesis · Master, 🥈 Sentinela, 🥉 Apoiador, 🔵 Detentor · X) e <strong>Quantidade</strong> — agrupados. A ordem é Genesis primeiro, depois Detentores por categoria decrescente. Quando a API está offline, uma simulação local de 13 sócios é exibida automaticamente para validação visual.</p>
+
+                <div class="post-section">Blog — abas Linha do Tempo e Testes Automáticos corrigidas</div>
+                <p>O arquivo <code>blog/index.html</code> estava truncado (terminava no meio do CVE-007/008 sem fechar nenhuma tag HTML). Adicionado fechamento completo + footer padrão. A função <code>switchTab()</code>, chamada pelos botões das 3 abas, simplesmente não existia no arquivo — causando tela sem resposta ao clicar. Adicionada com suporte a navegação por URL hash (<code>#timeline</code>, <code>#testes</code>, <code>#pilares</code>).</p>
+
+            </div>
+        </article>
+
         <!-- CONSOLE MESTRE + CONSOLE REESTRUTURADO — 06 ABR 2026 -->
         <article class="post">
             <div class="post-header">
@@ -436,8 +477,8 @@
                 <div class="post-section">Console Mestre — `/admin/` como página separada</div>
                 <p>O Console Mestre foi extraído para <code>/admin/index.html</code> como página autônoma, com gate de acesso diferenciado (tema vermelho, aviso de área restrita e link de retorno ao Console). O conteúdo é uma cópia completa do Console — as duas páginas evoluem independentemente a partir daqui, permitindo que o admin acumule funcionalidades exclusivas sem impactar a experiência do sócio.</p>
 
-                <div class="post-section">Burn automático confirmado — botão manual removido</div>
-                <p>Auditoria do <code>aerarium.py</code> confirmou que a deflação 1:1 da Genesis Reserve já ocorre automaticamente a cada <code>mine_tokens()</code> (linhas 168–173): <code>burn = min(reward, genesis_reserve)</code>. O botão "Queimar PLG-G Não Vendidos" e a função <code>confirmarBurn()</code> foram removidos do Console Mestre — ação manual seria redundante e potencialmente perigosa.</p>
+                <div class="post-section">Burn instantâneo ao fim da Genesis — botão manual removido</div>
+                <p>A auditoria do <code>aerarium.py</code> identificou e corrigiu a regra de queima. A deflação 1:1 progressiva por <code>mine_tokens()</code> (<code>burn = min(reward, genesis_reserve)</code>) foi <span class="amber">removida</span> — o mecanismo estava errado. A regra correta: ao encerrar os 30 dias da Genesis Reserve, <span class="green">todo PLG-G não vendido é queimado instantaneamente em um único evento</span> via <code>queimar_plgg_nao_vendido()</code>. A função é idempotente (flag no DB — não reexecuta). O botão "Queimar PLG-G Não Vendidos" e a função <code>confirmarBurn()</code> foram removidos do Console Mestre.</p>
 
                 <div class="post-section">Pasta `socio-fundador/` renomeada para `console/`</div>
                 <p>A rota <code>/socio-fundador/</code> foi renomeada para <code>/console/</code> — nome mais direto e coerente com a função da página. Referências atualizadas em <code>admin/index.html</code>, <code>dashboard/index.html</code> e neste blog.</p>
@@ -448,11 +489,11 @@
                 <div class="post-section">3 estados de medalha com Anime.js</div>
                 <p>A identidade visual do status Genesis foi implementada com três estados de medalha animada (rotação 3D via Anime.js, <code>rotateY 360°</code> contínuo):</p>
                 <ul style="margin:8px 0 8px 18px;color:#aaa;font-size:0.85rem;line-height:1.8;">
-                    <li><strong style="color:#FFD700">Dourada girando</strong> — participou da Genesis Reserve, selo ativo (saldo &gt; 0)</li>
-                    <li><strong style="color:#888">Apagada/cinza estática</strong> — tinha Genesis, saldo PLG-G zerou em algum momento — irrecuperável mesmo comprando de volta via P2P</li>
-                    <li><strong style="color:#c8d0d8">Branca girando</strong> — nunca participou da Genesis, adquiriu PLG-G via P2P após encerramento da Reserve</li>
+                    <li><strong style="color:#FFD700">Dourada girando</strong> — participou da Genesis Reserve, selo ativo (<code>genesis_balance &gt; 0</code> — PLG-G com DNA ainda nesta carteira)</li>
+                    <li><strong style="color:#888">Apagada/cinza estática</strong> — participou da Genesis, mas transferiu todo o seu PLG-G original para fora — irrecuperável mesmo comprando de volta via P2P</li>
+                    <li><strong style="color:#c8d0d8">Branca girando</strong> — nunca participou da Genesis; adquiriu PLG-G via P2P — recebe boost e peso de voto normalmente, mas sem título Sócio Genesis</li>
                 </ul>
-                <p>A <strong>categoria</strong> (MASTER / SENTINELA / APOIADOR) é sempre calculada pelo saldo atual, independente do estado da medalha. O título Sócio Genesis é intransferível e irrecuperável — regra implementada diretamente no <code>genesis_contract.py</code> via <code>marcar_status_genesis_perdido()</code>.</p>
+                <p>A <strong>categoria e o boost</strong> (MASTER 2,0× / SENTINELA 1,5× / APOIADOR 1,0×) são calculados pelo <strong>saldo total de PLG-G</strong> — inclui compras P2P secundárias. O título Sócio Genesis é determinado exclusivamente pelo <code>genesis_balance</code> (DNA vinculado à carteira compradora original): ao transferir PLG-G para fora, os tokens saem com o DNA e perdem o vínculo — quem recebe não herda o título. Regra implementada em <code>genesis_contract.py</code> via <code>salvar_saldo_plgg_genesis()</code> e <code>marcar_status_genesis_perdido()</code>.</p>
 
             </div>
         </article>
@@ -2046,4 +2087,63 @@
                     <li><span class="green">[CVE-004] CORRIGIDO</span> — Bans do Escudo persistidos em disco com checksum BLAKE3. Carregados antes de abrir sockets. Nós banidos permanecem banidos após restart.</li>
                     <li><span class="green">[CVE-005] CORRIGIDO</span> — <code>/wallet/transferir</code>: sessão Bearer obrigatória + Dilithium3 em cada transferência. Risco financeiro eliminado.</li>
                     <li><span class="green">[CVE-006] CORRIGIDO</span> — <code>transferir_plgg()</code>: ownership verificado por <code>verificar_tx()</code>. Transferência de PLG-G de terceiros bloqueada.</li>
-                    <li><span class="green">[CVE-007/008] CORRIGIDO</span> — Flutter: SHA-256 simulado substituído por Dilithium
+                    <li><span class="green">[CVE-007/008] CORRIGIDO</span> — Flutter: SHA-256 simulado substituído por Dilithium3 via FFI nativo (<code>dilithium_bridge.c</code> + <code>dilithium_ffi_service.dart</code>). Assinatura criptográfica real em toda a cadeia mobile.</li>
+                </ul>
+            </div>
+        </article>
+
+    </div><!-- /tab-testes -->
+
+</div><!-- /posts-container -->
+
+<footer>
+    <p>&copy; 2026 PLEGMA DAG | The Architecture of Absolute Justice</p>
+    <div class="social-links">
+        <a href="https://x.com/plegmadag" target="_blank" rel="noopener" title="X (Twitter)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="https://t.me/plegma_dag" target="_blank" rel="noopener" title="Telegram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        </a>
+        <a href="https://discord.gg/MFsJqyBBJ" target="_blank" rel="noopener" title="Discord">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057.1 18.08.116 18.102.136 18.116a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+        </a>
+        <a href="https://github.com/PlegmaDag" target="_blank" rel="noopener" title="GitHub">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        </a>
+        <a href="https://www.instagram.com/plegmadag/" target="_blank" rel="noopener" title="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        </a>
+        <a href="/social" title="PLG — Sua Rede de Conexões">
+            <svg width="18" height="18" viewBox="0 0 6000 6000" fill="currentColor" style="fill-rule:evenodd;clip-rule:evenodd" xmlns="http://www.w3.org/2000/svg"><path d="M1808 4633c475,-3 951,0 1427,-1 499,0 825,11 1246,-181 606,-277 1097,-807 1277,-1576 98,-421 64,-847 -63,-1241 -116,-356 -298,-631 -547,-885 -121,-123 -243,-225 -394,-316 -147,-89 -305,-172 -491,-230 -431,-135 -863,-101 -1333,-101 -474,1 -948,0 -1422,0 -219,0 -501,-15 -712,4 -213,19 -375,141 -463,256 -135,176 -139,315 -140,573 0,238 0,475 0,712l1 2853c-1,420 -79,874 250,1182 473,441 1185,175 1333,-362 51,-186 32,-481 31,-687zm-276 -2047c1,0 4,-1 5,2l229 105 1 -163 -235 56zm2678 108l174 -76c27,-11 45,-15 65,-35l-240 -54 1 165zm-2424 -1372c16,32 45,52 71,77l213 219c43,44 99,107 144,144 41,33 122,107 141,147 -40,55 -185,171 -263,215l-239 -239c-28,-29 -50,-61 -86,-78l0 472c-58,33 -268,81 -346,89l0 -688 -265 705c30,18 49,40 61,78 391,-21 774,-165 1063,-392 130,-102 233,-229 338,-381 63,-92 205,-367 239,-492 -10,-15 -39,-53 -54,-69l-1017 193zm1336 -136c12,99 183,415 233,493 185,293 473,535 802,654 159,57 422,121 605,131 11,-37 33,-61 58,-78l-261 -712 -2 694c-110,-11 -249,-53 -347,-88l0 -476c-68,33 -248,271 -323,320 -56,-23 -239,-180 -266,-215 77,-97 509,-508 569,-584l-1024 -201c-11,40 -16,43 -44,62zm-562 2027c36,73 47,139 1,212 26,43 44,50 77,88 43,49 225,257 258,278 92,-46 115,-15 195,-2l203 -220c15,-17 23,-30 38,-47 30,-35 35,-26 82,-89 -36,-129 -43,-101 5,-227l-200 -239c-20,-25 -48,-64 -66,-83 -34,18 -57,50 -83,79 -27,28 -53,52 -81,78l-160 -156 -204 243c-20,26 -50,59 -65,85zm-1300 -652c46,32 222,79 293,108 453,182 667,444 734,479 89,-35 108,-30 195,-4 30,-37 256,-304 271,-337l-181 -193c-22,-22 -44,-37 -66,-60 -83,-88 -158,-172 -245,-255 6,-9 2,-4 12,-14l53 -40c25,-18 41,-32 67,-52 29,-22 34,-26 63,-56 22,-23 41,-47 68,-60 41,33 75,78 113,117 42,43 72,73 121,116 38,33 77,77 113,115 31,32 87,98 118,119 69,-54 429,-446 478,-468 27,40 80,85 119,117 24,20 42,33 66,52 31,24 47,27 64,54 -121,114 -245,256 -365,378 -45,45 -97,79 -128,130l203 249c22,26 45,61 71,85 128,-31 94,-20 202,10 26,-30 63,-63 99,-95 174,-154 402,-295 623,-385 58,-23 263,-87 296,-110 -484,-69 -777,-163 -1084,-415 -286,-236 -474,-547 -603,-904l-81 2c-74,180 -148,351 -243,500 -109,170 -211,271 -356,398 -283,249 -625,351 -1090,419zm-186 180c-248,18 -298,-236 -173,-347 49,-44 86,-49 166,-53l311 -847c-34,-39 -74,-69 -79,-153 -10,-153 124,-241 243,-211 70,18 106,54 133,109 110,-14 1079,-199 1112,-218 24,-53 22,-84 63,-124 73,-71 198,-71 274,-3 36,32 41,81 69,127 40,22 991,201 1109,218 102,-198 386,-121 379,94 -3,88 -43,115 -80,161l312 847c320,-5 296,429 -10,399 -25,54 -343,767 -347,804 -14,114 37,112 -51,177 -70,52 -199,142 -293,166l-2 -923c66,-44 255,-138 346,-166l0 473 254 -573 -36 -41c-171,36 -419,148 -556,226 -256,147 -416,313 -453,334 9,35 21,59 23,97 2,35 -18,84 -14,100 4,19 253,236 303,286 19,20 42,36 63,54l1 134c-70,-43 -391,-369 -452,-396 -63,54 -136,29 -202,10l-244 269c-21,21 -64,73 -80,94 68,141 -9,297 -165,305 -129,7 -268,-116 -183,-305 -72,-88 -176,-190 -242,-269 -28,-34 -58,-58 -81,-96 -108,30 -107,38 -214,-4l-326 288c-23,23 -27,31 -51,51 -12,9 -17,13 -28,22l-39 27c1,-151 -9,-123 80,-197 28,-23 39,-42 70,-66l141 -129c129,-118 67,-31 62,-161 -2,-43 14,-76 24,-112 -69,-56 -132,-118 -210,-177 -78,-59 -153,-106 -240,-158 -112,-67 -415,-204 -559,-229l-35 41 251 573 3 -470c72,19 296,125 345,164l1 1286c441,-1 883,0 1324,0 455,1 801,32 1197,-135 616,-259 1061,-852 1132,-1527 91,-871 -370,-1496 -838,-1805 -296,-194 -604,-294 -1034,-294 -877,1 -1775,6 -2650,0 -227,-2 -317,134 -317,346 1,223 0,446 0,669l0 3319c1,259 -31,386 112,560 199,240 727,185 727,-332 0,-443 0,-886 0,-1329 0,-52 3,-109 1,-161 -2,-49 -24,-82 -42,-125l-305 -694z"/></svg>
+        </a>
+    </div>
+    <div class="footer-legal">
+        <a href="/termos">Termos de Uso</a>
+        <a href="/privacidade">Privacidade</a>
+        <a href="/cookies">Cookies</a>
+        <a href="/quem-somos">Quem Somos</a>
+    </div>
+</footer>
+
+<script>
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + tabId).classList.add('active');
+        history.replaceState(null, '', '#' + tabId);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const hash = location.hash.replace('#', '');
+        if (hash === 'timeline' || hash === 'testes' || hash === 'pilares') {
+            const btn = Array.from(document.querySelectorAll('.tab-btn'))
+                            .find(b => b.getAttribute('onclick').includes(hash));
+            if (btn) switchTab(hash, btn);
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -99,10 +99,12 @@
             position: sticky; top: 0; z-index: 50;
         }
         .h-brand {
+            display: flex; align-items: center; gap: 10px;
             font-family: 'Montserrat', sans-serif; font-weight: 800;
             font-size: 1rem; color: var(--cyan); letter-spacing: 2px;
             text-shadow: var(--glow-sm);
         }
+        .h-brand img { width: 36px; height: 36px; filter: drop-shadow(0 0 6px rgba(0,242,255,0.5)); }
         .h-right { display: flex; align-items: center; gap: 16px; }
         .h-status { font-size: 0.6rem; color: var(--green); letter-spacing: 2px; display: flex; align-items: center; gap: 6px; }
         .h-status::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }
@@ -259,7 +261,10 @@
 <!-- ═══ APP ═══ -->
 <div id="app">
 <header>
-    <div class="h-brand">⬡ CONSOLE MESTRE</div>
+    <div class="h-brand">
+        <img src="/assets/img/logo.gif" alt="Plegma">
+        CONSOLE MESTRE
+    </div>
     <div class="h-right">
         <div class="h-status" id="hStatus">MESTRE ATIVO</div>
         <a href="/console/" class="h-back">← CONSOLE</a>
@@ -292,6 +297,26 @@
             <div class="stat-card-label">Tips Pendentes</div>
             <div class="stat-card-val" id="statTips">—</div>
             <div class="stat-card-sub">Vértices na fronteira</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-card-label">Nós Ativos</div>
+            <div class="stat-card-val" id="statNosAtivos">—</div>
+            <div class="stat-card-sub">Total global</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-label">Nós Âncora</div>
+            <div class="stat-card-val" id="statNosAncoras">—</div>
+            <div class="stat-card-sub">Peers + este nó</div>
+        </div>
+        <div class="stat-card amber">
+            <div class="stat-card-label">Mineradores</div>
+            <div class="stat-card-val" id="statMineradores">—</div>
+            <div class="stat-card-sub">PC · Servidor · VPS — gera prova ZK</div>
+        </div>
+        <div class="stat-card purple">
+            <div class="stat-card-label">Validadores</div>
+            <div class="stat-card-val" id="statValidadores">—</div>
+            <div class="stat-card-sub">PC · Notebook · Tablet · Celular — valida prova 22kb</div>
         </div>
     </div>
 
@@ -350,24 +375,75 @@
         </div>
     </div>
 
+    <!-- ═══ AERARIUM + SHIELD ═══ -->
+    <div class="two-col" style="margin-bottom:0;">
+
+        <!-- Aerarium -->
+        <div class="panel">
+            <div class="panel-header">⚖️ Aerarium · Manutenção da Rede <span id="aerariumBadge"></span></div>
+            <div class="panel-body">
+                <div class="stat-card-label">Saldo de Manutenção</div>
+                <div style="font-size:1.3rem;color:var(--amber);font-weight:700;margin-bottom:4px;" id="aerariumSaldo">—</div>
+                <div style="margin-bottom:16px;">
+                    <div class="pool-bar-bg" style="margin-top:6px;">
+                        <div class="pool-bar-fill" id="aerariumBar" style="width:0%;background:var(--amber);box-shadow:0 0 8px rgba(245,158,11,0.4);"></div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:var(--text2);margin-top:4px;">
+                        <span id="aerariumPct">0%</span>
+                        <span>Teto: $1.000 USDC</span>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <tr><td style="color:var(--text2)">Origem</td><td style="text-align:right;color:var(--cyan);">10% das Transações</td></tr>
+                    <tr><td style="color:var(--text2)">Teto de Acumulação</td><td style="text-align:right;">$1.000 USDC</td></tr>
+                    <tr><td style="color:var(--text2)">Excedente → Pool</td><td id="aerariumTransbordo" style="text-align:right;">—</td></tr>
+                    <tr><td style="color:var(--text2)">USDC Arrecadado</td><td id="aerariumUsdc" style="text-align:right;color:var(--green);">—</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Shield Usuário -->
+        <div class="panel">
+            <div class="panel-header">🛡️ Shield Usuário — Dispositivos Ativos</div>
+            <div class="panel-body">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+                    <div style="text-align:center;padding:14px 8px;background:var(--bg3);border-radius:8px;border:1px solid var(--border);">
+                        <div style="font-size:0.62rem;color:var(--text2);text-transform:uppercase;letter-spacing:2px;">PCs</div>
+                        <div style="font-size:1.5rem;color:var(--cyan);font-weight:700;margin-top:4px;text-shadow:var(--glow-sm);" id="shieldPCs">—</div>
+                        <div style="font-size:0.6rem;color:var(--text2);margin-top:2px;">mineradores · validadores</div>
+                    </div>
+                    <div style="text-align:center;padding:14px 8px;background:var(--bg3);border-radius:8px;border:1px solid var(--border);">
+                        <div style="font-size:0.62rem;color:var(--text2);text-transform:uppercase;letter-spacing:2px;">Móveis</div>
+                        <div style="font-size:1.5rem;color:var(--green);font-weight:700;margin-top:4px;text-shadow:0 0 8px rgba(35,209,139,0.3);" id="shieldMobile">—</div>
+                        <div style="font-size:0.6rem;color:var(--text2);margin-top:2px;">Android · iOS</div>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <tr><td style="color:var(--text2)">Total Protegidos</td><td id="shieldTotal" style="text-align:right;color:var(--green);">—</td></tr>
+                    <tr><td style="color:var(--text2)">Valor Arrecadado (global)</td><td id="shieldArrecadado" style="text-align:right;color:var(--cyan);">—</td></tr>
+                    <tr><td style="color:var(--text2)">Royalties 2%</td><td id="shieldRoyalties" style="text-align:right;color:var(--amber);">—</td></tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
     <!-- ═══ SÓCIOS ═══ -->
     <div class="section-label" style="margin-top:8px;">
         Sócios Genesis &amp; PLG-G
         <span id="socioCount" style="color:var(--cyan);">—</span>
     </div>
     <div class="panel" style="margin-bottom:24px;">
-        <div class="panel-header">Lista de Sócios — Saldos PLG-G <span id="socioRefreshBtn" onclick="carregarSocios()" style="cursor:pointer;color:var(--cyan);">↺</span></div>
-        <div style="overflow-x:auto;max-height:220px;overflow-y:auto;">
+        <div class="panel-header">Lista de Sócios — por Categoria &amp; Título <span id="socioRefreshBtn" onclick="carregarSocios()" style="cursor:pointer;color:var(--cyan);">↺</span></div>
+        <div style="overflow-x:auto;max-height:260px;overflow-y:auto;">
             <table class="data-table" id="socioTable">
                 <thead><tr>
                     <th>#</th>
-                    <th>Endereço PLG</th>
-                    <th>Saldo PLG-G</th>
                     <th>Categoria</th>
-                    <th>Sócio Genesis</th>
-                    <th>Atualizado</th>
+                    <th>Título</th>
+                    <th style="text-align:center;">Quantidade</th>
                 </tr></thead>
-                <tbody id="socioTableBody"><tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text2);">Carregando...</td></tr></tbody>
+                <tbody id="socioTableBody"><tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text2);">Carregando...</td></tr></tbody>
             </table>
         </div>
     </div>
@@ -393,175 +469,6 @@
                 </tr></thead>
                 <tbody id="inscricaoBody"><tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text2);">Carregando...</td></tr></tbody>
             </table>
-        </div>
-    </div>
-
-    <!-- ═══ GUIA VPS — NÓ MINERADOR ═══ -->
-    <div class="section-label" id="guia-vps" style="margin-top:8px;">Guia — Configurar Nó Minerador em VPS</div>
-    <div class="two-col" style="margin-bottom:24px;">
-
-        <!-- Azure Trial -->
-        <div class="panel">
-            <div class="panel-header">Azure — Trial Gratuito 30 Dias (Microsoft)</div>
-            <div class="panel-body" style="font-size:0.75rem;color:var(--text3);line-height:1.8;">
-                <div style="background:var(--amber2);border:1px solid rgba(245,158,11,0.25);border-radius:6px;padding:12px 14px;margin-bottom:16px;font-size:0.7rem;color:var(--amber);">
-                    ⚠ O trial Azure inclui $200 USD em crédito por 30 dias. Não é cobrado automaticamente se você não upgradar para pay-as-you-go após o período.
-                </div>
-                <p style="margin-bottom:10px;"><strong style="color:var(--text)">Passo 1</strong> — Acesse <span style="color:var(--cyan)">azure.microsoft.com/free</span> e crie a conta com email Microsoft. Exige cartão de crédito para verificação (não cobrado no trial).</p>
-                <p style="margin-bottom:10px;"><strong style="color:var(--text)">Passo 2</strong> — No portal Azure, crie uma nova <strong style="color:var(--text)">Virtual Machine</strong>:</p>
-                <ul style="padding-left:18px;margin-bottom:10px;">
-                    <li>Região: <strong style="color:var(--cyan)">East US</strong> ou <strong style="color:var(--cyan)">West Europe</strong> (menor latência)</li>
-                    <li>Sistema: <strong style="color:var(--cyan)">Ubuntu Server 22.04 LTS</strong></li>
-                    <li>Tamanho: <strong style="color:var(--cyan)">B2s</strong> (2 vCPU · 4 GB RAM) — suficiente para nó Minerador</li>
-                    <li>Autenticação: SSH public key (gere um par com <code>ssh-keygen</code>)</li>
-                    <li>Portas abertas: <strong>22</strong> (SSH), <strong>8080</strong>, <strong>8082</strong>, <strong>8083</strong></li>
-                </ul>
-                <p style="margin-bottom:10px;"><strong style="color:var(--text)">Passo 3</strong> — Após criar a VM, copie o IP público. Conecte: <code style="color:var(--cyan)">ssh -i ~/.ssh/id_rsa azureuser@IP_DA_VM</code></p>
-                <p style="margin-bottom:10px;"><strong style="color:var(--text)">Passo 4</strong> — Execute o script de instalação do nó (ver painel ao lado).</p>
-                <p style="color:var(--text2);font-size:0.75rem;">O trial B2s consome ~$0,04/h. Com $200 de crédito você tem ~208 dias. Após o trial, B2s fica ~$29/mês.</p>
-            </div>
-        </div>
-
-        <!-- Opções VPS de Baixo Custo -->
-        <div class="panel">
-            <div class="panel-header">VPS de Baixo Custo — Comparativo</div>
-            <div class="panel-body">
-                <div style="font-size:0.75rem;color:var(--text2);margin-bottom:12px;">Requisitos mínimos do nó MINERADOR: 2 vCPU · 2 GB RAM · 20 GB SSD · Ubuntu 20.04+ &nbsp;·&nbsp; <span style="color:var(--amber)">Validadores usam celular, tablet ou PC comum — sem VPS</span></div>
-                <table class="data-table" style="margin-bottom:16px;">
-                    <thead><tr>
-                        <th>Provedor</th>
-                        <th>Plano</th>
-                        <th>Preço/mês</th>
-                        <th>Specs</th>
-                        <th>Recomendado</th>
-                    </tr></thead>
-                    <tbody>
-                        <tr>
-                            <td style="color:var(--cyan)">Hetzner</td>
-                            <td>CX22</td>
-                            <td style="color:var(--green)">~€4,35</td>
-                            <td>2 vCPU · 4 GB · 40 GB SSD</td>
-                            <td><span class="badge badge-green">MELHOR CUSTO</span></td>
-                        </tr>
-                        <tr>
-                            <td style="color:var(--cyan)">Contabo</td>
-                            <td>Cloud VPS S</td>
-                            <td style="color:var(--green)">~€5,99</td>
-                            <td>4 vCPU · 8 GB · 200 GB SSD</td>
-                            <td><span class="badge badge-cyan">PROVER</span></td>
-                        </tr>
-                        <tr>
-                            <td style="color:var(--cyan)">DigitalOcean</td>
-                            <td>Droplet Básico</td>
-                            <td style="color:var(--amber)">~$6</td>
-                            <td>1 vCPU · 1 GB · 25 GB SSD</td>
-                            <td><span class="badge badge-amber">MINERADOR</span></td>
-                        </tr>
-                        <tr>
-                            <td style="color:var(--cyan)">Vultr</td>
-                            <td>Cloud Compute</td>
-                            <td style="color:var(--amber)">~$6</td>
-                            <td>1 vCPU · 1 GB · 25 GB SSD</td>
-                            <td><span class="badge badge-amber">MINERADOR</span></td>
-                        </tr>
-                        <tr>
-                            <td style="color:var(--cyan)">Azure B1s</td>
-                            <td>(pós-trial)</td>
-                            <td style="color:var(--text2)">~$7,60</td>
-                            <td>1 vCPU · 1 GB · 30 GB SSD</td>
-                            <td><span class="badge badge-amber">MINERADOR</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div style="font-size:0.75rem;color:var(--text2);line-height:1.7;">
-                    Para nó <strong style="color:var(--purple)">PROVER</strong> (gera provas ZK, alta performance): recomendado ≥4 vCPU · 8 GB RAM · VPS dedicado.<br>
-                    Para nó <strong style="color:var(--cyan)">MINERADOR</strong> (mineração padrão): 2 vCPU · 2 GB RAM · VPS básico ou PC dedicado.<br>
-                    <span style="color:var(--amber)">Validador não usa VPS</span> — roda no app mobile (Android), tablet ou PC comum.
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Script de instalação -->
-    <div class="panel" style="margin-bottom:24px;">
-        <div class="panel-header">
-            Script de Instalação do Nó PLEGMA
-            <button onclick="copiarScript()" style="font-family:'Space Mono',monospace;font-size:0.6rem;padding:4px 10px;border-radius:3px;border:1px solid rgba(0,242,255,0.3);background:var(--cyan2);color:var(--cyan);cursor:pointer;letter-spacing:1px;">COPIAR</button>
-        </div>
-        <div class="panel-body">
-            <pre id="installScript" style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:18px;font-size:0.78rem;color:var(--green);line-height:1.7;overflow-x:auto;white-space:pre;">#!/bin/bash
-# =============================================================
-# PLEGMA DAG — Script de Instalação do Nó (Ubuntu 20.04+)
-# Execução: chmod +x install_node.sh && sudo ./install_node.sh
-# =============================================================
-
-set -e
-echo "==================================================="
-echo " [*] PLEGMA DAG — Instalação do Nó Minerador"
-echo "==================================================="
-
-# Atualizar sistema
-apt update && apt upgrade -y
-
-# Dependências base
-apt install -y python3 python3-pip python3-venv git curl wget unzip \
-               build-essential libssl-dev libffi-dev openssl
-
-# Python 3.10+ necessário para dilithium-py
-python3 --version
-
-# Clonar ou baixar PLEGMA_CORE
-mkdir -p /opt/plegma
-cd /opt/plegma
-
-# Se você tem o zip do PLEGMA_CORE:
-# wget https://plegmadag.com/download/plegma_core.zip && unzip plegma_core.zip
-
-# Virtualenv
-python3 -m venv venv
-source venv/bin/activate
-
-# Dependências Python
-pip install --upgrade pip
-pip install blake3 py_ecc dilithium-py flask requests
-
-# Configurar firewall (UFW)
-ufw allow 22/tcp     # SSH
-ufw allow 8080/tcp   # API DAG
-ufw allow 8082/tcp   # Auth
-ufw allow 8083/tcp   # Wallet
-ufw --force enable
-
-# Criar serviço systemd para core_vm.py
-cat > /etc/systemd/system/plegma-node.service &lt;&lt;EOF
-[Unit]
-Description=PLEGMA DAG Node
-After=network.target
-
-[Service]
-Type=simple
-User=root
-WorkingDirectory=/opt/plegma/PLEGMA_CORE
-Environment=PATH=/opt/plegma/venv/bin
-ExecStart=/opt/plegma/venv/bin/python3 core_vm.py
-Restart=always
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-systemctl daemon-reload
-systemctl enable plegma-node
-systemctl start plegma-node
-
-echo ""
-echo "==================================================="
-echo " [✓] Nó PLEGMA iniciado!"
-echo " [*] Verificar status: systemctl status plegma-node"
-echo " [*] Ver logs: journalctl -u plegma-node -f"
-echo " [*] API acessível em: http://$(curl -s ifconfig.me):8080/api/status"
-echo "==================================================="</pre>
         </div>
     </div>
 
@@ -715,6 +622,10 @@ async function carregarStatus() {
         setTxt('statAceitas',    fmt(rStatus.total_aceitas));
         setTxt('statRejeitadas', fmt(rStatus.total_rejeitadas));
         setTxt('statTips',       fmt(rStatus.tips_pendentes));
+        setTxt('statNosAtivos',  fmt(rStatus.nos_ativos));
+        setTxt('statNosAncoras', fmt(rStatus.nos_ancoras));
+        setTxt('statMineradores',fmt(rStatus.nos_mineradores));
+        setTxt('statValidadores',fmt(rStatus.validadores_ativos));
         setTxt('poolLastHash',   rStatus.last_vertex_hash ? rStatus.last_vertex_hash.substring(0,20)+'…' : '—');
 
         const vendido = rGenesis.total_plgg_sold ?? 0;
@@ -762,33 +673,127 @@ async function carregarStatus() {
     } catch(err) {
         setTxt('lastRefresh', 'erro: ' + err.message);
     }
+
+    // Aerarium e Shield em paralelo (não bloqueiam o refresh principal)
+    carregarAerarium();
+    carregarShield();
+}
+
+// ─────────────────────────────────────────────
+// AERARIUM
+// ─────────────────────────────────────────────
+async function carregarAerarium() {
+    try {
+        const r = await fetch(`${API}/api/genesis/liquidity_status`).then(r => r.json());
+        const saldo   = r.valor_aerarium   ?? 0;
+        const teto    = r.aerarium_teto    ?? 1000;
+        const transb  = r.aerarium_transbordo ?? 0;
+        const usdc    = r.usdc_arrecadado_total ?? 0;
+        const pct     = Math.min((saldo / teto) * 100, 100);
+
+        setTxt('aerariumSaldo', fmtUSdt(saldo));
+        setTxt('aerariumPct',   pct.toFixed(1) + '%');
+        setTxt('aerariumTransbordo', transb > 0 ? fmtUSdt(transb) + ' → Pool' : '—');
+        setTxt('aerariumUsdc', fmtUSdt(usdc));
+
+        const bar = document.getElementById('aerariumBar');
+        if (bar) bar.style.width = pct + '%';
+
+        const badge = document.getElementById('aerariumBadge');
+        if (badge) {
+            badge.innerHTML = saldo >= teto
+                ? '<span class="badge badge-green">TETO ATINGIDO</span>'
+                : '<span class="badge badge-amber">EM ACUMULAÇÃO</span>';
+        }
+    } catch(e) {
+        setTxt('aerariumSaldo', 'erro');
+    }
+}
+
+// ─────────────────────────────────────────────
+// SHIELD USUÁRIO
+// ─────────────────────────────────────────────
+async function carregarShield() {
+    try {
+        const rCount = await fetch(`${API}/api/admin/shield/stats?admin_key=${encodeURIComponent(_adminKey)}`).then(r => r.json());
+        setTxt('shieldPCs',        fmt(rCount.pcs           ?? 0));
+        setTxt('shieldMobile',     fmt(rCount.mobile         ?? 0));
+        setTxt('shieldTotal',      fmt(rCount.total_ativos   ?? 0) + ' protegidos');
+        setTxt('shieldArrecadado', fmtUSdt(rCount.valor_arrecadado ?? 0));
+        setTxt('shieldRoyalties',  fmtUSdt(rCount.royalties_2pct   ?? 0));
+    } catch(e) {
+        ['shieldPCs','shieldMobile','shieldTotal','shieldArrecadado','shieldRoyalties'].forEach(id => setTxt(id, '—'));
+    }
 }
 
 // ─────────────────────────────────────────────
 // SÓCIOS
 // ─────────────────────────────────────────────
+function _tituloMedalha(is_genesis, balance) {
+    const gb = balance ?? 0;
+    if (is_genesis && gb >= 6001)  return '🥇 Sócio Genesis · Master';
+    if (is_genesis && gb >= 3001)  return '🥈 Sócio Genesis · Sentinela';
+    if (is_genesis && gb >= 1000)  return '🥉 Sócio Genesis · Apoiador';
+    if (is_genesis)                return '⚪ Sócio Genesis · Sem boost';
+    // PLG-G secundário (sem DNA)
+    if (gb >= 6001)  return '🔵 Detentor · Master';
+    if (gb >= 3001)  return '🔵 Detentor · Sentinela';
+    if (gb >= 1000)  return '🔵 Detentor · Apoiador';
+    return '— Sem título';
+}
+
+function _categoriaLabel(balance) {
+    const b = balance ?? 0;
+    if (b >= 6001) return '<span class="badge badge-cyan">MASTER</span>';
+    if (b >= 3001) return '<span class="badge" style="border-color:rgba(167,139,250,0.4);color:#a78bfa;background:rgba(167,139,250,0.08);">SENTINELA</span>';
+    if (b >= 1000) return '<span class="badge badge-green">APOIADOR</span>';
+    return '<span class="badge" style="border-color:rgba(100,100,100,0.3);color:#666;">—</span>';
+}
+
 async function carregarSocios() {
+    const tbody = document.getElementById('socioTableBody');
     try {
+        let socios = [];
         const r = await fetch(`${API}/api/genesis/socios`).then(r => r.json());
-        const socios = r.socios ?? r ?? [];
+        socios = r.socios ?? r ?? [];
+
         setTxt('socioCount', socios.length + ' sócios');
-        const tbody = document.getElementById('socioTableBody');
+
         if (!socios.length) {
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text2)">Nenhum sócio ainda.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text2)">Nenhum sócio ainda.</td></tr>';
             return;
         }
-        tbody.innerHTML = socios.map((s, i) => `
+
+        // Agrupa por (categoria, título)
+        const grupos = {};
+        socios.forEach(s => {
+            const gb   = s.genesis_balance ?? 0;
+            const cat  = _categoriaLabel(gb);
+            const tit  = _tituloMedalha(s.is_genesis, gb);
+            const key  = cat + '||' + tit;
+            if (!grupos[key]) grupos[key] = { cat, tit, count: 0 };
+            grupos[key].count++;
+        });
+
+        // Ordena: Genesis primeiro, depois por balance desc
+        const ordem = ['Master', 'Sentinela', 'Apoiador', 'Sem boost', 'Detentor', 'Sem título'];
+        const linhas = Object.values(grupos).sort((a, b) => {
+            const ia = ordem.findIndex(o => a.tit.includes(o));
+            const ib = ordem.findIndex(o => b.tit.includes(o));
+            return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+        });
+
+        let i = 1;
+        tbody.innerHTML = linhas.map(g => `
             <tr>
-                <td style="color:var(--text2)">${i+1}</td>
-                <td style="font-size:0.75rem;color:var(--cyan)">${s.plg_address ?? '—'}</td>
-                <td>${(s.balance ?? 0).toLocaleString('pt-BR')} PLG-G</td>
-                <td>${tipoCategoria(s.balance ?? 0)}</td>
-                <td>${s.is_genesis ? '<span class="badge badge-green">SIM</span>' : '<span class="badge badge-red">NÃO</span>'}</td>
-                <td style="color:var(--text2);font-size:0.75rem">${fmtTs(s.updated_at)}</td>
+                <td style="color:var(--text2)">${i++}</td>
+                <td>${g.cat}</td>
+                <td style="font-size:0.8rem;">${g.tit}</td>
+                <td style="text-align:center;font-weight:700;color:var(--cyan);font-size:1rem;">${g.count}</td>
             </tr>`).join('');
+
     } catch(e) {
-        document.getElementById('socioTableBody').innerHTML =
-            `<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text2)">${e.message}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text2)">${e.message}</td></tr>`;
     }
 }
 
