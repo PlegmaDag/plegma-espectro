@@ -1411,20 +1411,13 @@
                     </div>
                 </div>
                 <div style="display:flex; flex-direction:column; gap:10px; min-width:180px;">
-                    <button style="font-family:'Space Mono',monospace; font-size:0.7rem; font-weight:700; letter-spacing:1px; padding:12px 20px; border-radius:6px; border:none; cursor:not-allowed; background:linear-gradient(135deg,rgba(0,242,255,0.3),rgba(0,114,255,0.3)); color:rgba(0,242,255,0.6); text-transform:uppercase; opacity:0.6;" disabled>
-                        ↓ BAIXAR MINERADOR<br><span style="font-size:0.55rem; font-weight:400; letter-spacing:2px;">V2.0+ · EM BREVE</span>
-                    </button>
+                    <!-- BAIXAR MINERADOR — acesso condicional: mín. 1.000 PLG-G Genesis -->
+                    <div id="btnBaixarMinerador"></div>
                     <div style="font-size:0.58rem; color:var(--text-dim); letter-spacing:1px; text-align:center; line-height:1.6;">
-                        Windows · Linux · macOS<br>
-                        Score mín. 1000 para Prover
+                        Windows · Score mín. 1000 para Prover
                     </div>
-                    <!-- Acesso ao Conselho Fundador — sem referência em nav ou links públicos -->
-                    <a href="/socio-fundador/" target="_blank"
-                        style="display:block; font-family:'Space Mono',monospace; font-size:0.6rem; letter-spacing:2px; padding:8px 14px; border-radius:5px; border:1px solid rgba(0,242,255,0.12); background:rgba(0,242,255,0.03); color:rgba(0,242,255,0.35); text-align:center; text-decoration:none; text-transform:uppercase; transition:all 0.2s;"
-                        onmouseover="this.style.borderColor='rgba(0,242,255,0.3)';this.style.color='rgba(0,242,255,0.7)'"
-                        onmouseout="this.style.borderColor='rgba(0,242,255,0.12)';this.style.color='rgba(0,242,255,0.35)'">
-                        ⬡ conselho
-                    </a>
+                    <!-- CONSOLE — acesso condicional: mín. 1.000 PLG-G Genesis -->
+                    <div id="btnConsole"></div>
                 </div>
             </div>
         </div>
@@ -2420,6 +2413,54 @@
         // Enviar PLG-G saldo
         setText('envPlggSaldo', Number(plgg).toFixed(2) + ' PLG-G');
         setText('envPlggLock',  '0.00 PLG-G');
+
+        // Acesso condicional: Minerador + Console exigem ≥ 1.000 PLG-G
+        atualizarAcessoGenesis();
+    }
+
+    // =========================================================================
+    // ACESSO GENESIS — Minerador e Console exigem ≥ 1.000 PLG-G (Fase Genesis)
+    // =========================================================================
+    function atualizarAcessoGenesis() {
+        const plgg      = walletData ? (walletData.saldo_plgg || 0) : 0;
+        const temAcesso = plgg >= 1000;
+
+        const elMinerador = document.getElementById('btnBaixarMinerador');
+        const elConsole   = document.getElementById('btnConsole');
+
+        if (elMinerador) {
+            if (temAcesso) {
+                elMinerador.innerHTML =
+                    `<a href="/download/plegma-minerador-v2.0-windows.zip" download style="text-decoration:none;display:block;">
+                        <button style="font-family:'Space Mono',monospace;font-size:0.7rem;font-weight:700;letter-spacing:1px;padding:12px 20px;border-radius:6px;border:none;cursor:pointer;background:linear-gradient(135deg,rgba(0,242,255,0.5),rgba(0,114,255,0.5));color:#00F2FF;text-transform:uppercase;width:100%;">
+                            ↓ BAIXAR MINERADOR<br><span style="font-size:0.55rem;font-weight:400;letter-spacing:2px;">V2.0 · WINDOWS</span>
+                        </button>
+                    </a>`;
+            } else {
+                elMinerador.innerHTML =
+                    `<div title="Requer 1.000 PLG-G na Reserva Genesis" style="font-family:'Space Mono',monospace;font-size:0.7rem;font-weight:700;letter-spacing:1px;padding:12px 20px;border-radius:6px;cursor:not-allowed;background:linear-gradient(135deg,rgba(0,242,255,0.08),rgba(0,114,255,0.08));color:rgba(0,242,255,0.3);text-transform:uppercase;text-align:center;opacity:0.7;user-select:none;border:1px solid rgba(0,242,255,0.1);">
+                        ↓ BAIXAR MINERADOR<br><span style="font-size:0.55rem;font-weight:400;letter-spacing:2px;">⬡ 1.000 PLG-G · GENESIS</span>
+                    </div>`;
+            }
+        }
+
+        if (elConsole) {
+            if (temAcesso) {
+                elConsole.innerHTML =
+                    `<a href="/socio-fundador/" target="_blank"
+                        style="display:block;font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:2px;padding:8px 14px;border-radius:5px;border:1px solid rgba(0,242,255,0.3);background:rgba(0,242,255,0.06);color:rgba(0,242,255,0.8);text-align:center;text-decoration:none;text-transform:uppercase;transition:all 0.2s;"
+                        onmouseover="this.style.borderColor='rgba(0,242,255,0.6)';this.style.color='#00F2FF'"
+                        onmouseout="this.style.borderColor='rgba(0,242,255,0.3)';this.style.color='rgba(0,242,255,0.8)'">
+                        ⬡ CONSOLE
+                    </a>`;
+            } else {
+                elConsole.innerHTML =
+                    `<div title="Requer 1.000 PLG-G na Reserva Genesis"
+                        style="display:block;font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:2px;padding:8px 14px;border-radius:5px;border:1px solid rgba(0,242,255,0.08);background:rgba(0,242,255,0.02);color:rgba(0,242,255,0.2);text-align:center;text-transform:uppercase;cursor:not-allowed;user-select:none;">
+                        ⬡ CONSOLE
+                    </div>`;
+            }
+        }
     }
 
     function renderVestingList(vestings) {
@@ -3998,6 +4039,7 @@
     // =========================================================================
     // INIT
     // =========================================================================
+    atualizarAcessoGenesis(); // estado bloqueado inicial antes do fetch
     fetchWalletStatus();
     setInterval(fetchWalletStatus, 5000);
     initShieldTelemetry();

@@ -163,9 +163,32 @@
         .tag-pilar { border-color: #f59e0b; color: #f59e0b; background: rgba(245,158,11,0.06); }
 
         .post-section {
-            font-size: 0.6rem; color: var(--text-dim);
-            letter-spacing: 3px; text-transform: uppercase;
-            padding: 10px 22px 4px;
+            font-size: 0.7rem; color: rgba(0,242,255,0.75);
+            letter-spacing: 1.5px;
+            padding: 14px 22px 6px;
+        }
+
+        /* Subtítulo dentro de .post-section (container) */
+        .post-section-title {
+            font-size: 0.75rem; color: var(--cyan);
+            letter-spacing: 1px; font-weight: 700;
+            display: block; margin-bottom: 8px;
+        }
+
+        /* h3 dentro de posts da timeline */
+        .post-body h3 {
+            font-size: 0.78rem; color: var(--cyan);
+            letter-spacing: 1px; font-weight: 700;
+            font-family: 'Space Mono', monospace;
+            margin: 0 0 8px;
+        }
+
+        /* .tag e .post-tags — aliás dos posts mais recentes */
+        .post-tags { display: flex; align-items: center; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
+        .tag {
+            font-size: 0.65rem; padding: 2px 8px;
+            border-radius: 3px; border: 1px solid rgba(0,242,255,0.3);
+            white-space: nowrap; color: var(--cyan);
         }
 
         footer {
@@ -398,15 +421,48 @@
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
 
+        <!-- MINERADOR v2.0 — REDE REAL + AERARIUM BOOST — 05 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">05 ABR 2026 — Minerador v2.0 · Rede Real · Aerarium Boost Genesis · Binário Monolítico</span>
+                <div class="post-meta">
+                    <span class="post-tag tag-core">PROTOCOLO</span>
+                    <span class="post-tag tag-crypto">ZK</span>
+                    <span class="post-tag tag-fix">BUILD</span>
+                    <span class="post-tag tag-infra">INFRA</span>
+                </div>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Conexão Real com a Rede</div>
+                <p>O <code>miner_engine.py</code> operava em modo simulação permanente: o <code>POST /api/mine</code> era enviado sem os campos <code>signature</code> e <code>public_key</code>, resultando em erro 400 e fallback para <code>_simular_mineracao()</code> em todo ciclo. A correção inclui assinatura Dilithium3 determinística da mensagem <code>sender:receiver:amount</code> antes de cada submissão — o mesmo formato validado pelo servidor. O campo <code>recompensa_minerador</code> ausente na resposta de <code>/api/mine</code> foi adicionado.</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Protocolo Aerarium + Boost Genesis</div>
+                <p>O endpoint <code>/api/mine</code> passou a aplicar as regras do Estatuto §4: <code>check_priority(miner_address)</code> determina a categoria do Sócio Genesis e o multiplicador de recompensa — APOIADOR 1,0×, SENTINELA 1,5×, MASTER 2,0×. A fórmula final é <code>R = (G/N) × boost</code>. Adicionalmente, o limite de mineradores por carteira é validado server-side: 1 minerador por 1.000 PLG-G. Carteiras sem PLG-G recebem HTTP 403. A coluna <code>node_id</code> foi adicionada à tabela <code>vesting</code> com migração automática para rastreamento do limite.</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Bifurcação PROVER / VALIDATOR</div>
+                <p>O motor de mineração implementa bifurcação estrutural baseada no hardware detectado. Nós PROVER ativam a sub-rotina ZK (<code>_zk_ativo = True</code>): <code>_gerar_prova_zk()</code> é chamada a cada vértice, produzindo prova BLAKE3 sobre <code>tx_mensagem + public_key</code> — estrutura para integração futura de ZK-SNARK completo. Nós VALIDATOR mantêm a sub-rotina dormente (<code>_zk_ativo = False</code>): a função nunca é invocada, economizando CPU/RAM. O campo <code>zk_proof</code> viaja no payload: preenchido para PROVER, vazio para VALIDATOR. A GUI exibe o modo em tempo real ("ZK Mode: ATIVO/DORMENTE").</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Hard-Crash Fatal + BLAKE3 Determinístico</div>
+                <p>O fallback silencioso para modo simulação quando <code>dilithium-py</code> está ausente foi substituído por hard-crash explícito: <code>validar_camada_seguranca()</code> grava <code>logging.critical()</code> em <code>miner_fatal.log</code> offline e executa <code>sys.exit(1)</code>. Sem LatticeShield, o nó não inicializa. O <code>node_id</code> agora é derivado via <code>BLAKE3(chave_pública_Dilithium3)</code> em runtime — UUID proibido. O hardware_detector mantém seu node_id apenas para a tela de boot; o engine substitui pelo id criptográfico antes de qualquer conexão de rede.</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Binário Monolítico + Dashboard + Deploy</div>
+                <p>O minerador é distribuído como EXE autônomo (27,6 MB) gerado por PyInstaller com <code>onefile=True</code>: Python runtime, Dilithium3, BLAKE3, psutil e Pillow embutidos — sem <code>pip install</code> em runtime. No dashboard, os botões "BAIXAR MINERADOR" e "CONSOLE" (renomeado de "conselho") são bloqueados por padrão e só ativados quando a carteira possui ≥ 1.000 PLG-G, verificado via <code>atualizarAcessoGenesis()</code> a cada ciclo de <code>fetchWalletStatus()</code>. O <code>deploy.ps1</code> foi atualizado com regras simétricas ao APK: upload condicional, limpeza local e remota (mantém 2 versões).</p>
+            </div>
+        </article>
+
         <!-- ZK DETERMINISMO + HASH GUARD — 05 ABR 2026 -->
         <article class="post">
             <div class="post-header">
                 <span class="post-title">05 ABR 2026 — ZK Determinismo Absoluto · Extirpação de secrets · Hash Guard ptau BLAKE3</span>
-                <div class="post-tags">
-                    <span class="tag">ZK</span>
-                    <span class="tag">CRIPTO</span>
-                    <span class="tag">INFRA</span>
-                    <span class="tag">AUDITORIA</span>
+                <div class="post-meta">
+                    <span class="post-tag tag-core">ZK</span>
+                    <span class="post-tag tag-crypto">CRIPTO</span>
+                    <span class="post-tag tag-infra">INFRA</span>
+                    <span class="post-tag tag-sec">AUDITORIA</span>
                 </div>
             </div>
             <div class="post-section">
@@ -427,10 +483,10 @@
         <article class="post">
             <div class="post-header">
                 <span class="post-title">05 ABR 2026 — ZK-SNARK Groth16/BN128 implantado · Circuito PLEGMA_BINDING · Fix FQ12 Python 3.14</span>
-                <div class="post-tags">
-                    <span class="tag">ZK</span>
-                    <span class="tag">CRIPTO</span>
-                    <span class="tag">BUILD</span>
+                <div class="post-meta">
+                    <span class="post-tag tag-core">ZK</span>
+                    <span class="post-tag tag-crypto">CRIPTO</span>
+                    <span class="post-tag tag-fix">BUILD</span>
                 </div>
             </div>
             <div class="post-section">
@@ -483,10 +539,10 @@
         <article class="post">
             <div class="post-header">
                 <span class="post-title">05 ABR 2026 — Auditoria BUILD 009 completa · Canal privado extinto · Dilithium3 FFI confirmado · Roadmaps sincronizados</span>
-                <div class="post-tags">
-                    <span class="tag">SEGURANÇA</span>
-                    <span class="tag">BUILD</span>
-                    <span class="tag">INFRA</span>
+                <div class="post-meta">
+                    <span class="post-tag tag-sec">SEGURANÇA</span>
+                    <span class="post-tag tag-fix">BUILD</span>
+                    <span class="post-tag tag-infra">INFRA</span>
                 </div>
             </div>
             <div class="post-body">
@@ -1954,438 +2010,4 @@
                     <li><span class="green">[CVE-004] CORRIGIDO</span> — Bans do Escudo persistidos em disco com checksum BLAKE3. Carregados antes de abrir sockets. Nós banidos permanecem banidos após restart.</li>
                     <li><span class="green">[CVE-005] CORRIGIDO</span> — <code>/wallet/transferir</code>: sessão Bearer obrigatória + Dilithium3 em cada transferência. Risco financeiro eliminado.</li>
                     <li><span class="green">[CVE-006] CORRIGIDO</span> — <code>transferir_plgg()</code>: ownership verificado por <code>verificar_tx()</code>. Transferência de PLG-G de terceiros bloqueada.</li>
-                    <li><span class="green">[CVE-007/008] CORRIGIDO</span> — Flutter: SHA-256 simulado substituído por Dilithium3 real via <code>dart:ffi</code> + <code>libdilithium_plegma.so</code> (PQClean arm64-v8a + x86_64). BLAKE3 nativo para endereços. Paridade criptográfica total com o nó Python.</li>
-                </ul>
-
-                <div class="post-section">Novos arquivos e impacto</div>
-                <ul>
-                    <li><code>PLEGMA_CORE/tx_verifier.py</code> — módulo central: <code>verificar_tx()</code> + <code>verificar_sessao_header()</code></li>
-                    <li><code>PLEGMA_APP/android/app/src/main/cpp/dilithium_bridge.c</code> — C bridge Dilithium3 + BLAKE3</li>
-                    <li><code>PLEGMA_APP/android/app/src/main/cpp/CMakeLists.txt</code> — build NDK via FetchContent (PQClean + BLAKE3)</li>
-                    <li><code>PLEGMA_APP/lib/services/dilithium_ffi_service.dart</code> — dart:ffi singleton</li>
-                    <li>Item PMR 2.4 ("Dilithium3 FFI mobile") desbloqueado — condição para burn da Chave DEUS.</li>
-                </ul>
-            </div>
-        </article>
-
-        <!-- AUTOTEST 2026-03-24 05:44:54 -->
-        <article class="post">
-            <div class="post-header">
-                <span class="post-title">AUTOTEST — Bateria Completa: 11/14 Passed — 24 Mar 2026 — 05:44</span>
-                <div class="post-meta">
-                    <span class="post-date">24 Mar 2026 · 05:44</span>
-                    <span class="post-tag">AUTOTEST</span>
-                    <span class="post-tag" style="border-color:rgba(239,68,68,0.4);color:#ef4444;background:rgba(239,68,68,0.06);">FALHAS</span>
-                </div>
-            </div>
-            <div class="post-body">
-                <div class="post-section">Resultado: 11/14 testes — 41.7s</div>
-                <p>Bateria automatizada de 14 testes executada contra <code>api.plegmadag.com</code>:
-                disponibilidade, stress concorrente, rate limiting, injeção SQL, XSS,
-                path traversal, oversized requests, race conditions, flood auth, method confusion,
-                canal de notas, performance sequencial e saúde pós-ataque.</p>
-
-                <div class="post-section">Performance</div>
-                <ul>
-                    <li>Baseline (100 GETs seq.): avg <strong>105.2ms</strong> — p95 144ms — max 156ms — erros 0</li>
-                    <li>Stress (200 req — 50 threads): <strong>74.9 req/s</strong> — avg 476.0ms — p95 1391ms — erros 0</li>
-                </ul>
-
-                <div class="post-section">Falhas e Alertas</div>
-                <ul>
-    <li><strong>[CRITICAL] T06_xss</strong>: XSS não refletido em nenhuma resposta</li>
-    <li><strong>[HIGH] T03_rate_limit</strong>: Nenhum 429 em 15 requests (último: 200)</li>
-    <li><strong>[MEDIUM] T08_oversized</strong>: Corpo 1MB: 200 — Addr 10KB: 201 — Servidor: UP</li>
-                </ul>
-            </div>
-        </article>
-
-        <!-- AUTOTEST 2026-03-24 17:35:04 -->
-        <article class="post">
-            <div class="post-header">
-                <span class="post-title">AUTOTEST — Bateria Completa: 12/14 Passed — 24 Mar 2026 — 17:35</span>
-                <div class="post-meta">
-                    <span class="post-date">24 Mar 2026 · 17:35</span>
-                    <span class="post-tag">AUTOTEST</span>
-                    <span class="post-tag" style="border-color:rgba(239,68,68,0.4);color:#ef4444;background:rgba(239,68,68,0.06);">FALHAS</span>
-                </div>
-            </div>
-            <div class="post-body">
-                <div class="post-section">Resultado: 12/14 testes — 38.6s</div>
-                <p>Bateria automatizada de 14 testes executada contra <code>api.plegmadag.com</code>:
-                disponibilidade, stress concorrente, rate limiting, injeção SQL, XSS,
-                path traversal, oversized requests, race conditions, flood auth, method confusion,
-                canal de notas, performance sequencial e saúde pós-ataque.</p>
-
-                <div class="post-section">Performance</div>
-                <ul>
-                    <li>Baseline (100 GETs seq.): avg <strong>101.9ms</strong> — p95 159ms — max 217ms — erros 0</li>
-                    <li>Stress (200 req — 50 threads): <strong>76.3 req/s</strong> — avg 432.6ms — p95 1370ms — erros 0</li>
-                </ul>
-
-                <div class="post-section">Falhas e Alertas</div>
-                <ul>
-    <li><strong>[HIGH] T03_rate_limit</strong>: Nenhum 429 em 15 requests (último: 200)</li>
-    <li><strong>[MEDIUM] T08_oversized</strong>: Corpo 1MB: 413 — Addr 10KB: 201 — Servidor: UP</li>
-                </ul>
-            </div>
-        </article>
-
-        <!-- AUTOTEST 2026-03-24 17:51:57 -->
-        <article class="post">
-            <div class="post-header">
-                <span class="post-title">AUTOTEST — Bateria Completa: 13/14 Passed — 24 Mar 2026 — 17:51</span>
-                <div class="post-meta">
-                    <span class="post-date">24 Mar 2026 · 17:51</span>
-                    <span class="post-tag">AUTOTEST</span>
-                    <span class="post-tag" style="border-color:rgba(239,68,68,0.4);color:#ef4444;background:rgba(239,68,68,0.06);">FALHAS</span>
-                </div>
-            </div>
-            <div class="post-body">
-                <div class="post-section">Resultado: 13/14 testes — 46.4s</div>
-                <p>Bateria automatizada de 14 testes executada contra <code>api.plegmadag.com</code>:
-                disponibilidade, stress concorrente, rate limiting, injeção SQL, XSS,
-                path traversal, oversized requests, race conditions, flood auth, method confusion,
-                canal de notas, performance sequencial e saúde pós-ataque.</p>
-
-                <div class="post-section">Performance</div>
-                <ul>
-                    <li>Baseline (100 GETs seq.): avg <strong>225.6ms</strong> — p95 1233ms — max 2001ms — erros 0</li>
-                    <li>Stress (200 req — 50 threads): <strong>84.1 req/s</strong> — avg 370.1ms — p95 1148ms — erros 0</li>
-                </ul>
-
-                <div class="post-section">Falhas e Alertas</div>
-                <ul>
-    <li><strong>[HIGH] T03_rate_limit</strong>: Nenhum 429 em 15 requests (último: 200)</li>
-                </ul>
-            </div>
-        </article>
-
-        <!-- AUTOTEST 2026-03-24 18:40:03 -->
-        <article class="post">
-            <div class="post-header">
-                <span class="post-title">AUTOTEST — Bateria Completa: 14/14 Passed — 24 Mar 2026 — 18:40</span>
-                <div class="post-meta">
-                    <span class="post-date">24 Mar 2026 · 18:40</span>
-                    <span class="post-tag">AUTOTEST</span>
-                    <span class="post-tag" style="border-color:rgba(35,209,139,0.4);color:#23d18b;background:rgba(35,209,139,0.06);">PASS</span>
-                </div>
-            </div>
-            <div class="post-body">
-                <div class="post-section">Resultado: 14/14 testes — 30.5s</div>
-                <p>Bateria automatizada de 14 testes executada contra <code>api.plegmadag.com</code>:
-                disponibilidade, stress concorrente, rate limiting, injeção SQL, XSS,
-                path traversal, oversized requests, race conditions, flood auth, method confusion,
-                canal de notas, performance sequencial e saúde pós-ataque.</p>
-
-                <div class="post-section">Performance</div>
-                <ul>
-                    <li>Baseline (100 GETs seq.): avg <strong>93.9ms</strong> — p95 108ms — max 124ms — erros 0</li>
-                    <li>Stress (200 req — 50 threads): <strong>102.3 req/s</strong> — avg 310.4ms — p95 1364ms — erros 0</li>
-                </ul>
-
-                <div class="post-section">Falhas e Alertas</div>
-                <ul>
-    <li>Nenhuma falha detectada.</li>
-                </ul>
-            </div>
-        </article>
-
-        <!-- AUTOTEST 2026-03-24 21:29:03 -->
-        <article class="post">
-            <div class="post-header">
-                <span class="post-title">AUTOTEST — Bateria Completa: 14/14 Passed — 24 Mar 2026 — 21:29</span>
-                <div class="post-meta">
-                    <span class="post-date">24 Mar 2026 · 21:29</span>
-                    <span class="post-tag">AUTOTEST</span>
-                    <span class="post-tag" style="border-color:rgba(35,209,139,0.4);color:#23d18b;background:rgba(35,209,139,0.06);">PASS</span>
-                </div>
-            </div>
-            <div class="post-body">
-                <div class="post-section">Resultado: 14/14 testes — 39.9s</div>
-                <p>Bateria automatizada de 14 testes executada contra <code>api.plegmadag.com</code>:
-                disponibilidade, stress concorrente, rate limiting, injeção SQL, XSS,
-                path traversal, oversized requests, race conditions, flood auth, method confusion,
-                canal de notas, performance sequencial e saúde pós-ataque.</p>
-
-                <div class="post-section">Performance</div>
-                <ul>
-                    <li>Baseline (100 GETs seq.): avg <strong>99.7ms</strong> — p95 127ms — max 203ms — erros 0</li>
-                    <li>Stress (200 req — 50 threads): <strong>43.3 req/s</strong> — avg 703.5ms — p95 2865ms — erros 0</li>
-                </ul>
-
-                <div class="post-section">Falhas e Alertas</div>
-                <ul>
-    <li>Nenhuma falha detectada.</li>
-                </ul>
-            </div>
-        </article>
-
-        <!-- AUTOTEST 2026-03-24 23:28:56 -->
-        <article class="post">
-            <div class="post-header">
-                <span class="post-title">AUTOTEST — Bateria Completa: 14/14 Passed — 24 Mar 2026 — 23:28</span>
-                <div class="post-meta">
-                    <span class="post-date">24 Mar 2026 · 23:28</span>
-                    <span class="post-tag">AUTOTEST</span>
-                    <span class="post-tag" style="border-color:rgba(35,209,139,0.4);color:#23d18b;background:rgba(35,209,139,0.06);">PASS</span>
-                </div>
-            </div>
-            <div class="post-body">
-                <div class="post-section">Resultado: 14/14 testes — 33.3s</div>
-                <p>Bateria automatizada de 14 testes executada contra <code>api.plegmadag.com</code>:
-                disponibilidade, stress concorrente, rate limiting, injeção SQL, XSS,
-                path traversal, oversized requests, race conditions, flood auth, method confusion,
-                canal de notas, performance sequencial e saúde pós-ataque.</p>
-
-                <div class="post-section">Performance</div>
-                <ul>
-                    <li>Baseline (100 GETs seq.): avg <strong>99.7ms</strong> — p95 130ms — max 197ms — erros 0</li>
-                    <li>Stress (200 req — 50 threads): <strong>80.3 req/s</strong> — avg 377.0ms — p95 1575ms — erros 0</li>
-                </ul>
-
-                <div class="post-section">Falhas e Alertas</div>
-                <ul>
-    <li>Nenhuma falha detectada.</li>
-                </ul>
-            </div>
-        </article>
-
-        <!-- AUTOTEST 2026-03-27 -->
-        <article class="post">
-            <div class="post-header">
-                <span class="post-title">AUTOTEST — Bateria Manual Expandida: 27/28 Passed — 27 Mar 2026</span>
-                <div class="post-meta">
-                    <span class="post-date">27 Mar 2026 · Bateria Expandida</span>
-                    <span class="post-tag">AUTOTEST</span>
-                    <span class="post-tag" style="border-color:rgba(239,68,68,0.4);color:#ef4444;background:rgba(239,68,68,0.06);">FALHAS</span>
-                </div>
-            </div>
-            <div class="post-body">
-                <div class="post-section">Resultado: 27/28 — 96.4% pass rate</div>
-                <p>Bateria manual expandida executada contra <code>api.plegmadag.com</code> e <code>plegmadag.com</code>:
-                cobertura completa de endpoints REST (14 rotas), fluxo de autenticação challenge/verify/status/logout,
-                endpoints wallet e miner, gossip P2P, genesis, governança PMR, assets estáticos,
-                todas as páginas frontend (13 páginas), CORS headers e performance baseline.</p>
-
-                <div class="post-section">Endpoints API — 14/14 OK</div>
-                <ul>
-                    <li><code>GET /api/status</code> → 200 · ONLINE · 2 nós · 6 tx · 5 tips pendentes</li>
-                    <li><code>GET /api/lastBlock</code> → 200 · hash <code>35e41f64</code> · peso_zk 21.4 KB</li>
-                    <li><code>GET /api/genesis/status</code> → 200 · supply 10.5M · vendido 0 · não iniciado</li>
-                    <li><code>GET /api/genesis/ultimo_preco</code> → 200 · $0.10 fixo</li>
-                    <li><code>GET /api/genesis/saldo?address=</code> → 200 · retorno correto para endereço inexistente</li>
-                    <li><code>GET /api/governance/maturity</code> → 200 · PMR=0 · chave_deus_ativa · 4 críticos pendentes (V2.0+)</li>
-                    <li><code>GET /api/priority?address=</code> → 200 · categoria APOIADOR · boost 1.0 · peso_voto 1.0</li>
-                    <li><code>GET /api/peer/hashes</code> → 200 · 6 hashes no DAG</li>
-                    <li><code>GET /api/peer/vertex/:hash</code> → 200 · vertex retornado com assinatura Dilithium3 completa</li>
-                    <li><code>GET /api/wallet/status?address=</code> → 200 · saldos corretos</li>
-                    <li><code>GET /api/wallet/extrato?address=</code> → 200</li>
-                    <li><code>GET /api/auth/challenge</code> → 200 · nonce gerado · TTL 120s</li>
-                    <li><code>GET /wallet/status</code> · <code>/wallet/vesting</code> · <code>/wallet/stats</code> · <code>/wallet/provers</code> → todos 200</li>
-                </ul>
-
-                <div class="post-section">Fluxo de Auth</div>
-                <ul>
-                    <li><code>GET /api/auth/challenge</code> → 200 · nonce único gerado corretamente ✅</li>
-                    <li><code>POST /api/auth/verify</code> (body inválido) → 400 com mensagem de campos obrigatórios ✅</li>
-                    <li><code>GET /api/auth/status?nonce=INVALIDO</code> → 404 <code>expired</code> ✅</li>
-                </ul>
-
-                <div class="post-section">Frontend — 13/13 Páginas OK</div>
-                <p>Todas as páginas retornam HTTP 200: <code>/</code>, <code>/blog/</code>, <code>/genesis/</code>, <code>/dashboard/</code>,
-                <code>/labs/</code>, <code>/fundacao/</code>, <code>/financas/</code>, <code>/social/</code>, <code>/ajuda/</code>,
-                <code>/servicos/</code>, <code>/podcast/</code>, <code>/quem-somos/</code>, <code>/forge/</code>.</p>
-                <p>Assets estáticos: <code>/auth.js</code> → 200 · <code>/assets/img/logo.gif</code> → 200 · <code>/assets/img/favicon-blog.svg</code> → 200.</p>
-
-                <div class="post-section">CORS</div>
-                <ul>
-                    <li><code>Access-Control-Allow-Origin: *</code> ✅</li>
-                    <li><code>Access-Control-Allow-Methods: GET, POST, OPTIONS</code> ✅</li>
-                    <li>Headers presentes após redirect 301 → HTTPS ✅</li>
-                </ul>
-
-                <div class="post-section">Performance Baseline (15 req sequenciais)</div>
-                <ul>
-                    <li>avg <strong>515ms</strong> — p95 983ms — min 270ms — max 1030ms</li>
-                    <li>Latência inclui redirect HTTP→HTTPS (301). Recomendado: medir diretamente via HTTPS após ativar SSL.</li>
-                </ul>
-
-                <div class="post-section">Falhas e Alertas</div>
-                <ul>
-                    <li><strong>[MEDIUM] ISS-04 — POST /api/mine sem validação de payload:</strong> body <code>{}</code> vazio aceito como vértice (retorna 201). Campos sender/receiver/amount/signature/public_key não validados. Vértice inválido inserido no DAG.</li>
-                    <li><strong>[INFO] ISS-05 — /miner/status (porta 8084) não exposto via nginx:</strong> inacessível externamente. Porta direta (80.78.26.52:8084) timeout. Apenas acesso direto ao servidor.</li>
-                    <li><strong>[INFO] ISS-06 — Rotas inexistentes documentadas:</strong> <code>/api/dag/status</code> e <code>/api/sentinela/status</code> → 404. Usar <code>/api/status</code> para DAG.</li>
-                    <li><strong>[PENDENTE] ISS-02 — HTTPS/SSL:</strong> HTTP retorna 301 redirect. Sem TLS próprio, confiando no proxy. Aguardando configuração de certificado.</li>
-                </ul>
-
-                <div class="post-section">Estado do DAG (snapshot)</div>
-                <ul>
-                    <li>Nós ativos: <strong>2</strong> · Validadores ativos: 2</li>
-                    <li>Total transações: <strong>6</strong> · Tips pendentes: 5 · Aceitas: 0</li>
-                    <li>Governança PMR: 0 · chave_deus_ativa: true</li>
-                    <li>Genesis Reserve: 10.497.619 PLG-G disponíveis · vendido: 0 · fase não iniciada</li>
-                    <li>Wallet principal: 625.75 PLG disponível · 2.380.86 PLG em vesting (unlock em 25 dias)</li>
-                </ul>
-            </div>
-        </article>
-
-        <!-- AUDITORIA DE SEGURANÇA 2026-03-29 -->
-        <article class="post">
-            <div class="post-header">
-                <span class="post-title">AUDITORIA DE SEGURANÇA — Bateria Massiva: 65/90 Passed · Score 72% · 29 Mar 2026</span>
-                <div class="post-meta">
-                    <span class="post-date">29 Mar 2026 · Auditoria</span>
-                    <span class="post-tag tag-sec">SEGURANÇA</span>
-                    <span class="post-tag" style="border-color:rgba(239,68,68,0.4);color:#ef4444;background:rgba(239,68,68,0.06);">FALHAS</span>
-                </div>
-            </div>
-            <div class="post-body">
-                <div class="post-section">Resultado: 65/90 testes — Score 72% — Análise estática + testes unitários</div>
-                <p>Bateria de 90 testes automatizados executada sobre o código-fonte do projeto (sem servidor necessário).
-                Cobertura: 7 blocos — Sentinela (Vigia/Crivo/Escudo), Auth Server, Core VM, Wallet Server,
-                Genesis Contract, App Flutter e testes de resistência (fuzzing, edge cases, race conditions).</p>
-
-                <div class="post-section">Resultados por Severidade</div>
-                <ul>
-                    <li><strong>[CRITICAL]</strong> 15 aprovados · <strong>8 reprovados</strong> — CVEs críticos identificados</li>
-                    <li><strong>[HIGH]</strong> 19 aprovados · <strong>8 reprovados</strong> — vulnerabilidades altas</li>
-                    <li><strong>[MEDIUM]</strong> 8 aprovados · <strong>8 reprovados</strong> — riscos médios</li>
-                    <li><strong>[INFO]</strong> 23 aprovados · 1 reprovado</li>
-                </ul>
-
-                <div class="post-section">O que está funcionando (destaques)</div>
-                <ul>
-                    <li>Geofencing (KP/IR/SY): 100% bloqueado — T02-T04</li>
-                    <li>Anti-Smurfing thread-safe sob carga concorrente (10 threads): ≤6 aprovados — T90</li>
-                    <li>Crivo: overflow, underflow, reentrância (lowercase) — T12-T15</li>
-                    <li>Escudo: Slashing efetivo (score=-1, staked=0) + double-spend — T20-T23</li>
-                    <li>NonceStore: TTL, uso único, replay bloqueado, thread-safety — T28-T38</li>
-                    <li>Rate limit challenge com threading.Lock() — T51</li>
-                    <li>Admin: chave vazia bloqueia acesso (sem bypass com env vazio) — T55</li>
-                    <li>Genesis: lock TOCTOU no supply check — T65</li>
-                    <li>Flutter: Random.secure(), FlutterSecureStorage com encryption, dupla auth B1+B2 — T71-T74</li>
-                    <li>Resistência: payload 1MB sem crash, unicode sem crash, race condition Anti-Smurfing — T81-T90</li>
-                </ul>
-
-                <div class="post-section">CVEs Críticos Identificados (P0 — bloqueiam abertura pública)</div>
-                <ul>
-                    <li><strong>CVE-001</strong> core_vm /api/mine — assinatura Dilithium3 nunca verificada</li>
-                    <li><strong>CVE-002</strong> core_vm /api/peer/vertex — vértices inseridos no DAG sem validação</li>
-                    <li><strong>CVE-003</strong> core_vm /api/auth/verify — token JWT previsível (PLG_TOKEN_{addr}_{ts})</li>
-                    <li><strong>CVE-004</strong> sentinela Escudo — bans não persistem após restart do servidor</li>
-                    <li><strong>CVE-005</strong> wallet_server /wallet/transferir — sem autenticação</li>
-                    <li><strong>CVE-006</strong> genesis_contract transferir_plgg — sem verificação de ownership</li>
-                    <li><strong>CVE-007/008</strong> Flutter crypto_service — SHA-256 simulado em vez de Dilithium3 real (bloqueia PMR 2.4)</li>
-                </ul>
-
-                <div class="post-section">Vulnerabilidades Altas (P1 — V1.5)</div>
-                <ul>
-                    <li>Crivo case-sensitive: "Recursive_Call" (R maiúsculo) não é detectado</li>
-                    <li>Crivo type confusion: amount=NaN passa pela verificação numérica</li>
-                    <li>/social/post, /social/votar, /labs/votar: sem autenticação</li>
-                    <li>/miner/pause e /resume: sem autenticação</li>
-                    <li>Senha hardcoded 'plegma2026' no canal privado (/api/notas)</li>
-                    <li>Flutter B2: salt estático 'plegma_b2_salt_' — vulnerável a rainbow table</li>
-                </ul>
-
-                <div class="post-section">Relatório e Script</div>
-                <ul>
-                    <li>Relatório completo: <code>SECURITY_AUDIT/RELATORIO_SEGURANCA_2026-03-29.md</code></li>
-                    <li>Script de testes: <code>SECURITY_AUDIT/test_battery.py</code> (90 testes, sem servidor)</li>
-                    <li>Resultados JSON: <code>SECURITY_AUDIT/test_results.json</code></li>
-                    <li>Roadmap atualizado: Camada 13 — Hardening P0/P1/P2</li>
-                </ul>
-            </div>
-        </article>
-
-    </div><!-- /tab-testes -->
-
-</div><!-- /posts-container -->
-
-<!-- Selos de Tecnologia -->
-<div style="max-width:900px;margin:0 auto;padding:0 40px 40px">
-    <div style="font-size:0.7rem;letter-spacing:4px;text-transform:uppercase;color:#00F2FF;margin-bottom:20px;display:flex;align-items:center;gap:16px">Tecnologias da Rede PLEGMA <span style="flex:1;height:1px;background:rgba(0,242,255,0.25);display:block"></span></div>
-    <div style="display:flex;flex-wrap:wrap;gap:8px">
-        <div style="display:flex;align-items:center;border:1px solid rgba(0,242,255,0.12);border-radius:4px;overflow:hidden;font-size:0.6rem;letter-spacing:1px;font-family:'Space Mono',monospace"><span style="background:rgba(255,255,255,0.03);color:#64748b;padding:4px 8px;border-right:1px solid rgba(0,242,255,0.12)">segurança</span><span style="background:rgba(0,242,255,0.08);color:#00F2FF;padding:4px 8px;font-weight:700">Crystals-Dilithium3</span></div>
-        <div style="display:flex;align-items:center;border:1px solid rgba(0,242,255,0.12);border-radius:4px;overflow:hidden;font-size:0.6rem;letter-spacing:1px;font-family:'Space Mono',monospace"><span style="background:rgba(255,255,255,0.03);color:#64748b;padding:4px 8px;border-right:1px solid rgba(0,242,255,0.12)">padrão</span><span style="background:rgba(0,242,255,0.08);color:#00F2FF;padding:4px 8px;font-weight:700">NIST FIPS 204</span></div>
-        <div style="display:flex;align-items:center;border:1px solid rgba(0,242,255,0.12);border-radius:4px;overflow:hidden;font-size:0.6rem;letter-spacing:1px;font-family:'Space Mono',monospace"><span style="background:rgba(255,255,255,0.03);color:#64748b;padding:4px 8px;border-right:1px solid rgba(0,242,255,0.12)">hash</span><span style="background:rgba(0,242,255,0.08);color:#00F2FF;padding:4px 8px;font-weight:700">BLAKE3</span></div>
-        <div style="display:flex;align-items:center;border:1px solid rgba(0,242,255,0.12);border-radius:4px;overflow:hidden;font-size:0.6rem;letter-spacing:1px;font-family:'Space Mono',monospace"><span style="background:rgba(255,255,255,0.03);color:#64748b;padding:4px 8px;border-right:1px solid rgba(0,242,255,0.12)">provas</span><span style="background:rgba(0,242,255,0.08);color:#00F2FF;padding:4px 8px;font-weight:700">ZK-SNARK · 22KB</span></div>
-        <div style="display:flex;align-items:center;border:1px solid rgba(0,242,255,0.12);border-radius:4px;overflow:hidden;font-size:0.6rem;letter-spacing:1px;font-family:'Space Mono',monospace"><span style="background:rgba(255,255,255,0.03);color:#64748b;padding:4px 8px;border-right:1px solid rgba(0,242,255,0.12)">rede</span><span style="background:rgba(35,209,139,0.08);color:#23d18b;padding:4px 8px;font-weight:700">DAG · Acyclic Graph</span></div>
-        <div style="display:flex;align-items:center;border:1px solid rgba(0,242,255,0.12);border-radius:4px;overflow:hidden;font-size:0.6rem;letter-spacing:1px;font-family:'Space Mono',monospace"><span style="background:rgba(255,255,255,0.03);color:#64748b;padding:4px 8px;border-right:1px solid rgba(0,242,255,0.12)">criptografia</span><span style="background:rgba(167,139,250,0.08);color:#a78bfa;padding:4px 8px;font-weight:700">Lattice-Based</span></div>
-        <div style="display:flex;align-items:center;border:1px solid rgba(0,242,255,0.12);border-radius:4px;overflow:hidden;font-size:0.6rem;letter-spacing:1px;font-family:'Space Mono',monospace"><span style="background:rgba(255,255,255,0.03);color:#64748b;padding:4px 8px;border-right:1px solid rgba(0,242,255,0.12)">mineração</span><span style="background:rgba(35,209,139,0.08);color:#23d18b;padding:4px 8px;font-weight:700">Mobile-First</span></div>
-        <div style="display:flex;align-items:center;border:1px solid rgba(0,242,255,0.12);border-radius:4px;overflow:hidden;font-size:0.6rem;letter-spacing:1px;font-family:'Space Mono',monospace"><span style="background:rgba(255,255,255,0.03);color:#64748b;padding:4px 8px;border-right:1px solid rgba(0,242,255,0.12)">energia</span><span style="background:rgba(35,209,139,0.08);color:#23d18b;padding:4px 8px;font-weight:700">Eficiência Extrema</span></div>
-        <div style="display:flex;align-items:center;border:1px solid rgba(0,242,255,0.12);border-radius:4px;overflow:hidden;font-size:0.6rem;letter-spacing:1px;font-family:'Space Mono',monospace"><span style="background:rgba(255,255,255,0.03);color:#64748b;padding:4px 8px;border-right:1px solid rgba(0,242,255,0.12)">supply</span><span style="background:rgba(245,158,11,0.08);color:#f59e0b;padding:4px 8px;font-weight:700">21B $PLG · Fixed</span></div>
-        <div style="display:flex;align-items:center;border:1px solid rgba(0,242,255,0.12);border-radius:4px;overflow:hidden;font-size:0.6rem;letter-spacing:1px;font-family:'Space Mono',monospace"><span style="background:rgba(255,255,255,0.03);color:#64748b;padding:4px 8px;border-right:1px solid rgba(0,242,255,0.12)">governança</span><span style="background:rgba(167,139,250,0.08);color:#a78bfa;padding:4px 8px;font-weight:700">1 Person · 1 Vote</span></div>
-    </div>
-</div>
-
-<footer>
-    <p>&copy; 2026 PLEGMA DAG | The Architecture of Absolute Justice</p>
-    <div class="social-links">
-        <a href="https://x.com/plegmadag" target="_blank" rel="noopener" title="X (Twitter)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        </a>
-        <a href="https://t.me/plegma_dag" target="_blank" rel="noopener" title="Telegram">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-        </a>
-        <a href="https://discord.gg/MFsJqyBBJ" target="_blank" rel="noopener" title="Discord">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057.1 18.08.116 18.102.136 18.116a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-        </a>
-        <a href="https://github.com/PlegmaDag" target="_blank" rel="noopener" title="GitHub">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-        </a>
-        <a href="https://www.instagram.com/plegmadag/" target="_blank" rel="noopener" title="Instagram">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
-        </a>
-        <a href="/social" title="PLG — Sua Rede de Conexões">
-            <svg width="18" height="18" viewBox="0 0 6000 6000" fill="currentColor" style="fill-rule:evenodd;clip-rule:evenodd" xmlns="http://www.w3.org/2000/svg"><path d="M1808 4633c475,-3 951,0 1427,-1 499,0 825,11 1246,-181 606,-277 1097,-807 1277,-1576 98,-421 64,-847 -63,-1241 -116,-356 -298,-631 -547,-885 -121,-123 -243,-225 -394,-316 -147,-89 -305,-172 -491,-230 -431,-135 -863,-101 -1333,-101 -474,1 -948,0 -1422,0 -219,0 -501,-15 -712,4 -213,19 -375,141 -463,256 -135,176 -139,315 -140,573 0,238 0,475 0,712l1 2853c-1,420 -79,874 250,1182 473,441 1185,175 1333,-362 51,-186 32,-481 31,-687zm-276 -2047c1,0 4,-1 5,2l229 105 1 -163 -235 56zm2678 108l174 -76c27,-11 45,-15 65,-35l-240 -54 1 165zm-2424 -1372c16,32 45,52 71,77l213 219c43,44 99,107 144,144 41,33 122,107 141,147 -40,55 -185,171 -263,215l-239 -239c-28,-29 -50,-61 -86,-78l0 472c-58,33 -268,81 -346,89l0 -688 -265 705c30,18 49,40 61,78 391,-21 774,-165 1063,-392 130,-102 233,-229 338,-381 63,-92 205,-367 239,-492 -10,-15 -39,-53 -54,-69l-1017 193zm1336 -136c12,99 183,415 233,493 185,293 473,535 802,654 159,57 422,121 605,131 11,-37 33,-61 58,-78l-261 -712 -2 694c-110,-11 -249,-53 -347,-88l0 -476c-68,33 -248,271 -323,320 -56,-23 -239,-180 -266,-215 77,-97 509,-508 569,-584l-1024 -201c-11,40 -16,43 -44,62zm-562 2027c36,73 47,139 1,212 26,43 44,50 77,88 43,49 225,257 258,278 92,-46 115,-15 195,-2l203 -220c15,-17 23,-30 38,-47 30,-35 35,-26 82,-89 -36,-129 -43,-101 5,-227l-200 -239c-20,-25 -48,-64 -66,-83 -34,18 -57,50 -83,79 -27,28 -53,52 -81,78l-160 -156 -204 243c-20,26 -50,59 -65,85zm-1300 -652c46,32 222,79 293,108 453,182 667,444 734,479 89,-35 108,-30 195,-4 30,-37 256,-304 271,-337l-181 -193c-22,-22 -44,-37 -66,-60 -83,-88 -158,-172 -245,-255 6,-9 2,-4 12,-14l53 -40c25,-18 41,-32 67,-52 29,-22 34,-26 63,-56 22,-23 41,-47 68,-60 41,33 75,78 113,117 42,43 72,73 121,116 38,33 77,77 113,115 31,32 87,98 118,119 69,-54 429,-446 478,-468 27,40 80,85 119,117 24,20 42,33 66,52 31,24 47,27 64,54 -121,114 -245,256 -365,378 -45,45 -97,79 -128,130l203 249c22,26 45,61 71,85 128,-31 94,-20 202,10 26,-30 63,-63 99,-95 174,-154 402,-295 623,-385 58,-23 263,-87 296,-110 -484,-69 -777,-163 -1084,-415 -286,-236 -474,-547 -603,-904l-81 2c-74,180 -148,351 -243,500 -109,170 -211,271 -356,398 -283,249 -625,351 -1090,419zm-186 180c-248,18 -298,-236 -173,-347 49,-44 86,-49 166,-53l311 -847c-34,-39 -74,-69 -79,-153 -10,-153 124,-241 243,-211 70,18 106,54 133,109 110,-14 1079,-199 1112,-218 24,-53 22,-84 63,-124 73,-71 198,-71 274,-3 36,32 41,81 69,127 40,22 991,201 1109,218 102,-198 386,-121 379,94 -3,88 -43,115 -80,161l312 847c320,-5 296,429 -10,399 -25,54 -343,767 -347,804 -14,114 37,112 -51,177 -70,52 -199,142 -293,166l-2 -923c66,-44 255,-138 346,-166l0 473 254 -573 -36 -41c-171,36 -419,148 -556,226 -256,147 -416,313 -453,334 9,35 21,59 23,97 2,35 -18,84 -14,100 4,19 253,236 303,286 19,20 42,36 63,54l1 134c-70,-43 -391,-369 -452,-396 -63,54 -136,29 -202,10l-244 269c-21,21 -64,73 -80,94 68,141 -9,297 -165,305 -129,7 -268,-116 -183,-305 -72,-88 -176,-190 -242,-269 -28,-34 -58,-58 -81,-96 -108,30 -107,38 -214,-4l-326 288c-23,23 -27,31 -51,51 -12,9 -17,13 -28,22l-39 27c1,-151 -9,-123 80,-197 28,-23 39,-42 70,-66l141 -129c129,-118 67,-31 62,-161 -2,-43 14,-76 24,-112 -69,-56 -132,-118 -210,-177 -78,-59 -153,-106 -240,-158 -112,-67 -415,-204 -559,-229l-35 41 251 573 3 -470c72,19 296,125 345,164l1 1286c441,-1 883,0 1324,0 455,1 801,32 1197,-135 616,-259 1061,-852 1132,-1527 91,-871 -370,-1496 -838,-1805 -296,-194 -604,-294 -1034,-294 -877,1 -1775,6 -2650,0 -227,-2 -317,134 -317,346 1,223 0,446 0,669l0 3319c1,259 -31,386 112,560 199,240 727,185 727,-332 0,-443 0,-886 0,-1329 0,-52 3,-109 1,-161 -2,-49 -24,-82 -42,-125l-305 -694z"/></svg>
-        </a>
-    </div>
-    <div class="footer-legal">
-        <a href="/termos">Termos de Uso</a>
-        <a href="/privacidade">Privacidade</a>
-        <a href="/cookies">Cookies</a>
-        <a href="/quem-somos">Quem Somos</a>
-    </div>
-</footer>
-
-<script>
-    PlegmaAuth.init();
-
-    function switchTab(tabId, btn) {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('tab-' + tabId).classList.add('active');
-        history.replaceState(null, '', '#' + tabId);
-    }
-
-    // Abre aba correta se houver hash na URL
-    window.addEventListener('DOMContentLoaded', () => {
-        const hash = location.hash.replace('#', '');
-        if (hash === 'timeline' || hash === 'testes') {
-            const btns = document.querySelectorAll('.tab-btn');
-            const targetBtn = Array.from(btns).find(b => b.textContent.toLowerCase().includes(hash));
-            if (targetBtn) switchTab(hash, targetBtn);
-        }
-    });
-</script>
-
-<!-- Auto-translate: detecta idioma do navegador e traduz automaticamente -->
-<div id="google_translate_element" style="display:none"></div>
-<script>
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({ pageLanguage: 'pt', autoDisplay: false }, 'google_translate_element');
-  var lang = ((navigator.language || navigator.userLanguage || 'pt').split('-')[0]).toLowerCase();
-  if (lang !== 'pt') {
-    setTimeout(function() {
-      var sel = document.querySelector('.goog-te-combo');
-      if (sel) { sel.value = lang; sel.dispatchEvent(new Event('change')); }
-    }, 800);
-  }
-}
-</script>
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-</body>
-</html>
+                    <li><span class="green">[CVE-007/008] CORRIGIDO</span> — Flutter: SHA-256 simulado substituído por Dilithium
