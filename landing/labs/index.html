@@ -977,7 +977,7 @@ function getDefaultIdeas() {
         {
             id: 'idea_003',
             title: 'Integração do ZKM com NFTs na DAG PLEGMA',
-            body: 'Usar o protocolo ZKM para comprimir imagens de NFTs diretamente na DAG. A prova SHA-256 do ZKM serviria como prova de autenticidade do NFT, eliminando dependências de IPFS externo.',
+            body: 'Usar o protocolo ZKM para comprimir imagens de NFTs diretamente na DAG. A prova BLAKE3 do ZKM serviria como prova de autenticidade do NFT, eliminando dependências de IPFS externo.',
             author: 'PLG3C4D5E6F...DEMO',
             date: new Date(Date.now() - 86400000 * 1).toISOString(),
             status: 'IDEIA',
@@ -1344,7 +1344,7 @@ const PROJECTS = {
             id: 'zkm_forge',
             name: 'ZKM Forge',
             tags: ['JS', 'PROTOCOL', 'WEB'],
-            desc: 'Conversor PNG e GIF animado para o formato binário proprietário .zkm com prova matemática SHA-256. Motor de compressão por blocos RGBA com fator ajustável.',
+            desc: 'Conversor PNG e GIF animado para o formato binário proprietário .zkm com prova BLAKE3 pós-quântica. Motor de compressão por blocos RGBA com fator ajustável.',
             origin: 'PLEGMA LABS',
             originType: 'interno',
             link: '/forge/',
@@ -1355,7 +1355,7 @@ const PROJECTS = {
             id: 'zkm_viewer',
             name: 'ZKM Viewer',
             tags: ['JS', 'WEB', 'TOOL'],
-            desc: 'Página de visualização e teste de arquivos .zkm. Verifica a prova SHA-256 automaticamente e exibe a animação reconstruída com efeito visual ZKM.',
+            desc: 'Página de visualização e teste de arquivos .zkm. Verifica a prova BLAKE3 automaticamente e exibe a animação reconstruída com efeito visual ZKM.',
             origin: 'PLEGMA LABS',
             originType: 'interno',
             link: '/forge/view.html',
@@ -1444,7 +1444,7 @@ const PROJECTS = {
             tags: ['NFT', 'ZKM', 'DAG'],
             versao: 'V2.0',
             categoria: 'Protocolo',
-            desc: 'Usar o protocolo ZKM para comprimir imagens de NFTs diretamente na DAG. A prova SHA-256 do ZKM serve como prova de autenticidade, eliminando dependências de IPFS externo.',
+            desc: 'Usar o protocolo ZKM para comprimir imagens de NFTs diretamente na DAG. A prova BLAKE3 do ZKM serve como prova de autenticidade, eliminando dependências de IPFS externo.',
         },
 
         // ── V3.0+ ────────────────────────────────────────────────────────────

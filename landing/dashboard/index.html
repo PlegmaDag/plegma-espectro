@@ -20,6 +20,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600&family=Montserrat:wght@800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <script src="../auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blake3@2.1.4/browser-async.js"></script>
+    <script>
+    // BLAKE3 para operações locais — substitui crypto.subtle.digest('SHA-256')
+    async function blake3Hex(data) {
+        const h = await blake3.hash(data instanceof Uint8Array ? data : new TextEncoder().encode(data));
+        return Array.from(h).map(b => b.toString(16).padStart(2,'0')).join('');
+    }
+    </script>
     <style>
         :root {
             --bg-center: #0a192f;
@@ -3788,8 +3796,7 @@
     async function adminLogin() {
         const pw = document.getElementById('adminPassInput').value;
         if (!pw) return;
-        const buf  = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
-        const hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+        const hash = await blake3Hex(new TextEncoder().encode(pw));
         const stored = localStorage.getItem('plg_admin_hash');
         if (!stored) {
             // Primeiro acesso — define a senha admin

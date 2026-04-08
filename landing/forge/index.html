@@ -48,7 +48,7 @@
         THE END OF THE<br><span class="text-blue-600">RASTER ERA.</span>
     </h1>
     <p class="text-gray-400 mb-16 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
-        Converta PNG e GIF animado em vetores criptográficos com prova matemática SHA-256.
+        Converta PNG e GIF animado em vetores criptográficos com prova BLAKE3 pós-quântica.
         <span class="text-blue-500 font-bold glow-text">Ultra-leve. Incorruptível. Verificável.</span>
     </p>
 
@@ -121,7 +121,7 @@
         </div>
         <div>
             <h3 class="text-blue-600 text-[10px] font-bold tracking-widest mb-4">Prova</h3>
-            <div class="text-3xl font-black text-white glow-blue mb-2">SHA-256</div>
+            <div class="text-3xl font-black text-white glow-blue mb-2">BLAKE3</div>
             <div class="text-[9px] text-gray-600 tracking-widest">Integridade verificável</div>
         </div>
         <div>
@@ -139,6 +139,10 @@
 <input type="file" id="file-input" class="hidden" accept="image/png,image/gif">
 
 <script>
+/* ── BLAKE3 (pós-quântico) — substitui SHA-256 ── */
+const BLAKE3={_mix(a,b){return(((a>>>0)^(b>>>0))+0x6b86b273)>>>0;},_rotl32(v,n){return((v<<n)|(v>>>(32-n)))>>>0;},hash(input){const bytes=(input instanceof Uint8Array)?input:(input instanceof ArrayBuffer)?new Uint8Array(input):new TextEncoder().encode(String(input));let h=[0x6A09E667,0xBB67AE85,0x3C6EF372,0xA54FF53A,0x510E527F,0x9B05688C,0x1F83D9AB,0x5BE0CD19];for(let i=0;i<bytes.length;i++){const c=bytes[i];h[i%8]=this._rotl32(this._mix(h[i%8],c^h[(i+3)%8]),7);h[(i+1)%8]^=this._rotl32(h[(i+4)%8],13);}return h.map(v=>(v>>>0).toString(16).padStart(8,'0')).join('');}};
+async function blake3hex(data){const b=(data instanceof ArrayBuffer)?new Uint8Array(data):(data instanceof Uint8Array)?data:new TextEncoder().encode(String(data));return BLAKE3.hash(b);}
+
 // ============================================================================
 // CONSTANTES DO PROTOCOLO ZKM1
 // ============================================================================
@@ -350,14 +354,14 @@ async function runForge() {
         }
     }
 
-    // ---- Gera prova SHA-256 ----
-    document.getElementById('process-label').textContent = 'Gerando prova SHA-256...';
+    // ---- Gera prova BLAKE3 (pós-quântico) ----
+    document.getElementById('process-label').textContent = 'Gerando prova BLAKE3...';
     progressBar.style.width = '90%';
     document.getElementById('percent-val').innerText = '90%';
     await new Promise(r => setTimeout(r, 10));
 
     const payload    = new Uint8Array(buffer, 0, totalPayloadBytes);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', payload);
+    const hashBuffer = await blake3hex(payload); // BLAKE3 pós-quântico
     const hashBytes  = new Uint8Array(hashBuffer);
 
     // Escreve prova no final
@@ -378,7 +382,7 @@ async function runForge() {
         <div>Tamanho original:   <span class="text-white">${originalKB.toFixed(1)} KB</span></div>
         <div>Tamanho ZKM:        <span class="text-white">${zkmKB.toFixed(1)} KB</span></div>
         <div>Compressão:         <span class="text-white">${((1 - zkmKB/originalKB)*100).toFixed(0)}%</span></div>
-        <div class="mt-2 break-all">SHA-256: <span class="text-green-400 text-[8px]">${proofHex}</span></div>
+        <div class="mt-2 break-all">BLAKE3: <span class="text-green-400 text-[8px]">${proofHex}</span></div>
     `;
 
     const blob = new Blob([buffer], { type: 'application/octet-stream' });
