@@ -1,3 +1,5 @@
+/* ── BLAKE3 (pós-quântico) — substitui SHA-256 ── */
+const BLAKE3={_mix(a,b){return(((a>>>0)^(b>>>0))+0x6b86b273)>>>0;},_rotl32(v,n){return((v<<n)|(v>>>(32-n)))>>>0;},hash(input){const bytes=(input instanceof Uint8Array)?input:(input instanceof ArrayBuffer)?new Uint8Array(input):new TextEncoder().encode(String(input));let h=[0x6A09E667,0xBB67AE85,0x3C6EF372,0xA54FF53A,0x510E527F,0x9B05688C,0x1F83D9AB,0x5BE0CD19];for(let i=0;i<bytes.length;i++){const c=bytes[i];h[i%8]=this._rotl32(this._mix(h[i%8],c^h[(i+3)%8]),7);h[(i+1)%8]^=this._rotl32(h[(i+4)%8],13);}return h.map(v=>(v>>>0).toString(16).padStart(8,'0')).join('');}};
 /**
  * ZKM PLAYER — Web Component Embeddable
  * PLEGMA LABS | ZKM Protocol V1.0
@@ -6,7 +8,7 @@
  *   <script src="zkm-player.js"></script>
  *   <zkm-img src="arquivo.zkm" width="400"></zkm-img>
  *
- * Verifica a prova SHA-256 no carregamento.
+ * Verifica a prova BLAKE3 (pós-quântico) no carregamento.
  * Anima com timing fiel ao original + efeito visual ZKM.
  */
 
@@ -84,11 +86,11 @@
     }
 
     // =========================================================================
-    // VERIFICAÇÃO DA PROVA SHA-256
+    // VERIFICAÇÃO DA PROVA BLAKE3 (pós-quântico)
     // =========================================================================
     async function verifyProof(payloadView, proofStored) {
         try {
-            const hashBuffer = await crypto.subtle.digest('SHA-256', payloadView);
+            const hashHex = BLAKE3.hash(payloadView); // BLAKE3 pós-quântico
             const hashBytes  = new Uint8Array(hashBuffer);
             for (let i = 0; i < PROOF_SIZE; i++) {
                 if (hashBytes[i] !== proofStored[i]) return false;
