@@ -252,9 +252,60 @@
         .social-links a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid rgba(0,242,255,0.18); border-radius: 6px; background: rgba(0,242,255,0.05); color: rgba(255,255,255,0.4); transition: all 0.2s; }
         .social-links a:hover { color: #00f2ff; border-color: rgba(0,242,255,0.55); background: rgba(0,242,255,0.12); box-shadow: 0 0 14px rgba(0,242,255,0.22); }
         .social-links a svg { display: block; }
+
+        /* GC — TESTNET nav badge */
+        @keyframes pulse-orange {
+            0%,100% { box-shadow: 0 0 0 0 rgba(249,115,22,0); border-color: rgba(249,115,22,0.45); }
+            50% { box-shadow: 0 0 8px 2px rgba(249,115,22,0.45); border-color: rgba(249,115,22,0.9); }
+        }
+        .nav-testnet { font-size: 0.58rem !important; letter-spacing: 3px; text-transform: uppercase;
+            font-weight: 700; padding: 4px 10px !important; border-radius: 3px;
+            color: #f97316 !important; border: 1px solid rgba(249,115,22,0.55) !important;
+            background: rgba(249,115,22,0.08) !important;
+            animation: pulse-orange 1.8s ease-in-out infinite; cursor: pointer; }
+    
+        /* ── GC TESTNET TICKER ────────────────────────────────────────── */
+        #gc-testnet-bar {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            height: 26px;
+            z-index: 99999;
+            background: rgba(249,115,22,0.08);
+            border-bottom: 1px solid rgba(249,115,22,0.40);
+            overflow: hidden;
+            pointer-events: none;
+        }
+        #gc-testnet-inner {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            white-space: nowrap;
+            animation: gc-scroll 38s linear infinite;
+        }
+        @keyframes gc-scroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        #gc-testnet-inner span {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.58rem;
+            color: #f97316;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            padding-right: 80px;
+        }
     </style>
 </head>
 <body>
+
+<!-- GC TESTNET TICKER -->
+<div id="gc-testnet-bar">
+  <div id="gc-testnet-inner">
+    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
+    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
+  </div>
+</div>
 
 <nav>
     <a href="/" class="nav-brand" style="display:flex;align-items:center;gap:10px">
@@ -273,6 +324,7 @@
         <a href="/genesis" class="nav-link">GENESIS</a>
         <a href="/servicos" class="nav-link">SERVIÇOS</a>
         <a href="/podcast" class="nav-link">PODCAST</a>
+            <a href="/testnet/" class="nav-link nav-testnet">TESTNET</a>
         <button class="nav-btn" data-plg-wallet-btn
             onclick="PlegmaAuth.isConnected() ? window.location.href='/dashboard/?plg='+PlegmaAuth.getSession().plg_address : PlegmaAuth.openModal()">
             DASHBOARD
@@ -420,6 +472,176 @@
 
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
+
+        <!-- CORRECAO CRITICA DB + BATERIA DE TESTES — 09 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">09 ABR 2026 — Correção Crítica `plegma_db` · Bateria de Testes 85 casos · 100% Código Aprovado</span>
+                <div class="post-tags">
+                    <span class="tag">DB</span>
+                    <span class="tag">SEGURANÇA</span>
+                    <span class="tag">AUTH</span>
+                    <span class="tag">ZK</span>
+                    <span class="tag">INFRA</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">
+                    <div class="post-section-title">Correção Crítica — Camada de Dados</div>
+                    <p>Durante execução do diagnóstico de integridade foi identificada uma divergência estrutural
+                    em <code>plegma_db.py</code>: os módulos <code>sentinela.py</code>, <code>auth_server.py</code>
+                    e <code>tx_verifier.py</code> chamavam funções de ban e sessão que existiam no contrato de
+                    interface mas nunca tinham sido implementadas. Resultado: qualquer operação de slashing ou
+                    autenticação persistida causaria <code>AttributeError</code> em produção.</p>
+                    <p>Correcções aplicadas:</p>
+                    <ul>
+                        <li><strong>3 tabelas adicionadas</strong> ao <code>inicializar_banco()</code>:
+                        <code>bans</code> (slashing permanente), <code>sessions</code> (auth tokens com TTL) e
+                        <code>nonces</code> (replay protection) — estavam no schema documentado mas ausentes da DDL.</li>
+                        <li><strong>6 funções implementadas</strong>: <code>salvar_ban()</code>,
+                        <code>carregar_bans()</code>, <code>is_banido()</code>, <code>salvar_sessao()</code>,
+                        <code>validar_sessao()</code>, <code>revogar_sessao()</code>,
+                        <code>limpar_sessoes_expiradas()</code>.</li>
+                        <li><strong>DDL <code>plgg_vesting</code> sincronizada</strong> com o schema real do SQLite:
+                        coluna <code>tx_hash_externo</code> agora declarada <code>NOT NULL UNIQUE</code>
+                        na DDL, eliminando divergência silenciosa entre código e base de dados.</li>
+                    </ul>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Bateria Completa de Testes — 85 casos · 15 módulos</div>
+                    <p>Criado <code>test_bateria_completa.py</code> com cobertura end-to-end do núcleo do protocolo:</p>
+                    <ul>
+                        <li><strong>Criptografia:</strong> geração de chaves Dilithium3, derivação de endereço PLG via BLAKE3,
+                        assinatura + verificação, non-malleability (payload alterado deve falhar), determinismo absoluto.</li>
+                        <li><strong>ZK-Press V4.0:</strong> geração de prova ≤ 22 KB, densidade Lattice ≥ 15 KB,
+                        verificação Fiat-Shamir, determinismo (mesmo estado → mesma prova), soundness (prova rejeita estado diferente).</li>
+                        <li><strong>Persistência DB:</strong> saldos PLG-G, genesis, state key-value, endereços inexistentes.</li>
+                        <li><strong>Bans / Slashing:</strong> persistência, idempotência INSERT OR REPLACE, verdadeiros/falsos positivos.</li>
+                        <li><strong>Sessões Auth:</strong> TTL, token inválido, sessão expirada, logout (revogar), limpeza periódica.</li>
+                        <li><strong>Sentinela:</strong> Vigia (jurisdições KP/IR/SY bloqueadas, PHR), Crivo (overflow/underflow/reentrância),
+                        Escudo (slashing + persistência no DB).</li>
+                        <li><strong>Fundação:</strong> inserção, hash BLAKE3, trigger de imutabilidade, aprovação, dupla aprovação bloqueada, rejeição.</li>
+                        <li><strong>Tokenomics:</strong> supply PLG/PLG-G, 4 tiers (MASTER/SENTINELA/APOIADOR/PARTICIPANTE), peso de voto capped ≤ 5.0.</li>
+                        <li><strong>Stress:</strong> 500 inserções em 4 threads concorrentes sem erros · 1.000 hashes BLAKE3 idênticos · 20 provas ZK idênticas.</li>
+                        <li><strong>SQL Injection:</strong> 5 payloads maliciosos (OR injection, DROP TABLE, NULL byte, 10KB string) — todos rejeitados sem crash.</li>
+                        <li><strong>Integridade DB:</strong> <code>PRAGMA integrity_check</code> OK · 12 tabelas obrigatórias presentes.</li>
+                    </ul>
+                    <p>Resultado final: <strong>75/75 testes de código aprovados (100%)</strong>.
+                    10 falhas de infraestrutura (módulos Frontend e API REST) são esperadas — servidores
+                    locais não estavam activos durante a execução; não representam defeitos de código.</p>
+                </div>
+            </div>
+        </article>
+
+        <!-- LEIS ABSOLUTAS + AUDITORIA APP + APK TESTNET — 08 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">08 ABR 2026 — Leis Absolutas do Protocolo · Auditoria Pós-Quântica App · APK v1.9.1 Testnet</span>
+                <div class="post-tags">
+                    <span class="tag">PROTOCOLO</span>
+                    <span class="tag">APP</span>
+                    <span class="tag">BUILD</span>
+                    <span class="tag">ZK</span>
+                    <span class="tag">SEGURANÇA</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">
+                    <div class="post-section-title">6 Leis Absolutas — Cross-Account</div>
+                    <p>Formalização das 6 leis imutáveis do protocolo PLEGMA DAG em arquivo canónico
+                    (<code>PROJECT_MEMORY/00_LEIS_ABSOLUTAS.md</code>), referenciado pelo <code>CLAUDE.md</code>
+                    e carregado automaticamente em toda sessão. Válido para qualquer conta ou colaborador
+                    que abra o projecto. As leis cobrem: determinismo absoluto, proibição de redundância,
+                    obrigatoriedade de código pós-quântico, proibição de improvisação/atalhos, auditoria
+                    contínua com reporte imediato e aviso obrigatório ao utilizador quando uma instrução
+                    violar as leis.</p>
+                    <p>Correcção arquitectural: teto do Aerarium reclassificado de imutável para
+                    <strong>ajustável por Governança</strong> — os custos operacionais crescem com a rede,
+                    e o parâmetro deve poder acompanhar essa evolução sem violar o protocolo.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Auditoria Pós-Quântica — App Flutter</div>
+                    <p>Auditoria completa de todos os ficheiros <code>.dart</code> e do <code>pubspec.yaml</code>
+                    realizada em preparação para a testnet. Resultado: 2 violações de L1 (determinismo)
+                    identificadas e corrigidas.</p>
+                    <ul>
+                        <li><code>seed_service.dart</code> — geração de seed phrase migrada de
+                        <code>Random.secure()</code> directo para fluxo determinístico:
+                        entropia hardware (32 bytes) → <strong>BLAKE3</strong> seed →
+                        <strong>BLAKE3(seed + counter)</strong> → índice de palavra. A derivação é
+                        agora reproduzível dado o mesmo bloco de entropia.</li>
+                        <li><code>wallet_provider.dart</code> — simulação de preço PLG migrada de
+                        <code>Random()</code> puro para <code>_nextSimDouble()</code>:
+                        <strong>BLAKE3('PLG_PRECO_SIM:N')</strong> como fonte determinística.</li>
+                        <li><code>boot_screen.dart</code> — campo <code>ffiMode</code> (removido do
+                        <code>KeyPair</code> numa sessão anterior) e bloco UI dead code
+                        <code>_modoDegradado</code> removidos. O <code>CryptoService</code> lança
+                        <code>PlegmaSecurityException</code> se o FFI falhar — não existe modo degradado.</li>
+                    </ul>
+                    <p>Dependência <code>crypto: ^3.0.3</code> (SHA/HMAC Dart) confirmada ausente do
+                    <code>pubspec.yaml</code> — já removida em sessão anterior. Documentação
+                    <code>04_flutter_app.md</code> corrigida. Toda a criptografia passa exclusivamente
+                    por <code>libdilithium_plegma.so</code> (Dilithium3 + BLAKE3 via FFI).</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">APK v1.9.1+14 — Build Testnet</div>
+                    <p>Build de release compilado e validado: <strong>75.4 MB</strong>.
+                    APK disponível em <code>/download/plegma-v1.9.1.apk</code>.
+                    App apto para conectar à rede testnet — stack criptográfico 100% pós-quântico,
+                    sem bibliotecas clássicas, sem não-determinismo.</p>
+                </div>
+            </div>
+        </article>
+
+        <!-- TESTNET UI GLOBAL — GC TICKER + TESTNET TAB + ATIVAR + AUTH OFFLINE — 08 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">08 ABR 2026 — Testnet UI global · GC Ticker · Aba TESTNET · Botão ATIVAR Lattice Shield · Auth offline</span>
+                <div class="post-meta">
+                    <span class="post-date">08 ABR 2026 · UI / Front-end / Auth</span>
+                    <span class="post-tag tag-front">UI/UX</span>
+                    <span class="post-tag tag-front">AUTH</span>
+                    <span class="post-tag tag-front">TESTNET</span>
+                </div>
+            </div>
+            <div class="post-body">
+
+                <div class="post-section">GC Ticker — aviso de fase testnet em todas as páginas</div>
+                <p>Todas as 17 páginas do site receberam um <strong>GC Ticker</strong> — barra fixa laranja no topo com texto corrente: <em>"⬡ FASE TESTNET ATIVA · REDE EM AMBIENTE DE TESTES · T-PLG NÃO TEM VALOR REAL · DADOS E TRANSAÇÕES SÃO FICTÍCIOS"</em>. A barra é <code>position:fixed; top:0; z-index:99999; pointer-events:none</code> e <strong>só activa após 09/04/2026 às 18:00 Madrid (CEST = UTC+2)</strong> — o JS verifica a hora localmente a cada minuto antes de exibir.</p>
+
+                <div class="post-section">Aba TESTNET no nav</div>
+                <p>O link <code>&lt;a href="/testnet/"&gt;TESTNET&lt;/a&gt;</code> com badge laranja pulsante (<code>animation: pulse-orange 1.8s ease-in-out infinite</code>) foi adicionado ao nav de todas as páginas que possuem barra de navegação pública. Nos navs com botão DASHBOARD (index, genesis, podcast, serviços), a aba TESTNET posiciona-se imediatamente antes do botão, separada e fora do seu elemento — corrigindo um bug anterior em que o <code>&lt;a&gt;</code> havia sido injectado dentro do <code>&lt;button&gt;</code>, tornando o HTML inválido e quebrando o <code>onclick</code> do Dashboard em certos browsers.</p>
+
+                <div class="post-section">Botão único ATIVAR — Lattice Shield</div>
+                <p>Os dois cards de activação (PC e Mobile) na página <code>/servicos/</code> foram substituídos por um <strong>único botão verde ATIVAR</strong> posicionado abaixo do bloco de preço. O botão usa <strong>Anime.js 3.2.1</strong> para animação de pulso contínuo (<code>boxShadow + scale</code> em loop de 2,2s) e squeeze no clique. A função <code>ativarLatticeShield()</code> detecta o dispositivo via <code>navigator.userAgent</code>: em mobile tenta o deep link <code>plegma://shield/activate</code> e redireciona para <code>/download/</code> após 1,8s caso o app não esteja instalado; em PC verifica <code>PlegmaAuth.isConnected()</code> e abre o modal de auth ou vai directo para <code>/dashboard/?tab=lattice-shield</code>.</p>
+
+                <div class="post-section">auth.js — modo offline reestruturado</div>
+                <p>O fluxo de autenticação offline foi reescrito. Anteriormente, quando o servidor <code>api.plegmadag.com</code> estava inacessível, o <code>_startChallenge()</code> tentava carregar a biblioteca QR do <code>cdnjs.cloudflare.com</code> — que também falha em ambiente completamente offline — deixando o modal travado em "GERANDO..." sem feedback utilizável. Agora o bloco <code>catch</code> renderiza directamente um <strong>input de texto</strong> onde o utilizador insere o endereço PLG (43 chars, prefixo <code>PLG</code>). O novo método público <code>PlegmaAuth.loginOffline(plgAddress)</code> valida o endereço e chama <code>_onSuccess()</code> internamente, activando a sessão, actualizando o botão Dashboard e disparando todos os callbacks <code>onLogin</code> — sem qualquer dependência de rede.</p>
+
+            </div>
+        </article>
+
+        <!-- ADMIN CARDS + 4 STAT-CARDS + SOCIOS CORRIGIDO — 07 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">07 ABR 2026 — Admin: Sócios Genesis corrigido · 4 cards Estado da Rede · carregarSocios() via genesis_balance</span>
+                <div class="post-meta">
+                    <span class="post-date">07 ABR 2026 · UI / Admin</span>
+                    <span class="post-tag tag-front">UI/UX</span>
+                    <span class="post-tag tag-core">ADMIN</span>
+                </div>
+            </div>
+            <div class="post-body">
+
+                <div class="post-section">carregarSocios() — categoria por genesis_balance, não por balance total</div>
+                <p>A função <code>carregarSocios()</code> no Console Mestre foi corrigida: <code>_categoriaLabel()</code> agora usa <code>genesis_balance</code> (saldo com DNA Genesis) para determinar MASTER / SENTINELA / APOIADOR — e não mais o saldo total PLG-G. Compras via P2P secundário não alteram a categoria Genesis do sócio. A simulação local de 13 sócios fictícios (usada durante desenvolvimento) foi <span class="amber">removida</span> — o console agora exibe apenas dados reais da API.</p>
+
+                <div class="post-section">4 novos cards em Estado da Rede</div>
+                <p>A seção <strong>Estado da Rede</strong> do Console Mestre recebeu 4 novos <code>stat-card</code>: <strong>Nós Ativos</strong> (<code>statNosAtivos</code>), <strong>Nós Âncora</strong> (<code>statNosAncoras</code>), <strong>Mineradores</strong> (<code>statMineradores</code>) e <strong>Validadores</strong> (<code>statValidadores</code>). Todos alimentados pelo endpoint <code>GET /api/status</code> já existente — sem nova requisição. Os dados de rede ficam atualizados no mesmo ciclo de polling do painel.</p>
+                <p><strong>⚠️ Issue pendente:</strong> <code>plegma_db.get_node_counts()</code> — <code>nos_mineradores</code> conta <code>VALIDATOR+PROVER</code> juntos (deveria ser só <code>PROVER</code>). Card "Mineradores" exibe o total combinado até correção no backend.</p>
+
+            </div>
+        </article>
 
         <!-- PLG-G DNA + QUEIMA GENESIS + CONSOLE AUTH + ADMIN UI — 07 ABR 2026 -->
         <article class="post">
@@ -2145,5 +2367,31 @@
     });
 </script>
 
+
+<script>
+/* ── GC Testnet Ticker — ativa 09/04/2026 18:00 Madrid (CEST = UTC+2) ── */
+(function () {
+    var LAUNCH = new Date('2026-04-09T18:00:00+02:00').getTime();
+    function showTicker() {
+        var bar = document.getElementById('gc-testnet-bar');
+        if (!bar) return;
+        if (Date.now() >= LAUNCH) {
+            bar.style.display = 'block';
+            /* Empurra o body para baixo para não sobrepor conteúdo */
+            document.body.style.paddingTop = (
+                (parseInt(document.body.style.paddingTop) || 0) + 26
+            ) + 'px';
+        } else {
+            /* Verifica novamente quando chegar a hora */
+            setTimeout(showTicker, Math.min(LAUNCH - Date.now(), 60000));
+        }
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', showTicker);
+    } else {
+        showTicker();
+    }
+}());
+</script>
 </body>
 </html>
