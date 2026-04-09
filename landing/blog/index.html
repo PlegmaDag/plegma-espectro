@@ -473,6 +473,62 @@
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
 
+        <!-- AUDITORIA ZK + REMOÇÃO BN128 + SCRIPT NÓ — 09 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">09 ABR 2026 — Auditoria ZK · Remoção Groth16/BN128 · Script de Instalação de Nó Corrigido</span>
+                <div class="post-meta">
+                    <span class="post-date">09 ABR 2026 · 23:30</span>
+                    <span class="post-tag tag-core">ZK</span>
+                    <span class="post-tag tag-crypto">CRIPTO</span>
+                    <span class="post-tag tag-infra">INFRA</span>
+                    <span class="post-tag tag-fix">FIX</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">
+                    <div class="post-section-title">ZK Engine — Consolidação Pós-Quântica</div>
+                    <p>Auditoria completa da camada ZK revelou coexistência de dois sistemas: <code>zk_press.py</code> v4.0 (Lattice Ring-LWE / BLAKE3 Fiat-Shamir — activo) e pasta <code>PLEGMA_CORE/zk/</code> (snarkjs Groth16/BN128 — dead code da v3, nunca chamado). A pasta foi removida permanentemente. O motor activo é o <strong>ZkPressEngine v4.0</strong>: provas determinísticas ~16–18 KB via expansão de coeficientes polinomiais Lattice com oráculo BLAKE3, sem trusted setup, sem curvas elípticas. Label do <code>shield_server.py</code> corrigido: <code>ZkPressEngine-BN128</code> → <code>ZkPressEngine-Lattice</code>.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Limpeza de Referências Pré-Quânticas</div>
+                    <p>Varrimento completo ao projecto identificou referências a BN128/Groth16 em páginas públicas. Substituídas por <strong>Lattice Ring-LWE</strong> em: <code>index.html</code> (tech tags), <code>quem-somos/index.html</code> (pilar ZK + ficha técnica), <code>servicos/index.html</code> (ZK-Snapshot). Hash <code>SHA3-256</code> no serviço de snapshot corrigido para <code>BLAKE3</code> — consistência com o protocolo canónico.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Script de Instalação de Nó — Console</div>
+                    <p>Script público em <code>console/index.html</code> corrigido em 4 pontos: (1) <code>py_ecc</code> removido — biblioteca de curvas elípticas incompatível com o stack pós-quântico; (2) dependências simplificadas para <code>blake3 dilithium-py flask requests</code>; (3) UFW restrito a portas 22/tcp e 8080/tcp — remoção das portas internas 8082/8083; (4) <code>peers.json</code> e <code>PLEGMA_REGION</code> configurados automaticamente durante instalação — novos nós entram na rede correctamente sem configuração manual.</p>
+                </div>
+            </div>
+        </article>
+
+        <!-- APK v1.9.2 + DEPLOY EU + TESTNET ONLINE — 09 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">09 ABR 2026 — APK v1.9.2 · Fix Conectividade · Deploy EU · TESTNET Online</span>
+                <div class="post-meta">
+                    <span class="post-date">09 ABR 2026 · 20:00</span>
+                    <span class="post-tag tag-app">APP</span>
+                    <span class="post-tag tag-infra">INFRA</span>
+                    <span class="post-tag tag-build">BUILD</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Correção Crítica — Conectividade do App</div>
+                <p>Identificado e corrigido o bug que impedia o app de conectar à rede: o serviço de armazenamento local retornava um endereço IP interno como fallback, sobrepondo a configuração correcta do domínio HTTPS. O fallback foi corrigido para apontar directamente ao domínio da API, resolvendo o erro "rede offline" tanto em instalações novas quanto em actualizações.</p>
+
+                <div class="post-section-title">APK v1.9.2+15 — Build Testnet</div>
+                <p>Build de release compilado e validado: <strong>75.4 MB</strong>.
+                APK disponível em <code>/download/plegma-v1.9.2.apk</code>.
+                Conectividade HTTPS via domínio confirmada — stack criptográfico 100% pós-quântico.</p>
+
+                <div class="post-section">Deploy Completo — Servidor EU</div>
+                <p>Todas as páginas web (landing, blog, admin, console, testnet) e o APK foram deployed ao servidor EU. API TESTNET confirmada online: <strong>4 nós activos</strong>, <strong>0 transacções</strong>, fase TESTNET com faucet habilitado. Directórios de download e blog criados no servidor.</p>
+
+                <div class="post-section">Servidor BR — Configuração Iniciada</div>
+                <p>Terceiro servidor (BR) identificado e acessível. Python 3.10 presente, dependências e módulos core pendentes de instalação. Próximo passo: deploy completo do PLEGMA_CORE e integração no cluster de peers.</p>
+            </div>
+        </article>
+
         <!-- CORRECAO CRITICA DB + BATERIA DE TESTES — 09 ABR 2026 -->
         <article class="post">
             <div class="post-header">
@@ -533,12 +589,11 @@
             </div>
         </article>
 
-        <!-- LEIS ABSOLUTAS + AUDITORIA APP + APK TESTNET — 08 ABR 2026 -->
+        <!-- AUDITORIA APP + APK TESTNET — 08 ABR 2026 -->
         <article class="post">
             <div class="post-header">
-                <span class="post-title">08 ABR 2026 — Leis Absolutas do Protocolo · Auditoria Pós-Quântica App · APK v1.9.1 Testnet</span>
+                <span class="post-title">08 ABR 2026 — Auditoria Pós-Quântica App · APK v1.9.1 Testnet · Aerarium Governança</span>
                 <div class="post-tags">
-                    <span class="tag">PROTOCOLO</span>
                     <span class="tag">APP</span>
                     <span class="tag">BUILD</span>
                     <span class="tag">ZK</span>
@@ -547,17 +602,11 @@
             </div>
             <div class="post-body">
                 <div class="post-section">
-                    <div class="post-section-title">6 Leis Absolutas — Cross-Account</div>
-                    <p>Formalização das 6 leis imutáveis do protocolo PLEGMA DAG em arquivo canónico
-                    (<code>PROJECT_MEMORY/00_LEIS_ABSOLUTAS.md</code>), referenciado pelo <code>CLAUDE.md</code>
-                    e carregado automaticamente em toda sessão. Válido para qualquer conta ou colaborador
-                    que abra o projecto. As leis cobrem: determinismo absoluto, proibição de redundância,
-                    obrigatoriedade de código pós-quântico, proibição de improvisação/atalhos, auditoria
-                    contínua com reporte imediato e aviso obrigatório ao utilizador quando uma instrução
-                    violar as leis.</p>
-                    <p>Correcção arquitectural: teto do Aerarium reclassificado de imutável para
+                    <div class="post-section-title">Correcção Arquitectural — Aerarium</div>
+                    <p>Teto do Aerarium reclassificado de imutável para
                     <strong>ajustável por Governança</strong> — os custos operacionais crescem com a rede,
-                    e o parâmetro deve poder acompanhar essa evolução sem violar o protocolo.</p>
+                    e o parâmetro deve poder acompanhar essa evolução sem violar o protocolo.
+                    Default mantido em $1.000 USDC; excedente segue para o Pool de recompensas.</p>
                 </div>
                 <div class="post-section">
                     <div class="post-section-title">Auditoria Pós-Quântica — App Flutter</div>
@@ -584,9 +633,9 @@
                     por <code>libdilithium_plegma.so</code> (Dilithium3 + BLAKE3 via FFI).</p>
                 </div>
                 <div class="post-section">
-                    <div class="post-section-title">APK v1.9.1+14 — Build Testnet</div>
+                    <div class="post-section-title">APK v1.9.2+15 — Build Testnet</div>
                     <p>Build de release compilado e validado: <strong>75.4 MB</strong>.
-                    APK disponível em <code>/download/plegma-v1.9.1.apk</code>.
+                    APK disponível em <code>/download/plegma-v1.9.2.apk</code>.
                     App apto para conectar à rede testnet — stack criptográfico 100% pós-quântico,
                     sem bibliotecas clássicas, sem não-determinismo.</p>
                 </div>

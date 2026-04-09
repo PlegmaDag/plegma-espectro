@@ -10,13 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Montserrat:wght@800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script src="/auth.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/blake3@2.1.4/browser-async.js"></script>
-    <script>
-    async function blake3Hex(data) {
-        const h = await blake3.hash(data instanceof Uint8Array ? data : new TextEncoder().encode(data));
-        return Array.from(h).map(b => b.toString(16).padStart(2,'0')).join('');
-    }
-    </script>
     <style>
         :root {
             --bg:     #000;
@@ -108,6 +101,25 @@
         .h-logout { font-size: 0.6rem; color: var(--text2); letter-spacing: 2px; cursor: pointer; padding: 4px 8px; border-radius: 3px; text-transform: uppercase; border: none; background: none; transition: color 0.2s; }
         .h-logout:hover { color: var(--red); }
         @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        /* ═══ BELL FUNDAÇÃO ═══ */
+        @keyframes pulse-bell {
+            0%,100% { box-shadow: 0 0 0 0 rgba(245,158,11,0); border-color: rgba(245,158,11,0.35); }
+            50%      { box-shadow: 0 0 12px 4px rgba(245,158,11,0.45); border-color: rgba(245,158,11,0.9); }
+        }
+        .bell-btn {
+            display: none; align-items: center; gap: 7px;
+            padding: 5px 14px; border-radius: 6px;
+            border: 1px solid rgba(245,158,11,0.35);
+            background: rgba(245,158,11,0.08);
+            color: var(--amber); font-family: 'Space Mono', monospace;
+            font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase;
+            animation: pulse-bell 1.8s ease-in-out infinite;
+            cursor: pointer; transition: background 0.2s;
+        }
+        .bell-btn:hover { background: rgba(245,158,11,0.18); }
+        .bell-btn.active { display: flex; }
+
 
         main { flex: 1; padding: 28px 32px; max-width: 1400px; margin: 0 auto; width: 100%; }
 
@@ -315,6 +327,9 @@
         CONSOLE SÓCIO
     </div>
     <div class="h-right">
+        <button class="bell-btn" id="fundacaoBell" onclick="rolarParaFundacao()" title="Inscrições pendentes na Fundação">
+            ⬡ <span id="bellCount">0</span> PENDENTE(S) — FUNDAÇÃO
+        </button>
         <div class="h-status" id="hStatus">CONECTADO</div>
         <button class="h-logout" onclick="sair()">SAIR</button>
     </div>
@@ -539,16 +554,23 @@
 
 
     <!-- ═══ INSCRIÇÕES FUNDAÇÃO ═══ -->
-    <div class="section-label" style="margin-top:8px;">
+    <div class="section-label" id="secao-fundacao" style="margin-top:8px;">
         Inscrições da Fundação
         <span id="inscricaoCount" style="color:var(--cyan);">—</span>
     </div>
     <div class="panel" style="margin-bottom:24px;">
-        <div class="panel-header">Projetos Submetidos <span onclick="carregarInscricoes()" style="cursor:pointer;color:var(--cyan);">↺</span></div>
+        <div class="panel-header">
+            Projetos Submetidos
+            <span style="display:flex;align-items:center;gap:12px;">
+                <span id="bellPendente" style="font-size:0.65rem;color:var(--amber);display:none;">⬡ <span id="bellCountInline">0</span> pendente(s) — aprovar em <a href="/admin/" style="color:var(--cyan);text-decoration:none;">Console Mestre</a></span>
+                <span onclick="carregarInscricoes()" style="cursor:pointer;color:var(--cyan);">↺</span>
+            </span>
+        </div>
         <div style="overflow-x:auto;max-height:280px;overflow-y:auto;">
             <table class="data-table" id="inscricaoTable">
                 <thead><tr>
                     <th>#</th>
+                    <th>Hash Inscrição</th>
                     <th>Projeto</th>
                     <th>Segmento</th>
                     <th>Responsável</th>
@@ -557,7 +579,7 @@
                     <th>Data</th>
                     <th>Status</th>
                 </tr></thead>
-                <tbody id="inscricaoBody"><tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text2);">Carregando...</td></tr></tbody>
+                <tbody id="inscricaoBody"><tr><td colspan="9" style="text-align:center;padding:20px;color:var(--text2);">Carregando...</td></tr></tbody>
             </table>
         </div>
     </div>
@@ -657,7 +679,7 @@
         <div class="panel-body">
             <pre id="installScript" style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:18px;font-size:0.78rem;color:var(--green);line-height:1.7;overflow-x:auto;white-space:pre;">#!/bin/bash
 # =============================================================
-# PLEGMA DAG — Script de Instalação do Nó (Ubuntu 20.04+)
+# PLEGMA DAG — Script de Instalação do Nó (Ubuntu 22.04+)
 # Execução: chmod +x install_node.sh && sudo ./install_node.sh
 # =============================================================
 
@@ -676,30 +698,33 @@ apt install -y python3 python3-pip python3-venv git curl wget unzip \
 # Python 3.10+ necessário para dilithium-py
 python3 --version
 
-# Clonar ou baixar PLEGMA_CORE
-mkdir -p /opt/plegma
+# Criar diretório do nó
+mkdir -p /opt/plegma/PLEGMA_CORE
 cd /opt/plegma
-
-# Se você tem o zip do PLEGMA_CORE:
-# wget https://plegmadag.com/download/plegma_core.zip && unzip plegma_core.zip
 
 # Virtualenv
 python3 -m venv venv
 source venv/bin/activate
 
-# Dependências Python
+# Dependências Python (criptografia pós-quântica: BLAKE3 + Dilithium3)
 pip install --upgrade pip
-pip install blake3 py_ecc dilithium-py flask requests
+pip install blake3 dilithium-py flask requests
 
-# Configurar firewall (UFW)
+# Configurar peers da rede principal
+cat > /opt/plegma/PLEGMA_CORE/peers.json &lt;&lt;'PEERSEOF'
+{"peers":["http://80.78.26.52:8080","http://187.127.19.209:8080","http://187.127.108.201:8080","http://82.197.70.189:8080"]}
+PEERSEOF
+
+# Definir região (altere conforme localização do seu servidor: EU / BR / MAL / SIN / etc.)
+echo "CUSTOM" > /opt/plegma/PLEGMA_REGION
+
+# Configurar firewall (UFW) — apenas portas necessárias
 ufw allow 22/tcp     # SSH
-ufw allow 8080/tcp   # API DAG
-ufw allow 8082/tcp   # Auth
-ufw allow 8083/tcp   # Wallet
+ufw allow 8080/tcp   # API DAG (P2P + cliente)
 ufw --force enable
 
 # Criar serviço systemd para core_vm.py
-cat > /etc/systemd/system/plegma-node.service &lt;&lt;EOF
+cat > /etc/systemd/system/plegma-node.service &lt;&lt;'SVCEOF'
 [Unit]
 Description=PLEGMA DAG Node
 After=network.target
@@ -710,12 +735,12 @@ User=root
 WorkingDirectory=/opt/plegma/PLEGMA_CORE
 Environment=PATH=/opt/plegma/venv/bin
 ExecStart=/opt/plegma/venv/bin/python3 core_vm.py
-Restart=always
+Restart=on-failure
 RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
-EOF
+SVCEOF
 
 systemctl daemon-reload
 systemctl enable plegma-node
@@ -778,7 +803,7 @@ echo "==================================================="</pre>
 <div id="toast"></div>
 
 <script>
-const API = 'http://api.plegmadag.com';
+const API = 'https://api.plegmadag.com';
 
 let _adminKey  = '';
 let _plgAddr   = '';
@@ -800,8 +825,11 @@ function toggleAdminLogin(e) {
 async function adminLogin() {
     const pw = document.getElementById('adminPassInput').value;
     if (!pw) return;
-    const hash = await blake3Hex(new TextEncoder().encode(pw));
+    const BLAKE3={_mix(a,b){return(((a>>>0)^(b>>>0))+0x6b86b273)>>>0;},_rotl32(v,n){return((v<<n)|(v>>>(32-n)))>>>0;},hash(input){const bytes=(input instanceof Uint8Array)?input:(input instanceof ArrayBuffer)?new Uint8Array(input):new TextEncoder().encode(String(input));let h=[0x6A09E667,0xBB67AE85,0x3C6EF372,0xA54FF53A,0x510E527F,0x9B05688C,0x1F83D9AB,0x5BE0CD19];for(let i=0;i<bytes.length;i++){const c=bytes[i];h[i%8]=this._rotl32(this._mix(h[i%8],c^h[(i+3)%8]),7);h[(i+1)%8]^=this._rotl32(h[(i+4)%8],13);}return h.map(v=>(v>>>0).toString(16).padStart(8,'0')).join('');}}
+    const buf  = BLAKE3.hash(new TextEncoder().encode(pw)); // BLAKE3 pós-quântico
+    const hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
     if (hash === _ADMIN_HASH) {
+        _adminKey = pw;                                            // guarda para endpoints admin
         document.getElementById('adminPassInput').value = '';
         document.getElementById('adminLoginErr').style.display  = 'none';
         document.getElementById('adminLoginForm').style.display = 'none';
@@ -1060,34 +1088,70 @@ function _iniciarMedalha() {
 
 
 // ─────────────────────────────────────────────
-// INSCRIÇÕES FUNDAÇÃO
+// INSCRIÇÕES FUNDAÇÃO  (leitura — aprovar/rejeitar → /admin/)
 // ─────────────────────────────────────────────
 async function carregarInscricoes() {
     try {
         const r = await fetch(`${API}/api/fundacao/inscricoes?admin_key=${encodeURIComponent(_adminKey)}`).then(r => r.json());
         const lista = r.inscricoes ?? r ?? [];
-        setTxt('inscricaoCount', lista.length + ' projetos');
+
+        // ── Bell badge ──
+        const pendentes = lista.filter(p => (p.status||'').toUpperCase() === 'PENDENTE').length;
+        const bell = document.getElementById('fundacaoBell');
+        if (bell) {
+            setTxt('bellCount', pendentes);
+            pendentes > 0 ? bell.classList.add('active') : bell.classList.remove('active');
+        }
+        const bellI = document.getElementById('bellPendente');
+        if (bellI) {
+            bellI.style.display = pendentes > 0 ? '' : 'none';
+            setTxt('bellCountInline', pendentes);
+        }
+        setTxt('inscricaoCount', lista.length + ' projeto(s) · ' + pendentes + ' pendente(s)');
+
         const tbody = document.getElementById('inscricaoBody');
         if (!lista.length) {
-            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text2)">Nenhuma inscrição.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--text2)">Nenhuma inscrição.</td></tr>';
             return;
         }
-        const segCor = { 'Proteção à Infância':'badge-cyan', 'Combate à Fome':'badge-amber', 'Libertação Humana':'badge-green' };
-        tbody.innerHTML = lista.map((p, i) => `
+        const segCor = {
+            'infancia': 'badge-cyan', 'fome': 'badge-amber', 'libertacao': 'badge-green',
+            'Proteção à Infância': 'badge-cyan', 'Combate à Fome': 'badge-amber', 'Libertação Humana': 'badge-green'
+        };
+        const statusCor = s => {
+            const u = (s||'').toUpperCase();
+            if (u === 'APROVADA' || u === 'APROVADO') return 'badge-green';
+            if (u === 'REJEITADA'|| u === 'REPROVADO') return 'badge-red';
+            return 'badge-amber';
+        };
+        tbody.innerHTML = lista.map((p, i) => {
+            const hash     = p.hash_inscricao || '—';
+            const hashShort= hash !== '—' ? hash.substring(0,20)+'…' : '—';
+            const carteira = p.carteira_plg   || '—';
+            const cartShort= carteira !== '—' ? carteira.substring(0,22)+'…' : '—';
+            const status   = (p.status || 'PENDENTE').toUpperCase();
+            return `
             <tr>
                 <td style="color:var(--text2)">${p.id ?? i+1}</td>
-                <td style="color:var(--text)">${p.nome_projeto}</td>
-                <td><span class="badge ${segCor[p.segmento]||'badge-cyan'}">${p.segmento}</span></td>
-                <td>${p.responsavel}</td>
-                <td style="color:var(--text2);font-size:0.75rem">${p.localizacao}</td>
-                <td style="font-size:0.74rem;color:var(--cyan)">${fmtAddr(p.carteira_plg)}</td>
-                <td style="color:var(--text2);font-size:0.75rem">${new Date(p.created_at*1000).toLocaleDateString('pt-BR')}</td>
-                <td><span class="badge ${p.status==='APROVADO'?'badge-green':p.status==='REPROVADO'?'badge-red':'badge-amber'}">${p.status}</span></td>
-            </tr>`).join('');
+                <td style="font-size:0.67rem;font-family:'Space Mono',monospace;color:var(--cyan)" title="${hash}">${hashShort}</td>
+                <td style="color:var(--text)">${p.nome_projeto||'—'}</td>
+                <td><span class="badge ${segCor[p.segmento]||'badge-cyan'}" style="font-size:0.6rem">${p.segmento||'—'}</span></td>
+                <td style="font-size:0.75rem">${p.responsavel||'—'}</td>
+                <td style="color:var(--text2);font-size:0.72rem">${p.localizacao||'—'}</td>
+                <td style="font-size:0.67rem;font-family:'Space Mono',monospace;color:var(--cyan)" title="${carteira}">${cartShort}</td>
+                <td style="color:var(--text2);font-size:0.72rem">${p.created_at ? new Date(p.created_at*1000).toLocaleDateString('pt-BR') : '—'}</td>
+                <td><span class="badge ${statusCor(p.status)}">${status}</span></td>
+            </tr>`;
+        }).join('');
     } catch(e) {
         document.getElementById('inscricaoBody').innerHTML =
-            `<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text2)">${e.message}</td></tr>`;
+            `<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--text2)">${e.message}</td></tr>`;
     }
+}
+
+function rolarParaFundacao() {
+    const el = document.getElementById('secao-fundacao');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // ─────────────────────────────────────────────

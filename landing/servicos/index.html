@@ -186,9 +186,90 @@
         .social-links a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid rgba(0,242,255,0.18); border-radius: 6px; background: rgba(0,242,255,0.05); color: rgba(255,255,255,0.4); transition: all 0.2s; }
         .social-links a:hover { color: #00f2ff; border-color: rgba(0,242,255,0.55); background: rgba(0,242,255,0.12); box-shadow: 0 0 14px rgba(0,242,255,0.22); }
         .social-links a svg { display: block; }
+        /* Botão Ativar Lattice Shield */
+        .btn-ativar-main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: 18px;
+            padding: 16px 28px;
+            background: rgba(35,209,139,0.10);
+            color: #23d18b;
+            border: 1px solid rgba(35,209,139,0.55);
+            border-radius: 6px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+        }
+        .btn-ativar-main:hover {
+            background: rgba(35,209,139,0.22);
+            box-shadow: 0 0 24px rgba(35,209,139,0.35);
+        }
+        .btn-ativar-main:active { transform: scale(0.98); }
+
+
+        /* GC — TESTNET nav badge */
+        @keyframes pulse-orange {
+            0%,100% { box-shadow: 0 0 0 0 rgba(249,115,22,0); border-color: rgba(249,115,22,0.45); }
+            50% { box-shadow: 0 0 8px 2px rgba(249,115,22,0.45); border-color: rgba(249,115,22,0.9); }
+        }
+        .nav-testnet { font-size: 0.58rem !important; letter-spacing: 3px; text-transform: uppercase;
+            font-weight: 700; padding: 4px 10px !important; border-radius: 3px;
+            color: #f97316 !important; border: 1px solid rgba(249,115,22,0.55) !important;
+            background: rgba(249,115,22,0.08) !important;
+            animation: pulse-orange 1.8s ease-in-out infinite; cursor: pointer; }
+    
+        /* ── GC TESTNET TICKER ────────────────────────────────────────── */
+        #gc-testnet-bar {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            height: 26px;
+            z-index: 99999;
+            background: rgba(249,115,22,0.08);
+            border-bottom: 1px solid rgba(249,115,22,0.40);
+            overflow: hidden;
+            pointer-events: none;
+        }
+        #gc-testnet-inner {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            white-space: nowrap;
+            animation: gc-scroll 38s linear infinite;
+        }
+        @keyframes gc-scroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        #gc-testnet-inner span {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.58rem;
+            color: #f97316;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            padding-right: 80px;
+        }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 </head>
 <body>
+
+<!-- GC TESTNET TICKER -->
+<div id="gc-testnet-bar">
+  <div id="gc-testnet-inner">
+    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
+    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
+  </div>
+</div>
 <div class="page">
 
     <nav>
@@ -205,6 +286,7 @@
             <a href="/genesis" class="nav-link">GENESIS</a>
             <a href="/servicos" class="nav-link active">SERVIÇOS</a>
             <a href="/podcast" class="nav-link">PODCAST</a>
+            <a href="/testnet/" class="nav-link nav-testnet">TESTNET</a>
             <button class="nav-btn" data-plg-wallet-btn
                 onclick="PlegmaAuth.isConnected() ? window.location.href='/dashboard/?plg='+PlegmaAuth.getSession().plg_address : PlegmaAuth.openModal()">
                 DASHBOARD
@@ -238,10 +320,6 @@
             <div class="service-card featured" style="grid-column: 1 / -1;">
                 <div style="display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:20px;">
                     <div style="display:flex; flex-direction:column; gap:12px; flex:1; min-width:260px;">
-                        <span class="service-badge badge-soon">
-                            <svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg>
-                            Em breve
-                        </span>
                         <div style="display:flex; align-items:center; gap:14px;">
                             <div class="service-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -266,6 +344,13 @@
                         </div>
                         <div class="price-note">✓ Pode ser pago com recompensas de mineração</div>
                         <div style="font-size:0.68rem; color:var(--text2); text-align:right; line-height:1.6; margin-top:4px;">Se a mineração anual não cobrir<br>o custo, a diferença é paga em $PLG</div>
+                        <button id="btn-ativar-shield" class="btn-ativar-main" onclick="ativarLatticeShield()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                <polyline points="9 12 11 14 15 10"/>
+                            </svg>
+                            ATIVAR LATTICE SHIELD
+                        </button>
                     </div>
                 </div>
                 <ul class="service-features" style="margin-top:8px; border-top:1px solid var(--border); padding-top:16px;">
@@ -326,34 +411,7 @@
             </div>
         </div>
 
-        <!-- ATIVAÇÃO -->
-        <div class="section-title">Como Ativar</div>
-        <div class="activation-grid">
-            <div class="activation-card">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                    <h3>PC — Windows / Linux</h3>
-                </div>
-                <p>Acesse o Dashboard com sua carteira PLG autenticada. Na aba <strong style="color:var(--cyan)">Lattice Shield</strong>, clique em Download para baixar o instalador. O agente roda em background e se conecta automaticamente à rede pelo endereço PLG da sua carteira.</p>
-                <div class="act-path">Dashboard → <span>Lattice Shield</span> → Download</div>
-                <div class="btn-disabled">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    Download — Em breve
-                </div>
-            </div>
-            <div class="activation-card">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
-                    <h3>Mobile — Android / iOS</h3>
-                </div>
-                <p>No app PLEGMA, acesse a aba <strong style="color:var(--cyan)">Shield</strong>. Toque em <strong style="color:var(--cyan)">Ativar Lattice Shield</strong>. A proteção entra em operação imediatamente — sem configuração adicional. O app solicita as permissões necessárias para monitoramento de processos em background.</p>
-                <div class="act-path">App PLEGMA → <span>Aba Shield</span> → Ativar Lattice Shield</div>
-                <div class="btn-disabled">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
-                    Disponível no lançamento do app
-                </div>
-            </div>
-        </div>
+
 
         <!-- MODELO DE COBRANÇA -->
         <div class="section-title">Modelo de Cobrança</div>
@@ -399,7 +457,7 @@
                 <div class="r-status">✅</div>
                 <div>
                     <h4>ZK-Snapshot de Integridade</h4>
-                    <p>Snapshot único do dispositivo com consentimento. <code>BLAKE3(sorted apps)</code> — hash ancora na DAG via ZK-Press (Lattice-SNARK). BroadcastReceiver detecta mudanças em tempo real. Delta auditável com re-ancoragem em 1 tap.</p>
+                    <p>Snapshot único do dispositivo com consentimento. <code>BLAKE3(sorted apps)</code> — hash ancora na DAG via ZK-Press (Lattice Ring-LWE). BroadcastReceiver detecta mudanças em tempo real. Delta auditável com re-ancoragem em 1 tap.</p>
                 </div>
             </div>
             <div class="roadmap-item future">
@@ -688,5 +746,136 @@
     </footer>
 
 </div>
+
+<script>
+/* ── Lattice Shield — Ativação inteligente ───────────────────────── */
+(function () {
+
+    /* Detecta mobile/tablet pelo UA e pela presença de touch */
+    function isMobile() {
+        return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)
+            || ('ontouchstart' in window && window.innerWidth < 1024);
+    }
+
+    /* Tenta abrir deep-link; se o app não estiver instalado,
+       após 1,8 s redireciona para a landing de download. */
+    function tryDeepLink(deepLink, fallback) {
+        const start = Date.now();
+        const fallbackTimer = setTimeout(function () {
+            /* Se a janela ainda estiver visível (app não abriu), vai para fallback */
+            if (Date.now() - start < 2000) {
+                window.location.href = fallback;
+            }
+        }, 1800);
+
+        /* Ao voltar ao foco (app abriu), cancela o fallback */
+        window.addEventListener('blur', function onBlur() {
+            clearTimeout(fallbackTimer);
+            window.removeEventListener('blur', onBlur);
+        }, { once: true });
+
+        window.location.href = deepLink;
+    }
+
+    /* Fluxo principal */
+    window.ativarLatticeShield = function () {
+        var btn = document.getElementById('btn-ativar-shield');
+
+        /* Feedback visual imediato via Anime.js */
+        if (typeof anime !== 'undefined') {
+            anime({
+                targets: btn,
+                scale: [1, 0.96, 1],
+                duration: 320,
+                easing: 'easeOutQuad'
+            });
+        }
+
+        if (isMobile()) {
+            /* Mobile: tenta abrir app na aba Shield; fallback → /download/ */
+            tryDeepLink('plegma://shield/activate', '/download/');
+        } else {
+            /* PC: verifica autenticação PlegmaAuth */
+            if (typeof PlegmaAuth !== 'undefined' && PlegmaAuth.isConnected()) {
+                window.location.href = '/dashboard/?tab=lattice-shield';
+            } else if (typeof PlegmaAuth !== 'undefined') {
+                /* Abre modal de auth; ao autenticar, redireciona */
+                PlegmaAuth.openModal();
+                var pollAuth = setInterval(function () {
+                    if (PlegmaAuth.isConnected()) {
+                        clearInterval(pollAuth);
+                        window.location.href = '/dashboard/?tab=lattice-shield';
+                    }
+                }, 400);
+            } else {
+                /* Fallback caso PlegmaAuth ainda não carregue */
+                window.location.href = '/dashboard/?tab=lattice-shield';
+            }
+        }
+    };
+
+    /* Anime.js — animação de pulso no botão ao carregar */
+    document.addEventListener('DOMContentLoaded', function () {
+        var btn = document.getElementById('btn-ativar-shield');
+        if (!btn || typeof anime === 'undefined') return;
+
+        /* Pulso contínuo suave na borda + brilho */
+        anime({
+            targets: btn,
+            boxShadow: [
+                '0 0 0px rgba(35,209,139,0.0)',
+                '0 0 28px rgba(35,209,139,0.55)',
+                '0 0 0px rgba(35,209,139,0.0)'
+            ],
+            borderColor: [
+                'rgba(35,209,139,0.40)',
+                'rgba(35,209,139,1)',
+                'rgba(35,209,139,0.40)'
+            ],
+            duration: 2200,
+            loop: true,
+            easing: 'easeInOutSine',
+            direction: 'normal'
+        });
+
+        /* Movimento sutil de "respiração" na escala */
+        anime({
+            targets: btn,
+            scale: [1, 1.012, 1],
+            duration: 2200,
+            loop: true,
+            easing: 'easeInOutSine',
+            direction: 'normal'
+        });
+    });
+
+}());
+</script>
+
+<script>
+/* ── GC Testnet Ticker — ativa 09/04/2026 18:00 Madrid (CEST = UTC+2) ── */
+(function () {
+    var LAUNCH = new Date('2026-04-09T18:00:00+02:00').getTime();
+    function showTicker() {
+        var bar = document.getElementById('gc-testnet-bar');
+        if (!bar) return;
+        if (Date.now() >= LAUNCH) {
+            bar.style.display = 'block';
+            /* Empurra o body para baixo para não sobrepor conteúdo */
+            document.body.style.paddingTop = (
+                (parseInt(document.body.style.paddingTop) || 0) + 26
+            ) + 'px';
+        } else {
+            /* Verifica novamente quando chegar a hora */
+            setTimeout(showTicker, Math.min(LAUNCH - Date.now(), 60000));
+        }
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', showTicker);
+    } else {
+        showTicker();
+    }
+}());
+</script>
 </body>
 </html>

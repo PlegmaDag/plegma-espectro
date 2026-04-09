@@ -445,9 +445,60 @@
             .closing { padding: 72px 24px; }
             .closing-cta, .closing-cta-2 { display: block; text-align: center; margin: 8px 0; }
         }
+
+        /* GC — TESTNET nav badge */
+        @keyframes pulse-orange {
+            0%,100% { box-shadow: 0 0 0 0 rgba(249,115,22,0); border-color: rgba(249,115,22,0.45); }
+            50% { box-shadow: 0 0 8px 2px rgba(249,115,22,0.45); border-color: rgba(249,115,22,0.9); }
+        }
+        .nav-testnet { font-size: 0.58rem !important; letter-spacing: 3px; text-transform: uppercase;
+            font-weight: 700; padding: 4px 10px !important; border-radius: 3px;
+            color: #f97316 !important; border: 1px solid rgba(249,115,22,0.55) !important;
+            background: rgba(249,115,22,0.08) !important;
+            animation: pulse-orange 1.8s ease-in-out infinite; cursor: pointer; }
+    
+        /* ── GC TESTNET TICKER ────────────────────────────────────────── */
+        #gc-testnet-bar {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            height: 26px;
+            z-index: 99999;
+            background: rgba(249,115,22,0.08);
+            border-bottom: 1px solid rgba(249,115,22,0.40);
+            overflow: hidden;
+            pointer-events: none;
+        }
+        #gc-testnet-inner {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            white-space: nowrap;
+            animation: gc-scroll 38s linear infinite;
+        }
+        @keyframes gc-scroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        #gc-testnet-inner span {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.58rem;
+            color: #f97316;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            padding-right: 80px;
+        }
     </style>
 </head>
 <body>
+
+<!-- GC TESTNET TICKER -->
+<div id="gc-testnet-bar">
+  <div id="gc-testnet-inner">
+    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
+    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
+  </div>
+</div>
 
 <nav>
     <a href="/" class="nav-brand">PLEGMA DAG</a>
@@ -459,6 +510,7 @@
         <a href="/genesis" class="nav-link">GENESIS</a>
             <a href="/servicos" class="nav-link">SERVIÇOS</a>
             <a href="/podcast" class="nav-link">PODCAST</a>
+            <a href="/testnet/" class="nav-link nav-testnet">TESTNET</a>
         <a href="/financas" class="nav-link">FINANÇAS</a>
         <a href="/labs" class="nav-link">LABS</a>
         <a href="/quem-somos" class="nav-link active">QUEM SOMOS</a>
@@ -625,7 +677,7 @@
                 <div class="pilar-title">Prova de Zero Conhecimento</div>
                 <div class="pilar-body">
                     Cada transação carrega uma <strong>prova ZK de até 22 KB</strong>
-                    (ZK-SNARK / Lattice — Ring-LWE). Privacidade e verificabilidade coexistem.
+                    (ZK-SNARK / Lattice Ring-LWE). Privacidade e verificabilidade coexistem.
                     Você pode provar que sabe sem revelar o que sabe.
                 </div>
             </div>
@@ -742,7 +794,7 @@
             <div class="tech-item">
                 <div class="tech-label">Prova de Privacidade</div>
                 <div class="tech-name">ZK-SNARK / ZK-Press</div>
-                <div class="tech-desc">Provas de zero conhecimento com limite de 22 KB por transação (Lattice-SNARK / Ring-LWE). Privacidade verificável sem comprometer a integridade do registro.</div>
+                <div class="tech-desc">Provas de zero conhecimento com limite de 22 KB por transação (Lattice Ring-LWE). Privacidade verificável sem comprometer a integridade do registro.</div>
             </div>
             <div class="tech-item">
                 <div class="tech-label">Motor de Recompensa</div>
@@ -915,5 +967,31 @@ function googleTranslateElementInit() {
 }
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<script>
+/* ── GC Testnet Ticker — ativa 09/04/2026 18:00 Madrid (CEST = UTC+2) ── */
+(function () {
+    var LAUNCH = new Date('2026-04-09T18:00:00+02:00').getTime();
+    function showTicker() {
+        var bar = document.getElementById('gc-testnet-bar');
+        if (!bar) return;
+        if (Date.now() >= LAUNCH) {
+            bar.style.display = 'block';
+            /* Empurra o body para baixo para não sobrepor conteúdo */
+            document.body.style.paddingTop = (
+                (parseInt(document.body.style.paddingTop) || 0) + 26
+            ) + 'px';
+        } else {
+            /* Verifica novamente quando chegar a hora */
+            setTimeout(showTicker, Math.min(LAUNCH - Date.now(), 60000));
+        }
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', showTicker);
+    } else {
+        showTicker();
+    }
+}());
+</script>
 </body>
 </html>
