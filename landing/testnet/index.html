@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PLEGMA DAG Testnet Faucet — Requisite tokens $PLG para desenvolvimento e testes no ambiente de Gênese.">
+    <meta name="keywords" content="PLEGMA DAG, testnet, faucet, PLG, ZK-SNARK, Lattice, blockchain, DAG">
+    <meta name="robots" content="noindex, nofollow">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://plegmadag.com/testnet/">
+    <meta property="og:title" content="PLEGMA Testnet Faucet | GENESIS_2026">
+    <meta property="og:description" content="Ambiente de testes PLEGMA DAG. Requisite tokens PLG para validação de protocolos e integração ao Protocolo Sentinela.">
+    <meta property="og:image" content="https://plegmadag.com/assets/img/logo.gif">
+    <link rel="icon" type="image/x-icon" href="/assets/img/logo.gif">
+    <title>PLEGMA | Testnet Faucet — GENESIS_2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    <script src="/auth.js"></script>
+
+    <style>
+        /* ═══════════════════════════════════════════════════════
+           DESIGN TOKENS — PLEGMA PRECISION ENGINEERING
+        ═══════════════════════════════════════════════════════ */
+        :root {
+            --bg:        #000000;
+            --bg2:       #050a14;
+            --bg3:       #0a1020;
+            --cyan:      #00F2FF;
+            --cyan2:     rgba(0,242,255,0.08);
+            --cyan3:     rgba(0,242,255,0.15);
+            --green:     #23d18b;
+            --green2:    rgba(35,209,139,0.08);
+            --amber:     #f59e0b;
+            --amber2:    rgba(245,158,11,0.08);
+            --red:       #ef4444;
+            --orange:    #f97316;
+            --purple:    #a78bfa;
+            --border:    rgba(0,242,255,0.10);
+            --border2:   rgba(0,242,255,0.22);
+            --text:      #e2e8f0;
+            --text2:     #64748b;
+            --text3:     #94a3b8;
+            --glow:      0 0 20px rgba(0,242,255,0.3);
+            --glow-sm:   0 0 8px rgba(0,242,255,0.18);
+            --glow-green:0 0 12px rgba(35,209,139,0.35);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Space Mono', monospace;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1;
+        }
+
+        /* Grade de fundo — estética de precisão */
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background-image:
+                linear-gradient(rgba(0,242,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,242,255,0.025) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: 0; pointer-events: none;
+        }
+
+        /* Scanline sutil */
+        body::after {
+            content: '';
+            position: fixed; inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0,0,0,0.04) 2px,
+                rgba(0,0,0,0.04) 4px
+            );
+            z-index: 0; pointer-events: none;
+        }
+
+        .page { position: relative; z-index: 1; }
+
+        /* ═══ SCROLLBAR ═══ */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: rgba(0,242,255,0.2); border-radius: 2px; }
+
+        /* ═══ NAV — Padronizado ═══ */
+        nav { display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 64px; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.88); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 100; }
+        .nav-brand { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--cyan); text-shadow: var(--glow-sm); text-decoration: none; letter-spacing: 2px; display: flex; align-items: center; gap: 10px; }
+        .nav-links { display: flex; gap: 24px; align-items: center; }
+        .nav-link { font-size: 0.68rem; color: var(--text2); text-decoration: none; letter-spacing: 2px; text-transform: uppercase; transition: color 0.2s; padding: 6px 10px; border-radius: 3px; }
+        .nav-link:hover { color: var(--cyan); }
+        .nav-link.active { color: var(--cyan); }
+        .nav-btn { font-size: 0.68rem; background: rgba(0,242,255,0.08); color: var(--cyan); border: 1px solid rgba(0,242,255,0.3); padding: 6px 14px; border-radius: 3px; font-family: 'Space Mono', monospace; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; }
+        .nav-btn:hover { background: var(--cyan); color: #000; box-shadow: var(--glow-sm); }
+        /* TESTNET badge — pulsing orange */
+        .nav-testnet { font-size: 0.58rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; padding: 4px 10px; border-radius: 3px; color: var(--orange); border: 1px solid rgba(249,115,22,0.55); background: rgba(249,115,22,0.08); animation: pulse-orange 1.8s ease-in-out infinite; cursor: default; }
+        @keyframes pulse-orange { 0%,100%{ box-shadow:0 0 0 0 rgba(249,115,22,0) } 50%{ box-shadow:0 0 10px 2px rgba(249,115,22,0.35) } }
+        /* Hamburger mobile */
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; background: none; border: none; z-index: 200; }
+        .hamburger span { display: block; width: 22px; height: 2px; background: var(--cyan); border-radius: 2px; transition: all 0.3s; }
+        .nav-open .hamburger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .nav-open .hamburger span:nth-child(2) { opacity: 0; }
+        .nav-open .hamburger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        /* ═══════════════════════════════════════════════════════
+           HERO
+        ═══════════════════════════════════════════════════════ */
+        .hero {
+            padding: 72px 40px 56px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg,
+                rgba(0,242,255,0.035) 0%,
+                rgba(249,115,22,0.01) 60%,
+                transparent 100%);
+            position: relative; overflow: hidden;
+        }
+
+        .hero-glow-orb {
+            position: absolute; top: -80px; left: 50%;
+            transform: translateX(-50%);
+            width: 600px; height: 300px;
+            background: radial-gradient(ellipse, rgba(0,242,255,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-tag {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase;
+            color: var(--orange);
+            border: 1px solid rgba(249,115,22,0.35);
+            padding: 4px 16px; border-radius: 2px;
+            background: rgba(249,115,22,0.05);
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+            font-weight: 800; color: var(--text);
+            line-height: 1.0; margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .hero h1 .hl-cyan { color: var(--cyan); text-shadow: var(--glow); }
+        .hero h1 .hl-orange { color: var(--orange); }
+
+        .hero-sub {
+            font-size: 0.78rem; color: var(--text3);
+            max-width: 560px; margin: 18px auto 0;
+            line-height: 1.9; letter-spacing: 0.5px;
+        }
+
+        /* Métricas rápidas no hero */
+        .hero-metrics {
+            display: flex; justify-content: center; gap: 0;
+            margin-top: 36px; flex-wrap: wrap;
+            border: 1px solid var(--border);
+            border-radius: 6px; overflow: hidden;
+            max-width: 640px; margin-left: auto; margin-right: auto;
+        }
+
+        .hero-metric {
+            flex: 1; min-width: 120px;
+            padding: 16px 20px; text-align: center;
+            border-right: 1px solid var(--border);
+            background: var(--bg2);
+        }
+        .hero-metric:last-child { border-right: none; }
+
+        .hm-val {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.3rem; font-weight: 800;
+            color: var(--cyan); display: block;
+        }
+        .hm-val.green { color: var(--green); }
+        .hm-val.orange { color: var(--orange); }
+
+        .hm-label {
+            font-size: 0.56rem; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--text2);
+            margin-top: 5px; display: block;
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           MAIN LAYOUT
+        ═══════════════════════════════════════════════════════ */
+        .main {
+            max-width: 960px; margin: 0 auto;
+            padding: 56px 40px 80px;
+        }
+
+        .section-title {
+            font-size: 0.65rem; letter-spacing: 4px;
+            text-transform: uppercase; color: var(--cyan);
+            margin-bottom: 24px;
+            display: flex; align-items: center; gap: 14px;
+        }
+        .section-title::after {
+            content: ''; flex: 1; height: 1px;
+            background: linear-gradient(90deg, var(--border2), transparent);
+        }
+        .section-title .st-tag {
+            font-size: 0.52rem; padding: 2px 8px;
+            border: 1px solid var(--border2); border-radius: 2px;
+            color: var(--text2); margin-left: auto;
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           FAUCET SECTION
+        ═══════════════════════════════════════════════════════ */
+        .faucet-wrap {
+            background: var(--bg2);
+            border: 1px solid var(--border2);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 56px;
+        }
+
+        .faucet-header {
+            padding: 20px 28px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center;
+            justify-content: space-between; flex-wrap: wrap; gap: 12px;
+            background: rgba(0,242,255,0.03);
+        }
+
+        .faucet-header-info h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem; font-weight: 800;
+            color: var(--text); letter-spacing: 1px;
+        }
+
+        .faucet-header-info p {
+            font-size: 0.65rem; color: var(--text2);
+            letter-spacing: 1px; margin-top: 4px;
+        }
+
+        .faucet-quota {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.62rem; letter-spacing: 2px;
+            color: var(--green);
+            border: 1px solid rgba(35,209,139,0.3);
+            padding: 6px 14px; border-radius: 3px;
+            background: rgba(35,209,139,0.05);
+        }
+
+        .faucet-body { padding: 28px; }
+
+        /* Input de endereço */
+        .input-group { margin-bottom: 20px; }
+
+        .input-label {
+            display: flex; align-items: center; justify-content: space-between;
+            font-size: 0.6rem; letter-spacing: 3px; text-transform: uppercase;
+            color: var(--cyan); margin-bottom: 10px;
+        }
+
+        .input-label .lbl-hint {
+            color: var(--text2); font-size: 0.55rem; letter-spacing: 1px;
+            text-transform: none;
+        }
+
+        .addr-input-wrap { position: relative; }
+
+        .addr-input {
+            width: 100%;
+            background: rgba(0,0,0,0.55);
+            border: 1px solid var(--border2);
+            color: var(--text);
+            padding: 14px 48px 14px 16px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.78rem; letter-spacing: 0.5px;
+            border-radius: 4px; outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .addr-input:focus {
+            border-color: var(--cyan);
+            box-shadow: var(--glow-sm);
+        }
+        .addr-input.valid {
+            border-color: var(--green);
+            box-shadow: 0 0 8px rgba(35,209,139,0.2);
+        }
+        .addr-input.invalid {
+            border-color: var(--red);
+            box-shadow: 0 0 6px rgba(239,68,68,0.18);
+        }
+        .addr-input::placeholder { color: var(--text2); font-size: 0.72rem; }
+
+        .addr-input-icon {
+            position: absolute; right: 14px; top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.9rem; pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .addr-status {
+            margin-top: 8px; font-size: 0.62rem;
+            letter-spacing: 1px; line-height: 1.6;
+            min-height: 18px;
+        }
+        .addr-status.ok  { color: var(--green); }
+        .addr-status.err { color: var(--red); }
+        .addr-status.neutral { color: var(--text2); }
+
+        /* Opção de exibir na vitrine */
+        .showcase-opt {
+            display: flex; align-items: flex-start; gap: 12px;
+            background: rgba(0,242,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 4px; padding: 14px 16px;
+            margin-bottom: 20px; cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .showcase-opt:hover { border-color: var(--border2); }
+        .showcase-opt.checked { border-color: rgba(0,242,255,0.35); background: rgba(0,242,255,0.05); }
+
+        .showcase-checkbox {
+            width: 16px; height: 16px; min-width: 16px;
+            border: 1px solid var(--border2); border-radius: 3px;
+            background: transparent;
+            display: flex; align-items: center; justify-content: center;
+            margin-top: 1px; transition: all 0.15s;
+        }
+        .showcase-checkbox.on {
+            background: var(--cyan);
+            border-color: var(--cyan);
+        }
+        .showcase-checkbox.on::after {
+            content: '✓'; font-size: 0.65rem; color: #000; font-weight: 700;
+        }
+
+        .showcase-opt-text { flex: 1; }
+        .showcase-opt-text strong {
+            display: block; font-size: 0.68rem;
+            color: var(--text); letter-spacing: 1px; margin-bottom: 4px;
+        }
+        .showcase-opt-text span {
+            font-size: 0.62rem; color: var(--text2); line-height: 1.6;
+        }
+
+        /* Botão principal */
+        .btn-faucet {
+            width: 100%; padding: 16px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem; font-weight: 700;
+            letter-spacing: 3px; text-transform: uppercase;
+            border: 1px solid rgba(0,242,255,0.45);
+            background: linear-gradient(135deg, rgba(0,242,255,0.12), rgba(0,242,255,0.06));
+            color: var(--cyan); border-radius: 4px;
+            cursor: pointer; transition: all 0.25s;
+            position: relative; overflow: hidden;
+        }
+        .btn-faucet::before {
+            content: '';
+            position: absolute; top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,242,255,0.08), transparent);
+            transition: left 0.5s;
+        }
+        .btn-faucet:hover:not(:disabled)::before { left: 100%; }
+        .btn-faucet:hover:not(:disabled) {
+            background: var(--cyan); color: #000;
+            box-shadow: 0 0 28px rgba(0,242,255,0.4);
+        }
+        .btn-faucet:disabled {
+            opacity: 0.38; cursor: not-allowed;
+        }
+        .btn-faucet.loading {
+            color: var(--amber); border-color: rgba(245,158,11,0.4);
+            background: rgba(245,158,11,0.05);
+            cursor: not-allowed;
+        }
+        .btn-faucet.success {
+            color: var(--green); border-color: rgba(35,209,139,0.4);
+            background: rgba(35,209,139,0.06);
+        }
+
+        /* Cooldown bar */
+        .cooldown-wrap { margin-top: 12px; }
+        .cooldown-label {
+            display: flex; justify-content: space-between;
+            font-size: 0.58rem; color: var(--text2);
+            letter-spacing: 1px; margin-bottom: 6px;
+        }
+        .cooldown-bar {
+            height: 2px; background: rgba(255,255,255,0.05);
+            border-radius: 1px; overflow: hidden;
+        }
+        .cooldown-fill {
+            height: 100%; border-radius: 1px;
+            background: linear-gradient(90deg, var(--cyan), var(--green));
+            transition: width 0.1s linear;
+            width: 0%;
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           PROOF TERMINAL — ZK-SNARK SIMULATION
+        ═══════════════════════════════════════════════════════ */
+        .proof-terminal {
+            background: #000;
+            border: 1px solid rgba(0,242,255,0.2);
+            border-radius: 6px; margin-top: 20px;
+            overflow: hidden;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+        .proof-terminal.show { display: block; }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .pt-header {
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(0,242,255,0.1);
+            background: rgba(0,242,255,0.03);
+        }
+        .pt-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .pt-dot.red   { background: #ef4444; }
+        .pt-dot.amber { background: #f59e0b; }
+        .pt-dot.green { background: #23d18b; }
+        .pt-title {
+            font-size: 0.6rem; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--text2);
+            margin-left: 6px;
+        }
+
+        .pt-body {
+            padding: 16px 18px; min-height: 140px;
+            max-height: 240px; overflow-y: auto;
+        }
+
+        .pt-line {
+            font-size: 0.7rem; line-height: 2;
+            display: flex; align-items: flex-start; gap: 10px;
+        }
+        .pt-line .pt-prompt { color: var(--green); flex-shrink: 0; }
+        .pt-line .pt-text   { color: var(--text3); word-break: break-all; }
+        .pt-line .pt-text.cyan   { color: var(--cyan); }
+        .pt-line .pt-text.green  { color: var(--green); }
+        .pt-line .pt-text.amber  { color: var(--amber); }
+        .pt-line .pt-text.red    { color: var(--red); }
+
+        .pt-cursor {
+            display: inline-block; width: 7px; height: 13px;
+            background: var(--cyan); vertical-align: middle;
+            animation: blink 0.9s step-end infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* Barra de progresso do proof */
+        .pt-progress-wrap { padding: 0 18px 16px; }
+        .pt-progress-label {
+            display: flex; justify-content: space-between;
+            font-size: 0.58rem; color: var(--text2);
+            letter-spacing: 1px; margin-bottom: 6px;
+        }
+        .pt-progress-bar {
+            height: 3px; background: rgba(255,255,255,0.04);
+            border-radius: 2px; overflow: hidden;
+        }
+        .pt-progress-fill {
+            height: 100%; width: 0%; border-radius: 2px;
+            background: linear-gradient(90deg, var(--cyan), var(--green));
+            transition: width 0.3s ease;
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           TRANSACTION RECEIPT
+        ═══════════════════════════════════════════════════════ */
+        .tx-receipt {
+            background: rgba(35,209,139,0.04);
+            border: 1px solid rgba(35,209,139,0.3);
+            border-radius: 6px; padding: 20px 24px;
+            margin-top: 20px;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        .tx-receipt.show { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .tx-receipt-title {
+            font-size: 0.6rem; letter-spacing: 3px;
+            text-transform: uppercase; color: var(--green);
+            margin-bottom: 16px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .tx-receipt-title::before {
+            content: '';
+            display: inline-block; width: 6px; height: 6px;
+            border-radius: 50%; background: var(--green);
+            box-shadow: 0 0 8px var(--green);
+        }
+
+        .tx-rows { display: flex; flex-direction: column; gap: 0; }
+
+        .tx-row {
+            display: flex; justify-content: space-between;
+            align-items: flex-start; padding: 10px 0;
+            border-bottom: 1px solid rgba(0,242,255,0.06);
+            gap: 16px; flex-wrap: wrap;
+        }
+        .tx-row:last-child { border-bottom: none; }
+
+        .tx-key {
+            font-size: 0.58rem; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--text2);
+            min-width: 130px; padding-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .tx-val {
+            font-size: 0.72rem; color: var(--text);
+            word-break: break-all; text-align: right;
+            flex: 1;
+        }
+        .tx-val.green  { color: var(--green); font-weight: 700; }
+        .tx-val.cyan   { color: var(--cyan); }
+        .tx-val.amber  { color: var(--amber); }
+        .tx-val.mono   { font-size: 0.65rem; letter-spacing: 0.5px; }
+        .tx-val.copy-target { cursor: pointer; }
+        .tx-val.copy-target:hover { color: var(--cyan); text-decoration: underline; }
+
+        /* ═══════════════════════════════════════════════════════
+           ZK-PRESS DATA DISPLAY — compressão estética
+        ═══════════════════════════════════════════════════════ */
+        .zkpress-panel {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 56px;
+        }
+
+        .zkpress-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 18px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(0,0,0,0.4);
+        }
+
+        .zkpress-title {
+            font-size: 0.58rem; letter-spacing: 3px;
+            text-transform: uppercase; color: var(--text2);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .zkpress-title .zk-badge {
+            font-size: 0.52rem; padding: 2px 7px;
+            border: 1px solid rgba(167,139,250,0.3);
+            border-radius: 2px; color: var(--purple);
+            background: rgba(167,139,250,0.06);
+        }
+
+        .zkpress-meta {
+            font-size: 0.55rem; color: var(--text2);
+            letter-spacing: 2px;
+        }
+
+        .zkpress-body {
+            padding: 14px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 2px;
+        }
+
+        .zkp-cell {
+            padding: 10px 12px;
+            border: 1px solid rgba(0,242,255,0.06);
+            border-radius: 3px;
+            background: rgba(0,0,0,0.3);
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .zkp-cell:hover {
+            background: rgba(0,242,255,0.04);
+            border-color: rgba(0,242,255,0.12);
+        }
+
+        .zkp-key {
+            font-size: 0.52rem; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--text2);
+            margin-bottom: 5px;
+        }
+
+        .zkp-val {
+            font-size: 0.7rem; color: var(--text);
+            word-break: break-all; line-height: 1.4;
+        }
+        .zkp-val.cyan   { color: var(--cyan); }
+        .zkp-val.green  { color: var(--green); }
+        .zkp-val.amber  { color: var(--amber); }
+        .zkp-val.purple { color: var(--purple); }
+        .zkp-val.red    { color: var(--red); }
+
+        /* ═══════════════════════════════════════════════════════
+           VITRINE DE INTERAÇÃO — THE SHOWCASE
+        ═══════════════════════════════════════════════════════ */
+        .showcase-section { margin-bottom: 56px; }
+
+        .showcase-notice {
+            display: flex; align-items: flex-start; gap: 12px;
+            background: rgba(245,158,11,0.04);
+            border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 4px; padding: 14px 18px;
+            margin-bottom: 20px;
+        }
+
+        .showcase-notice-icon { font-size: 0.9rem; flex-shrink: 0; margin-top: 1px; }
+
+        .showcase-notice p {
+            font-size: 0.68rem; color: var(--text3);
+            line-height: 1.7; letter-spacing: 0.3px;
+        }
+        .showcase-notice p strong { color: var(--amber); }
+
+        .showcase-grid-header {
+            display: grid;
+            grid-template-columns: 32px 1fr 120px 100px 80px;
+            gap: 12px; padding: 8px 16px;
+            font-size: 0.55rem; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--text2);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .showcase-list { }
+
+        .showcase-row {
+            display: grid;
+            grid-template-columns: 32px 1fr 120px 100px 80px;
+            gap: 12px; padding: 10px 16px;
+            border-bottom: 1px solid rgba(0,242,255,0.05);
+            align-items: center;
+            transition: background 0.15s;
+            animation: rowFadeIn 0.4s ease;
+        }
+        .showcase-row:hover { background: rgba(0,242,255,0.025); }
+        .showcase-row:last-child { border-bottom: none; }
+
+        @keyframes rowFadeIn {
+            from { opacity: 0; transform: translateX(-6px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        .sc-index {
+            font-size: 0.6rem; color: var(--text2);
+            text-align: center;
+        }
+
+        .sc-addr {
+            font-size: 0.68rem; color: var(--cyan);
+            overflow: hidden; text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .sc-addr:hover { color: #fff; text-decoration: underline; }
+
+        .sc-hash {
+            font-size: 0.6rem; color: var(--text2);
+            overflow: hidden; text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .sc-amount {
+            font-size: 0.65rem; color: var(--green);
+            font-weight: 700; text-align: center;
+        }
+
+        .sc-badge {
+            font-size: 0.52rem; letter-spacing: 1px;
+            padding: 3px 8px; border-radius: 2px;
+            text-transform: uppercase; text-align: center;
+        }
+        .sc-badge.pub  { color: var(--cyan); background: var(--cyan2); border: 1px solid rgba(0,242,255,0.2); }
+        .sc-badge.priv { color: var(--text2); background: rgba(255,255,255,0.03); border: 1px solid var(--border); }
+
+        .showcase-empty {
+            text-align: center; padding: 48px 20px;
+            font-size: 0.72rem; color: var(--text2);
+            letter-spacing: 2px;
+        }
+
+        .showcase-footer {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            background: rgba(0,0,0,0.3);
+            flex-wrap: wrap; gap: 8px;
+        }
+
+        .showcase-count {
+            font-size: 0.58rem; color: var(--text2);
+            letter-spacing: 2px;
+        }
+        .showcase-count span { color: var(--cyan); }
+
+        /* ═══════════════════════════════════════════════════════
+           PROTOCOL INFO CARDS
+        ═══════════════════════════════════════════════════════ */
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px; margin-bottom: 56px;
+        }
+
+        .proto-card {
+            background: var(--bg2); border: 1px solid var(--border);
+            border-radius: 6px; padding: 22px 18px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .proto-card:hover {
+            border-color: var(--border2);
+            box-shadow: var(--glow-sm);
+        }
+
+        .proto-icon {
+            font-size: 1.2rem; margin-bottom: 12px;
+            display: block;
+        }
+
+        .proto-title {
+            font-size: 0.68rem; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--cyan);
+            margin-bottom: 8px; font-weight: 700;
+        }
+
+        .proto-desc {
+            font-size: 0.68rem; color: var(--text3);
+            line-height: 1.8;
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           FOOTER
+        ═══════════════════════════════════════════════════════ */
+        footer { border-top: 1px solid var(--border); padding: 40px; text-align: center; }
+        footer > p { font-size: 0.65rem; color: var(--text2); letter-spacing: 4px; text-transform: uppercase; }
+        .footer-legal { display: flex; gap: 20px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
+        .footer-legal a { font-size: 0.62rem; color: var(--text2); text-decoration: none; letter-spacing: 2px; text-transform: uppercase; transition: color 0.2s; }
+        .footer-legal a:hover { color: var(--cyan); }
+        .social-links { display: flex; gap: 14px; justify-content: center; align-items: center; margin: 18px 0 14px; }
+        .social-links a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid rgba(0,242,255,0.18); border-radius: 6px; background: rgba(0,242,255,0.05); color: rgba(255,255,255,0.4); transition: all 0.2s; }
+        .social-links a:hover { color: #00f2ff; border-color: rgba(0,242,255,0.55); background: rgba(0,242,255,0.12); box-shadow: 0 0 14px rgba(0,242,255,0.22); }
+        .social-links a svg { display: block; }
+
+        /* ═══════════════════════════════════════════════════════
+           TOAST
+        ═══════════════════════════════════════════════════════ */
+        .toast {
+            position: fixed; bottom: 28px; right: 28px;
+            padding: 12px 20px; border-radius: 5px;
+            font-size: 0.7rem; letter-spacing: 1px;
+            z-index: 9999; pointer-events: none;
+            opacity: 0; transform: translateY(10px);
+            transition: all 0.25s ease;
+            max-width: 320px; line-height: 1.5;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.success { background: rgba(35,209,139,0.12); border: 1px solid rgba(35,209,139,0.4); color: var(--green); }
+        .toast.error   { background: rgba(239,68,68,0.1);   border: 1px solid rgba(239,68,68,0.4);   color: var(--red);   }
+        .toast.info    { background: rgba(0,242,255,0.08);  border: 1px solid rgba(0,242,255,0.3);   color: var(--cyan);  }
+
+        /* ═══════════════════════════════════════════════════════
+           MODAL DE PRIVACIDADE (VITRINE)
+        ═══════════════════════════════════════════════════════ */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
+            z-index: 500; display: none;
+            align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.open { display: flex; }
+
+        .modal-box {
+            background: var(--bg2);
+            border: 1px solid rgba(0,242,255,0.3);
+            border-radius: 8px; max-width: 520px; width: 100%;
+            padding: 32px;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .modal-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem; font-weight: 800;
+            color: var(--cyan); margin-bottom: 16px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .modal-body {
+            font-size: 0.72rem; color: var(--text3);
+            line-height: 1.9; margin-bottom: 24px;
+        }
+        .modal-body strong { color: var(--amber); }
+
+        .modal-actions { display: flex; gap: 10px; }
+
+        .btn-modal-confirm {
+            flex: 1; padding: 12px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.72rem; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            background: var(--cyan); color: #000; border: none;
+            border-radius: 4px; cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .btn-modal-confirm:hover { opacity: 0.88; }
+
+        .btn-modal-cancel {
+            flex: 1; padding: 12px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase;
+            background: transparent; color: var(--text2);
+            border: 1px solid var(--border2); border-radius: 4px;
+            cursor: pointer; transition: color 0.2s, border-color 0.2s;
+        }
+        .btn-modal-cancel:hover { color: var(--text); border-color: var(--border); }
+
+        /* ═══════════════════════════════════════════════════════
+           RESPONSIVE
+        ═══════════════════════════════════════════════════════ */
+        @media (max-width: 768px) {
+            nav { padding: 0 20px; position: relative; flex-wrap: wrap; height: auto; min-height: 56px; }
+            .nav-brand { padding: 10px 0; }
+            .hamburger { display: flex; }
+            .nav-links { display: none; flex-direction: column; align-items: flex-start; gap: 0; width: 100%; padding: 12px 0 16px; border-top: 1px solid var(--border); }
+            .nav-open .nav-links { display: flex; }
+            .nav-link { font-size: 0.72rem; padding: 10px 4px; width: 100%; border-bottom: 1px solid var(--border2); }
+            .nav-btn { width: 100%; margin-top: 10px; text-align: center; }
+            .hero { padding: 50px 20px 40px; }
+            .hero-metrics { grid-template-columns: repeat(2, 1fr); }
+            .main { padding: 40px 20px 60px; }
+            .faucet-header, .faucet-body { padding: 18px 20px; }
+            .showcase-grid-header,
+            .showcase-row { grid-template-columns: 28px 1fr 80px; }
+            .showcase-grid-header .sh-hash,
+            .showcase-grid-header .sh-vis,
+            .showcase-row .sc-hash,
+            .showcase-row .sc-badge { display: none; }
+            .footer-legal { gap: 12px; }
+        }
+
+        @media (max-width: 520px) {
+            .hero h1 { font-size: 1.9rem; }
+            .nav-brand span.brand-txt { display: none; }
+        }
+    
+        /* ── GC TESTNET TICKER ────────────────────────────────────────── */
+        #gc-testnet-bar {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            height: 26px;
+            z-index: 99999;
+            background: rgba(249,115,22,0.08);
+            border-bottom: 1px solid rgba(249,115,22,0.40);
+            overflow: hidden;
+            pointer-events: none;
+        }
+        #gc-testnet-inner {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            white-space: nowrap;
+            animation: gc-scroll 38s linear infinite;
+        }
+        @keyframes gc-scroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        #gc-testnet-inner span {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.58rem;
+            color: #f97316;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            padding-right: 80px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- GC TESTNET TICKER -->
+<div id="gc-testnet-bar">
+  <div id="gc-testnet-inner">
+    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
+    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
+  </div>
+</div>
+<div class="page">
+
+    <!-- NAV PADRONIZADO -->
+    <nav id="main-nav">
+        <a href="/" class="nav-brand">
+            <img src="/assets/img/logo.gif" alt="PLEGMA" style="height:38px;filter:drop-shadow(0 0 6px rgba(0,242,255,0.5))">
+            <span>PLEGMA DAG</span>
+        </a>
+        <button class="hamburger" onclick="document.getElementById('main-nav').classList.toggle('nav-open')" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links">
+            <a href="/financas" class="nav-link">FINANÇAS</a>
+            <a href="/fundacao" class="nav-link">FUNDAÇÃO</a>
+            <a href="/social" class="nav-link">REDE</a>
+            <a href="/blog" class="nav-link">BLOG</a>
+            <a href="/labs" class="nav-link">LABS</a>
+            <a href="/genesis" class="nav-link">GENESIS</a>
+            <a href="/servicos" class="nav-link">SERVIÇOS</a>
+            <a href="/podcast" class="nav-link">PODCAST</a>
+            <a href="/testnet/" class="nav-link active nav-testnet">TESTNET</a>
+            <button class="nav-btn" onclick="PlegmaAuth.isConnected() ? window.location.href='/dashboard/?plg='+PlegmaAuth.getSession().plg_address : PlegmaAuth.openModal()">
+                DASHBOARD
+            </button>
+        </div>
+    </nav>
+
+    <!-- ═══════════ HERO ═══════════ -->
+    <section class="hero">
+        <div class="hero-glow-orb"></div>
+        <div class="hero-tag">
+            <span>⬡</span>
+            Protocolo Sentinela — Ambiente de Gênese
+        </div>
+        <h1>
+            Testnet<br>
+            <span class="hl-cyan">Faucet</span>
+            <span class="hl-orange"> ◈</span>
+        </h1>
+        <p class="hero-sub">
+            Requsite tokens <strong style="color:var(--text)">$T-PLG</strong> para desenvolvimento,
+            testes de integração e validação de provas ZK-SNARK no ambiente de
+            <strong style="color:var(--cyan)">Sincronização DAG</strong>.
+            Nenhum valor real. Determinismo absoluto.
+        </p>
+
+        <div class="hero-metrics">
+            <div class="hero-metric">
+                <span class="hm-val" id="metric-distributed">0</span>
+                <span class="hm-label">T-PLG Distribuídos</span>
+            </div>
+            <div class="hero-metric">
+                <span class="hm-val green" id="metric-requests">0</span>
+                <span class="hm-label">Requisições</span>
+            </div>
+            <div class="hero-metric">
+                <span class="hm-val orange">1.000</span>
+                <span class="hm-label">T-PLG / Transferência</span>
+            </div>
+            <div class="hero-metric">
+                <span class="hm-val" id="metric-nodes">—</span>
+                <span class="hm-label">Nós Ativos</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ MAIN ═══════════ -->
+    <main class="main">
+
+        <!-- ─── FAUCET SECTION ─── -->
+        <div class="section-title">
+            Aerarium — Distribuição de Tokens
+            <span class="st-tag">FAUCET v2.1</span>
+        </div>
+
+        <div class="faucet-wrap">
+            <div class="faucet-header">
+                <div class="faucet-header-info">
+                    <h2>Requisitar $T-PLG</h2>
+                    <p>Endereço Lattice-based · Formato hexadecimal verificado · Gênese_2026</p>
+                </div>
+                <div class="faucet-quota">
+                    <span>◆</span>
+                    <span>1.000 T-PLG / transfer · Máx 10.000/dia · Cooldown 24h</span>
+                </div>
+            </div>
+
+            <div class="faucet-body">
+                <!-- Input de endereço -->
+                <div class="input-group">
+                    <div class="input-label">
+                        <span>Endereço de Destino</span>
+                        <span class="lbl-hint">Lattice-based / 0x hex</span>
+                    </div>
+                    <div class="addr-input-wrap">
+                        <input
+                            type="text"
+                            class="addr-input"
+                            id="addr-input"
+                            placeholder="PLG3A4FEC37... (formato do app PLEGMA)"
+                            maxlength="128"
+                            autocomplete="off"
+                            spellcheck="false"
+                        >
+                        <span class="addr-input-icon" id="addr-icon">⬡</span>
+                    </div>
+                    <div class="addr-status neutral" id="addr-status">
+                        Insira um endereço válido para continuar.
+                    </div>
+                </div>
+
+                <!-- Opção de vitrine -->
+                <div class="showcase-opt" id="showcase-toggle" onclick="toggleShowcaseOpt()">
+                    <div class="showcase-checkbox" id="showcase-checkbox"></div>
+                    <div class="showcase-opt-text">
+                        <strong>Deixar na Vitrine</strong>
+                        <span>
+                            Exibir meu endereço na seção Showcase para interação comunitária.
+                            Requer consentimento explícito conforme política de privacidade da Testnet.
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Botão principal -->
+                <button class="btn-faucet" id="btn-faucet" onclick="requestPLG()" disabled>
+                    ▶ Requisitar $T-PLG
+                </button>
+
+                <!-- Cooldown bar (visível após envio) -->
+                <div class="cooldown-wrap" id="cooldown-wrap" style="display:none">
+                    <div class="cooldown-label">
+                        <span>COOLDOWN AERARIUM</span>
+                        <span id="cooldown-timer">24:00:00</span>
+                    </div>
+                    <div class="cooldown-bar">
+                        <div class="cooldown-fill" id="cooldown-fill"></div>
+                    </div>
+                </div>
+
+                <!-- Terminal ZK-SNARK -->
+                <div class="proof-terminal" id="proof-terminal">
+                    <div class="pt-header">
+                        <span class="pt-dot red"></span>
+                        <span class="pt-dot amber"></span>
+                        <span class="pt-dot green"></span>
+                        <span class="pt-title">PLG-ZK-ENGINE / PROTOCOLO SENTINELA v2.1</span>
+                    </div>
+                    <div class="pt-body" id="pt-body">
+                        <!-- linhas injetadas via JS -->
+                    </div>
+                    <div class="pt-progress-wrap" id="pt-progress-wrap">
+                        <div class="pt-progress-label">
+                            <span id="pt-stage-label">INICIALIZANDO</span>
+                            <span id="pt-pct">0%</span>
+                        </div>
+                        <div class="pt-progress-bar">
+                            <div class="pt-progress-fill" id="pt-fill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recibo da transação -->
+                <div class="tx-receipt" id="tx-receipt">
+                    <div class="tx-receipt-title">Transação Confirmada — Sincronização DAG</div>
+                    <div class="tx-rows" id="tx-rows">
+                        <!-- injetado via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── ZK-PRESS DATA PANEL ─── -->
+        <div class="section-title">
+            Estado da Rede — Zk-Press Live
+            <span class="st-tag">22KB COMPRESSED</span>
+        </div>
+
+        <div class="zkpress-panel" id="zkpress-panel">
+            <div class="zkpress-header">
+                <div class="zkpress-title">
+                    DAG_SYNC_STATUS
+                    <span class="zk-badge">ZK-PRESS</span>
+                </div>
+                <div class="zkpress-meta" id="zkpress-ts">--</div>
+            </div>
+            <div class="zkpress-body" id="zkpress-body">
+                <!-- injetado via JS -->
+            </div>
+        </div>
+
+        <!-- ─── VITRINE DE INTERAÇÃO ─── -->
+        <div class="section-title showcase-section">
+            The Showcase — Vitrine de Interação
+            <span class="st-tag">MAX 50 SLOTS</span>
+        </div>
+
+        <div class="showcase-notice">
+            <span class="showcase-notice-icon">⚠</span>
+            <p>
+                <strong>Aviso de Privacidade:</strong> Os endereços exibidos nesta vitrine foram
+                registrados com <strong>consentimento explícito</strong> do titular no momento da
+                requisição. O registro é público, permanente durante a sessão de Testnet e serve
+                exclusivamente para fins de <strong>interação comunitária e testes de protocolo</strong>.
+                Para remover seu endereço, acesse o Dashboard e revogue o consentimento.
+            </p>
+        </div>
+
+        <div class="zkpress-panel">
+            <div class="zkpress-header">
+                <div class="zkpress-title">
+                    SHOWCASE_REGISTRY
+                    <span class="zk-badge">SENTINELA</span>
+                </div>
+                <div class="zkpress-meta">
+                    <span id="showcase-meta">0 endereços públicos</span>
+                </div>
+            </div>
+
+            <div class="showcase-grid-header">
+                <span>#</span>
+                <span>Endereço</span>
+                <span class="sh-hash">BLAKE3 Hash</span>
+                <span>Valor</span>
+                <span class="sh-vis">Visib.</span>
+            </div>
+
+            <div class="showcase-list" id="showcase-list">
+                <div class="showcase-empty" id="showcase-empty">
+                    Nenhum endereço na vitrine. Seja o primeiro a participar.
+                </div>
+            </div>
+
+            <div class="showcase-footer">
+                <span class="showcase-count">
+                    <span id="showcase-count-pub">0</span> públicos ·
+                    <span id="showcase-count-all">0</span> total ·
+                    limite 50 slots
+                </span>
+                <span class="showcase-count" style="color:var(--text2)">
+                    AERARIUM · TESTNET · GENESIS_2026
+                </span>
+            </div>
+        </div>
+
+        <!-- ─── PROTOCOL CARDS ─── -->
+        <div class="section-title" style="margin-top:56px">
+            Especificações do Protocolo
+        </div>
+
+        <div class="protocol-grid">
+            <div class="proto-card">
+                <span class="proto-icon">⬡</span>
+                <div class="proto-title">Sincronização DAG</div>
+                <div class="proto-desc">
+                    Topologia directed acyclic graph com confirmação assíncrona.
+                    Latência média: 0.8s por vértice validado.
+                </div>
+            </div>
+            <div class="proto-card">
+                <span class="proto-icon">🔐</span>
+                <div class="proto-title">Protocolo Sentinela</div>
+                <div class="proto-desc">
+                    Camada de segurança Dilithium3 com verificação de prova ZK-SNARK
+                    antes de qualquer emissão do Aerarium.
+                </div>
+            </div>
+            <div class="proto-card">
+                <span class="proto-icon">◈</span>
+                <div class="proto-title">BLAKE3 Hash</div>
+                <div class="proto-desc">
+                    Todas as transações de teste utilizam BLAKE3 para garantir
+                    determinismo absoluto e auditabilidade na rede Gênese.
+                </div>
+            </div>
+            <div class="proto-card">
+                <span class="proto-icon">⚡</span>
+                <div class="proto-title">Aerarium</div>
+                <div class="proto-desc">
+                    Cofre protocolar de distribuição: 1.000 T-PLG/transfer, máx 10.000/dia por carteira. Cooldown 24h. Supply total: 1B T-PLG.
+                </div>
+            </div>
+            <div class="proto-card">
+                <span class="proto-icon">🧮</span>
+                <div class="proto-title">ZK-SNARK Proof</div>
+                <div class="proto-desc">
+                    Prova de trabalho substituída por geração de prova de conhecimento
+                    zero. Verificação: ~2.1s. Tamanho: ~16 KB (Lattice Ring-LWE).
+                </div>
+            </div>
+            <div class="proto-card">
+                <span class="proto-icon">🌐</span>
+                <div class="proto-title">Gênese Lattice</div>
+                <div class="proto-desc">
+                    Endereços baseados em criptografia de rede Lattice resistentes a
+                    computação quântica. Compatíveis com NIST PQC Round 4.
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ═══════════ FOOTER ═══════════ -->
+    <footer>
+        <p>&copy; 2026 PLEGMA DAG | The Architecture of Absolute Justice</p>
+        <div class="social-links">
+            <a href="https://x.com/plegmadag" target="_blank" rel="noopener" title="X (Twitter)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="https://t.me/plegma_dag" target="_blank" rel="noopener" title="Telegram">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+            </a>
+            <a href="https://discord.gg/MFsJqyBBJ" target="_blank" rel="noopener" title="Discord">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057.1 18.08.116 18.102.136 18.116a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+            </a>
+            <a href="https://github.com/PlegmaDag" target="_blank" rel="noopener" title="GitHub">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+            </a>
+            <a href="https://www.instagram.com/plegmadag/" target="_blank" rel="noopener" title="Instagram">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+            </a>
+            <a href="/social" title="PLG — Sua Rede de Conexões">
+                <svg width="18" height="18" viewBox="0 0 6000 6000" fill="currentColor" style="fill-rule:evenodd;clip-rule:evenodd" xmlns="http://www.w3.org/2000/svg"><path d="M1808 4633c475,-3 951,0 1427,-1 499,0 825,11 1246,-181 606,-277 1097,-807 1277,-1576 98,-421 64,-847 -63,-1241 -116,-356 -298,-631 -547,-885 -121,-123 -243,-225 -394,-316 -147,-89 -305,-172 -491,-230 -431,-135 -863,-101 -1333,-101 -474,1 -948,0 -1422,0 -219,0 -501,-15 -712,4 -213,19 -375,141 -463,256 -135,176 -139,315 -140,573 0,238 0,475 0,712l1 2853c-1,420 -79,874 250,1182 473,441 1185,175 1333,-362 51,-186 32,-481 31,-687zm-276 -2047c1,0 4,-1 5,2l229 105 1 -163 -235 56zm2678 108l174 -76c27,-11 45,-15 65,-35l-240 -54 1 165zm-2424 -1372c16,32 45,52 71,77l213 219c43,44 99,107 144,144 41,33 122,107 141,147 -40,55 -185,171 -263,215l-239 -239c-28,-29 -50,-61 -86,-78l0 472c-58,33 -268,81 -346,89l0 -688 -265 705c30,18 49,40 61,78 391,-21 774,-165 1063,-392 130,-102 233,-229 338,-381 63,-92 205,-367 239,-492 -10,-15 -39,-53 -54,-69l-1017 193zm1336 -136c12,99 183,415 233,493 185,293 473,535 802,654 159,57 422,121 605,131 11,-37 33,-61 58,-78l-261 -712 -2 694c-110,-11 -249,-53 -347,-88l0 -476c-68,33 -248,271 -323,320 -56,-23 -239,-180 -266,-215 77,-97 509,-508 569,-584l-1024 -201c-11,40 -16,43 -44,62zm-562 2027c36,73 47,139 1,212 26,43 44,50 77,88 43,49 225,257 258,278 92,-46 115,-15 195,-2l203 -220c15,-17 23,-30 38,-47 30,-35 35,-26 82,-89 -36,-129 -43,-101 5,-227l-200 -239c-20,-25 -48,-64 -66,-83 -34,18 -57,50 -83,79 -27,28 -53,52 -81,78l-160 -156 -204 243c-20,26 -50,59 -65,85zm-1300 -652c46,32 222,79 293,108 453,182 667,444 734,479 89,-35 108,-30 195,-4 30,-37 256,-304 271,-337l-181 -193c-22,-22 -44,-37 -66,-60 -83,-88 -158,-172 -245,-255 6,-9 2,-4 12,-14l53 -40c25,-18 41,-32 67,-52 29,-22 34,-26 63,-56 22,-23 41,-47 68,-60 41,33 75,78 113,117 42,43 72,73 121,116 38,33 77,77 113,115 31,32 87,98 118,119 69,-54 429,-446 478,-468 27,40 80,85 119,117 24,20 42,33 66,52 31,24 47,27 64,54 -121,114 -245,256 -365,378 -45,45 -97,79 -128,130l203 249c22,26 45,61 71,85 128,-31 94,-20 202,10 26,-30 63,-63 99,-95 174,-154 402,-295 623,-385 58,-23 263,-87 296,-110 -484,-69 -777,-163 -1084,-415 -286,-236 -474,-547 -603,-904l-81 2c-74,180 -148,351 -243,500 -109,170 -211,271 -356,398 -283,249 -625,351 -1090,419zm-186 180c-248,18 -298,-236 -173,-347 49,-44 86,-49 166,-53l311 -847c-34,-39 -74,-69 -79,-153 -10,-153 124,-241 243,-211 70,18 106,54 133,109 110,-14 1079,-199 1112,-218 24,-53 22,-84 63,-124 73,-71 198,-71 274,-3 36,32 41,81 69,127 40,22 991,201 1109,218 102,-198 386,-121 379,94 -3,88 -43,115 -80,161l312 847c320,-5 296,429 -10,399 -25,54 -343,767 -347,804 -14,114 37,112 -51,177 -70,52 -199,142 -293,166l-2 -923c66,-44 255,-138 346,-166l0 473 254 -573 -36 -41c-171,36 -419,148 -556,226 -256,147 -416,313 -453,334 9,35 21,59 23,97 2,35 -18,84 -14,100 4,19 253,236 303,286 19,20 42,36 63,54l1 134c-70,-43 -391,-369 -452,-396 -63,54 -136,29 -202,10l-244 269c-21,21 -64,73 -80,94 68,141 -9,297 -165,305 -129,7 -268,-116 -183,-305 -72,-88 -176,-190 -242,-269 -28,-34 -58,-58 -81,-96 -108,30 -107,38 -214,-4l-326 288c-23,23 -27,31 -51,51 -12,9 -17,13 -28,22l-39 27c1,-151 -9,-123 80,-197 28,-23 39,-42 70,-66l141 -129c129,-118 67,-31 62,-161 -2,-43 14,-76 24,-112 -69,-56 -132,-118 -210,-177 -78,-59 -153,-106 -240,-158 -112,-67 -415,-204 -559,-229l-35 41 251 573 3 -470c72,19 296,125 345,164l1 1286c441,-1 883,0 1324,0 455,1 801,32 1197,-135 616,-259 1061,-852 1132,-1527 91,-871 -370,-1496 -838,-1805 -296,-194 -604,-294 -1034,-294 -877,1 -1775,6 -2650,0 -227,-2 -317,134 -317,346 1,223 0,446 0,669l0 3319c1,259 -31,386 112,560 199,240 727,185 727,-332 0,-443 0,-886 0,-1329 0,-52 3,-109 1,-161 -2,-49 -24,-82 -42,-125l-305 -694z"/></svg>
+            </a>
+        </div>
+        <div class="footer-legal">
+            <a href="/termos">Termos de Uso</a>
+            <a href="/privacidade">Privacidade</a>
+            <a href="/cookies">Cookies</a>
+            <a href="/quem-somos">Quem Somos</a>
+        </div>
+    </footer>
+
+</div><!-- .page -->
+
+<!-- ═══════════ MODAL PRIVACIDADE ═══════════ -->
+<div class="modal-overlay" id="privacy-modal">
+    <div class="modal-box">
+        <div class="modal-title">
+            <span>⚠</span>
+            Consentimento de Privacidade
+        </div>
+        <div class="modal-body">
+            Ao confirmar, seu endereço será registrado publicamente na
+            <strong>Vitrine de Interação (Showcase)</strong> desta Testnet.<br><br>
+            Este registro é <strong>visível a todos os participantes</strong> da rede
+            e será mantido durante toda a sessão de Gênese_2026.<br><br>
+            Os dados são utilizados exclusivamente para <strong>testes de protocolo e
+            interação comunitária</strong>. Você pode revogar o consentimento a qualquer
+            momento via Dashboard → Configurações → Privacidade Testnet.
+        </div>
+        <div class="modal-actions">
+            <button class="btn-modal-confirm" id="modal-confirm">Confirmar Consentimento</button>
+            <button class="btn-modal-cancel" id="modal-cancel">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════ TOAST ═══════════ -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════ SCRIPTS ═══════════ -->
+<script>
+'use strict';
+
+// ═══════════════════════════════════════════════════════
+//  BLAKE3 SIMULADO — determinismo frontend
+// ═══════════════════════════════════════════════════════
+const BLAKE3 = {
+    _mix(a, b) { return (((a >>> 0) ^ (b >>> 0)) + 0x6b86b273) >>> 0; },
+    _rotl32(v, n) { return ((v << n) | (v >>> (32 - n))) >>> 0; },
+    hash(input) {
+        const str = String(input);
+        let h = [
+            0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
+            0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19
+        ];
+        for (let i = 0; i < str.length; i++) {
+            const c = str.charCodeAt(i);
+            h[i % 8] = this._rotl32(this._mix(h[i % 8], c ^ h[(i + 3) % 8]), 7);
+            h[(i + 1) % 8] ^= this._rotl32(h[(i + 4) % 8], 13);
+        }
+        return h.map(v => (v >>> 0).toString(16).padStart(8, '0')).join('');
+    },
+    short(input, len = 16) { return this.hash(input).slice(0, len); }
+};
+
+// ═══════════════════════════════════════════════════════
+//  ESTADO DA APLICAÇÃO
+// ═══════════════════════════════════════════════════════
+// ── Persistência localStorage ─────────────────────────────────────────────────
+const LS_KEY = 'plegma_testnet_v1';
+
+function _lsSave() {
+    try {
+        localStorage.setItem(LS_KEY, JSON.stringify({
+            showcase      : State.showcase,
+            totalDistributed: State.totalDistributed,
+            totalRequests : State.totalRequests,
+            dailyUsage    : State.dailyUsage,
+        }));
+    } catch(_) {}
+}
+
+function _lsLoad() {
+    try {
+        const raw = localStorage.getItem(LS_KEY);
+        if (!raw) return;
+        const d = JSON.parse(raw);
+        if (Array.isArray(d.showcase))       State.showcase        = d.showcase;
+        if (typeof d.totalDistributed==='number') State.totalDistributed = d.totalDistributed;
+        if (typeof d.totalRequests==='number')    State.totalRequests    = d.totalRequests;
+        if (d.dailyUsage && typeof d.dailyUsage==='object') State.dailyUsage = d.dailyUsage;
+    } catch(_) {}
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
+const State = {
+    showcase: [],           // {addr, amount, hash, ts, pub}
+    MAX_SHOWCASE: 50,
+    MAX_TRANSFER: 1000,     // máx por transferência
+    MAX_DAILY: 10000,       // máx por carteira por dia
+    TOTAL_SUPPLY: 1_000_000_000,
+    isProcessing: false,
+    wantsShowcase: false,
+    cooldownEnd: null,
+    totalDistributed: 0,
+    totalRequests: 0,
+    consentPending: false,
+    dailyUsage: {},         // { addr: { amount, date } }
+};
+
+// Carrega estado persistido ao iniciar
+_lsLoad();
+
+
+// ═══════════════════════════════════════════════════════
+//  VALIDAÇÃO DE ENDEREÇO
+// ═══════════════════════════════════════════════════════
+const ADDR_PATTERNS = {
+    plg:     /^PLG[0-9A-F]{40}$/,
+    hex:     /^0x[0-9a-fA-F]{32,64}$/,
+};
+
+function validateAddress(addr) {
+    if (!addr || addr.trim().length < 10) return { valid: false, msg: 'Endereço muito curto.' };
+    const a = addr.trim().toUpperCase();
+    if (ADDR_PATTERNS.plg.test(a))  return { valid: true,  type: 'PLG', msg: '✓ Endereço PLG válido.' };
+    if (/^0X[0-9A-F]{32,64}$/.test(a)) return { valid: true, type: 'HEX', msg: '✓ Formato hexadecimal válido.' };
+    if (a.startsWith('PLG')) return { valid: false, msg: 'Endereço PLG inválido. Esperado: PLG + 40 caracteres hex maiúsculos.' };
+    if (a.startsWith('0X'))  return { valid: false, msg: 'Endereço hex inválido. Esperado 32–64 caracteres hex após 0x.' };
+    return { valid: false, msg: 'Formato não reconhecido. Use PLG<40hex> (ex: PLG3A4F...).' };
+}
+
+// ═══════════════════════════════════════════════════════
+//  INPUT HANDLER
+// ═══════════════════════════════════════════════════════
+const addrInput  = document.getElementById('addr-input');
+const addrStatus = document.getElementById('addr-status');
+const addrIcon   = document.getElementById('addr-icon');
+const btnFaucet  = document.getElementById('btn-faucet');
+
+addrInput.addEventListener('input', () => {
+    const val = addrInput.value.trim();
+    const r   = validateAddress(val);
+
+    addrInput.className = 'addr-input' + (val.length > 8 ? (r.valid ? ' valid' : ' invalid') : '');
+    addrStatus.textContent  = val.length > 0 ? r.msg : 'Insira um endereço válido para continuar.';
+    addrStatus.className    = 'addr-status ' + (val.length > 8 ? (r.valid ? 'ok' : 'err') : 'neutral');
+    addrIcon.textContent    = val.length > 8 ? (r.valid ? '✓' : '✗') : '⬡';
+    btnFaucet.disabled      = !r.valid || State.isProcessing || !!State.cooldownEnd;
+});
+
+// ═══════════════════════════════════════════════════════
+//  TOGGLE VITRINE
+// ═══════════════════════════════════════════════════════
+function toggleShowcaseOpt() {
+    const cb = document.getElementById('showcase-checkbox');
+    const wrap = document.getElementById('showcase-toggle');
+
+    if (!State.wantsShowcase) {
+        // Abre modal de consentimento
+        State.consentPending = true;
+        document.getElementById('privacy-modal').classList.add('open');
+    } else {
+        State.wantsShowcase = false;
+        cb.className = 'showcase-checkbox';
+        wrap.className = 'showcase-opt';
+    }
+}
+
+document.getElementById('modal-confirm').addEventListener('click', () => {
+    if (State.consentPending) {
+        State.wantsShowcase = true;
+        const cb = document.getElementById('showcase-checkbox');
+        const wrap = document.getElementById('showcase-toggle');
+        cb.className = 'showcase-checkbox on';
+        wrap.className = 'showcase-opt checked';
+        State.consentPending = false;
+    }
+    document.getElementById('privacy-modal').classList.remove('open');
+});
+
+document.getElementById('modal-cancel').addEventListener('click', () => {
+    State.consentPending = false;
+    document.getElementById('privacy-modal').classList.remove('open');
+});
+
+// ═══════════════════════════════════════════════════════
+//  ZK-SNARK PROOF TERMINAL
+// ═══════════════════════════════════════════════════════
+const PROOF_STAGES = [
+    { pct: 5,  stage: 'INIT_ZK_ENGINE',          color: 'cyan',  msg: 'Inicializando PLG-ZK-Engine v2.1...' },
+    { pct: 12, stage: 'LOAD_CIRCUIT',             color: '',      msg: (a) => `Carregando circuito Lattice Ring-LWE para endereço ${a.slice(0,14)}...` },
+    { pct: 22, stage: 'GENERATE_WITNESS',         color: 'amber', msg: 'Gerando witness da transação...' },
+    { pct: 35, stage: 'LATTICE_VERIFY',           color: 'cyan',  msg: (a) => `Verificando endereço Lattice: ${a.slice(0,22)}...` },
+    { pct: 48, stage: 'SNARK_PROVE',              color: 'amber', msg: 'Executando prova ZK-SNARK Lattice Ring-LWE... (~16 KB)' },
+    { pct: 60, stage: 'SENTINELA_CHECK',          color: '',      msg: 'Protocolo Sentinela: verificando integridade...' },
+    { pct: 72, stage: 'BLAKE3_COMMIT',            color: 'cyan',  msg: (h) => `BLAKE3 commit: ${h}` },
+    { pct: 85, stage: 'DAG_PROPAGATE',            color: 'amber', msg: 'Propagando vértice no DAG — aguardando confirmação...' },
+    { pct: 95, stage: 'AERARIUM_RELEASE',         color: 'green', msg: 'AERARIUM: solicitando liberação ao Aerarium...' },
+    { pct: 99, stage: 'PENDING_CONFIRM',          color: 'amber', msg: 'Aguardando validação do endereço na rede...' },
+];
+
+function addTerminalLine(text, color = '', prompt = '◈') {
+    const body = document.getElementById('pt-body');
+    const line = document.createElement('div');
+    line.className = 'pt-line';
+    line.innerHTML = `<span class="pt-prompt">${prompt}</span><span class="pt-text ${color}">${text}</span>`;
+    body.appendChild(line);
+    body.scrollTop = body.scrollHeight;
+}
+
+async function runProofTerminal(addr) {
+    const terminal = document.getElementById('proof-terminal');
+    const ptBody   = document.getElementById('pt-body');
+    const ptFill   = document.getElementById('pt-fill');
+    const ptStage  = document.getElementById('pt-stage-label');
+    const ptPct    = document.getElementById('pt-pct');
+
+    ptBody.innerHTML = '';
+    terminal.classList.add('show');
+
+    const txHash  = BLAKE3.hash(addr + Date.now());
+    const shortH  = txHash.slice(0, 16);
+
+    addTerminalLine(`PLG-ZK-ENGINE BOOT — GENESIS_2026`, 'cyan', '▶');
+    addTerminalLine(`Endereço alvo: ${addr}`, '', '·');
+
+    for (let _i = 0; _i < PROOF_STAGES.length; _i++) {
+        const s = PROOF_STAGES[_i];
+        await sleep(200 + _i * 30);
+
+        const msg = typeof s.msg === 'function'
+            ? s.msg(s.stage === 'LOAD_CIRCUIT' || s.stage === 'LATTICE_VERIFY' ? addr : shortH)
+            : s.msg;
+
+        addTerminalLine(msg, s.color);
+        ptFill.style.width  = s.pct + '%';
+        ptStage.textContent = s.stage;
+        ptPct.textContent   = s.pct + '%';
+    }
+
+    return { txHash, shortH };
+}
+
+// ═══════════════════════════════════════════════════════
+//  REQUISITAR PLG — FLUXO PRINCIPAL
+// ═══════════════════════════════════════════════════════
+async function requestPLG() {
+    const addr = addrInput.value.trim();
+    const r    = validateAddress(addr);
+    if (!r.valid || State.isProcessing) return;
+
+    State.isProcessing = true;
+    btnFaucet.disabled = true;
+    btnFaucet.className = 'btn-faucet loading';
+    btnFaucet.textContent = '⟳ Gerando Prova ZK-SNARK...';
+
+    document.getElementById('tx-receipt').classList.remove('show');
+
+    // Executa animação ZK-SNARK (visual)
+    const { txHash, shortH } = await runProofTerminal(addr);
+
+    await sleep(400);
+
+    // Chamada real ao backend
+    let resposta;
+    try {
+        const res = await fetch('https://api.plegmadag.com/api/faucet', {
+            method : 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body   : JSON.stringify({ plg_address: addr }),
+        });
+        resposta = await res.json();
+
+        if (!res.ok) {
+            const msg = resposta.erro || 'Erro ao contactar o Aerarium.';
+            addTerminalLine(`✗ RECUSADO — ${msg}`, 'red', '✗');
+            showToast(msg, 'error');
+            btnFaucet.className   = 'btn-faucet';
+            btnFaucet.textContent = '▶ Requisitar $T-PLG';
+            btnFaucet.disabled    = false;
+            State.isProcessing    = false;
+            return;
+        }
+        addTerminalLine('✓ Aerarium confirmou. Vértice aceite na DAG.', 'green', '✓');
+    } catch (_) {
+        addTerminalLine('✗ Sem resposta do servidor.', 'red', '✗');
+        showToast('Sem resposta do servidor. Verifique a ligação.', 'error');
+        btnFaucet.className   = 'btn-faucet';
+        btnFaucet.textContent = '▶ Requisitar $T-PLG';
+        btnFaucet.disabled    = false;
+        State.isProcessing    = false;
+        return;
+    }
+
+    const creditado  = resposta.creditado  ?? 1000;
+    const saldoNovo  = resposta.saldo_novo ?? creditado;
+    const tsNow      = new Date().toISOString();
+    const valorFmt   = creditado.toLocaleString('pt-BR') + ' T-PLG';
+    const saldoFmt   = saldoNovo.toLocaleString('pt-BR') + ' T-PLG';
+
+    // Exibe recibo com dados reais
+    const txRows = document.getElementById('tx-rows');
+    txRows.innerHTML = `
+        <div class="tx-row">
+            <span class="tx-key">Status</span>
+            <span class="tx-val green">CONFIRMADA — Gênese</span>
+        </div>
+        <div class="tx-row">
+            <span class="tx-key">Endereço</span>
+            <span class="tx-val cyan mono copy-target" onclick="copyText('${addr}')">${addr}</span>
+        </div>
+        <div class="tx-row">
+            <span class="tx-key">BLAKE3 Hash</span>
+            <span class="tx-val mono copy-target" onclick="copyText('${txHash}')">${txHash}</span>
+        </div>
+        <div class="tx-row">
+            <span class="tx-key">Valor</span>
+            <span class="tx-val green">${valorFmt}</span>
+        </div>
+        <div class="tx-row">
+            <span class="tx-key">Saldo Actual</span>
+            <span class="tx-val cyan">${saldoFmt}</span>
+        </div>
+        <div class="tx-row">
+            <span class="tx-key">Tipo Endereço</span>
+            <span class="tx-val">${r.type}</span>
+        </div>
+        <div class="tx-row">
+            <span class="tx-key">Prova</span>
+            <span class="tx-val amber">ZK-SNARK Lattice Ring-LWE · ~16 KB</span>
+        </div>
+        <div class="tx-row">
+            <span class="tx-key">Timestamp</span>
+            <span class="tx-val mono">${tsNow}</span>
+        </div>
+        <div class="tx-row">
+            <span class="tx-key">Rede</span>
+            <span class="tx-val">PLEGMA TESTNET · GENESIS_2026</span>
+        </div>
+    `;
+    document.getElementById('tx-receipt').classList.add('show');
+
+    // Adiciona à vitrine
+    addToShowcase(addr, txHash, State.wantsShowcase);
+
+    // Atualiza métricas locais
+    State.totalDistributed += creditado;
+    State.totalRequests++;
+    updateMetrics();
+    updateZkPress();
+
+    // Botão sucesso + cooldown visual 24h → representado por barra de 30s
+    btnFaucet.className  = 'btn-faucet success';
+    btnFaucet.textContent = '✓ Distribuído — Cooldown 24h';
+    startCooldown(30);
+
+    showToast(`${valorFmt} distribuídos. Saldo: ${saldoFmt}. Cooldown: 24h.`, 'success');
+
+    _lsSave();
+
+    State.isProcessing = false;
+    addrInput.value = '';
+    addrInput.className = 'addr-input';
+    addrStatus.textContent = 'Insira um endereço válido para continuar.';
+    addrStatus.className = 'addr-status neutral';
+    addrIcon.textContent = '⬡';
+}
+
+// ═══════════════════════════════════════════════════════
+//  SHOWCASE
+// ═══════════════════════════════════════════════════════
+function addToShowcase(addr, txHash, pub) {
+    if (State.showcase.length >= State.MAX_SHOWCASE) {
+        State.showcase.pop(); // remove mais antigo
+    }
+    State.showcase.unshift({
+        addr,
+        amount: 1000,
+        hash: txHash.slice(0, 16),
+        ts: Date.now(),
+        pub,
+    });
+    renderShowcase();
+}
+
+function renderShowcase() {
+    const list    = document.getElementById('showcase-list');
+    const empty   = document.getElementById('showcase-empty');
+    const countPub = document.getElementById('showcase-count-pub');
+    const countAll = document.getElementById('showcase-count-all');
+    const meta     = document.getElementById('showcase-meta');
+
+    if (State.showcase.length === 0) {
+        empty.style.display = 'block';
+        list.querySelectorAll('.showcase-row').forEach(r => r.remove());
+        return;
+    }
+    empty.style.display = 'none';
+
+    // Limpa e re-renderiza (max 50 DOM)
+    list.querySelectorAll('.showcase-row').forEach(r => r.remove());
+
+    const pubCount = State.showcase.filter(e => e.pub).length;
+
+    State.showcase.forEach((entry, i) => {
+        const row = document.createElement('div');
+        row.className = 'showcase-row';
+
+        // Mascaramento: privado mostra só últimos 4 dígitos
+        let displayAddr, titleAttr, clickHandler;
+        if (entry.pub) {
+            const shortAddr = entry.addr.length > 28
+                ? entry.addr.slice(0, 14) + '...' + entry.addr.slice(-8)
+                : entry.addr;
+            displayAddr  = shortAddr;
+            titleAttr    = entry.addr;
+            clickHandler = `onclick="copyText('${entry.addr}')"`;
+        } else {
+            const last4   = entry.addr.slice(-4);
+            displayAddr  = '••••••••••••••••••••••••' + last4;
+            titleAttr    = 'Endereço privado — exibindo apenas os últimos 4 dígitos';
+            clickHandler = '';
+        }
+
+        row.innerHTML = `
+            <span class="sc-index">${String(i + 1).padStart(2, '0')}</span>
+            <span class="sc-addr" title="${titleAttr}" ${clickHandler}>${displayAddr}</span>
+            <span class="sc-hash">${entry.pub ? entry.hash : '••••••••••••••••'}</span>
+            <span class="sc-amount">+${entry.amount} T-PLG</span>
+            <span class="sc-badge ${entry.pub ? 'pub' : 'priv'}">${entry.pub ? 'PÚBLICO' : 'PRIVADO'}</span>
+        `;
+        list.appendChild(row);
+    });
+
+    countPub.textContent = pubCount;
+    countAll.textContent = State.showcase.length;
+    meta.textContent     = `${pubCount} endereço${pubCount !== 1 ? 's' : ''} público${pubCount !== 1 ? 's' : ''}`;
+}
+
+// ═══════════════════════════════════════════════════════
+//  ZK-PRESS PANEL
+// ═══════════════════════════════════════════════════════
+const ZKP_FIELDS = () => [
+    { k: 'NET_ID',         v: 'PLEGMA_TESTNET',      c: 'cyan'   },
+    { k: 'TOKEN',          v: 'T-PLG (Testnet)',       c: 'cyan'   },
+    { k: 'SUPPLY',         v: '1.000.000.000 T-PLG',  c: 'amber'  },
+    { k: 'EPOCH',          v: 'GENESIS_2026',         c: 'amber'  },
+    { k: 'TOTAL_VERTS',    v: State.totalRequests > 0 ? State.totalRequests.toLocaleString() : '0', c: '' },
+    { k: 'CONFIRMED_TX',   v: State.totalRequests,    c: 'green'  },
+    { k: 'T-PLG_ISSUED',   v: State.totalDistributed.toLocaleString('pt-BR') + ' T-PLG', c: 'green' },
+    { k: 'ACTIVE_NODES',   v: State.activeNodes ?? '—',  c: 'cyan'   },
+    { k: 'ZK_PROOF_SIZE',  v: '~16 KB (Lattice)',      c: 'purple' },
+    { k: 'HASH_ALGO',      v: 'BLAKE3_d256',          c: ''       },
+    { k: 'CRYPTO',         v: 'DILITHIUM3 + KYBER',   c: 'cyan'   },
+    { k: 'CONSENSUS',      v: 'DAG_ASYNC_v2',         c: ''       },
+    { k: 'AVG_LATENCY',    v: '0.81 s / vértice',     c: ''       },
+    { k: 'FAUCET_QUOTA',   v: '1.000 T-PLG / transf · 10.000/dia', c: 'amber'  },
+    { k: 'ZKP_CIRCUIT',    v: 'Lattice Ring-LWE',      c: 'purple' },
+    { k: 'COMPRESS_RATIO', v: '22 KB (Zk-Press)',     c: 'purple' },
+    { k: 'NET_STATE',      v: 'SINCRONIZADA',         c: 'green'  },
+    { k: 'SENTINELA',      v: 'ATIVO · NÍVEL 3',      c: 'cyan'   },
+];
+
+function updateZkPress() {
+    const body = document.getElementById('zkpress-body');
+    const ts   = document.getElementById('zkpress-ts');
+
+    body.innerHTML = '';
+    ZKP_FIELDS().forEach(f => {
+        const cell = document.createElement('div');
+        cell.className = 'zkp-cell';
+        cell.innerHTML = `<div class="zkp-key">${f.k}</div><div class="zkp-val ${f.c}">${f.v}</div>`;
+        body.appendChild(cell);
+    });
+
+    ts.textContent = new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
+}
+
+// ═══════════════════════════════════════════════════════
+//  MÉTRICAS HERO
+// ═══════════════════════════════════════════════════════
+function updateMetrics() {
+    animCount('metric-distributed', State.totalDistributed);
+    animCount('metric-requests',    State.totalRequests);
+}
+
+function animCount(id, target) {
+    const el   = document.getElementById(id);
+    const curr = parseInt(el.textContent.replace(/,/g, '')) || 0;
+    const diff = target - curr;
+    if (diff <= 0) { el.textContent = target.toLocaleString(); return; }
+    let i = 0;
+    const steps = 20;
+    const inc   = diff / steps;
+    const iv = setInterval(() => {
+        i++;
+        el.textContent = Math.round(curr + inc * i).toLocaleString();
+        if (i >= steps) { clearInterval(iv); el.textContent = target.toLocaleString(); }
+    }, 30);
+}
+
+// ═══════════════════════════════════════════════════════
+//  COOLDOWN DEMO (60s como proxy de 24h)
+// ═══════════════════════════════════════════════════════
+function startCooldown(seconds) {
+    const wrap  = document.getElementById('cooldown-wrap');
+    const fill  = document.getElementById('cooldown-fill');
+    const timer = document.getElementById('cooldown-timer');
+
+    wrap.style.display = 'block';
+    State.cooldownEnd  = Date.now() + seconds * 1000;
+
+    const iv = setInterval(() => {
+        const remaining = Math.max(0, State.cooldownEnd - Date.now());
+        const pct = ((seconds * 1000 - remaining) / (seconds * 1000)) * 100;
+
+        fill.style.width = pct + '%';
+
+        const s = Math.floor(remaining / 1000);
+        const m = Math.floor(s / 60);
+        const h = Math.floor(m / 60);
+        timer.textContent = `${String(h).padStart(2,'0')}:${String(m%60).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+
+        if (remaining <= 0) {
+            clearInterval(iv);
+            wrap.style.display = 'none';
+            State.cooldownEnd  = null;
+            btnFaucet.className    = 'btn-faucet';
+            btnFaucet.textContent  = '▶ Requisitar $T-PLG';
+            btnFaucet.disabled     = false;
+            showToast('Cooldown encerrado. Você pode requisitar novamente.', 'info');
+        }
+    }, 500);
+}
+
+// ═══════════════════════════════════════════════════════
+//  UTILITÁRIOS
+// ═══════════════════════════════════════════════════════
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function showToast(msg, type = 'info') {
+    const t = document.getElementById('toast');
+    t.textContent  = msg;
+    t.className    = `toast ${type} show`;
+    setTimeout(() => { t.className = `toast ${type}`; }, 4000);
+}
+
+function copyText(text) {
+    navigator.clipboard?.writeText(text).then(() => {
+        showToast('Copiado para a área de transferência.', 'info');
+    }).catch(() => {
+        showToast('Erro ao copiar. Selecione manualmente.', 'error');
+    });
+}
+
+// ═══════════════════════════════════════════════════════
+//  ZK-PRESS AUTO-REFRESH
+// ═══════════════════════════════════════════════════════
+function startZkPressRefresh() {
+    updateZkPress();
+    // Pulsa um campo aleatório a cada 3s para simular live data
+    setInterval(() => {
+        const cells = document.querySelectorAll('.zkp-cell');
+        if (cells.length === 0) return;
+        const c = cells[Math.floor(Math.random() * cells.length)];
+        c.style.borderColor = 'rgba(0,242,255,0.3)';
+        setTimeout(() => { c.style.borderColor = ''; }, 600);
+        updateZkPress();
+    }, 3000);
+}
+
+// ═══════════════════════════════════════════════════════
+//  BOOT
+// ═══════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+    // Restaurar estado persistido na UI
+    if (State.showcase.length > 0 || State.totalRequests > 0) {
+        renderShowcase();
+        updateMetrics();
+        updateZkPress();
+    }
+
+    startZkPressRefresh();
+
+    // Nós ativos — dados reais do backend
+    function fetchNodeCount() {
+        fetch('https://api.plegmadag.com/api/status')
+            .then(r => r.json())
+            .then(d => {
+                const el = document.getElementById('metric-nodes');
+                if (el) el.textContent = d.nos_ativos ?? '—';
+                State.activeNodes = d.nos_ativos ?? null;
+            })
+            .catch(() => {});
+    }
+    fetchNodeCount();
+    setInterval(fetchNodeCount, 15000);
+});
+</script>
+
+<script>
+/* ── GC Testnet Ticker — ativa 09/04/2026 18:00 Madrid (CEST = UTC+2) ── */
+(function () {
+    var LAUNCH = new Date('2026-04-09T18:00:00+02:00').getTime();
+    function showTicker() {
+        var bar = document.getElementById('gc-testnet-bar');
+        if (!bar) return;
+        if (Date.now() >= LAUNCH) {
+            bar.style.display = 'block';
+            /* Empurra o body para baixo para não sobrepor conteúdo */
+            document.body.style.paddingTop = (
+                (parseInt(document.body.style.paddingTop) || 0) + 26
+            ) + 'px';
+        } else {
+            /* Verifica novamente quando chegar a hora */
+            setTimeout(showTicker, Math.min(LAUNCH - Date.now(), 60000));
+        }
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', showTicker);
+    } else {
+        showTicker();
+    }
+}());
+</script>
+</body>
+</html>

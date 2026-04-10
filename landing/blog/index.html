@@ -473,6 +473,41 @@
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
 
+        <!-- APP v1.9.5 — AUTH QR FIX + HEARTBEAT + FAUCET REAL + PROVERS REMOVER — 10 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">10 ABR 2026 — App v1.9.5 · Auth QR Corrigida · Heartbeat Dilithium3 · Faucet T-PLG Real · Provers REMOVER</span>
+                <div class="post-meta">
+                    <span class="post-date">10 ABR 2026</span>
+                    <span class="post-tag tag-app">APP</span>
+                    <span class="post-tag tag-core">CORE</span>
+                    <span class="post-tag" style="border-color:rgba(239,68,68,0.4);color:#ef4444;background:rgba(239,68,68,0.06);">AUTH</span>
+                    <span class="post-tag" style="border-color:rgba(245,158,11,0.4);color:#f59e0b;background:rgba(245,158,11,0.06);">TESTNET</span>
+                    <span class="post-tag" style="border-color:rgba(139,92,246,0.4);color:#8b5cf6;background:rgba(139,92,246,0.06);">ZK</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">
+                    <div class="post-section-title">Fix — Autenticação QR (Dilithium3 hex obrigatório)</div>
+                    <p>A autenticação por QR code — fluxo em que o app escaneia um desafio exibido no dashboard e assina com a chave Dilithium3 — falhava silenciosamente no servidor. A causa raiz era tripla: o método <code>verifyAuth</code> em <code>api_service.dart</code> enviava os campos com nomes incorretos (<code>challenge_id</code>/<code>address</code>/<code>assinatura</code> em vez de <code>nonce</code>/<code>plg_address</code>/<code>signature</code>), a assinatura era transmitida em Base64 quando o backend exige hexadecimal, e o campo <code>public_key</code> nunca era enviado — tornando a verificação Dilithium3 impossível.</p>
+                    <p>O método <code>verifyAuth</code> foi removido. Ambos os pontos de autenticação em <code>shield_screen.dart</code> (scan QR externo e challenge gerado in-app) foram migrados para o método correto <code>authVerify</code>, com conversão explícita de assinatura e chave pública de Base64 para hexadecimal via <code>DilithiumFfiService.bytesToHex(base64.decode(...))</code>. O campo de resposta lido passou de <code>token</code> para o correto <code>session_token</code>.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">HeartbeatService — Validadores Visíveis no Admin</div>
+                    <p>Embora a infraestrutura de heartbeat estivesse implementada no servidor (<code>POST /api/node/heartbeat</code>), o app nunca realizava essa chamada — resultando em zero validadores no painel de administração. O serviço <code>HeartbeatService</code> foi criado como singleton, iniciado no <code>initState</code> do <code>HomeScreen</code>, com envio periódico a cada 2 minutos. Cada ciclo carrega a chave privada do armazenamento seguro, assina o identificador de nó (<code>VALIDATOR_&lt;address&gt;</code>) com Dilithium3 via FFI, converte assinatura e chave pública para hexadecimal e envia ao servidor. O backend verifica a assinatura, deriva o endereço PLG via <code>BLAKE3(pub_key)</code> e regista o nó em <code>nos_rede</code> com TTL de 300 segundos.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Faucet T-PLG — Ligação ao Backend Real</div>
+                    <p>O faucet da página Testnet simulava todo o processo localmente: a animação ZK era puramente visual, os tokens eram contabilizados em <code>localStorage</code>, e nenhuma chamada ao servidor ocorria. A última etapa da animação declarava "✓ Confirmada" antes de qualquer validação.</p>
+                    <p>O fluxo foi reescrito: após a animação ZK (mantida como representação visual do processo criptográfico), é efectuado um <code>POST /api/faucet</code> ao backend. O servidor passou a validar que o endereço existe na tabela <code>sessions</code> ou <code>nos_rede</code> antes de creditar — endereços PLG válidos em formato mas não autenticados na rede são rejeitados com mensagem explicativa. Os tokens creditados passam a ser persistidos na tabela <code>tplg_balances</code> (separada de <code>plgg_balances</code>, que é exclusiva do PLG-G Genesis). O montante foi corrigido de 100 para 1.000 T-PLG. Erros do servidor são exibidos no terminal ZK com linha vermelha.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Provers — REMOVER Funcional</div>
+                    <p>O botão REMOVER no painel de Provers abria um diálogo de confirmação que, ao confirmar, exibia apenas uma mensagem local sem contactar o servidor — o prover permanecia na base de dados e ressurgia ao recarregar. O endpoint <code>POST /wallet/desvincular_prover</code> foi adicionado ao <code>wallet_server.py</code>, executando <code>DELETE FROM miner_vesting WHERE node_id = ? AND plg_address = ?</code>. O método <code>desvincularProver</code> foi implementado no <code>WalletProvider</code> e o diálogo de confirmação foi ligado a esta chamada real, com feedback de sucesso ou falha.</p>
+                </div>
+            </div>
+        </article>
+
         <!-- APP v1.9.4 + VALIDADORES + T-PLG + DOUBLE BIOMETRIC FIX — 10 ABR 2026 -->
         <article class="post">
             <div class="post-header">
