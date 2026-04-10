@@ -100,9 +100,60 @@
         .social-links a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid rgba(0,242,255,0.18); border-radius: 6px; background: rgba(0,242,255,0.05); color: rgba(255,255,255,0.4); transition: all 0.2s; }
         .social-links a:hover { color: #00f2ff; border-color: rgba(0,242,255,0.55); background: rgba(0,242,255,0.12); box-shadow: 0 0 14px rgba(0,242,255,0.22); }
         .social-links a svg { display: block; }
+
+        /* GC — TESTNET nav badge */
+        @keyframes pulse-orange {
+            0%,100% { box-shadow: 0 0 0 0 rgba(249,115,22,0); border-color: rgba(249,115,22,0.45); }
+            50% { box-shadow: 0 0 8px 2px rgba(249,115,22,0.45); border-color: rgba(249,115,22,0.9); }
+        }
+        .nav-testnet { font-size: 0.58rem !important; letter-spacing: 3px; text-transform: uppercase;
+            font-weight: 700; padding: 4px 10px !important; border-radius: 3px;
+            color: #f97316 !important; border: 1px solid rgba(249,115,22,0.55) !important;
+            background: rgba(249,115,22,0.08) !important;
+            animation: pulse-orange 1.8s ease-in-out infinite; cursor: pointer; }
+    
+        /* ── GC TESTNET TICKER ────────────────────────────────────────── */
+        #gc-testnet-bar {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            height: 26px;
+            z-index: 99999;
+            background: rgba(249,115,22,0.08);
+            border-bottom: 1px solid rgba(249,115,22,0.40);
+            overflow: hidden;
+            pointer-events: none;
+        }
+        #gc-testnet-inner {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            white-space: nowrap;
+            animation: gc-scroll 38s linear infinite;
+        }
+        @keyframes gc-scroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        #gc-testnet-inner span {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.58rem;
+            color: #f97316;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            padding-right: 80px;
+        }
     </style>
 </head>
 <body>
+
+<!-- GC TESTNET TICKER -->
+<div id="gc-testnet-bar">
+  <div id="gc-testnet-inner">
+    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
+    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
+  </div>
+</div>
 <div class="page">
 
     <nav>
@@ -119,6 +170,7 @@
             <a href="/genesis" class="nav-link">GENESIS</a>
             <a href="/servicos" class="nav-link">SERVIÇOS</a>
             <a href="/podcast" class="nav-link active">PODCAST</a>
+            <a href="/testnet/" class="nav-link nav-testnet">TESTNET</a>
             <button class="nav-btn" data-plg-wallet-btn
                 onclick="PlegmaAuth.isConnected() ? window.location.href='/dashboard/?plg='+PlegmaAuth.getSession().plg_address : PlegmaAuth.openModal()">
                 DASHBOARD
@@ -199,7 +251,7 @@
                         <span class="ep-tag tag-tech">ZK-SNARK</span>
                     </div>
                     <div class="ep-title">ZK-Press — como comprimir uma prova criptográfica para 543 bytes</div>
-                    <div class="ep-desc">Protocolo Schnorr não-interativo via Fiat-Shamir sobre curva BN128. O que é uma prova de conhecimento zero, como o ZK-Press reduz 22KB de prova para 543 bytes e por que isso permite que smartphones participem da rede sem degradação.</div>
+                    <div class="ep-desc">Protocolo Fiat-Shamir sobre grade Lattice Ring-LWE. O que é uma prova de conhecimento zero, como o ZK-Press comprime uma prova pós-quântica para menos de 22KB e por que isso permite que smartphones participem da rede sem degradação.</div>
                     <div class="ep-soon">Lançamento: a confirmar</div>
                 </div>
             </div>
@@ -264,5 +316,31 @@
     </footer>
 
 </div>
+
+<script>
+/* ── GC Testnet Ticker — ativa 09/04/2026 18:00 Madrid (CEST = UTC+2) ── */
+(function () {
+    var LAUNCH = new Date('2026-04-09T18:00:00+02:00').getTime();
+    function showTicker() {
+        var bar = document.getElementById('gc-testnet-bar');
+        if (!bar) return;
+        if (Date.now() >= LAUNCH) {
+            bar.style.display = 'block';
+            /* Empurra o body para baixo para não sobrepor conteúdo */
+            document.body.style.paddingTop = (
+                (parseInt(document.body.style.paddingTop) || 0) + 26
+            ) + 'px';
+        } else {
+            /* Verifica novamente quando chegar a hora */
+            setTimeout(showTicker, Math.min(LAUNCH - Date.now(), 60000));
+        }
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', showTicker);
+    } else {
+        showTicker();
+    }
+}());
+</script>
 </body>
 </html>

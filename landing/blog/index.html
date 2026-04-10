@@ -473,6 +473,42 @@
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
 
+        <!-- APP v1.9.4 + VALIDADORES + T-PLG + DOUBLE BIOMETRIC FIX — 10 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">10 ABR 2026 — App v1.9.4 · T-PLG Testnet · Fix Dupla Biometria · Validadores Online · Bridge nos_rede</span>
+                <div class="post-meta">
+                    <span class="post-date">10 ABR 2026</span>
+                    <span class="post-tag tag-app">APP</span>
+                    <span class="post-tag tag-core">CORE</span>
+                    <span class="post-tag tag-front">DB</span>
+                    <span class="post-tag" style="border-color:rgba(239,68,68,0.4);color:#ef4444;background:rgba(239,68,68,0.06);">AUTH</span>
+                    <span class="post-tag" style="border-color:rgba(245,158,11,0.4);color:#f59e0b;background:rgba(245,158,11,0.06);">TESTNET</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">
+                    <div class="post-section-title">Fix — Dupla Biometria no Scan QR</div>
+                    <p>O processo de autenticação do dashboard por QR code acionava a biometria duas vezes. A causa: a aba Shield mantinha uma instância própria de <code>LocalAuthentication</code>, que ao abrir o diálogo do sistema operacional disparava um evento <code>AppLifecycleState.inactive</code> no observador do HomeScreen, ativando novamente o lock screen.</p>
+                    <p>Solução: removido o <code>LocalAuthentication</code> da aba Shield. Toda autenticação biométrica passa agora por <code>AuthService.authenticateBiometric()</code>, com uma chamada prévia a <code>AuthService.beginExternalAuth()</code> que neutraliza temporariamente o observador de ciclo de vida durante a exibição do diálogo. Resultado: uma única solicitação biométrica, comportamento determinístico.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">T-PLG — Saldo e Extrato Testnet no App</div>
+                    <p>Durante a fase de teste público, o token de rede recebe a designação <strong>T-PLG</strong> (Testnet PLG). A constante <code>kFaseTestnet = true</code> foi adicionada à aba Carteira do app, alterando automaticamente o formato de exibição de valores para <code>T-PLG</code> e adicionando um badge âmbar "TESTNET" ao cabeçalho do card de saldo.</p>
+                    <p>O provider da carteira passou a realizar chamadas reais ao servidor a cada ciclo de atualização: <code>_fetchWalletSaldo()</code> consulta <code>/api/wallet/status?address=</code> para o saldo disponível, e <code>fetchExtrato()</code> consulta <code>/api/wallet/extrato?address=</code> para o histórico de transações. O mapeamento de campos cobre as variantes <code>transacoes</code>, <code>extrato</code>, <code>transactions</code> e <code>txs</code>.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Rede Real — Remoção de Provers Simulados</div>
+                    <p>O servidor de carteira mantinha um objeto demo em memória com nós fictícios de validação. Essa simulação foi removida em sua totalidade. O endpoint <code>GET /wallet/provers</code> passa agora a consultar a tabela <code>miner_vesting</code> no banco de dados SQLite, retornando exclusivamente nós reais vinculados ao endereço PLG da requisição. O endpoint <code>POST /wallet/vincular_prover</code> foi corrigido para exigir o campo <code>plg_address</code> e persistir o vínculo diretamente no banco.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Validadores Visíveis no Console — Tabela nos_rede</div>
+                    <p>Nós da rede que enviavam heartbeats regulares (visíveis no app com uptime em contagem) não apareciam nos painéis <code>/admin</code> e <code>/console</code>. A causa: a contagem de nós lia apenas a tabela <code>miner_vesting</code>, que em fase testnet permanece vazia (transações de mineração bloqueadas).</p>
+                    <p>A solução foi introduzir a tabela <code>nos_rede (plg_address, node_id, node_type, last_seen)</code> como camada bridge: cada heartbeat processado pelo servidor escreve ou atualiza uma linha nesta tabela via <code>upsert_no_ativo()</code>. A função <code>get_node_counts()</code> foi reescrita para fundir os dados das duas tabelas, aplicando um TTL de 300 segundos para determinar atividade recente, sem duplicação entre Provers e Validadores.</p>
+                </div>
+            </div>
+        </article>
+
         <!-- AUDITORIA ZK + REMOÇÃO BN128 + SCRIPT NÓ — 09 ABR 2026 -->
         <article class="post">
             <div class="post-header">
@@ -1005,7 +1041,7 @@
                     <p>O agente é composto por quatro módulos independentes orquestrados pelo entry point principal:</p>
                     <ul>
                         <li><strong>LocalShieldEngine</strong> — varre processos em execução a cada 60 segundos via <code>psutil</code> e monitora a área de transferência a cada 3 segundos. Detecta keyloggers, RATs, ransomware e URLs de phishing por blacklist estática + heurística de padrões regex.</li>
-                        <li><strong>ValidatorNode</strong> — envia heartbeat à rede a cada 30 segundos via <code>GET /api/priority</code>. A cada 5 minutos ancora um snapshot ZK do estado de processos em <code>POST /shield/anchor</code>, encadeando provas recursivas BN128.</li>
+                        <li><strong>ValidatorNode</strong> — envia heartbeat à rede a cada 30 segundos via <code>GET /api/priority</code>. A cada 5 minutos ancora um snapshot ZK do estado de processos em <code>POST /shield/anchor</code>, encadeando provas recursivas Lattice Ring-LWE.</li>
                         <li><strong>PlegmaClient</strong> — cliente HTTP puro (<code>urllib</code>) para <code>api.plegmadag.com</code> e <code>shield_server</code> (porta 8085), com fallback para IP direto.</li>
                         <li><strong>TrayApp</strong> — ícone de escudo na bandeja do sistema (<code>pystray</code> + <code>Pillow</code>), gerado programaticamente. Muda de cor: cyan = protegido, vermelho = inativo, cinza = offline. Menu: Dashboard, Status, Configurar, Encerrar.</li>
                     </ul>
@@ -1386,7 +1422,7 @@
                 <ul>
                     <li><strong>Problema de loja:</strong> apps que fazem scan contínuo de pacotes instalados são rejeitados por ambas as stores como comportamento de spyware.</li>
                     <li><strong>Solução:</strong> ao instalar, o usuário consente um <em>snapshot único</em> do dispositivo. O app lê os apps instalados uma vez, computa <code>SHA3-256(sorted "pacote\x00cert_hash")</code> localmente — a lista nunca sai do dispositivo. O separador <code>\x00</code> (null byte) é inequívoco: evita colisão de hash que o separador <code>:</code> permitia.</li>
-                    <li>O hash é enviado ao <code>shield_server.py</code> (porta 8085), que gera uma <strong>prova ZK via ZkPressEngine (BN128/Schnorr)</strong> e ancora na rede. Retorna <code>anchor_id + zk_proof</code>.</li>
+                    <li>O hash é enviado ao <code>shield_server.py</code> (porta 8085), que gera uma <strong>prova ZK via ZkPressEngine (Lattice Ring-LWE)</strong> e ancora na rede. Retorna <code>anchor_id + zk_proof</code>.</li>
                     <li>Monitoramento futuro: <code>BroadcastReceiver</code> Android registrado dinamicamente escuta <code>ACTION_PACKAGE_ADDED/REMOVED/CHANGED</code>. Zero polling. Zero permissão especial adicional.</li>
                     <li>Em mudança: app recomputa o hash localmente, compara com o snapshot — se diferente, exibe o diff (quais pacotes mudaram) e oferece re-ancoragem em 1 tap.</li>
                     <li>Hash usa hierarquia: <strong>SHA3-256</strong> no Android 12+ (= fallback Python de <code>lattice_shield.py</code>), SHA-256 em versões anteriores. BLAKE3 seria ideal mas não tem biblioteca nativa Dart sem NDK customizado.</li>
