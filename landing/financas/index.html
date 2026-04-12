@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Regra de ouro 10/30/30/30: como dividir sua renda para soberania financeira com PLEGMA DAG. Sem dívidas, sem dependência.">
+    <meta name="description" content="Aerarium — tesouro da rede PLEGMA DAG. Estatutos §3, §6, §13 e §14: pools de mineração, distribuição de taxas, fórmula de emissão e proteções anti-dump.">
     <meta name="keywords" content="PLEGMA DAG, blockchain DAG, criptografia pós-quântica, Dilithium3, ZK-SNARK, PLG-G, governança descentralizada, mineração mobile">
     <meta name="robots" content="index, follow">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://plegmadag.com/financas/">
-    <meta property="og:title" content="Finanças Soberanas | PLEGMA DAG">
-    <meta property="og:description" content="Regra de ouro 10/30/30/30: como dividir sua renda para soberania financeira com PLEGMA DAG. Sem dívidas, sem dependência.">
+    <meta property="og:title" content="Aerarium — Tesouro da Rede | PLEGMA DAG">
+    <meta property="og:description" content="Aerarium — tesouro da rede PLEGMA DAG. Estatutos §3, §6, §13 e §14: pools de mineração, distribuição de taxas, fórmula de emissão e proteções anti-dump.">
     <meta property="og:image" content="https://plegmadag.com/assets/img/logo.gif">
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://plegmadag.com/financas/">
-    <meta property="twitter:title" content="Finanças Soberanas | PLEGMA DAG">
+    <meta property="twitter:title" content="Aerarium — Tesouro da Rede | PLEGMA DAG">
     <meta property="twitter:image" content="https://plegmadag.com/assets/img/logo.gif">
     <link rel="icon" type="image/svg+xml" href="/assets/img/favicon-financas.svg">
-    <title>PLEGMA | Finanças Soberanas</title>
+    <title>PLEGMA | Aerarium — Tesouro da Rede</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Montserrat:wght@800&display=swap" rel="stylesheet">
     <script src="/auth.js"></script>
     <style>
@@ -160,9 +160,60 @@
         .social-links a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid rgba(0,242,255,0.18); border-radius: 6px; background: rgba(0,242,255,0.05); color: rgba(255,255,255,0.4); transition: all 0.2s; }
         .social-links a:hover { color: #00f2ff; border-color: rgba(0,242,255,0.55); background: rgba(0,242,255,0.12); box-shadow: 0 0 14px rgba(0,242,255,0.22); }
         .social-links a svg { display: block; }
+
+        /* GC — TESTNET nav badge */
+        @keyframes pulse-orange {
+            0%,100% { box-shadow: 0 0 0 0 rgba(249,115,22,0); border-color: rgba(249,115,22,0.45); }
+            50% { box-shadow: 0 0 8px 2px rgba(249,115,22,0.45); border-color: rgba(249,115,22,0.9); }
+        }
+        .nav-testnet { font-size: 0.58rem !important; letter-spacing: 3px; text-transform: uppercase;
+            font-weight: 700; padding: 4px 10px !important; border-radius: 3px;
+            color: #f97316 !important; border: 1px solid rgba(249,115,22,0.55) !important;
+            background: rgba(249,115,22,0.08) !important;
+            animation: pulse-orange 1.8s ease-in-out infinite; cursor: pointer; }
+    
+        /* ── GC TESTNET TICKER ────────────────────────────────────────── */
+        #gc-testnet-bar {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            height: 26px;
+            z-index: 99999;
+            background: rgba(249,115,22,0.08);
+            border-bottom: 1px solid rgba(249,115,22,0.40);
+            overflow: hidden;
+            pointer-events: none;
+        }
+        #gc-testnet-inner {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            white-space: nowrap;
+            animation: gc-scroll 38s linear infinite;
+        }
+        @keyframes gc-scroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        #gc-testnet-inner span {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.58rem;
+            color: #f97316;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            padding-right: 80px;
+        }
     </style>
 </head>
 <body>
+
+<!-- GC TESTNET TICKER -->
+<div id="gc-testnet-bar">
+  <div id="gc-testnet-inner">
+    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
+    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
+  </div>
+</div>
 <div class="page">
     <nav>
         <a href="/" class="nav-brand" style="display:flex;align-items:center;gap:10px"><img src="/assets/img/logo.gif" alt="PLEGMA" style="height:36px;filter:drop-shadow(0 0 6px rgba(0,242,255,0.5))"><span>PLEGMA DAG</span></a>
@@ -172,12 +223,13 @@
         <div class="nav-links">
             <a href="/financas" class="nav-link active">FINANÇAS</a>
             <a href="/fundacao" class="nav-link">FUNDAÇÃO</a>
-            <a href="/social" class="nav-link">REDE</a>
+            <a href="/social" class="nav-link">MESH SOCIAL</a>
             <a href="/blog" class="nav-link">BLOG</a>
             <a href="/labs" class="nav-link">LABS</a>
             <a href="/genesis" class="nav-link">GENESIS</a>
             <a href="/servicos" class="nav-link">SERVIÇOS</a>
             <a href="/podcast" class="nav-link">PODCAST</a>
+            <a href="/testnet/" class="nav-link nav-testnet">TESTNET</a>
             <a href="/dashboard" class="nav-link">DASHBOARD</a>
         </div>
     </nav>
@@ -191,127 +243,173 @@
     </div>
 
     <section class="hero">
-        <div class="hero-tag">Módulo de Soberania Financeira</div>
-        <h1>Finanças<br>Soberanas</h1>
-        <p>O sucesso financeiro é 20% conhecimento técnico e 80% disciplina. A PLEGMA entrega a infraestrutura — você escolhe o destino.</p>
+        <div class="hero-tag">Estatutos §3 · §6 · §13 · §14</div>
+        <h1>Aerarium<br>Tesouro da Rede</h1>
+        <p>Motor de tokenomics do protocolo PLEGMA DAG. Regras imutáveis de emissão, distribuição de recompensas e proteção anti-manipulação — codificadas no contrato e auditáveis por qualquer nó.</p>
     </section>
 
     <main class="main">
 
-        <div class="quote-block">
-            <p>"O ativo mais poderoso que todos nós temos é a nossa mente. Se for bem treinada, ela pode criar uma riqueza enorme em um instante."</p>
+        <div class="principle-box" style="border-color:rgba(0,242,255,0.3);background:rgba(0,242,255,0.03);margin-bottom:50px">
+            <h4>O que é o Aerarium</h4>
+            <p>O Aerarium é o <strong style="color:var(--cyan)">tesouro autónomo da rede</strong>. Não é controlado por nenhuma pessoa, empresa ou fundação — é gerido por estatutos codificados no protocolo. Acumula uma parcela das taxas de rede até um teto definido por governança, e todo excedente retorna automaticamente aos mineradores. O teto padrão é <strong style="color:var(--cyan)">$1.000 USDC</strong> e só pode ser alterado por votação da comunidade.</p>
         </div>
 
-        <div class="principle-box" style="margin-bottom:40px;border-color:rgba(35,209,139,0.3);background:rgba(35,209,139,0.04)">
-            <h4 style="color:var(--green)">Sugestão, Não Obrigação</h4>
-            <p>A metodologia apresentada aqui <strong style="color:var(--text)">não é uma regra imposta pela rede</strong> — é uma sugestão baseada em princípios de educação financeira aplicados e testados mundialmente ao longo de décadas. Filosofias como a de Robert Kiyosaki, George Clason ("O Homem Mais Rico da Babilônia") e Dave Ramsey convergem para o mesmo ponto: <strong style="color:var(--text)">pagar a si mesmo primeiro e dar com propósito gera riqueza de forma consistente</strong>. Você é livre para gerir seus ativos como preferir. Esta é apenas uma estrutura que funciona — e que a PLEGMA coloca à sua disposição.</p>
-        </div>
+        <!-- §3 — Supply e Pools de Mineração -->
+        <div class="section-title">Estatuto §3 · §13 — Supply e Pools de Mineração</div>
 
-        <!-- Regra de Ouro -->
-        <div class="section-title">Regra de Ouro — 10 / 30 / 30 / 30</div>
-
-        <div class="pillars-grid">
-            <div class="pillar-card doacao">
-                <div class="pillar-pct">10%</div>
-                <div class="pillar-name">Doação</div>
-                <div class="pillar-desc">Destinar para causas em que acredita. A riqueza flui melhor com propósito.</div>
+        <div class="pillars-grid" style="margin-bottom:20px">
+            <div class="pillar-card" style="border-color:rgba(0,242,255,0.3)">
+                <div class="pillar-pct">21B</div>
+                <div class="pillar-name">Supply Máximo</div>
+                <div class="pillar-desc">21.000.000.000 $PLG. Fixo e imutável. Zero inflação. Zero pré-mine para fundadores.</div>
             </div>
             <div class="pillar-card reinvest">
-                <div class="pillar-pct">30%</div>
-                <div class="pillar-name">Reinvestimento</div>
-                <div class="pillar-desc">Realocar no ecossistema. Aumentar peso de voto ou preparar stake. Renda passiva cresce exponencialmente.</div>
+                <div class="pillar-pct">60%</div>
+                <div class="pillar-name">Validator Pool</div>
+                <div class="pillar-desc">12.600.000.000 $PLG reservados para validadores. Celulares, tablets, notebooks e PCs básicos.</div>
             </div>
             <div class="pillar-card objetivos">
-                <div class="pillar-pct">30%</div>
-                <div class="pillar-name">Objetivos</div>
-                <div class="pillar-desc">Capital para o "eu" do futuro. Reserva de longo prazo. Não tocar para gastos cotidianos.</div>
+                <div class="pillar-pct">40%</div>
+                <div class="pillar-name">Prover Pool</div>
+                <div class="pillar-desc">8.400.000.000 $PLG reservados para provers. PC Gamer, GPU dedicada, ASIC e servidores.</div>
             </div>
-            <div class="pillar-card gastos">
-                <div class="pillar-pct">30%</div>
-                <div class="pillar-name">Gastos</div>
-                <div class="pillar-desc">Necessidades básicas. Graças à economia de 90% em taxas, rende muito mais do que no sistema tradicional.</div>
+            <div class="pillar-card" style="border-color:rgba(35,209,139,0.3)">
+                <div class="pillar-pct">30d</div>
+                <div class="pillar-name">Lock-up Obrigatório</div>
+                <div class="pillar-desc">Toda recompensa é bloqueada 30 dias a partir do timestamp do vértice minerado. Sem exceções.</div>
             </div>
         </div>
 
-        <div class="principle-box">
-            <h4>O Princípio Invertido</h4>
-            <p>No sistema tradicional, as pessoas gastam primeiro e guardam o que sobra — geralmente nada. Aqui: <strong style="color:var(--cyan)">distribua primeiro, gaste o que restar</strong>. O protocolo respeita a sua ordem, não a do mercado.</p>
+        <!-- Dispositivos elegíveis -->
+        <div class="principle-box" style="margin-bottom:50px">
+            <h4>Dispositivos Elegíveis por Pool</h4>
+            <table class="projection-table" style="margin:14px 0 0">
+                <thead><tr><th>Pool</th><th>Dispositivos</th><th>% do Supply</th></tr></thead>
+                <tbody>
+                    <tr><td style="color:var(--cyan)">Validator Pool</td><td>Celular · Tablet · Notebook · PC básico</td><td class="good">60%</td></tr>
+                    <tr><td style="color:var(--amber)">Prover Pool</td><td>PC Gamer · GPU dedicada · ASIC · Servidor</td><td style="color:var(--amber)">40%</td></tr>
+                </tbody>
+            </table>
         </div>
 
-        <!-- Carteira Automática -->
-        <div class="section-title">Carteira com Gestão Automática</div>
+        <!-- §6 — Distribuição de Taxas -->
+        <div class="section-title">Estatuto §6 — Distribuição das Taxas de Rede</div>
 
-        <div style="display:flex;align-items:center;gap:12px;padding:12px 18px;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.25);border-radius:6px;margin-bottom:20px">
-            <span style="font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:#a78bfa;white-space:nowrap">IMPLEMENTAÇÃO FUTURA</span>
-            <span style="font-size:0.75rem;color:var(--text3);line-height:1.6">Este módulo está planejado para versões futuras do app PLEGMA. A separação automática dos pilares será nativa na carteira — sem necessidade de configuração manual.</span>
+        <p style="font-size:0.8rem;color:var(--text3);line-height:1.8;margin-bottom:20px">Cada transação paga uma taxa de <strong style="color:var(--text)">0,1% do valor</strong>. Essa taxa é distribuída entre o Aerarium e os mineradores ativos conforme o estado do teto:</p>
+
+        <table class="projection-table" style="margin-bottom:20px">
+            <thead><tr><th>Estado do Aerarium</th><th>Aerarium</th><th>Provers</th><th>Validadores</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td style="color:var(--cyan)">Teto não atingido (padrão)</td>
+                    <td class="good">10%</td>
+                    <td>40%</td>
+                    <td>50%</td>
+                </tr>
+                <tr>
+                    <td style="color:var(--amber)">Teto atingido ($1.000) — transbordo</td>
+                    <td class="bad">0%</td>
+                    <td>40%</td>
+                    <td class="good">60%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="principle-box" style="margin-bottom:50px;border-color:rgba(35,209,139,0.3);background:rgba(35,209,139,0.03)">
+            <h4 style="color:var(--green)">Transbordo — Benefício Direto aos Mineradores</h4>
+            <p>Quando o Aerarium atinge o teto, a sua fatia (10%) é automaticamente redirecionada para os validadores — que passam a receber 60% em vez de 50%. O excedente nunca fica parado: retorna imediatamente à rede.</p>
         </div>
 
-        <ul class="feature-list">
+        <!-- Fórmula de Emissão -->
+        <div class="section-title">Fórmula de Emissão — Estatuto §3</div>
+
+        <div class="principle-box" style="margin-bottom:20px;font-family:'Space Mono',monospace">
+            <h4>R = G(t) / N</h4>
+            <p style="margin-bottom:12px">
+                <strong style="color:var(--cyan)">R</strong> — Recompensa por nó ativo (em $PLG)<br>
+                <strong style="color:var(--cyan)">G(t)</strong> — Pool disponível com decaimento exponencial<br>
+                <strong style="color:var(--cyan)">N</strong> — Número de nós ativos do mesmo tipo de pool
+            </p>
+            <p style="border-top:1px solid var(--border);padding-top:12px;color:var(--text2);font-size:0.78rem">
+                G(t) = G_inicial × e<sup>−λ × t</sup> &nbsp;|&nbsp; λ = 0.000137 &nbsp;(decaimento ~5% ao ano)
+            </p>
+        </div>
+
+        <ul class="feature-list" style="margin-bottom:50px">
             <li>
-                <span class="feat-pct" style="color:var(--green)">10%</span>
+                <span class="feat-pct" style="color:var(--text2);font-size:0.8rem">Dia 0–30</span>
                 <div class="feat-info">
-                    <strong>Doação Automática</strong>
-                    <span>Transferência direta para a Fundação PLEGMA ou causas configuradas. Zero atrito, zero taxas de intermediação.</span>
+                    <strong>Fase Genesis — Mineração Inativa</strong>
+                    <span>Nenhum token é emitido durante os primeiros 30 dias. A rede constrói consenso antes de distribuir recompensas.</span>
                 </div>
             </li>
             <li>
-                <span class="feat-pct">30%</span>
+                <span class="feat-pct">Dia 31+</span>
                 <div class="feat-info">
-                    <strong>Stake / Reinvestimento</strong>
-                    <span>Alocação imediata para validação de rede. Aumenta peso de voto e recompensa de mineração automaticamente.</span>
+                    <strong>Pós-Genesis — R = G/N + taxa</strong>
+                    <span>Recompensa base mais a parcela da taxa de rede (Estatuto §6). Quanto mais nós ativos, mais justa a distribuição.</span>
                 </div>
             </li>
             <li>
-                <span class="feat-pct" style="color:var(--amber)">30%</span>
+                <span class="feat-pct" style="color:var(--green)">Fair</span>
                 <div class="feat-info">
-                    <strong>Objetivos — Sub-carteira HODL</strong>
-                    <span>Reserva de longo prazo segregada. O protocolo bloqueia acesso impulsivo e exige confirmação deliberada.</span>
-                </div>
-            </li>
-            <li>
-                <span class="feat-pct" style="color:var(--text3)">30%</span>
-                <div class="feat-info">
-                    <strong>Saldo Livre</strong>
-                    <span>Disponível para gastos imediatos. Somente este pilar é de livre movimentação instantânea.</span>
+                    <strong>Zero Pré-Mine — Zero Vantagem para Fundadores</strong>
+                    <span>O supply total nunca foi pré-alocado. Todos os $PLG em existência foram ou serão minerados por nós reais da rede.</span>
                 </div>
             </li>
         </ul>
 
-        <!-- Alerta Soberania -->
-        <div class="section-title">Protocolo de Emergência Financeira</div>
+        <!-- Anti-Dump / Baleia -->
+        <div class="section-title">Proteção Anti-Dump — Cláusula Baleia</div>
 
-        <div class="alert-box">
+        <div class="alert-box" style="margin-bottom:50px">
             <div class="alert-header">
-                <span>⚠ Alerta — Detectada Tentativa de Evasão de Capital</span>
+                <span>⚠ Ativado automaticamente em transações ≥ 500.000 $PLG</span>
             </div>
-            <div class="alert-item">A Origem do Valor: Antes da PLEGMA DAG, este capital não existia na sua conta. Por que consumi-lo integralmente hoje, sacrificando o amanhã?</div>
-            <div class="alert-item">O Custo da Impulsividade: Ignorar os 30% de Acúmulo e 30% de Objetivos é sabotar a Independência Financeira.</div>
-            <div class="alert-item">A Quebra da Gratidão: Retirar os 10% da Fundação rompe o ciclo de impacto humanitário que mantém a rede ética.</div>
+            <div class="alert-item">Transações de grande volume são detectadas automaticamente pelo protocolo.</div>
+            <div class="alert-item">O valor é diluído ao longo de 24 horas — liberado à razão de amount / 24 por hora.</div>
+            <div class="alert-item">Não há forma de contornar este mecanismo. Nenhuma conta tem isenção.</div>
 
-            <table class="projection-table">
-                <thead>
-                    <tr><th>Cenário</th><th>Resultado</th></tr>
-                </thead>
+            <table class="projection-table" style="margin-top:16px">
+                <thead><tr><th>Parâmetro</th><th>Valor</th></tr></thead>
                 <tbody>
-                    <tr><td class="bad">100% Gasto</td><td class="bad">Independência Financeira adiada indefinidamente</td></tr>
-                    <tr><td class="good">10/30/30/30 aplicado</td><td class="good">Em ciclos de 30 dias, stake e reserva cobrem os custos fixos</td></tr>
+                    <tr><td>Threshold de ativação</td><td style="color:var(--amber)">≥ 500.000 $PLG em uma transação</td></tr>
+                    <tr><td>Período de diluição</td><td>24 horas contínuas</td></tr>
+                    <tr><td>Taxa de liberação</td><td class="good">amount ÷ 24 por hora</td></tr>
                 </tbody>
             </table>
+        </div>
 
-            <div class="alert-actions">
-                <button class="btn-recalibrar">[ RECALIBRAR ] — Aplicar a Regra de Ouro</button>
-                <button class="btn-insistir">[ INSISTIR ] — Proceder com gasto total</button>
-            </div>
+        <!-- Justice Cap §14 -->
+        <div class="section-title">Cláusula 14 — Justice Cap</div>
+
+        <div class="principle-box" style="margin-bottom:50px;border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.03)">
+            <h4 style="color:var(--amber)">Nenhum Prover pode deter mais de 10% da rede</h4>
+            <p>Nenhum Prover individual pode processar mais de <strong style="color:var(--amber)">10% do trabalho total da rede</strong> em qualquer ciclo. Esta cláusula impede a centralização do poder computacional e garante que a distribuição de recompensas do Prover Pool permanece geograficamente e economicamente diversificada.</p>
+        </div>
+
+        <!-- Governança do Aerarium -->
+        <div class="section-title">Governança do Aerarium</div>
+
+        <div class="principle-box" style="margin-bottom:50px">
+            <h4>Teto Ajustável — Apenas por Votação</h4>
+            <p>O teto padrão do Aerarium é <strong style="color:var(--cyan)">$1.000 USDC</strong>. Pode ser alterado apenas por votação de governança — com threshold de participação e período mínimo de deliberação. Nenhum administrador ou fundador tem poder unilateral sobre este parâmetro. A Fundação PLEGMA não acumula o Aerarium — não possui carteira própria.</p>
         </div>
 
         <!-- Selos -->
-        <div class="section-title">Selos de Mentalidade Financeira</div>
+        <div class="section-title">Parâmetros do Protocolo</div>
         <div class="selos-grid">
-            <span class="selo">[Gestão Soberana]</span>
-            <span class="selo">[Capital Estruturado]</span>
-            <span class="selo">[Liberdade por Design]</span>
-            <span class="selo">[Delayed Gratification]</span>
-            <span class="selo">[Financial Soberania]</span>
+            <span class="selo">[Supply: 21.000.000.000 $PLG]</span>
+            <span class="selo">[Validator Pool: 60%]</span>
+            <span class="selo">[Prover Pool: 40%]</span>
+            <span class="selo">[Lock-up: 30 dias]</span>
+            <span class="selo">[Aerarium Teto: $1.000 USDC]</span>
+            <span class="selo">[Taxa de Rede: 0,1%]</span>
+            <span class="selo">[Anti-Dump: 500K $PLG / 24h]</span>
+            <span class="selo">[Justice Cap: 10% por Prover]</span>
+            <span class="selo">[Decaimento: ~5% a.a.]</span>
+            <span class="selo">[Fair Launch: Zero Pre-Mine]</span>
         </div>
 
     </main>
@@ -381,5 +479,31 @@ function googleTranslateElementInit() {
 }
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<script>
+/* ── GC Testnet Ticker — ativa 09/04/2026 18:00 Madrid (CEST = UTC+2) ── */
+(function () {
+    var LAUNCH = new Date('2026-04-09T18:00:00+02:00').getTime();
+    function showTicker() {
+        var bar = document.getElementById('gc-testnet-bar');
+        if (!bar) return;
+        if (Date.now() >= LAUNCH) {
+            bar.style.display = 'block';
+            /* Empurra o body para baixo para não sobrepor conteúdo */
+            document.body.style.paddingTop = (
+                (parseInt(document.body.style.paddingTop) || 0) + 26
+            ) + 'px';
+        } else {
+            /* Verifica novamente quando chegar a hora */
+            setTimeout(showTicker, Math.min(LAUNCH - Date.now(), 60000));
+        }
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', showTicker);
+    } else {
+        showTicker();
+    }
+}());
+</script>
 </body>
 </html>

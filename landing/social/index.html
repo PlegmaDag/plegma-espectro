@@ -243,9 +243,60 @@
         .social-links a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid rgba(0,242,255,0.18); border-radius: 6px; background: rgba(0,242,255,0.05); color: rgba(255,255,255,0.4); transition: all 0.2s; }
         .social-links a:hover { color: #00f2ff; border-color: rgba(0,242,255,0.55); background: rgba(0,242,255,0.12); box-shadow: 0 0 14px rgba(0,242,255,0.22); }
         .social-links a svg { display: block; }
+
+        /* GC — TESTNET nav badge */
+        @keyframes pulse-orange {
+            0%,100% { box-shadow: 0 0 0 0 rgba(249,115,22,0); border-color: rgba(249,115,22,0.45); }
+            50% { box-shadow: 0 0 8px 2px rgba(249,115,22,0.45); border-color: rgba(249,115,22,0.9); }
+        }
+        .nav-testnet { font-size: 0.58rem !important; letter-spacing: 3px; text-transform: uppercase;
+            font-weight: 700; padding: 4px 10px !important; border-radius: 3px;
+            color: #f97316 !important; border: 1px solid rgba(249,115,22,0.55) !important;
+            background: rgba(249,115,22,0.08) !important;
+            animation: pulse-orange 1.8s ease-in-out infinite; cursor: pointer; }
+    
+        /* ── GC TESTNET TICKER ────────────────────────────────────────── */
+        #gc-testnet-bar {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            height: 26px;
+            z-index: 99999;
+            background: rgba(249,115,22,0.08);
+            border-bottom: 1px solid rgba(249,115,22,0.40);
+            overflow: hidden;
+            pointer-events: none;
+        }
+        #gc-testnet-inner {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            white-space: nowrap;
+            animation: gc-scroll 38s linear infinite;
+        }
+        @keyframes gc-scroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        #gc-testnet-inner span {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.58rem;
+            color: #f97316;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            padding-right: 80px;
+        }
     </style>
 </head>
 <body>
+
+<!-- GC TESTNET TICKER -->
+<div id="gc-testnet-bar">
+  <div id="gc-testnet-inner">
+    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
+    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
+  </div>
+</div>
 <div class="page">
     <nav>
         <a href="/" class="nav-brand" style="display:flex;align-items:center;gap:10px"><img src="/assets/img/logo.gif" alt="PLEGMA" style="height:36px;filter:drop-shadow(0 0 6px rgba(0,242,255,0.5))"><span>PLEGMA DAG</span></a>
@@ -255,25 +306,19 @@
         <div class="nav-links">
             <a href="/financas" class="nav-link">FINANÇAS</a>
             <a href="/fundacao" class="nav-link">FUNDAÇÃO</a>
-            <a href="/social" class="nav-link active">REDE</a>
+            <a href="/social" class="nav-link active">MESH SOCIAL</a>
             <a href="/blog" class="nav-link">BLOG</a>
             <a href="/labs" class="nav-link">LABS</a>
             <a href="/genesis" class="nav-link">GENESIS</a>
             <a href="/servicos" class="nav-link">SERVIÇOS</a>
             <a href="/podcast" class="nav-link">PODCAST</a>
+            <a href="/testnet/" class="nav-link nav-testnet">TESTNET</a>
             <a href="/dashboard" class="nav-link">DASHBOARD</a>
         </div>
     </nav>
 
     <!-- ═══ BANNER PRÉ-LANÇAMENTO ═══ -->
-    <style>.launch-banner{display:flex;align-items:center;gap:14px;background:rgba(239,68,68,0.06);border-bottom:1px solid rgba(239,68,68,0.25);padding:10px 40px;font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:1px;text-transform:uppercase;color:#ef4444;}.launch-dot{width:8px;height:8px;border-radius:50%;background:#ef4444;flex-shrink:0;animation:pulsered 1.4s ease-in-out infinite;}@keyframes pulsered{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.65);}60%{box-shadow:0 0 0 8px rgba(239,68,68,0);}}.launch-text{flex:1;line-height:1.6;}.launch-notify{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.45);color:#ef4444;padding:5px 16px;border-radius:3px;text-decoration:none;font-size:0.65rem;letter-spacing:2px;transition:all 0.2s;white-space:nowrap;}.launch-notify:hover{background:#ef4444;color:#000;}@media(max-width:600px){.launch-banner{padding:10px 16px;gap:10px;flex-wrap:wrap;}.launch-text{font-size:0.6rem;}}</style>
-    <div class="launch-banner">
-        <span class="launch-dot"></span>
-        <span class="launch-text">Plataforma em pré-lançamento — funcionalidades ativas somente na data oficial de abertura da Rede PLEGMA</span>
-        <a class="launch-notify" href="mailto:plegmadag@proton.me?subject=Notifique-me%20%E2%80%94%20PLEGMA%20DAG&body=Ol%C3%A1%2C%0A%0ANotifique-me%20quando%20houver%20data%20definida%20para%20o%20lan%C3%A7amento%20da%20Rede%20PLEGMA%20DAG.%0A%0AObrigado.">✉ AVISE-ME</a>
-    </div>
-
-    <section class="splash">
+<section class="splash">
         <div class="splash-tag">PLEGMA Mesh-Social</div>
         <h1>Rede Social<br>sem Vigilância</h1>
         <div class="manifesto">
@@ -332,6 +377,24 @@
                     <a href="/social/perfil/fundacao.html" style="text-decoration:none"><button class="btn-follow" style="border-color:rgba(35,209,139,0.3);color:var(--green)">[ Ver Perfil ]</button></a>
                 </div>
 
+                <!-- Finanças Soberanas -->
+                <div class="profile-card" style="border-color:rgba(245,158,11,0.25);background:rgba(245,158,11,0.04)">
+                    <div class="profile-header">
+                        <div class="profile-avatar" style="background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.3)">◈</div>
+                        <div>
+                            <div class="profile-name" style="color:var(--amber)">Finanças Soberanas</div>
+                            <div class="profile-handle">@financas</div>
+                            <span class="profile-badge" style="background:rgba(245,158,11,0.1);color:var(--amber);border-color:rgba(245,158,11,0.35)">◈ EDUCAÇÃO</span>
+                        </div>
+                    </div>
+                    <div class="profile-stats">
+                        <span><strong>12</strong> posts</span>
+                        <span><strong>∞</strong> seguidores</span>
+                    </div>
+                    <div class="profile-bio">Regra de ouro 10/30/30/30. Metodologia de gestão de capital no ecossistema PLEGMA — sugestão, não obrigação.</div>
+                    <a href="/social/perfil/financas-soberanas.html" style="text-decoration:none"><button class="btn-follow" style="border-color:rgba(245,158,11,0.35);color:var(--amber)">[ Ver Perfil ]</button></a>
+                </div>
+
                 <!-- Aviso Identidade -->
                 <div style="padding:12px;background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.15);border-radius:6px;font-size:0.68rem;color:var(--text2);line-height:1.7">
                     <span style="color:var(--red);letter-spacing:2px;font-size:0.6rem">⬡ IDENTIDADE</span><br>
@@ -358,27 +421,8 @@
                 <!-- Feed de Posts -->
                 <div class="feed" id="feedPosts">
 
-                    <!-- POST FIXADO — Plegmadag -->
-                    <div class="post pinned">
-                        <div class="post-pin-label">📌 Fixado — Plegmadag</div>
-                        <div class="post-header">
-                            <div class="post-avatar" style="background:rgba(0,242,255,0.1)">⬡</div>
-                            <div class="post-meta">
-                                <div class="post-author">Plegmadag <span>@plegmadag · ✦ Oficial</span></div>
-                                <div class="post-time">Genesis Day — 22 Mar 2026</div>
-                            </div>
-                        </div>
-                        <div class="post-body">
-                            A rede PLEGMA está viva. <span class="highlight">Genesis Block confirmado.</span><br><br>
-                            Este é o primeiro post oficial na nossa rede social P2P — sem algoritmo de vigilância, sem publicidade, sem coleta de dados. Apenas o Grafo e a matemática.<br><br>
-                            Bem-vindo ao protocolo da liberdade soberana. <span class="highlight">⬡ PLEGMA DAG</span>
-                        </div>
-                        <div class="post-footer">
-                            <button class="vote-btn respeit" onclick="votar(this,1)"><span>💠</span> <span class="vcount">1.204</span> Respeito</button>
-                            <button class="vote-btn ruido" onclick="votar(this,-1)"><span>⚡</span> <span class="vcount">3</span> Ruído</button>
-                            <button class="reply-btn">💬 Responder</button>
-                        </div>
-                    </div>
+                    <!-- POST FIXADO — Plegmadag: injectado via JS em 09/05/2026 18:00 Madrid -->
+                    <div id="post-genesis-plegmadag"></div>
 
                     <!-- POST FIXADO — Fundação Plegma -->
                     <div class="post pinned-fund">
@@ -675,44 +719,110 @@ async function publicarPost() {
     const texto = txt.value.trim();
     if (!texto) return;
 
-    // Author = endereço da carteira (se disponível) ou anônimo
-    const author = localStorage.getItem('plegma_address') || 'anonimo_' + Math.random().toString(36).substr(2,6);
+    if (!window.PlegmaAuth || !PlegmaAuth.isConnected()) {
+        document.getElementById('connectWall').style.display = 'flex';
+        if (window.PlegmaAuth) PlegmaAuth.openModal();
+        return;
+    }
+    const author = PlegmaAuth.getSession().plg_address;
+    const shortAddr = author.slice(0, 8) + '…' + author.slice(-4);
+    const agora = new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'}) + ' UTC';
+
+    function _inserirPost(textoSeguro) {
+        const feed = document.getElementById('feedPosts');
+        if (!feed) return;
+        const div = document.createElement('div');
+        div.className = 'post';
+        div.innerHTML =
+            '<div class="post-header">' +
+                '<div class="post-avatar" style="background:rgba(0,242,255,0.06)">⬡</div>' +
+                '<div class="post-meta">' +
+                    '<div class="post-author"><span style="color:var(--text3)">' + shortAddr + '</span></div>' +
+                    '<div class="post-time">' + agora + '</div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="post-body">' + textoSeguro + '</div>' +
+            '<div class="post-footer">' +
+                '<button class="vote-btn respeit" onclick="votar(this,1)"><span>💠</span> <span class="vcount">0</span> Respeito</button>' +
+                '<button class="vote-btn ruido" onclick="votar(this,-1)"><span>⚡</span> <span class="vcount">0</span> Ruído</button>' +
+                '<button class="reply-btn">💬 Responder</button>' +
+            '</div>';
+        /* insere após os posts fixados (último elemento com classe pinned ou pinned-fund) */
+        const fixados = feed.querySelectorAll('.post.pinned, .post.pinned-fund');
+        const ancora = fixados.length ? fixados[fixados.length - 1].nextSibling : feed.firstChild;
+        feed.insertBefore(div, ancora);
+        txt.value = '';
+        document.getElementById('charCount').textContent = '280 caracteres restantes';
+        document.getElementById('charCount').style.color = '';
+    }
+
+    /* Escapa HTML para evitar XSS */
+    const textoSeguro = texto.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
     try {
-        const resp = await fetch('http://80.78.26.52:8080/api/social/post', {
+        const resp = await fetch('https://api.plegmadag.com/api/social/post', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({author, conteudo: texto})
         });
         const data = await resp.json();
         if (data.erro) throw new Error(data.erro);
-
-        // Adiciona post ao feed visualmente
-        const feed = document.getElementById('feed');
-        const div = document.createElement('div');
-        div.className = 'post';
-        div.innerHTML = `
-            <div class="post-time">agora mesmo</div>
-            <div class="post-body">${texto}</div>
-            <div class="post-footer">
-                <button class="vote-btn respeit" onclick="votar(this,1)"><span>💠</span> <span class="vcount">0</span> Respeito</button>
-                <button class="vote-btn ruido" onclick="votar(this,-1)"><span>⚡</span> <span class="vcount">0</span> Ruído</button>
-            </div>
-        `;
-        feed.insertBefore(div, feed.firstChild);
-        txt.value = '';
-        document.getElementById('charCount').textContent = '0/500';
+        _inserirPost(textoSeguro);
     } catch(e) {
-        // Fallback offline: adiciona localmente mesmo assim
-        console.warn('API offline, post local:', e.message);
-        // ... adiciona visualmente sem persistir
+        console.warn('[PLEGMA] API offline, post local:', e.message);
+        _inserirPost(textoSeguro);
     }
 }
+
+/* ── Post Genesis Plegmadag — aparece em 09/05/2026 18:00 Madrid (CEST = UTC+2) ── */
+(function() {
+    var LAUNCH = new Date('2026-05-09T18:00:00+02:00').getTime();
+
+    function _injectarPostGenesis() {
+        var slot = document.getElementById('post-genesis-plegmadag');
+        if (!slot || slot.dataset.injected) return;
+        slot.dataset.injected = '1';
+        slot.className = 'post pinned';
+        slot.innerHTML =
+            '<div class="post-pin-label">📌 Fixado — Plegmadag</div>' +
+            '<div class="post-header">' +
+                '<div class="post-avatar" style="background:rgba(0,242,255,0.1)">⬡</div>' +
+                '<div class="post-meta">' +
+                    '<div class="post-author">Plegmadag <span>@plegmadag · ✦ Oficial</span></div>' +
+                    '<div class="post-time">Genesis Day — 09 Mai 2026</div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="post-body">' +
+                'A rede PLEGMA está viva. <span class="highlight">Genesis Block confirmado.</span><br><br>' +
+                'Este é o primeiro post oficial na nossa rede social P2P — sem algoritmo de vigilância, sem publicidade, sem coleta de dados. Apenas o Grafo e a matemática.<br><br>' +
+                'Bem-vindo ao protocolo da liberdade soberana. <span class="highlight">⬡ PLEGMA DAG</span>' +
+            '</div>' +
+            '<div class="post-footer">' +
+                '<button class="vote-btn respeit" onclick="votar(this,1)"><span>💠</span> <span class="vcount">0</span> Respeito</button>' +
+                '<button class="vote-btn ruido" onclick="votar(this,-1)"><span>⚡</span> <span class="vcount">0</span> Ruído</button>' +
+                '<button class="reply-btn">💬 Responder</button>' +
+            '</div>';
+    }
+
+    function _verificar() {
+        if (Date.now() >= LAUNCH) {
+            _injectarPostGenesis();
+        } else {
+            setTimeout(_verificar, Math.min(LAUNCH - Date.now(), 60000));
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', _verificar);
+    } else {
+        _verificar();
+    }
+}());
 
 // Carrega posts reais da API ao iniciar
 async function carregarPostsAPI() {
     try {
-        const resp = await fetch('http://80.78.26.52:8080/api/social/posts?limit=20');
+        const resp = await fetch('https://api.plegmadag.com/api/social/posts?limit=20');
         const data = await resp.json();
         // Não substitui posts fixados — apenas adiciona após eles
         // (implementação simplificada: apenas loga)
@@ -723,8 +833,41 @@ async function carregarPostsAPI() {
 }
 carregarPostsAPI();
 
+// PlegmaAuth — controla connectWall e botão publicar
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof PlegmaAuth !== 'undefined') {
+        PlegmaAuth.init({
+            onLogin: function(addr) {
+                document.getElementById('connectWall').style.display = 'none';
+                document.querySelector('.btn-post') && (document.querySelector('.btn-post').disabled = false);
+                /* se havia texto pendente no momento do login, publica automaticamente */
+                var txt = document.getElementById('postInput');
+                if (txt && txt.value.trim()) publicarPost();
+            },
+            onLogout: function() {
+                document.getElementById('connectWall').style.display = 'flex';
+            }
+        });
+        if (!PlegmaAuth.isConnected()) {
+            document.getElementById('connectWall').style.display = 'flex';
+        }
+    }
+});
+
 // Votar
-function votar(btn, tipo) {
+async function votar(btn, tipo) {
+    const postEl = btn.closest('.post');
+    const postId = postEl ? postEl.dataset.postId : null;
+    const voter  = (window.PlegmaAuth && PlegmaAuth.isConnected())
+                   ? PlegmaAuth.getSession().plg_address
+                   : 'anon_' + Math.random().toString(36).substr(2,6);
+    if (postId) {
+        fetch('https://api.plegmadag.com/api/social/votar', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({post_id: postId, voter, tipo})
+        }).catch(() => {});
+    }
     const count = btn.querySelector('.vcount');
     const n = parseInt(count.textContent.replace('.','')) || 0;
     if (btn.dataset.voted) {
@@ -761,5 +904,31 @@ function googleTranslateElementInit() {
 }
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<script>
+/* ── GC Testnet Ticker — ativa 09/04/2026 18:00 Madrid (CEST = UTC+2) ── */
+(function () {
+    var LAUNCH = new Date('2026-04-09T18:00:00+02:00').getTime();
+    function showTicker() {
+        var bar = document.getElementById('gc-testnet-bar');
+        if (!bar) return;
+        if (Date.now() >= LAUNCH) {
+            bar.style.display = 'block';
+            /* Empurra o body para baixo para não sobrepor conteúdo */
+            document.body.style.paddingTop = (
+                (parseInt(document.body.style.paddingTop) || 0) + 26
+            ) + 'px';
+        } else {
+            /* Verifica novamente quando chegar a hora */
+            setTimeout(showTicker, Math.min(LAUNCH - Date.now(), 60000));
+        }
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', showTicker);
+    } else {
+        showTicker();
+    }
+}());
+</script>
 </body>
 </html>

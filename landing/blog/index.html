@@ -318,7 +318,7 @@
     <div class="nav-links">
         <a href="/financas" class="nav-link">FINANÇAS</a>
         <a href="/fundacao" class="nav-link">FUNDAÇÃO</a>
-        <a href="/social" class="nav-link">REDE</a>
+        <a href="/social" class="nav-link">MESH SOCIAL</a>
         <a href="/blog" class="nav-link active">BLOG</a>
         <a href="/labs" class="nav-link">LABS</a>
         <a href="/genesis" class="nav-link">GENESIS</a>
@@ -472,6 +472,40 @@
 
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
+
+        <!-- INFRA EUR + SSL + MESH SOCIAL FIX — 12 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">12 ABR 2026 — Novo Servidor Primário · SSL Emitido · Mesh Social Fix · deploy.ps1 Cluster 5 Nós</span>
+                <div class="post-meta">
+                    <span class="post-date">12 ABR 2026</span>
+                    <span class="post-tag tag-infra">INFRA</span>
+                    <span class="post-tag tag-ui">UI/UX</span>
+                    <span class="post-tag tag-core">CORE</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Migração do Servidor Primário</div>
+                <p>O servidor primário da rede foi migrado para uma nova máquina com maior capacidade de armazenamento e processamento. O servidor anterior (contratado exclusivamente pelo anonimato) permanecerá ativo como <strong>nó minerador de teste</strong> até ao fim do período pago — servirá para validar o script de setup autónomo disponível no console.</p>
+                <p>O cluster passa a ter <strong>5 nós</strong>: EUR (primário — landing + nginx + SSL), BR, MAL, SIN e EU-MINER (standby). O nó EU-MINER está marcado com <code>Standby=$true</code> no <code>deploy.ps1</code> — excluído do deploy automático, só entra com <code>-Node EU-MINER</code> explícito.</p>
+
+                <div class="post-section">SSL — Certificado Emitido</div>
+                <p>Certificado Let's Encrypt emitido via Certbot para <code>plegmadag.com</code>, <code>api.plegmadag.com</code> e <code>www.plegmadag.com</code>. Renovação automática configurada pelo Certbot. DNS atualizado com registos A (IPv4) e AAAA (IPv6) apontando para o novo servidor. <strong>ISS-02 encerrado</strong> — a rede serve exclusivamente HTTPS.</p>
+
+                <div class="post-section">deploy.ps1 — Cluster 5 Nós + Fixes</div>
+                <p>O script de deploy foi reestruturado para suportar o novo cluster:</p>
+                <ul>
+                    <li><strong>Standby flag</strong> — nós marcados como standby são excluídos do deploy padrão sem precisar remover o entry do array</li>
+                    <li><strong>FASE 0b</strong> — prepara automaticamente o web root + symlink nginx no servidor primário antes de enviar landing pages</li>
+                    <li><strong>Fix awk</strong> — escape <code>\$1</code> corrigido para <code>`$1</code> (sintaxe PowerShell correta para passar literal ao bash)</li>
+                    <li><strong>Fix null crash</strong> — guard antes de <code>.Trim()</code> no resultado SSH de md5sum evita erro em ficheiros inexistentes remotamente</li>
+                </ul>
+
+                <div class="post-section">Mesh Social — Nav + publicarPost Fix</div>
+                <p>Três ficheiros da Mesh Social tinham o link de navegação como "REDE" em vez de "MESH SOCIAL": <code>social/index.html</code>, <code>social/perfil/fundacao.html</code> e <code>social/perfil/plegmadag.html</code>. Corrigidos.</p>
+                <p>Bug crítico na função <code>publicarPost()</code>: ao clicar Publicar sem estar autenticado, o modal de auth abria e a função retornava. Após autenticar, o utilizador precisava clicar Publicar novamente — comportamento não óbvio. Fix: o callback <code>onLogin</code> do <code>PlegmaAuth.init()</code> agora verifica se existe texto pendente no textarea e chama <code>publicarPost()</code> automaticamente. Adicionado também guard <code>if (window.PlegmaAuth)</code> para evitar crash quando o script de auth não carregou.</p>
+            </div>
+        </article>
 
         <!-- APP v1.9.5 — AUTH QR FIX + HEARTBEAT + FAUCET REAL + PROVERS REMOVER — 10 ABR 2026 -->
         <article class="post">
