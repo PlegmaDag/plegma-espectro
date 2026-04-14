@@ -8,248 +8,377 @@
     <title>⬡ CONSOLE MESTRE</title>
     <link rel="icon" type="image/x-icon" href="/assets/img/logo.gif">
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <style>
         :root {
-            --bg:     #000;
-            --bg2:    #05080f;
-            --bg3:    #080d1a;
-            --cyan:   #00F2FF;
-            --cyan2:  rgba(0,242,255,0.07);
-            --cyan3:  rgba(0,242,255,0.15);
-            --green:  #23d18b;
-            --green2: rgba(35,209,139,0.12);
-            --amber:  #f59e0b;
-            --amber2: rgba(245,158,11,0.1);
-            --red:    #ef4444;
-            --red2:   rgba(239,68,68,0.1);
-            --purple: #a78bfa;
-            --border: rgba(0,242,255,0.10);
-            --border2:rgba(0,242,255,0.22);
-            --text:   #e6edf3;
-            --text2:  #8b949e;
-            --text3:  #b0bec9;
-            --glow:   0 0 20px rgba(0,242,255,0.3);
-            --glow-sm:0 0 8px rgba(0,242,255,0.2);
-            --glow-red:0 0 16px rgba(239,68,68,0.4);
+            --bg:      #000;
+            --bg2:     #05080f;
+            --bg3:     #080d1a;
+            --bg4:     #0a0f1e;
+            --cyan:    #00F2FF;
+            --cyan2:   rgba(0,242,255,0.07);
+            --cyan3:   rgba(0,242,255,0.15);
+            --green:   #23d18b;
+            --green2:  rgba(35,209,139,0.12);
+            --amber:   #f59e0b;
+            --amber2:  rgba(245,158,11,0.10);
+            --red:     #ef4444;
+            --red2:    rgba(239,68,68,0.10);
+            --purple:  #a78bfa;
+            --border:  rgba(0,242,255,0.10);
+            --border2: rgba(0,242,255,0.22);
+            --text:    #e6edf3;
+            --text2:   #8b949e;
+            --text3:   #b0bec9;
+            --glow:    0 0 20px rgba(0,242,255,0.3);
+            --glow-sm: 0 0 8px rgba(0,242,255,0.2);
+            --glow-g:  0 0 12px rgba(35,209,139,0.4);
+            --glow-red:0 0 12px rgba(239,68,68,0.4);
+            --sb-w:    220px;
+            --hdr-h:   56px;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { height: 100%; }
-        body { background: var(--bg); color: var(--text); font-family: 'Space Mono', monospace; font-size: 0.875rem; }
+        body { background: var(--bg); color: var(--text); font-family: 'Space Mono', monospace; font-size: 0.875rem; overflow-x: hidden; }
 
-        /* ═══ GATE DE ACESSO ═══ */
+        /* ═══ GATE ═══ */
         #gate {
             position: fixed; inset: 0; z-index: 999;
             background: #000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            gap: 20px;
+            gap: 18px;
         }
         #gate.hidden { display: none; }
-        .gate-logo {
-            font-family: 'Montserrat', sans-serif; font-weight: 800;
-            font-size: 1.5rem; color: var(--red); letter-spacing: 4px;
-            text-shadow: var(--glow-red);
-        }
-        .gate-sub {
-            font-size: 0.72rem; color: var(--text2); letter-spacing: 5px; text-transform: uppercase;
-        }
+        .gate-logo { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.6rem; color: var(--red); letter-spacing: 4px; text-shadow: var(--glow-red); }
+        .gate-sub  { font-size: 0.68rem; color: var(--text2); letter-spacing: 5px; text-transform: uppercase; }
         .gate-warn {
-            font-size: 0.72rem; color: var(--red); letter-spacing: 1px; text-align: center;
+            font-size: 0.68rem; color: var(--red); letter-spacing: 1px; text-align: center;
             background: var(--red2); border: 1px solid rgba(239,68,68,0.25);
-            border-radius: 6px; padding: 10px 20px; max-width: 340px;
+            border-radius: 8px; padding: 12px 20px; max-width: 340px; line-height: 1.6;
         }
-        .gate-form {
-            display: flex; flex-direction: column; align-items: center; gap: 12px;
-            width: 100%; max-width: 320px;
-        }
+        .gate-form { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 320px; }
         .gate-input {
             width: 100%; padding: 12px 16px;
             background: var(--bg2); border: 1px solid rgba(239,68,68,0.3);
-            border-radius: 6px; color: var(--red);
+            border-radius: 8px; color: var(--red);
             font-family: 'Space Mono', monospace; font-size: 0.875rem;
-            letter-spacing: 2px; outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            letter-spacing: 2px; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
             text-align: center;
         }
         .gate-input:focus { border-color: var(--red); box-shadow: var(--glow-red); }
         .gate-btn {
-            width: 100%; padding: 12px;
+            width: 100%; padding: 13px;
             background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.35);
-            border-radius: 6px; color: var(--red);
-            font-family: 'Space Mono', monospace; font-size: 0.78rem;
-            letter-spacing: 3px; text-transform: uppercase; cursor: pointer;
-            transition: all 0.2s;
+            border-radius: 8px; color: var(--red);
+            font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.75rem;
+            letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: all 0.2s;
         }
         .gate-btn:hover { background: var(--red); color: #fff; }
-        .gate-err {
-            font-size: 0.72rem; color: var(--red); letter-spacing: 1px;
-            min-height: 18px; text-align: center;
-        }
-        .gate-back { font-size: 0.70rem; color: var(--text2); cursor: pointer; text-decoration: underline; }
+        .gate-err  { font-size: 0.68rem; color: var(--red); letter-spacing: 1px; min-height: 18px; text-align: center; }
+        .gate-back { font-size: 0.65rem; color: var(--text2); cursor: pointer; text-decoration: underline; }
         .gate-back:hover { color: var(--cyan); }
 
-        /* ═══ LAYOUT ═══ */
-        #app { display: none; min-height: 100vh; flex-direction: column; }
-        #app.visible { display: flex; }
+        /* ═══ APP ═══ */
+        #app { display: none; }
+        #app.visible { display: flex; flex-direction: column; min-height: 100vh; }
 
+        /* ═══ HEADER ═══ */
         header {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            height: var(--hdr-h);
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 32px; height: 56px;
+            padding: 0 24px 0 calc(var(--sb-w) + 24px);
+            background: rgba(0,0,0,0.97); backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
-            background: rgba(0,0,0,0.95); backdrop-filter: blur(20px);
-            position: sticky; top: 0; z-index: 50;
         }
         .h-brand {
             display: flex; align-items: center; gap: 10px;
             font-family: 'Montserrat', sans-serif; font-weight: 800;
-            font-size: 1rem; color: var(--cyan); letter-spacing: 2px;
-            text-shadow: var(--glow-sm);
+            font-size: 0.92rem; color: var(--cyan); letter-spacing: 3px;
+            text-shadow: var(--glow-sm); text-decoration: none;
         }
-        .h-brand img { width: 36px; height: 36px; filter: drop-shadow(0 0 6px rgba(0,242,255,0.5)); }
-        .h-right { display: flex; align-items: center; gap: 16px; }
+        .h-brand img { width: 32px; height: 32px; filter: drop-shadow(0 0 6px rgba(0,242,255,0.5)); }
+        .h-sandbox-label { font-size: 0.72rem; font-weight: 700; color: var(--red); letter-spacing: 4px; text-shadow: var(--glow-red); display: none; }
+        .h-right { display: flex; align-items: center; gap: 14px; }
         .h-status { font-size: 0.6rem; color: var(--green); letter-spacing: 2px; display: flex; align-items: center; gap: 6px; }
-        .h-status::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }
-        .h-back  { font-size: 0.6rem; color: var(--text2); letter-spacing: 2px; cursor: pointer; padding: 4px 8px; border-radius: 3px; text-transform: uppercase; text-decoration: none; transition: color 0.2s; }
-        .h-back:hover { color: var(--cyan); }
-        .h-logout { font-size: 0.6rem; color: var(--text2); letter-spacing: 2px; cursor: pointer; padding: 4px 8px; border-radius: 3px; text-transform: uppercase; border: none; background: none; transition: color 0.2s; }
-        .h-logout:hover { color: var(--red); }
-        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .sl-uptime { font-size: 1.5rem; font-weight: 700; color: var(--cyan); letter-spacing: -1px; font-family: 'Space Mono', monospace; text-shadow: var(--glow-sm); }
+        .h-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: var(--glow-g); animation: pulse 2s infinite; display: inline-block; }
+        .bell-btn {
+            display: none; align-items: center; gap: 7px;
+            padding: 5px 12px; border-radius: 6px;
+            border: 1px solid rgba(245,158,11,0.35); background: rgba(245,158,11,0.08);
+            color: var(--amber); font-family: 'Space Mono', monospace;
+            font-size: 0.6rem; letter-spacing: 1.5px; text-transform: uppercase;
+            animation: pulse-bell 1.8s ease-in-out infinite;
+            cursor: pointer; transition: background 0.2s;
+        }
+        .bell-btn.active  { display: flex; }
+        .bell-btn:hover   { background: rgba(245,158,11,0.18); }
+        .h-btn {
+            font-size: 0.6rem; color: var(--text2); letter-spacing: 2px; cursor: pointer;
+            padding: 4px 8px; border-radius: 3px; text-transform: uppercase;
+            border: none; background: none; transition: color 0.2s; text-decoration: none;
+            font-family: 'Space Mono', monospace;
+        }
+        .h-btn:hover         { color: var(--cyan); }
+        .h-btn.logout:hover  { color: var(--red); }
+        @keyframes pulse      { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+        @keyframes pulse-bell { 0%,100% { box-shadow: 0 0 0 0 rgba(245,158,11,0); } 50% { box-shadow: 0 0 12px 4px rgba(245,158,11,0.4); } }
 
-        main { flex: 1; padding: 28px 32px; max-width: 1400px; margin: 0 auto; width: 100%; }
+        /* ═══ SIDEBAR ═══ */
+        #sidebar {
+            position: fixed; top: var(--hdr-h); left: 0; bottom: 0;
+            width: var(--sb-w); z-index: 90;
+            background: var(--bg2); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column;
+            padding: 20px 0 16px;
+            overflow-y: auto; scrollbar-width: none;
+        }
+        #sidebar::-webkit-scrollbar { display: none; }
+        .sb-section { font-size: 0.55rem; color: var(--text2); letter-spacing: 3px; text-transform: uppercase; padding: 0 18px 6px; margin-top: 16px; }
+        .sb-section:first-child { margin-top: 0; }
+        .sb-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 18px; cursor: pointer;
+            font-size: 0.7rem; letter-spacing: 1.5px; text-transform: uppercase;
+            color: var(--text2); border: none; background: none; width: 100%;
+            text-align: left; transition: color 0.2s, background 0.2s;
+            position: relative; font-family: 'Space Mono', monospace;
+        }
+        .sb-item:hover  { color: var(--text); background: rgba(0,242,255,0.03); }
+        .sb-item.active { color: var(--cyan); background: rgba(0,242,255,0.06); }
+        .sb-item.active::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+            width: 2px; background: var(--cyan); box-shadow: 0 0 8px rgba(0,242,255,0.6);
+        }
+        .sb-icon { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.65; }
+        .sb-item.active .sb-icon { opacity: 1; }
 
-        /* ═══ SEÇÕES ═══ */
+        /* ═══ SANDBOX MODE — sidebar branca ═══ */
+        .sandbox-mode #sidebar {
+            background: #ffffff;
+            border-right: 1px solid rgba(0,0,0,0.12);
+        }
+        .sandbox-mode .sb-section { color: #888888; }
+        .sandbox-mode .sb-item { color: #444444; }
+        .sandbox-mode .sb-item:hover { color: #111111; background: rgba(0,0,0,0.04); }
+        .sandbox-mode .sb-item.active { color: #0055bb; background: rgba(0,85,187,0.08); }
+        .sandbox-mode .sb-item.active::before { background: #0055bb; box-shadow: none; }
+        .sb-sandbox-tag {
+            display: none;
+            margin: 0 14px 16px;
+            padding: 6px 10px;
+            background: #fff3cd; border: 1px solid #f0ad4e; border-radius: 6px;
+            font-size: 0.58rem; letter-spacing: 2px; text-transform: uppercase;
+            color: #7a4f00; text-align: center; font-weight: 700;
+        }
+        .sandbox-mode .sb-sandbox-tag { display: block; }
+        .sb-badge {
+            margin-left: auto; font-size: 0.52rem; background: var(--amber);
+            color: #000; border-radius: 10px; padding: 1px 5px; font-weight: 700; display: none;
+        }
+        .sb-badge.visible { display: inline-block; }
+        .sb-spacer { flex: 1; }
+        .sb-footer { padding: 12px 18px; border-top: 1px solid var(--border); }
+        .sb-footer-text { font-size: 0.55rem; color: var(--text2); letter-spacing: 1.5px; line-height: 1.9; }
+        .sb-footer-text strong { color: var(--green); }
+
+        /* ═══ MAIN ═══ */
+        #main {
+            margin-left: var(--sb-w);
+            margin-top: var(--hdr-h);
+            padding: 28px 32px;
+            min-height: calc(100vh - var(--hdr-h));
+        }
+
+        /* ═══ TAB PANELS ═══ */
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* ═══ SECTION LABEL ═══ */
         .section-label {
-            font-size: 0.70rem; letter-spacing: 4px; text-transform: uppercase;
-            color: var(--text2); margin-bottom: 12px; padding-bottom: 8px;
+            font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase;
+            color: var(--text2); margin-bottom: 14px; padding-bottom: 10px;
             border-bottom: 1px solid var(--border);
             display: flex; align-items: center; justify-content: space-between;
         }
-        .section-label span { color: var(--text2); }
+        .sl-count   { color: var(--cyan); font-size: 0.72rem; }
+        .sl-refresh { cursor: pointer; color: var(--cyan); font-size: 0.85rem; transition: opacity 0.2s; }
+        .sl-refresh:hover { opacity: 0.7; }
 
-        /* ═══ GRID STAT CARDS ═══ */
-        .stat-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
-            margin-bottom: 24px;
-        }
+        /* ═══ STAT GRID ═══ */
+        .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
         .stat-card {
             background: var(--bg2); border: 1px solid var(--border);
-            border-radius: 8px; padding: 16px 18px;
-            transition: border-color 0.2s;
+            border-radius: 10px; padding: 18px 20px;
+            transition: border-color 0.25s, transform 0.25s;
         }
-        .stat-card:hover { border-color: var(--border2); }
-        .stat-card-label { font-size: 0.70rem; color: var(--text2); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
-        .stat-card-val { font-size: 1.4rem; font-weight: 700; color: var(--cyan); font-family: 'Space Mono', monospace; letter-spacing: -1px; }
-        .stat-card-sub { font-size: 0.6rem; color: var(--text2); margin-top: 3px; }
-        .stat-card.green .stat-card-val { color: var(--green); }
-        .stat-card.amber .stat-card-val { color: var(--amber); }
-        .stat-card.purple .stat-card-val { color: var(--purple); }
+        .stat-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+        .sc-label { font-size: 0.56rem; color: var(--text2); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+        .sc-val   { font-size: 1.5rem; font-weight: 700; color: var(--cyan); letter-spacing: -1px; line-height: 1; }
+        .sc-sub   { font-size: 0.6rem; color: var(--text2); margin-top: 5px; }
+        .stat-card.green  .sc-val { color: var(--green); }
+        .stat-card.amber  .sc-val { color: var(--amber); }
+        .stat-card.purple .sc-val { color: var(--purple); }
+        .stat-card.red    .sc-val { color: var(--red); }
 
-        /* ═══ CARDS DUPLOS ═══ */
-        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-        .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-        .panel {
+        /* ═══ NODES GRID — GAUGE CARDS ═══ */
+        .nodes-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .node-card {
             background: var(--bg2); border: 1px solid var(--border);
-            border-radius: 8px; overflow: hidden;
+            border-radius: 12px; padding: 18px;
+            transition: border-color 0.25s, transform 0.25s;
+            position: relative; overflow: hidden;
         }
+        .node-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: var(--green); opacity: 0; transition: opacity 0.3s;
+        }
+        .node-card.online::before  { opacity: 1; box-shadow: 0 0 8px rgba(35,209,139,0.6); }
+        .node-card.offline::before { background: var(--red); opacity: 1; }
+        .node-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+        .node-region { font-size: 0.56rem; letter-spacing: 2px; color: var(--text2); text-transform: uppercase; margin-bottom: 4px; }
+        .node-name   { font-size: 0.82rem; color: var(--text); font-weight: 700; letter-spacing: 1px; margin-bottom: 12px; font-family: 'Montserrat', sans-serif; }
+        .node-status-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .node-status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text2); display: inline-block; }
+        .node-card.online  .node-status-dot { background: var(--green); box-shadow: var(--glow-g); animation: pulse 2s infinite; }
+        .node-card.offline .node-status-dot { background: var(--red); }
+        .node-status-label { font-size: 0.65rem; color: var(--text2); margin-left: 6px; }
+        .node-card.online  .node-status-label { color: var(--green); }
+        .node-card.offline .node-status-label { color: var(--red); }
+        .node-latency { font-size: 0.7rem; color: var(--cyan); }
+
+        /* Gauges SVG — 3 por card */
+        .node-gauges { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+        .gauge-wrap  { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+        .gauge-svg   { overflow: visible; }
+        .gauge-track { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 5; stroke-linecap: round; }
+        .gauge-arc   { fill: none; stroke-width: 5; stroke-linecap: round; }
+        .gauge-arc.cpu { stroke: var(--cyan); }
+        .gauge-arc.mem { stroke: var(--purple); }
+        .gauge-arc.nos { stroke: var(--green); }
+        .gauge-arc.dsk { stroke: var(--amber); }
+        .gauge-val { font-size: 0.62rem; color: var(--text3); text-align: center; }
+        .gauge-lbl { font-size: 0.5rem; color: var(--text2); text-align: center; letter-spacing: 1px; text-transform: uppercase; }
+
+        /* ═══ PANELS ═══ */
+        .two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+        .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+        .panel { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
         .panel-header {
-            padding: 12px 18px;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.74rem; color: var(--text2); letter-spacing: 3px; text-transform: uppercase;
+            padding: 14px 20px; border-bottom: 1px solid var(--border);
+            font-size: 0.6rem; color: var(--text2); letter-spacing: 3px; text-transform: uppercase;
             display: flex; align-items: center; justify-content: space-between;
         }
-        .panel-body { padding: 18px; }
+        .panel-body { padding: 20px; }
 
-        /* ═══ TABELA ═══ */
+        /* ═══ POOL BARS ═══ */
+        .pool-row    { margin-bottom: 14px; }
+        .pool-header { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text3); margin-bottom: 6px; }
+        .pool-bar-bg { height: 5px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
+        .pool-bar-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
+        .pool-bar-fill.validator { background: linear-gradient(90deg, var(--cyan), rgba(0,242,255,0.3)); }
+        .pool-bar-fill.prover    { background: linear-gradient(90deg, var(--purple), rgba(167,139,250,0.3)); }
+        .pool-bar-fill.aerarium  { background: linear-gradient(90deg, var(--amber), rgba(245,158,11,0.3)); }
+        .pool-bar-fill.plgg      { background: linear-gradient(90deg, var(--green), rgba(35,209,139,0.3)); }
+        .pool-bar-fill.shield    { background: linear-gradient(90deg, #6366f1, rgba(99,102,241,0.3)); }
+
+        /* ═══ DATA TABLE ═══ */
         .data-table { width: 100%; border-collapse: collapse; }
-        .data-table th {
-            font-size: 0.70rem; color: var(--text2); letter-spacing: 2px; text-transform: uppercase;
-            text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border);
-            font-weight: 400;
-        }
-        .data-table td { font-size: 0.82rem; color: var(--text3); padding: 8px 10px; border-bottom: 1px solid var(--border); line-height: 1.5; }
+        .data-table th { font-size: 0.56rem; color: var(--text2); letter-spacing: 2px; text-transform: uppercase; text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); font-weight: 400; }
+        .data-table td { font-size: 0.82rem; color: var(--text3); padding: 9px 12px; border-bottom: 1px solid var(--border); line-height: 1.5; }
         .data-table tr:last-child td { border-bottom: none; }
         .data-table tr:hover td { background: rgba(0,242,255,0.02); }
 
-        /* ═══ BADGE ═══ */
-        .badge {
-            display: inline-block; font-size: 0.70rem; letter-spacing: 1px; text-transform: uppercase;
-            padding: 2px 7px; border-radius: 3px;
-        }
+        /* ═══ BADGES ═══ */
+        .badge        { display: inline-block; font-size: 0.6rem; letter-spacing: 1px; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; }
         .badge-green  { background: var(--green2);  color: var(--green);  border: 1px solid rgba(35,209,139,0.3); }
         .badge-amber  { background: var(--amber2);  color: var(--amber);  border: 1px solid rgba(245,158,11,0.3); }
         .badge-red    { background: var(--red2);    color: var(--red);    border: 1px solid rgba(239,68,68,0.3); }
         .badge-cyan   { background: var(--cyan2);   color: var(--cyan);   border: 1px solid rgba(0,242,255,0.3); }
         .badge-purple { background: rgba(167,139,250,0.1); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
 
-        /* ═══ AÇÕES RÁPIDAS ═══ */
-        .action-btn {
-            display: block; width: 100%; padding: 10px 14px; margin-bottom: 8px;
-            background: var(--bg3); border: 1px solid var(--border);
-            border-radius: 6px; color: var(--text3); text-decoration: none;
-            font-size: 0.7rem; letter-spacing: 1px; cursor: pointer;
-            transition: all 0.2s; text-align: left; font-family: 'Space Mono', monospace;
+        /* ═══ ACTION BUTTONS ═══ */
+        .btn-aprovar, .btn-rejeitar {
+            font-family: 'Space Mono', monospace; font-size: 0.6rem;
+            letter-spacing: 1px; text-transform: uppercase; border-radius: 5px;
+            padding: 5px 10px; cursor: pointer; border: 1px solid; transition: filter 0.2s;
         }
-        .action-btn:hover { border-color: var(--border2); color: var(--cyan); background: var(--cyan2); }
-        .action-btn.danger:hover { border-color: rgba(239,68,68,0.4); color: var(--red); background: var(--red2); }
-        .action-btn .ab-tag { float: right; font-size: 0.70rem; color: var(--text2); }
+        .btn-aprovar  { background: rgba(35,209,139,0.1); color: var(--green); border-color: rgba(35,209,139,0.4); }
+        .btn-aprovar:hover  { filter: brightness(1.3); }
+        .btn-rejeitar { background: rgba(239,68,68,0.1); color: var(--red); border-color: rgba(239,68,68,0.4); margin-left: 4px; }
+        .btn-rejeitar:hover { filter: brightness(1.3); }
 
-        /* ═══ LOG LINE ═══ */
-        .log-line {
-            font-size: 0.78rem; color: var(--text3); line-height: 1.7;
-            padding: 6px 0; border-bottom: 1px solid var(--border);
-            display: flex; gap: 10px;
+        /* ═══ DONUT ═══ */
+        .donut-wrap   { display: flex; align-items: center; gap: 20px; margin-top: 16px; }
+        .donut-legend { flex: 1; display: flex; flex-direction: column; gap: 7px; }
+        .donut-item   { display: flex; align-items: center; gap: 8px; }
+        .donut-dot    { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .donut-label  { font-size: 0.7rem; color: var(--text3); flex: 1; }
+        .donut-pct    { font-size: 0.7rem; color: var(--text2); }
+
+        /* ═══ KPI CARDS ═══ */
+        .kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+        .kpi-card {
+            background: var(--bg2); border: 1px solid var(--border);
+            border-radius: 10px; padding: 20px;
+            display: flex; flex-direction: column; gap: 6px;
+            transition: border-color 0.25s;
         }
-        .log-line:last-child { border-bottom: none; }
-        .log-ts { color: var(--text2); flex-shrink: 0; font-size: 0.74rem; }
-        .log-line.ok .log-msg { color: var(--green); }
-        .log-line.warn .log-msg { color: var(--amber); }
-        .log-line.err .log-msg { color: var(--red); }
+        .kpi-card:hover { border-color: var(--border2); }
+        .kpi-label { font-size: 0.56rem; color: var(--text2); letter-spacing: 2px; text-transform: uppercase; }
+        .kpi-val   { font-size: 1.8rem; font-weight: 700; letter-spacing: -1px; line-height: 1; }
+        .kpi-sub   { font-size: 0.6rem; color: var(--text2); }
+        .kpi-card.cyan   .kpi-val { color: var(--cyan); }
+        .kpi-card.green  .kpi-val { color: var(--green); }
+        .kpi-card.amber  .kpi-val { color: var(--amber); }
+        .kpi-card.purple .kpi-val { color: var(--purple); }
 
-        /* ═══ POOL BAR ═══ */
-        .pool-row { margin-bottom: 14px; }
-        .pool-header { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text3); margin-bottom: 5px; }
-        .pool-bar-bg { height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
-        .pool-bar-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
-        .pool-bar-fill.validator { background: linear-gradient(90deg, var(--cyan), rgba(0,242,255,0.5)); }
-        .pool-bar-fill.prover    { background: linear-gradient(90deg, var(--purple), rgba(167,139,250,0.5)); }
+        /* ═══ TESTNET COUNTDOWN ═══ */
+        .countdown-wrap {
+            background: var(--bg2); border: 1px solid rgba(245,158,11,0.2);
+            border-radius: 12px; padding: 28px 32px; margin-bottom: 24px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .countdown-label { font-size: 0.6rem; color: var(--amber); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 8px; }
+        .countdown-title { font-size: 1.1rem; color: var(--text); font-family: 'Montserrat', sans-serif; font-weight: 800; margin-bottom: 4px; letter-spacing: 2px; }
+        .countdown-sub   { font-size: 0.68rem; color: var(--text2); }
+        .countdown-digits { display: flex; gap: 16px; align-items: flex-end; }
+        .cd-unit { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .cd-num  { font-size: 2.4rem; font-weight: 700; color: var(--amber); line-height: 1; font-family: 'Space Mono', monospace; text-shadow: 0 0 20px rgba(245,158,11,0.4); }
+        .cd-lbl  { font-size: 0.52rem; color: var(--text2); letter-spacing: 2px; text-transform: uppercase; }
+        .cd-sep  { font-size: 2rem; color: rgba(245,158,11,0.3); line-height: 1; padding-bottom: 4px; }
+
+        /* ═══ PARAM GRID ═══ */
+        .param-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+        .param-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+        .param-table { width: 100%; }
+        .param-table td { padding: 8px 16px; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+        .param-table tr:last-child td { border-bottom: none; }
+        .param-table td:first-child { color: var(--text2); width: 55%; }
+        .param-table td:last-child  { color: var(--cyan); text-align: right; font-size: 0.75rem; }
 
         /* ═══ TOAST ═══ */
         #toast {
             position: fixed; bottom: 24px; right: 24px; z-index: 999;
             background: var(--bg3); border: 1px solid var(--border2);
-            border-radius: 6px; padding: 10px 18px;
-            font-size: 0.7rem; color: var(--text);
+            border-radius: 8px; padding: 10px 20px;
+            font-size: 0.75rem; color: var(--text);
             opacity: 0; transform: translateY(8px);
             transition: all 0.3s; pointer-events: none;
         }
         #toast.show { opacity: 1; transform: translateY(0); }
-        #toast.ok { border-color: rgba(35,209,139,0.4); color: var(--green); }
-        #toast.err { border-color: rgba(239,68,68,0.4); color: var(--red); }
-
-        .nota-ts { color: var(--text2); font-size: 0.74rem; flex-shrink: 0; }
-        .nota-msg { color: var(--text3); font-size: 0.82rem; line-height: 1.5; }
-        .nota-empty { color: var(--text2); font-size: 0.7rem; text-align: center; padding: 20px 0; }
-
-        @media (max-width: 1100px) { .stat-grid { grid-template-columns: repeat(2,1fr); } }
-        @media (max-width: 900px) { .two-col, .three-col { grid-template-columns: 1fr; } }
-        @media (max-width: 600px) {
-            main { padding: 16px; }
-            header { padding: 0 16px; }
-            .stat-grid { grid-template-columns: 1fr 1fr; }
-        }
-        /* ═══ SOCIAL LINKS ═══ */
-        .social-links { display: flex; gap: 14px; justify-content: center; align-items: center; margin: 18px 0 14px; }
-        .social-links a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid rgba(0,242,255,0.18); border-radius: 6px; background: rgba(0,242,255,0.05); color: rgba(255,255,255,0.4); transition: all 0.2s; }
-        .social-links a:hover { color: #00f2ff; border-color: rgba(0,242,255,0.55); background: rgba(0,242,255,0.12); box-shadow: 0 0 14px rgba(0,242,255,0.22); }
-        .social-links a svg { display: block; }
+        #toast.ok   { border-color: rgba(35,209,139,0.4); color: var(--green); }
+        #toast.err  { border-color: rgba(239,68,68,0.4);  color: var(--red); }
     </style>
 </head>
 <body>
 
-<!-- ═══ GATE MESTRE ═══ -->
+<!-- ═══ GATE ═══ -->
 <div id="gate">
     <div class="gate-logo">PLEGMA DAG</div>
-    <div class="gate-sub">CONSOLE MESTRE — Acesso Máximo</div>
-    <div class="gate-warn">⚠ Área restrita. Ações aqui são irreversíveis.<br>Acesso apenas para o administrador da rede.</div>
+    <div class="gate-sub">Console Mestre · Acesso Máximo</div>
+    <div class="gate-warn">Área restrita. Ações aqui são irreversíveis.<br>Acesso apenas para o administrador da rede.</div>
     <form class="gate-form" onsubmit="verificarAcesso(event)">
         <input id="gateKey" class="gate-input" type="password" placeholder="chave mestre" autocomplete="off" autofocus>
         <button class="gate-btn" type="submit">ENTRAR</button>
@@ -260,258 +389,620 @@
 
 <!-- ═══ APP ═══ -->
 <div id="app">
+
+<!-- HEADER -->
 <header>
     <div class="h-brand">
         <img src="/assets/img/logo.gif" alt="Plegma">
         CONSOLE MESTRE
     </div>
+    <div class="h-sandbox-label" id="sandboxLabel">SANDBOX</div>
     <div class="h-right">
+        <button class="bell-btn" id="fundacaoBell" onclick="navegarPara('fundacao')" title="Inscrições pendentes">
+            ⬡ <span id="bellCount">0</span> PENDENTE(S)
+        </button>
         <div class="h-status" id="hStatus">MESTRE ATIVO</div>
-        <a href="/console/" class="h-back">← CONSOLE</a>
-        <button class="h-logout" onclick="sair()">SAIR</button>
+        <a href="/console/" class="h-btn">← CONSOLE</a>
+        <button class="h-btn logout" onclick="sair()">SAIR</button>
     </div>
 </header>
 
-<main>
+<!-- SIDEBAR -->
+<nav id="sidebar">
+    <div class="sb-sandbox-tag">⚠ SANDBOX</div>
+    <div class="sb-section">Monitor</div>
+    <button class="sb-item active" data-aba="rede" onclick="navegarPara('rede')">
+        <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Rede
+    </button>
+    <button class="sb-item" data-aba="testnet" onclick="navegarPara('testnet')">
+        <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
+        Testnet
+    </button>
 
-    <!-- ═══ REDE ═══ -->
-    <div class="section-label">Estado da Rede <span id="lastRefresh">—</span></div>
+    <div class="sb-section">Económico</div>
+    <button class="sb-item" data-aba="genesis" onclick="navegarPara('genesis')">
+        <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Genesis
+    </button>
+    <button class="sb-item" data-aba="servicos" onclick="navegarPara('servicos')">
+        <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+        Serviços
+    </button>
+    <button class="sb-item" data-aba="economia" onclick="navegarPara('economia')">
+        <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Aerarium
+    </button>
 
-    <div class="stat-grid">
-        <div class="stat-card">
-            <div class="stat-card-label">Transações</div>
-            <div class="stat-card-val" id="statTxTotal">—</div>
-            <div class="stat-card-sub">Total na DAG</div>
-        </div>
-        <div class="stat-card green">
-            <div class="stat-card-label">Aceitas</div>
-            <div class="stat-card-val" id="statAceitas">—</div>
-            <div class="stat-card-sub">BUILD 009p+</div>
-        </div>
-        <div class="stat-card amber">
-            <div class="stat-card-label">Rejeitadas</div>
-            <div class="stat-card-val" id="statRejeitadas">—</div>
-            <div class="stat-card-sub">Motivos variados</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-card-label">Tips Pendentes</div>
-            <div class="stat-card-val" id="statTips">—</div>
-            <div class="stat-card-sub">Vértices na fronteira</div>
-        </div>
-        <div class="stat-card green">
-            <div class="stat-card-label">Nós Ativos</div>
-            <div class="stat-card-val" id="statNosAtivos">—</div>
-            <div class="stat-card-sub">Total global</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-card-label">Nós Âncora</div>
-            <div class="stat-card-val" id="statNosAncoras">—</div>
-            <div class="stat-card-sub">Peers + este nó</div>
-        </div>
-        <div class="stat-card amber">
-            <div class="stat-card-label">Mineradores</div>
-            <div class="stat-card-val" id="statMineradores">—</div>
-            <div class="stat-card-sub">PC · Servidor · VPS — gera prova ZK</div>
-        </div>
-        <div class="stat-card purple">
-            <div class="stat-card-label">Validadores</div>
-            <div class="stat-card-val" id="statValidadores">—</div>
-            <div class="stat-card-sub">PC · Notebook · Tablet · Celular — valida prova 22kb</div>
+    <div class="sb-section">Governança</div>
+    <button class="sb-item" data-aba="fundacao" onclick="navegarPara('fundacao')">
+        <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Fundação
+        <span class="sb-badge" id="sbBadgeFundacao"></span>
+    </button>
+
+    <div class="sb-spacer"></div>
+    <div class="sb-footer">
+        <div class="sb-footer-text">
+            PLEGMA DAG<br>
+            BUILD <strong>009</strong> · TESTNET<br>
+            MAINNET <strong>09/05/2026</strong>
         </div>
     </div>
+</nav>
 
-    <div class="two-col">
+<!-- MAIN -->
+<main id="main">
 
-        <!-- Genesis Reserve -->
-        <div class="panel">
-            <div class="panel-header">Genesis Reserve <span id="genesisStatusBadge"></span></div>
-            <div class="panel-body">
-                <div class="stat-card-label">PLG-G Vendidos</div>
-                <div style="font-size:1.3rem;color:var(--cyan);font-weight:700;margin-bottom:4px;" id="plggVendido">—</div>
-                <div style="margin-bottom:16px;">
-                    <div class="pool-bar-bg" style="margin-top:6px;">
-                        <div class="pool-bar-fill validator" id="plggBar" style="width:0%"></div>
+    <!-- ══════════════════════════════════ ABA: REDE ══ -->
+    <div class="tab-panel active" id="panel-rede">
+        <div class="section-label">
+            Estado da Rede
+            <span id="erroStatus" style="color:#f97316;font-size:0.62rem;"></span>
+            <span class="sl-uptime" id="uptimeDisplay" title="Motor online desde último arranque">—</span>
+        </div>
+
+        <div class="stat-grid" id="statGrid">
+            <div class="stat-card">
+                <div class="sc-label">TPS Global</div>
+                <div class="sc-val" id="tnTps">—</div>
+                <div class="sc-sub">Transações/segundo</div>
+            </div>
+            <div class="stat-card green">
+                <div class="sc-label">Vértices Total</div>
+                <div class="sc-val" id="tnVertices">—</div>
+                <div class="sc-sub">Total na DAG</div>
+            </div>
+            <div class="stat-card amber">
+                <div class="sc-label">Uptime Nós</div>
+                <div class="sc-val" id="tnUptime">—</div>
+                <div class="sc-sub">Âncoras online</div>
+            </div>
+            <div class="stat-card purple">
+                <div class="sc-label">Latência Média</div>
+                <div class="sc-val" id="tnLatencia">—</div>
+                <div class="sc-sub">Entre nós âncora</div>
+            </div>
+            <div class="stat-card">
+                <div class="sc-label">Transações Total</div>
+                <div class="sc-val" id="statTxTotal">—</div>
+                <div class="sc-sub">Vértices na DAG</div>
+            </div>
+            <div class="stat-card green">
+                <div class="sc-label">Aceitas</div>
+                <div class="sc-val" id="statAceitas">—</div>
+                <div class="sc-sub">Confirmadas</div>
+            </div>
+            <div class="stat-card amber">
+                <div class="sc-label">Rejeitadas</div>
+                <div class="sc-val" id="statRejeitadas">—</div>
+                <div class="sc-sub">Inválidas</div>
+            </div>
+            <div class="stat-card purple">
+                <div class="sc-label">Tips Pendentes</div>
+                <div class="sc-val" id="statTips">—</div>
+                <div class="sc-sub">Fronteira DAG</div>
+            </div>
+            <div class="stat-card green">
+                <div class="sc-label">Nós Ativos</div>
+                <div class="sc-val" id="statNosAtivos">—</div>
+                <div class="sc-sub">Global</div>
+            </div>
+            <div class="stat-card">
+                <div class="sc-label">Nós Âncora</div>
+                <div class="sc-val" id="statNosAncoras">—</div>
+                <div class="sc-sub">Bootstrap peers</div>
+            </div>
+            <div class="stat-card amber">
+                <div class="sc-label">Mineradores</div>
+                <div class="sc-val" id="statMineradores">—</div>
+                <div class="sc-sub">PC · VPS · Servidor</div>
+            </div>
+            <div class="stat-card purple">
+                <div class="sc-label">Validadores</div>
+                <div class="sc-val" id="statValidadores">—</div>
+                <div class="sc-sub">PC · Tablet · Mobile</div>
+            </div>
+        </div>
+
+        <div class="section-label">
+            Nós Âncora — Swarm Gênese
+            <span class="sl-refresh" onclick="carregarNosAncora()">↺ Atualizar</span>
+        </div>
+        <div class="nodes-grid" id="nosAncoraGrid">
+
+            <div class="node-card" data-node="eu">
+                <div class="node-region">Europa · Lisboa</div>
+                <div class="node-name">EU-Alpha</div>
+                <div class="node-status-row">
+                    <span style="display:flex;align-items:center;gap:6px;">
+                        <span class="node-status-dot"></span>
+                        <span class="node-status-label">Verificando...</span>
+                    </span>
+                    <span class="node-latency" id="n-eu-lat">—</span>
+                </div>
+                <div class="node-gauges">
+                    <div class="gauge-wrap">
+                        <svg class="gauge-svg" width="54" height="54" viewBox="0 0 54 54">
+                            <circle class="gauge-track" cx="27" cy="27" r="21" stroke-dasharray="98.96 32.99" transform="rotate(135 27 27)"/>
+                            <circle class="gauge-arc cpu" id="n-eu-cpu-arc" cx="27" cy="27" r="21" stroke-dasharray="0 131.95" transform="rotate(135 27 27)"/>
+                            <text x="27" y="31" text-anchor="middle" fill="#e6edf3" font-size="8.5" font-family="Space Mono,monospace" id="n-eu-cpu-txt">—</text>
+                        </svg>
+                        <div class="gauge-lbl">CPU</div>
                     </div>
-                    <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:var(--text2);margin-top:4px;">
-                        <span id="plggPct">0%</span>
-                        <span>Supply: 10.500.000 PLG-G</span>
+                    <div class="gauge-wrap">
+                        <svg class="gauge-svg" width="54" height="54" viewBox="0 0 54 54">
+                            <circle class="gauge-track" cx="27" cy="27" r="21" stroke-dasharray="98.96 32.99" transform="rotate(135 27 27)"/>
+                            <circle class="gauge-arc mem" id="n-eu-mem-arc" cx="27" cy="27" r="21" stroke-dasharray="0 131.95" transform="rotate(135 27 27)"/>
+                            <text x="27" y="31" text-anchor="middle" fill="#e6edf3" font-size="8.5" font-family="Space Mono,monospace" id="n-eu-mem-txt">—</text>
+                        </svg>
+                        <div class="gauge-lbl">MEM</div>
+                    </div>
+                    <div class="gauge-wrap">
+                        <svg class="gauge-svg" width="54" height="54" viewBox="0 0 54 54">
+                            <circle class="gauge-track" cx="27" cy="27" r="21" stroke-dasharray="98.96 32.99" transform="rotate(135 27 27)"/>
+                            <circle class="gauge-arc dsk" id="n-eu-dsk-arc" cx="27" cy="27" r="21" stroke-dasharray="0 131.95" transform="rotate(135 27 27)"/>
+                            <text x="27" y="31" text-anchor="middle" fill="#e6edf3" font-size="8.5" font-family="Space Mono,monospace" id="n-eu-dsk-txt">—</text>
+                        </svg>
+                        <div class="gauge-lbl">NVMe</div>
                     </div>
                 </div>
-                <table class="data-table">
-                    <tr><td style="color:var(--text2)">USDT Arrecadado</td><td id="genesisUsdt" style="text-align:right;color:var(--green);">—</td></tr>
-                    <tr><td style="color:var(--text2)">Último preço P2P</td><td id="genesisPreco" style="text-align:right;">—</td></tr>
-                    <tr><td style="color:var(--text2)">Dia da Rede</td><td id="genesisDia" style="text-align:right;">—</td></tr>
-                    <tr><td style="color:var(--text2)">Governança</td><td id="genesisGov" style="text-align:right;">—</td></tr>
+            </div>
+
+            <div class="node-card" data-node="br">
+                <div class="node-region">América do Sul · São Paulo</div>
+                <div class="node-name">BR-Beta</div>
+                <div class="node-status-row">
+                    <span style="display:flex;align-items:center;gap:6px;">
+                        <span class="node-status-dot"></span>
+                        <span class="node-status-label">Verificando...</span>
+                    </span>
+                    <span class="node-latency" id="n-br-lat">—</span>
+                </div>
+                <div class="node-gauges">
+                    <div class="gauge-wrap">
+                        <svg class="gauge-svg" width="54" height="54" viewBox="0 0 54 54">
+                            <circle class="gauge-track" cx="27" cy="27" r="21" stroke-dasharray="98.96 32.99" transform="rotate(135 27 27)"/>
+                            <circle class="gauge-arc cpu" id="n-br-cpu-arc" cx="27" cy="27" r="21" stroke-dasharray="0 131.95" transform="rotate(135 27 27)"/>
+                            <text x="27" y="31" text-anchor="middle" fill="#e6edf3" font-size="8.5" font-family="Space Mono,monospace" id="n-br-cpu-txt">—</text>
+                        </svg>
+                        <div class="gauge-lbl">CPU</div>
+                    </div>
+                    <div class="gauge-wrap">
+                        <svg class="gauge-svg" width="54" height="54" viewBox="0 0 54 54">
+                            <circle class="gauge-track" cx="27" cy="27" r="21" stroke-dasharray="98.96 32.99" transform="rotate(135 27 27)"/>
+                            <circle class="gauge-arc mem" id="n-br-mem-arc" cx="27" cy="27" r="21" stroke-dasharray="0 131.95" transform="rotate(135 27 27)"/>
+                            <text x="27" y="31" text-anchor="middle" fill="#e6edf3" font-size="8.5" font-family="Space Mono,monospace" id="n-br-mem-txt">—</text>
+                        </svg>
+                        <div class="gauge-lbl">MEM</div>
+                    </div>
+                    <div class="gauge-wrap">
+                        <svg class="gauge-svg" width="54" height="54" viewBox="0 0 54 54">
+                            <circle class="gauge-track" cx="27" cy="27" r="21" stroke-dasharray="98.96 32.99" transform="rotate(135 27 27)"/>
+                            <circle class="gauge-arc dsk" id="n-br-dsk-arc" cx="27" cy="27" r="21" stroke-dasharray="0 131.95" transform="rotate(135 27 27)"/>
+                            <text x="27" y="31" text-anchor="middle" fill="#e6edf3" font-size="8.5" font-family="Space Mono,monospace" id="n-br-dsk-txt">—</text>
+                        </svg>
+                        <div class="gauge-lbl">NVMe</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="node-card" data-node="mal">
+                <div class="node-region">Sudeste Asiático · Kuala Lumpur</div>
+                <div class="node-name">MAL-Gamma</div>
+                <div class="node-status-row">
+                    <span style="display:flex;align-items:center;gap:6px;">
+                        <span class="node-status-dot"></span>
+                        <span class="node-status-label">Verificando...</span>
+                    </span>
+                    <span class="node-latency" id="n-mal-lat">—</span>
+                </div>
+                <div class="node-gauges">
+                    <div class="gauge-wrap">
+                        <svg class="gauge-svg" width="54" height="54" viewBox="0 0 54 54">
+                            <circle class="gauge-track" cx="27" cy="27" r="21" stroke-dasharray="98.96 32.99" transform="rotate(135 27 27)"/>
+                            <circle class="gauge-arc cpu" id="n-mal-cpu-arc" cx="27" cy="27" r="21" stroke-dasharray="0 131.95" transform="rotate(135 27 27)"/>
+                            <text x="27" y="31" text-anchor="middle" fill="#e6edf3" font-size="8.5" font-family="Space Mono,monospace" id="n-mal-cpu-txt">—</text>
+                        </svg>
+                        <div class="gauge-lbl">CPU</div>
+                    </div>
+                    <div class="gauge-wrap">
+                        <svg class="gauge-svg" width="54" height="54" viewBox="0 0 54 54">
+                            <circle class="gauge-track" cx="27" cy="27" r="21" stroke-dasharray="98.96 32.99" transform="rotate(135 27 27)"/>
+                            <circle class="gauge-arc mem" id="n-mal-mem-arc" cx="27" cy="27" r="21" stroke-dasharray="0 131.95" transform="rotate(135 27 27)"/>
+                            <text x="27" y="31" text-anchor="middle" fill="#e6edf3" font-size="8.5" font-family="Space Mono,monospace" id="n-mal-mem-txt">—</text>
+                        </svg>
+                        <div class="gauge-lbl">MEM</div>
+                    </div>
+                    <div class="gauge-wrap">
+                        <svg class="gauge-svg" width="54" height="54" viewBox="0 0 54 54">
+                            <circle class="gauge-track" cx="27" cy="27" r="21" stroke-dasharray="98.96 32.99" transform="rotate(135 27 27)"/>
+                            <circle class="gauge-arc dsk" id="n-mal-dsk-arc" cx="27" cy="27" r="21" stroke-dasharray="0 131.95" transform="rotate(135 27 27)"/>
+                            <text x="27" y="31" text-anchor="middle" fill="#e6edf3" font-size="8.5" font-family="Space Mono,monospace" id="n-mal-dsk-txt">—</text>
+                        </svg>
+                        <div class="gauge-lbl">NVMe</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="node-card" data-node="sin">
+                <div class="node-region">Ásia-Pacífico · Singapura</div>
+                <div class="node-name">SIN-Delta</div>
+                <div class="node-status-row">
+                    <span style="display:flex;align-items:center;gap:6px;">
+                        <span class="node-status-dot"></span>
+                        <span class="node-status-label">Verificando...</span>
+                    </span>
+                    <span class="node-latency" id="n-sin-lat">—</span>
+                </div>
+                <div class="node-gauges">
+                    <div class="gauge-wrap">
+                        <svg class="gauge-svg" width="54" height="54" viewBox="0 0 54 54">
+                            <circle class="gauge-track" cx="27" cy="27" r="21" stroke-dasharray="98.96 32.99" transform="rotate(135 27 27)"/>
+                            <circle class="gauge-arc cpu" id="n-sin-cpu-arc" cx="27" cy="27" r="21" stroke-dasharray="0 131.95" transform="rotate(135 27 27)"/>
+                            <text x="27" y="31" text-anchor="middle" fill="#e6edf3" font-size="8.5" font-family="Space Mono,monospace" id="n-sin-cpu-txt">—</text>
+                        </svg>
+                        <div class="gauge-lbl">CPU</div>
+                    </div>
+                    <div class="gauge-wrap">
+                        <svg class="gauge-svg" width="54" height="54" viewBox="0 0 54 54">
+                            <circle class="gauge-track" cx="27" cy="27" r="21" stroke-dasharray="98.96 32.99" transform="rotate(135 27 27)"/>
+                            <circle class="gauge-arc mem" id="n-sin-mem-arc" cx="27" cy="27" r="21" stroke-dasharray="0 131.95" transform="rotate(135 27 27)"/>
+                            <text x="27" y="31" text-anchor="middle" fill="#e6edf3" font-size="8.5" font-family="Space Mono,monospace" id="n-sin-mem-txt">—</text>
+                        </svg>
+                        <div class="gauge-lbl">MEM</div>
+                    </div>
+                    <div class="gauge-wrap">
+                        <svg class="gauge-svg" width="54" height="54" viewBox="0 0 54 54">
+                            <circle class="gauge-track" cx="27" cy="27" r="21" stroke-dasharray="98.96 32.99" transform="rotate(135 27 27)"/>
+                            <circle class="gauge-arc dsk" id="n-sin-dsk-arc" cx="27" cy="27" r="21" stroke-dasharray="0 131.95" transform="rotate(135 27 27)"/>
+                            <text x="27" y="31" text-anchor="middle" fill="#e6edf3" font-size="8.5" font-family="Space Mono,monospace" id="n-sin-dsk-txt">—</text>
+                        </svg>
+                        <div class="gauge-lbl">NVMe</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="section-label">
+            Últimos Vértices na DAG
+            <span class="sl-refresh" onclick="carregarVertices()">↺</span>
+        </div>
+        <div class="panel" style="margin-bottom:32px;">
+            <div class="panel-header">
+                Registro da DAG
+                <span style="font-size:0.6rem;" id="poolLastHash">—</span>
+            </div>
+            <div style="overflow-x:auto;">
+                <table class="data-table" id="dagTable">
+                    <thead><tr>
+                        <th>Hash</th><th>Remetente</th><th>Destinatário</th>
+                        <th>Valor $PLG</th><th>Nó</th><th>ZK Bytes</th><th>Timestamp</th>
+                    </tr></thead>
+                    <tbody id="dagBody"><tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text2)">Carregando...</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div><!-- /panel-rede -->
+
+    <!-- ══════════════════════════════════ ABA: TESTNET ══ -->
+    <div class="tab-panel" id="panel-testnet">
+        <div class="section-label">Testnet · Parâmetros e Estado</div>
+
+        <div class="countdown-wrap">
+            <div>
+                <div class="countdown-label">⬡ MAINNET LAUNCH</div>
+                <div class="countdown-title">PLEGMA DAG · MAINNET</div>
+                <div class="countdown-sub">9 de maio de 2026 · Mining ativo · P2P Validators live</div>
+            </div>
+            <div class="countdown-digits">
+                <div class="cd-unit"><div class="cd-num" id="cd-dias">--</div><div class="cd-lbl">dias</div></div>
+                <div class="cd-sep">:</div>
+                <div class="cd-unit"><div class="cd-num" id="cd-horas">--</div><div class="cd-lbl">horas</div></div>
+                <div class="cd-sep">:</div>
+                <div class="cd-unit"><div class="cd-num" id="cd-min">--</div><div class="cd-lbl">min</div></div>
+                <div class="cd-sep">:</div>
+                <div class="cd-unit"><div class="cd-num" id="cd-seg">--</div><div class="cd-lbl">seg</div></div>
+            </div>
+        </div>
+
+        <div class="param-grid">
+            <div class="param-card">
+                <div class="panel-header">Parâmetros da Rede</div>
+                <table class="param-table">
+                    <tr><td>Fase Atual</td><td><span class="badge badge-amber">TESTNET</span></td></tr>
+                    <tr><td>Consenso</td><td>DAG Acíclico Dirigido</td></tr>
+                    <tr><td>Assinatura</td><td>Crystals-Dilithium3</td></tr>
+                    <tr><td>Hash</td><td>BLAKE3</td></tr>
+                    <tr><td>Provas ZK</td><td>ZK-SNARK · max 22 KB</td></tr>
+                    <tr><td>Network Day</td><td id="tnNetDay">—</td></tr>
+                    <tr><td>Mining Testnet</td><td><span class="badge badge-red">503 BLOQUEADO</span></td></tr>
+                </table>
+            </div>
+            <div class="param-card">
+                <div class="panel-header">Parâmetros Económicos</div>
+                <table class="param-table">
+                    <tr><td>Supply $PLG</td><td>21.000.000.000 fixo</td></tr>
+                    <tr><td>Supply PLG-G</td><td>10.500.000 fixo</td></tr>
+                    <tr><td>Geração Base</td><td>1.000.000 $PLG/dia</td></tr>
+                    <tr><td>Fórmula Mining</td><td>R = G ÷ N</td></tr>
+                    <tr><td>Aerarium Fee</td><td>10% das transações</td></tr>
+                    <tr><td>Aerarium Teto</td><td>$1.000 USDC</td></tr>
+                    <tr><td>Royalties Shield</td><td>2% por dispositivo</td></tr>
+                </table>
+            </div>
+            <div class="param-card">
+                <div class="panel-header">Pools de Mineração</div>
+                <table class="param-table">
+                    <tr><td>Validator Pool</td><td>60% da geração</td></tr>
+                    <tr><td>Prover Pool</td><td>40% da geração</td></tr>
+                    <tr><td>Validator Pool Saldo</td><td id="tnValidatorPool">—</td></tr>
+                    <tr><td>Prover Pool Saldo</td><td id="tnProverPool">—</td></tr>
+                    <tr><td>Início Mining</td><td>09/05/2026</td></tr>
+                    <tr><td>Governança</td><td id="tnGov">—</td></tr>
+                </table>
+            </div>
+            <div class="param-card">
+                <div class="panel-header">Infraestrutura</div>
+                <table class="param-table">
+                    <tr><td>Nós Âncora</td><td>EU · BR · MAL · SIN</td></tr>
+                    <tr><td>Porta Core VM</td><td>8080</td></tr>
+                    <tr><td>Porta Shield</td><td>8085</td></tr>
+                    <tr><td>Porta Monitor</td><td>8086</td></tr>
+                    <tr><td>Porta Miner</td><td>8084</td></tr>
+                    <tr><td>DB Engine</td><td>SQLite · WAL mode</td></tr>
+                    <tr><td>Deploy</td><td>deploy.ps1 · rsync</td></tr>
                 </table>
             </div>
         </div>
 
-        <!-- Pools de Mineração -->
-        <div class="panel">
-            <div class="panel-header">Pools de Mineração</div>
-            <div class="panel-body">
-                <div class="pool-row">
-                    <div class="pool-header">
-                        <span>Validator Pool (60%)</span>
-                        <span id="validatorPool">—</span>
+    </div><!-- /panel-testnet -->
+
+    <!-- ══════════════════════════════════ ABA: GENESIS ══ -->
+    <div class="tab-panel" id="panel-genesis">
+        <div class="section-label" style="margin-top:4px;">Genesis Reserve &amp; Pools</div>
+        <div class="two-col">
+            <div class="panel">
+                <div class="panel-header">Genesis Reserve <span id="genesisStatusBadge"></span></div>
+                <div class="panel-body">
+                    <div style="font-size:0.56rem;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">PLG-G Vendidos</div>
+                    <div style="font-size:1.5rem;color:var(--green);font-weight:700;margin-bottom:4px;" id="plggVendido">—</div>
+                    <div style="margin-bottom:18px;">
+                        <div class="pool-bar-bg" style="margin-top:6px;"><div class="pool-bar-fill plgg" id="plggBar" style="width:0%"></div></div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:var(--text2);margin-top:4px;">
+                            <span id="plggPct">0%</span><span>Supply: 10.500.000 PLG-G</span>
+                        </div>
                     </div>
-                    <div class="pool-bar-bg"><div class="pool-bar-fill validator" id="validatorBar" style="width:0%"></div></div>
-                </div>
-                <div class="pool-row" style="margin-top:16px;">
-                    <div class="pool-header">
-                        <span>Prover Pool (40%)</span>
-                        <span id="proverPool">—</span>
-                    </div>
-                    <div class="pool-bar-bg"><div class="pool-bar-fill prover" id="proverBar" style="width:0%"></div></div>
-                </div>
-                <div style="margin-top:16px;">
                     <table class="data-table">
-                        <tr><td style="color:var(--text2)">Geração base</td><td id="poolBase" style="text-align:right;">1.000.000 $PLG/dia</td></tr>
-                        <tr><td style="color:var(--text2)">Fórmula</td><td style="text-align:right;color:var(--cyan);">R = G ÷ N</td></tr>
-                        <tr><td style="color:var(--text2)">Último bloco</td><td id="poolLastHash" style="text-align:right;font-size:0.74rem;">—</td></tr>
+                        <tr><td style="color:var(--text2)">USDT Arrecadado</td><td id="genesisUsdt" style="text-align:right;color:var(--green);">—</td></tr>
+                        <tr><td style="color:var(--text2)">Último preço P2P</td><td id="genesisPreco" style="text-align:right;">—</td></tr>
+                        <tr><td style="color:var(--text2)">Dia da Rede</td><td id="genesisDia" style="text-align:right;">—</td></tr>
+                        <tr><td style="color:var(--text2)">Governança</td><td id="genesisGov" style="text-align:right;">—</td></tr>
+                    </table>
+                    <div class="donut-wrap" style="margin-top:20px;">
+                        <svg width="90" height="90" viewBox="0 0 90 90">
+                            <circle cx="45" cy="45" r="35" fill="none" stroke="#05080f" stroke-width="18"/>
+                            <circle cx="45" cy="45" r="35" fill="none" stroke="#23d18b" stroke-width="18" stroke-dasharray="87.96 131.95" stroke-dashoffset="0" transform="rotate(-90 45 45)"/>
+                            <circle cx="45" cy="45" r="35" fill="none" stroke="#00F2FF" stroke-width="18" stroke-dasharray="57.07 162.84" stroke-dashoffset="-87.96" transform="rotate(-90 45 45)"/>
+                            <circle cx="45" cy="45" r="35" fill="none" stroke="#a78bfa" stroke-width="18" stroke-dasharray="32.99 186.93" stroke-dashoffset="-145.03" transform="rotate(-90 45 45)"/>
+                            <circle cx="45" cy="45" r="35" fill="none" stroke="#f59e0b" stroke-width="18" stroke-dasharray="21.99 197.92" stroke-dashoffset="-178.02" transform="rotate(-90 45 45)"/>
+                            <circle cx="45" cy="45" r="35" fill="none" stroke="#ef4444" stroke-width="18" stroke-dasharray="11.00 208.91" stroke-dashoffset="-200.01" transform="rotate(-90 45 45)"/>
+                            <text x="45" y="48" text-anchor="middle" fill="#e6edf3" font-size="7" font-family="Space Mono,monospace">10.5M</text>
+                        </svg>
+                        <div class="donut-legend">
+                            <div class="donut-item"><span class="donut-dot" style="background:#23d18b"></span><span class="donut-label">Ecossistema</span><span class="donut-pct">40%</span></div>
+                            <div class="donut-item"><span class="donut-dot" style="background:#00F2FF"></span><span class="donut-label">Fundação</span><span class="donut-pct">26%</span></div>
+                            <div class="donut-item"><span class="donut-dot" style="background:#a78bfa"></span><span class="donut-label">Marketing</span><span class="donut-pct">15%</span></div>
+                            <div class="donut-item"><span class="donut-dot" style="background:#f59e0b"></span><span class="donut-label">Comunidade</span><span class="donut-pct">10%</span></div>
+                            <div class="donut-item"><span class="donut-dot" style="background:#ef4444"></span><span class="donut-label">Governança</span><span class="donut-pct">5%</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-header">Pools de Mineração</div>
+                <div class="panel-body">
+                    <div class="pool-row">
+                        <div class="pool-header"><span>Validator Pool (60%)</span><span id="validatorPool">—</span></div>
+                        <div class="pool-bar-bg"><div class="pool-bar-fill validator" id="validatorBar" style="width:0%"></div></div>
+                    </div>
+                    <div class="pool-row" style="margin-top:16px;">
+                        <div class="pool-header"><span>Prover Pool (40%)</span><span id="proverPool">—</span></div>
+                        <div class="pool-bar-bg"><div class="pool-bar-fill prover" id="proverBar" style="width:0%"></div></div>
+                    </div>
+                    <div style="margin-top:18px;">
+                        <table class="data-table">
+                            <tr><td style="color:var(--text2)">Geração base</td><td style="text-align:right;color:var(--cyan);">1.000.000 $PLG/dia</td></tr>
+                            <tr><td style="color:var(--text2)">Fórmula</td><td style="text-align:right;color:var(--cyan);">R = G ÷ N</td></tr>
+                            <tr><td style="color:var(--text2)">Fase Atual</td><td style="text-align:right;"><span class="badge badge-amber">TESTNET</span></td></tr>
+                            <tr><td style="color:var(--text2)">Mining ativo em</td><td style="text-align:right;color:var(--text2);">09/05/2026</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section-label">Sócios Genesis &amp; PLG-G <span class="sl-count" id="socioCount">—</span></div>
+        <div class="panel" style="margin-bottom:32px;">
+            <div class="panel-header">Lista de Sócios — por Categoria &amp; Título <span class="sl-refresh" onclick="carregarSocios()">↺ Atualizar</span></div>
+            <div style="overflow-x:auto;max-height:320px;overflow-y:auto;">
+                <table class="data-table">
+                    <thead><tr><th>#</th><th>Categoria</th><th>Título</th><th style="text-align:center;">Quantidade</th></tr></thead>
+                    <tbody id="socioTableBody"><tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text2)">Carregando...</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div><!-- /panel-genesis -->
+
+    <!-- ══════════════════════════════════ ABA: SERVIÇOS ══ -->
+    <div class="tab-panel" id="panel-servicos">
+        <div class="section-label">Serviços · Receita e Royalties</div>
+
+        <div class="kpi-row">
+            <div class="kpi-card cyan">
+                <div class="kpi-label">Dispositivos Ativos</div>
+                <div class="kpi-val" id="svcTotal">—</div>
+                <div class="kpi-sub">PCs + Móveis protegidos</div>
+            </div>
+            <div class="kpi-card green">
+                <div class="kpi-label">Valor Arrecadado</div>
+                <div class="kpi-val" id="svcArrecadado">—</div>
+                <div class="kpi-sub">Receita bruta acumulada</div>
+            </div>
+            <div class="kpi-card amber">
+                <div class="kpi-label">Royalties (2%)</div>
+                <div class="kpi-val" id="svcRoyalties">—</div>
+                <div class="kpi-sub">Retorno ao protocolo</div>
+            </div>
+        </div>
+
+        <div class="two-col">
+            <div class="panel">
+                <div class="panel-header">Lattice Shield — Breakdown</div>
+                <div class="panel-body">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+                        <div style="text-align:center;padding:18px;background:var(--bg3);border-radius:8px;border:1px solid var(--border);">
+                            <div style="font-size:0.56rem;color:var(--text2);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;">PCs / Servidores</div>
+                            <div style="font-size:2rem;color:var(--cyan);font-weight:700;" id="svcPCs">—</div>
+                            <div style="font-size:0.6rem;color:var(--text2);margin-top:4px;">Mineradores · Validadores</div>
+                        </div>
+                        <div style="text-align:center;padding:18px;background:var(--bg3);border-radius:8px;border:1px solid var(--border);">
+                            <div style="font-size:0.56rem;color:var(--text2);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;">Dispositivos Móveis</div>
+                            <div style="font-size:2rem;color:var(--green);font-weight:700;" id="svcMobile">—</div>
+                            <div style="font-size:0.6rem;color:var(--text2);margin-top:4px;">Android · iOS</div>
+                        </div>
+                    </div>
+                    <div class="pool-row">
+                        <div class="pool-header"><span>PCs</span><span id="svcPcsPct">0%</span></div>
+                        <div class="pool-bar-bg"><div class="pool-bar-fill validator" id="svcPcsBar" style="width:0%"></div></div>
+                    </div>
+                    <div class="pool-row">
+                        <div class="pool-header"><span>Móveis</span><span id="svcMobPct">0%</span></div>
+                        <div class="pool-bar-bg"><div class="pool-bar-fill shield" id="svcMobBar" style="width:0%"></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-header">Resumo Financeiro · Shield</div>
+                <div class="panel-body">
+                    <table class="data-table">
+                        <tr><td style="color:var(--text2)">Total Protegidos</td><td id="svcTotalB" style="text-align:right;color:var(--cyan);">—</td></tr>
+                        <tr><td style="color:var(--text2)">Receita Bruta</td><td id="svcBruto" style="text-align:right;color:var(--green);">—</td></tr>
+                        <tr><td style="color:var(--text2)">Royalties 2%</td><td id="svcRoyB" style="text-align:right;color:var(--amber);">—</td></tr>
+                        <tr><td style="color:var(--text2)">Receita Líquida</td><td id="svcLiquido" style="text-align:right;">—</td></tr>
+                        <tr><td style="color:var(--text2)">Modelo</td><td style="text-align:right;">Subscrição + Royalty</td></tr>
+                        <tr><td style="color:var(--text2)">Status</td><td style="text-align:right;"><span class="badge badge-amber">TESTNET</span></td></tr>
+                    </table>
+                    <div style="margin-top:20px;padding:12px;background:var(--bg3);border-radius:8px;border:1px solid var(--border);">
+                        <div style="font-size:0.56rem;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">Próximos Serviços</div>
+                        <div style="font-size:0.7rem;color:var(--text3);line-height:1.9;">
+                            ◌ Lattice Shield Pro (em desenvolvimento)<br>
+                            ◌ ZK-Proof API (roadmap Q3 2026)<br>
+                            ◌ Validator-as-a-Service (roadmap Q4 2026)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- /panel-servicos -->
+
+    <!-- ══════════════════════════════════ ABA: AERARIUM ══ -->
+    <div class="tab-panel" id="panel-economia">
+        <div class="section-label" style="margin-top:4px;">Fluxos Económicos da Rede</div>
+        <div class="two-col">
+            <div class="panel">
+                <div class="panel-header">Aerarium · Manutenção da Rede <span id="aerariumBadge"></span></div>
+                <div class="panel-body">
+                    <div style="font-size:0.56rem;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Saldo de Manutenção</div>
+                    <div style="font-size:1.5rem;color:var(--amber);font-weight:700;margin-bottom:4px;" id="aerariumSaldo">—</div>
+                    <div style="margin-bottom:18px;">
+                        <div class="pool-bar-bg" style="margin-top:6px;"><div class="pool-bar-fill aerarium" id="aerariumBar" style="width:0%"></div></div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:var(--text2);margin-top:4px;">
+                            <span id="aerariumPct">0%</span><span>Teto: $1.000 USDC</span>
+                        </div>
+                    </div>
+                    <table class="data-table">
+                        <tr><td style="color:var(--text2)">Origem</td><td style="text-align:right;color:var(--cyan);">10% das Transações</td></tr>
+                        <tr><td style="color:var(--text2)">Teto de Acumulação</td><td style="text-align:right;">$1.000 USDC</td></tr>
+                        <tr><td style="color:var(--text2)">Excedente → Pool</td><td id="aerariumTransbordo" style="text-align:right;">—</td></tr>
+                        <tr><td style="color:var(--text2)">USDC Arrecadado</td><td id="aerariumUsdc" style="text-align:right;color:var(--green);">—</td></tr>
                     </table>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- ═══ AERARIUM + SHIELD ═══ -->
-    <div class="two-col" style="margin-bottom:0;">
-
-        <!-- Aerarium -->
-        <div class="panel">
-            <div class="panel-header">⚖️ Aerarium · Manutenção da Rede <span id="aerariumBadge"></span></div>
-            <div class="panel-body">
-                <div class="stat-card-label">Saldo de Manutenção</div>
-                <div style="font-size:1.3rem;color:var(--amber);font-weight:700;margin-bottom:4px;" id="aerariumSaldo">—</div>
-                <div style="margin-bottom:16px;">
-                    <div class="pool-bar-bg" style="margin-top:6px;">
-                        <div class="pool-bar-fill" id="aerariumBar" style="width:0%;background:var(--amber);box-shadow:0 0 8px rgba(245,158,11,0.4);"></div>
+            <div class="panel">
+                <div class="panel-header">Distribuição de Pools</div>
+                <div class="panel-body">
+                    <div style="font-size:0.56rem;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;">Alocação atual de fundos</div>
+                    <div class="pool-row">
+                        <div class="pool-header"><span>Validator Pool</span><span id="ecoValidatorPool">—</span></div>
+                        <div class="pool-bar-bg"><div class="pool-bar-fill validator" id="ecoValidatorBar" style="width:0%"></div></div>
                     </div>
-                    <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:var(--text2);margin-top:4px;">
-                        <span id="aerariumPct">0%</span>
-                        <span>Teto: $1.000 USDC</span>
+                    <div class="pool-row" style="margin-top:12px;">
+                        <div class="pool-header"><span>Prover Pool</span><span id="ecoProverPool">—</span></div>
+                        <div class="pool-bar-bg"><div class="pool-bar-fill prover" id="ecoProverBar" style="width:0%"></div></div>
                     </div>
-                </div>
-                <table class="data-table">
-                    <tr><td style="color:var(--text2)">Origem</td><td style="text-align:right;color:var(--cyan);">10% das Transações</td></tr>
-                    <tr><td style="color:var(--text2)">Teto de Acumulação</td><td style="text-align:right;">$1.000 USDC</td></tr>
-                    <tr><td style="color:var(--text2)">Excedente → Pool</td><td id="aerariumTransbordo" style="text-align:right;">—</td></tr>
-                    <tr><td style="color:var(--text2)">USDC Arrecadado</td><td id="aerariumUsdc" style="text-align:right;color:var(--green);">—</td></tr>
-                </table>
-            </div>
-        </div>
-
-        <!-- Shield Usuário -->
-        <div class="panel">
-            <div class="panel-header">🛡️ Shield Usuário — Dispositivos Ativos</div>
-            <div class="panel-body">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
-                    <div style="text-align:center;padding:14px 8px;background:var(--bg3);border-radius:8px;border:1px solid var(--border);">
-                        <div style="font-size:0.62rem;color:var(--text2);text-transform:uppercase;letter-spacing:2px;">PCs</div>
-                        <div style="font-size:1.5rem;color:var(--cyan);font-weight:700;margin-top:4px;text-shadow:var(--glow-sm);" id="shieldPCs">—</div>
-                        <div style="font-size:0.6rem;color:var(--text2);margin-top:2px;">mineradores · validadores</div>
+                    <div class="pool-row" style="margin-top:12px;">
+                        <div class="pool-header"><span>Aerarium</span><span id="ecoAerarium">—</span></div>
+                        <div class="pool-bar-bg"><div class="pool-bar-fill aerarium" id="ecoAerariumBar" style="width:0%"></div></div>
                     </div>
-                    <div style="text-align:center;padding:14px 8px;background:var(--bg3);border-radius:8px;border:1px solid var(--border);">
-                        <div style="font-size:0.62rem;color:var(--text2);text-transform:uppercase;letter-spacing:2px;">Móveis</div>
-                        <div style="font-size:1.5rem;color:var(--green);font-weight:700;margin-top:4px;text-shadow:0 0 8px rgba(35,209,139,0.3);" id="shieldMobile">—</div>
-                        <div style="font-size:0.6rem;color:var(--text2);margin-top:2px;">Android · iOS</div>
+                    <div style="margin-top:16px;">
+                        <table class="data-table">
+                            <tr><td style="color:var(--text2)">Total Supply</td><td style="text-align:right;color:var(--cyan);">21.000.000.000 $PLG</td></tr>
+                            <tr><td style="color:var(--text2)">Em Circulação</td><td id="ecoCirculacao" style="text-align:right;">—</td></tr>
+                        </table>
                     </div>
                 </div>
-                <table class="data-table">
-                    <tr><td style="color:var(--text2)">Total Protegidos</td><td id="shieldTotal" style="text-align:right;color:var(--green);">—</td></tr>
-                    <tr><td style="color:var(--text2)">Valor Arrecadado (global)</td><td id="shieldArrecadado" style="text-align:right;color:var(--cyan);">—</td></tr>
-                    <tr><td style="color:var(--text2)">Royalties 2%</td><td id="shieldRoyalties" style="text-align:right;color:var(--amber);">—</td></tr>
-                </table>
             </div>
         </div>
+    </div><!-- /panel-economia -->
 
-    </div>
-
-    <!-- ═══ SÓCIOS ═══ -->
-    <div class="section-label" style="margin-top:8px;">
-        Sócios Genesis &amp; PLG-G
-        <span id="socioCount" style="color:var(--cyan);">—</span>
-    </div>
-    <div class="panel" style="margin-bottom:24px;">
-        <div class="panel-header">Lista de Sócios — por Categoria &amp; Título <span id="socioRefreshBtn" onclick="carregarSocios()" style="cursor:pointer;color:var(--cyan);">↺</span></div>
-        <div style="overflow-x:auto;max-height:260px;overflow-y:auto;">
-            <table class="data-table" id="socioTable">
-                <thead><tr>
-                    <th>#</th>
-                    <th>Categoria</th>
-                    <th>Título</th>
-                    <th style="text-align:center;">Quantidade</th>
-                </tr></thead>
-                <tbody id="socioTableBody"><tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text2);">Carregando...</td></tr></tbody>
-            </table>
+    <!-- ══════════════════════════════════ ABA: FUNDAÇÃO ══ -->
+    <div class="tab-panel" id="panel-fundacao">
+        <div class="section-label" id="secao-fundacao" style="margin-top:4px;">
+            Fundação — Inscrições / Aprovar / Rejeitar
+            <span style="display:flex;align-items:center;gap:14px;">
+                <span id="bellPendente" style="font-size:0.62rem;color:var(--amber);display:none;">⬡ <span id="bellCountInline">0</span> pendente(s)</span>
+                <span class="sl-count" id="inscricaoCount">—</span>
+                <span class="sl-refresh" onclick="carregarInscricoes()">↺</span>
+            </span>
         </div>
-    </div>
-
-    <!-- ═══ INSCRIÇÕES FUNDAÇÃO ═══ -->
-    <div class="section-label" style="margin-top:8px;">
-        Inscrições da Fundação
-        <span id="inscricaoCount" style="color:var(--cyan);">—</span>
-    </div>
-    <div class="panel" style="margin-bottom:24px;">
-        <div class="panel-header">Projetos Submetidos <span onclick="carregarInscricoes()" style="cursor:pointer;color:var(--cyan);">↺</span></div>
-        <div style="overflow-x:auto;max-height:280px;overflow-y:auto;">
-            <table class="data-table" id="inscricaoTable">
-                <thead><tr>
-                    <th>#</th>
-                    <th>Projeto</th>
-                    <th>Segmento</th>
-                    <th>Responsável</th>
-                    <th>Localização</th>
-                    <th>Carteira PLG</th>
-                    <th>Data</th>
-                    <th>Status</th>
-                </tr></thead>
-                <tbody id="inscricaoBody"><tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text2);">Carregando...</td></tr></tbody>
-            </table>
+        <div class="panel" style="margin-bottom:24px;">
+            <div class="panel-header">Projetos Submetidos</div>
+            <div style="overflow-x:auto;max-height:600px;overflow-y:auto;">
+                <table class="data-table">
+                    <thead><tr>
+                        <th>#</th><th>Hash Inscrição</th><th>Carteira PLG</th>
+                        <th>Data</th><th>Status</th><th>Ações</th>
+                    </tr></thead>
+                    <tbody id="inscricaoBody"><tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text2)">Carregando...</td></tr></tbody>
+                </table>
+            </div>
+            <div style="padding:10px 20px;font-size:0.62rem;color:var(--text2);border-top:1px solid var(--border);line-height:1.8;">
+                ⬡ <strong style="color:var(--amber)">Hash e Carteira são imutáveis</strong> — protegidos por trigger SQLite.
+                Apenas <strong>status</strong> muda. Governança descentralizada assumirá este painel quando ativada.
+            </div>
         </div>
-    </div>
-
-    <!-- ═══ ÚLTIMOS VÉRTICES ═══ -->
-    <div class="section-label">Últimos Vértices na DAG</div>
-    <div class="panel" style="margin-bottom:32px;">
-        <div class="panel-header">Registro da DAG <span onclick="carregarVertices()" style="cursor:pointer;color:var(--cyan);">↺</span></div>
-        <div style="overflow-x:auto;">
-            <table class="data-table" id="dagTable">
-                <thead><tr>
-                    <th>Hash</th>
-                    <th>Remetente</th>
-                    <th>Destinatário</th>
-                    <th>Valor $PLG</th>
-                    <th>Nó</th>
-                    <th>ZK Bytes</th>
-                    <th>Timestamp</th>
-                </tr></thead>
-                <tbody id="dagBody"><tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text2);">Carregando...</td></tr></tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="social-links">
-        <a href="https://x.com/plegmadag" target="_blank" rel="noopener" title="X (Twitter)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        </a>
-        <a href="https://t.me/plegma_dag" target="_blank" rel="noopener" title="Telegram">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-        </a>
-        <a href="https://discord.gg/MFsJqyBBJ" target="_blank" rel="noopener" title="Discord">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057.1 18.08.116 18.102.136 18.116a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-        </a>
-        <a href="https://github.com/PlegmaDag" target="_blank" rel="noopener" title="GitHub">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-        </a>
-        <a href="https://www.instagram.com/plegmadag/" target="_blank" rel="noopener" title="Instagram">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
-        </a>
-        <a href="https://facebook.com/plegma" target="_blank" rel="noopener" title="Facebook">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-        </a>
-    </div>
+    </div><!-- /panel-fundacao -->
 
 </main>
 </div><!-- /app -->
@@ -519,104 +1010,159 @@
 <div id="toast"></div>
 
 <script>
-const API = 'http://api.plegmadag.com';
-
-let _masterKey = '';
+const _sandbox = new URLSearchParams(window.location.search).get('sandbox') === '1';
+const API = _sandbox ? 'http://80.78.26.52:8080' : 'https://api.plagmadag.com';
 let _adminKey  = '';
+let _launchTs  = null; // motor_start_ts — preenchido pelo /api/status
 
-// ─────────────────────────────────────────────
-// GATE
-// ─────────────────────────────────────────────
-function verificarAcesso(e) {
+/* ── GATE ──────────────────────────────────────────────────────────────────── */
+async function verificarAcesso(e) {
     e.preventDefault();
-    const key = document.getElementById('gateKey').value.trim();
+    const key   = document.getElementById('gateKey').value.trim();
+    const errEl = document.getElementById('gateErr');
     if (!key) return;
-    fetch(`${API}/api/admin/downloads?admin_key=${encodeURIComponent(key)}`)
-        .then(r => r.json())
-        .then(d => {
-            if (d.erro) {
-                document.getElementById('gateErr').textContent = '✕ Chave inválida.';
-                return;
-            }
-            _masterKey = key;
-            _adminKey  = key;
-            sessionStorage.setItem('_pf_key', key);
-            document.getElementById('gate').classList.add('hidden');
-            document.getElementById('app').classList.add('visible');
-            inicializar();
-        })
-        .catch(() => {
-            _masterKey = key;
-            _adminKey  = key;
-            sessionStorage.setItem('_pf_key', key);
-            document.getElementById('gate').classList.add('hidden');
-            document.getElementById('app').classList.add('visible');
-            inicializar();
-        });
+    errEl.textContent = 'Verificando...';
+    try {
+        const r = await fetch(`${API}/api/admin/downloads?admin_key=${encodeURIComponent(key)}`,
+            { signal: AbortSignal.timeout(8000) });
+        const d = await r.json();
+        if (d.erro) { errEl.textContent = 'Chave inválida.'; return; }
+        _concederAcesso(key);
+    } catch(err) {
+        errEl.textContent = 'Servidor inacessível. Tente mais tarde.';
+    }
+}
+
+function _concederAcesso(key) {
+    _adminKey = key;
+    sessionStorage.setItem('_pf_key', key);
+    document.getElementById('gate').classList.add('hidden');
+    document.getElementById('app').classList.add('visible');
+    if (_sandbox) document.getElementById('sandboxLabel').style.display = 'block';
+    inicializar();
 }
 
 function sair() {
     sessionStorage.removeItem('_pf_key');
+    _adminKey = '';
     location.reload();
 }
 
-// ─────────────────────────────────────────────
-// INIT
-// ─────────────────────────────────────────────
+/* ── NAV ───────────────────────────────────────────────────────────────────── */
+let _abaAtiva = 'rede';
+
+function navegarPara(aba) {
+    if (_abaAtiva === aba) return;
+    _abaAtiva = aba;
+    document.querySelectorAll('.sb-item').forEach(b => b.classList.toggle('active', b.dataset.aba === aba));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    const panel = document.getElementById('panel-' + aba);
+    if (!panel) return;
+    panel.classList.add('active');
+    if (typeof anime !== 'undefined') {
+        anime({
+            targets: panel.querySelectorAll('.stat-card, .node-card, .panel, .kpi-card, .param-card, .countdown-wrap'),
+            opacity: [0, 1], translateY: [14, 0],
+            delay: anime.stagger(35), duration: 340, easing: 'easeOutCubic'
+        });
+    }
+    if (aba === 'fundacao') carregarInscricoes();
+    if (aba === 'genesis')  carregarSocios();
+    if (aba === 'economia') carregarAerarium();
+    if (aba === 'servicos') carregarShield();
+    if (aba === 'testnet')  { carregarStatus(); carregarNosAncora(); }
+}
+
+/* ── INIT ──────────────────────────────────────────────────────────────────── */
 function inicializar() {
     carregarStatus();
-    carregarSocios();
+    carregarNosAncora();
     carregarInscricoes();
     carregarVertices();
-    setInterval(() => { carregarStatus(); }, 30000);
+    iniciarCountdown();
+    setInterval(carregarStatus,    30000);
+    setInterval(carregarNosAncora, 10000); // tempo real — 10s
+    setInterval(() => {
+        const el = document.getElementById('uptimeDisplay');
+        if (!el || _launchTs === null) return;
+        const s = Math.floor(Date.now() / 1000 - _launchTs);
+        if (s < 0) { el.textContent = '—'; return; }
+        const d   = Math.floor(s / 86400);
+        const h   = Math.floor((s % 86400) / 3600);
+        const m   = Math.floor((s % 3600) / 60);
+        const sec = s % 60;
+        el.textContent = `${d}d ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+    }, 1000);
+    if (typeof anime !== 'undefined') {
+        anime({
+            targets: '#statGrid .stat-card',
+            opacity: [0, 1], translateY: [20, 0],
+            delay: anime.stagger(60), duration: 480, easing: 'easeOutCubic'
+        });
+    }
 }
 
 window.addEventListener('DOMContentLoaded', () => {
     const saved = sessionStorage.getItem('_pf_key');
-    if (saved) {
-        _masterKey = saved;
-        _adminKey  = saved;
-        document.getElementById('gate').classList.add('hidden');
-        document.getElementById('app').classList.add('visible');
-        inicializar();
-    }
+    if (saved) _concederAcesso(saved);
 });
 
-// ─────────────────────────────────────────────
-// HELPERS
-// ─────────────────────────────────────────────
-function fmt(n) { return (n ?? '—').toString(); }
-function fmtPLG(v) { return v == null ? '—' : Number(v).toLocaleString('pt-BR', {maximumFractionDigits:2}) + ' $PLG'; }
-function fmtUSdt(v) { return v == null ? '—' : '$' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}); }
-function fmtTs(ts) { return ts ? new Date(ts * 1000).toLocaleString('pt-BR') : '—'; }
-function fmtAddr(a) { return a ? a.substring(0,16)+'…' : '—'; }
+/* ── HELPERS ───────────────────────────────────────────────────────────────── */
+function fmt(n)      { return (n ?? '—').toString(); }
+function fmtU(v)     { return v == null ? '—' : '$' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+function fmtTs(ts)   { return ts ? new Date(ts * 1000).toLocaleString('pt-BR') : '—'; }
+function fmtAddr(a)  { return a ? a.substring(0,16)+'…' : '—'; }
 function setTxt(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
+function setHtml(id, v){ const el = document.getElementById(id); if (el) el.innerHTML = v; }
 
 function toast(msg, type='ok') {
     const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = 'show ' + type;
-    setTimeout(() => t.className = '', 2500);
+    t.textContent = msg; t.className = 'show ' + type;
+    setTimeout(() => { t.className = ''; }, 2600);
 }
 
-function tipoCategoria(saldo) {
-    if (saldo >= 10000) return '<span class="badge badge-amber">MASTER</span>';
-    if (saldo >= 5000)  return '<span class="badge badge-purple">SENTINELA</span>';
-    if (saldo >= 1000)  return '<span class="badge badge-cyan">APOIADOR</span>';
-    return '<span class="badge badge-red">ABAIXO MÍN</span>';
+/* ── GAUGE SVG (anime.js) ──────────────────────────────────────────────────── */
+// r=21 → circunferência = 2π×21 = 131.95 | arco 270° = 131.95×0.75 = 98.96
+const _GAUGE_FULL = 98.96;
+const _GAUGE_CIRC = 131.95;
+
+function setGauge(arcId, txtId, pct, label) {
+    const arcEl = document.getElementById(arcId);
+    const txtEl = document.getElementById(txtId);
+    if (!arcEl) return;
+    const targetFill = (Math.min(Math.max(pct, 0), 100) / 100) * _GAUGE_FULL;
+    if (typeof anime !== 'undefined') {
+        const obj = { v: 0 };
+        anime({
+            targets: obj, v: targetFill, duration: 900, easing: 'easeOutCubic',
+            update: () => {
+                arcEl.setAttribute('stroke-dasharray', `${obj.v.toFixed(2)} ${(_GAUGE_CIRC - obj.v).toFixed(2)}`);
+            }
+        });
+    } else {
+        arcEl.setAttribute('stroke-dasharray', `${targetFill.toFixed(2)} ${(_GAUGE_CIRC - targetFill).toFixed(2)}`);
+    }
+    if (txtEl) txtEl.textContent = label;
 }
 
-// ─────────────────────────────────────────────
-// STATUS DA REDE
-// ─────────────────────────────────────────────
+/* ── STATUS ────────────────────────────────────────────────────────────────── */
 async function carregarStatus() {
-    setTxt('lastRefresh', 'atualizando…');
+    setTxt('erroStatus', '');
     try {
-        const [rStatus, rGenesis, rGov] = await Promise.all([
-            fetch(`${API}/api/status`).then(r => r.json()),
-            fetch(`${API}/api/genesis/status`).then(r => r.json()),
-            fetch(`${API}/api/genesis/governance`).then(r => r.json())
+        const safeJson = r => r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`));
+        const [sStatus, sLastBlock, sGenesis, sGov] = await Promise.allSettled([
+            fetch(`${API}/api/status`).then(safeJson),
+            fetch(`${API}/api/lastBlock`).then(safeJson),
+            fetch(`${API}/api/genesis/status`).then(safeJson),
+            fetch(`${API}/api/genesis/governance`).then(safeJson)
         ]);
+
+        const rStatus    = sStatus.status    === 'fulfilled' ? sStatus.value    : {};
+        const rLastBlock = sLastBlock.status === 'fulfilled' ? sLastBlock.value : {};
+        const rGenesis   = sGenesis.status   === 'fulfilled' ? sGenesis.value   : {};
+        const rGov       = sGov.status       === 'fulfilled' ? sGov.value       : {};
+
+        if (sStatus.status === 'rejected') setTxt('erroStatus', 'Servidor sem resposta');
 
         setTxt('statTxTotal',    fmt(rStatus.total_transacoes));
         setTxt('statAceitas',    fmt(rStatus.total_aceitas));
@@ -626,247 +1172,343 @@ async function carregarStatus() {
         setTxt('statNosAncoras', fmt(rStatus.nos_ancoras));
         setTxt('statMineradores',fmt(rStatus.nos_mineradores));
         setTxt('statValidadores',fmt(rStatus.validadores_ativos));
-        setTxt('poolLastHash',   rStatus.last_vertex_hash ? rStatus.last_vertex_hash.substring(0,20)+'…' : '—');
+        setTxt('poolLastHash',   rLastBlock.last_vertex_hash ? rLastBlock.last_vertex_hash.substring(0,24)+'…' : '—');
+
+        if (rStatus.motor_start_ts) _launchTs = rStatus.motor_start_ts;
+        const total = rStatus.total_transacoes ?? 0;
+        const tps   = rStatus.transacoes_ativas ? (total > 0 ? (total / Math.max(1, rStatus.launch_ts_utc ? (Date.now()/1000 - rStatus.launch_ts_utc) : 86400)).toFixed(4) : '0') : '—';
+        setTxt('tnTps',      tps);
+        setTxt('tnVertices', fmt(total));
+        setTxt('tnNetDay',   fmt(rGenesis.network_day ?? '—') + 'º dia');
 
         const vendido = rGenesis.total_plgg_sold ?? 0;
         const supply  = 10500000;
         const pct     = Math.min((vendido / supply) * 100, 100);
         setTxt('plggVendido', vendido.toLocaleString('pt-BR') + ' PLG-G');
         setTxt('plggPct', pct.toFixed(2) + '%');
-        const bar = document.getElementById('plggBar');
-        if (bar) bar.style.width = pct + '%';
-        setTxt('genesisUsdt',  fmtUSdt(rGenesis.total_usdt_arrecadado));
-        setTxt('genesisDia',   fmt(rGenesis.network_day) + 'º dia');
+        const plggBar = document.getElementById('plggBar');
+        if (plggBar) plggBar.style.width = pct + '%';
+        setTxt('genesisUsdt', fmtU(rGenesis.total_usdt_arrecadado));
+        setTxt('genesisDia',  fmt(rGenesis.network_day) + 'º dia');
 
         const vPool = rGenesis.validator_pool_remaining;
         const pPool = rGenesis.prover_pool_remaining;
-        setTxt('validatorPool', vPool != null ? vPool.toLocaleString('pt-BR') + ' $PLG' : '—');
-        setTxt('proverPool',    pPool != null ? pPool.toLocaleString('pt-BR') + ' $PLG' : '—');
+        setTxt('validatorPool',   vPool != null ? vPool.toLocaleString('pt-BR') + ' $PLG' : '—');
+        setTxt('proverPool',      pPool != null ? pPool.toLocaleString('pt-BR') + ' $PLG' : '—');
+        setTxt('tnValidatorPool', vPool != null ? vPool.toLocaleString('pt-BR') + ' $PLG' : '—');
+        setTxt('tnProverPool',    pPool != null ? pPool.toLocaleString('pt-BR') + ' $PLG' : '—');
+        setTxt('ecoValidatorPool',vPool != null ? vPool.toLocaleString('pt-BR') + ' $PLG' : '—');
+        setTxt('ecoProverPool',   pPool != null ? pPool.toLocaleString('pt-BR') + ' $PLG' : '—');
+
         const totalPools = (vPool ?? 0) + (pPool ?? 0);
         if (totalPools > 0) {
-            const vb = document.getElementById('validatorBar');
-            const pb = document.getElementById('proverBar');
-            if (vb) vb.style.width = ((vPool / totalPools) * 100) + '%';
-            if (pb) pb.style.width = ((pPool / totalPools) * 100) + '%';
+            const vP = (vPool / totalPools) * 100;
+            const pP = (pPool / totalPools) * 100;
+            ['validatorBar','ecoValidatorBar'].forEach(id => { const el = document.getElementById(id); if (el) el.style.width = vP + '%'; });
+            ['proverBar','ecoProverBar'].forEach(id => { const el = document.getElementById(id); if (el) el.style.width = pP + '%'; });
         }
 
-        const govBadge = document.getElementById('genesisGov');
-        if (govBadge) {
-            govBadge.innerHTML = rGov.ativa
-                ? '<span class="badge badge-green">ATIVA</span>'
-                : '<span class="badge badge-amber">AGUARDANDO</span>';
-        }
+        const govHTML = rGov.ativa
+            ? '<span class="badge badge-green">ATIVA</span>'
+            : '<span class="badge badge-amber">AGUARDANDO</span>';
+        setHtml('genesisGov', govHTML);
+        setHtml('tnGov', govHTML);
+
         const sBadge = document.getElementById('genesisStatusBadge');
         if (sBadge) {
             const dia = rGenesis.network_day ?? 0;
             sBadge.innerHTML = dia <= 30
-                ? '<span class="badge badge-amber">EM CURSO · DIA ' + dia + '</span>'
+                ? `<span class="badge badge-amber">EM CURSO · DIA ${dia}</span>`
                 : '<span class="badge badge-green">ENCERRADA</span>';
         }
 
         try {
             const rPreco = await fetch(`${API}/api/genesis/ultimo_preco`).then(r => r.json());
-            setTxt('genesisPreco', rPreco.preco_unitario != null ? fmtUSdt(rPreco.preco_unitario) + ' / PLG-G' : '$0.10 (Genesis)');
+            setTxt('genesisPreco', rPreco.preco_unitario != null ? fmtU(rPreco.preco_unitario) + ' / PLG-G' : '$0.10 (Genesis)');
         } catch(e) { setTxt('genesisPreco', '$0.10 (Genesis)'); }
 
-        setTxt('lastRefresh', new Date().toLocaleTimeString('pt-BR'));
     } catch(err) {
-        setTxt('lastRefresh', 'erro: ' + err.message);
+        setTxt('erroStatus', 'ERRO: ' + err.message);
     }
-
-    // Aerarium e Shield em paralelo (não bloqueiam o refresh principal)
     carregarAerarium();
     carregarShield();
 }
 
-// ─────────────────────────────────────────────
-// AERARIUM
-// ─────────────────────────────────────────────
+/* ── NÓS ÂNCORA ───────────────────────────────────────────────────────────── */
+async function carregarNosAncora() {
+    const t0  = Date.now();
+    let dados = null;
+    try {
+        dados = await fetch(`${API}/api/cluster/status`, { signal: AbortSignal.timeout(15000) }).then(r => r.json());
+    } catch(e) { dados = { nos: [], online: 0, total: 4 }; }
+
+    const latencias = [];
+
+    (dados.nos ?? []).forEach(no => {
+        const card = document.querySelector(`.node-card[data-node="${no.id}"]`);
+        if (!card) return;
+        const label = card.querySelector('.node-status-label');
+
+        if (no.online) {
+            card.classList.remove('offline'); card.classList.add('online');
+            label.textContent = 'ONLINE';
+            const lat = no.latency_ms ?? null;
+            setTxt(`n-${no.id}-lat`, lat !== null ? lat + ' ms' : '—');
+            if (lat !== null) latencias.push(lat);
+
+            const nvmCount = no.nvm_count ?? 0;
+            const nvmPct   = Math.min(nvmCount * 10, 100);
+            const cpuPct   = no.cpu_pct  ?? null;
+            const memPct   = no.mem_pct  ?? null;
+            const dskPct   = no.disk_pct ?? null;
+            const dskLbl   = no.disk_used_gb != null && no.disk_total_gb != null
+                ? `${no.disk_used_gb}G` : (dskPct != null ? dskPct.toFixed(0)+'%' : 'N/D');
+            setGauge(`n-${no.id}-cpu-arc`, `n-${no.id}-cpu-txt`, cpuPct ?? 0, cpuPct != null ? cpuPct.toFixed(0)+'%' : 'N/D');
+            setGauge(`n-${no.id}-mem-arc`, `n-${no.id}-mem-txt`, memPct ?? 0, memPct != null ? memPct.toFixed(0)+'%' : 'N/D');
+            setGauge(`n-${no.id}-nos-arc`, `n-${no.id}-nos-txt`, nvmPct, nvmCount.toString());
+            setGauge(`n-${no.id}-dsk-arc`, `n-${no.id}-dsk-txt`, dskPct ?? 0, dskLbl);
+        } else {
+            card.classList.remove('online'); card.classList.add('offline');
+            label.textContent = 'OFFLINE';
+            setTxt(`n-${no.id}-lat`, '—');
+            ['cpu','mem','nos','dsk'].forEach(m => {
+                setGauge(`n-${no.id}-${m}-arc`, `n-${no.id}-${m}-txt`, 0, '—');
+            });
+        }
+    });
+
+    const online = dados.online ?? 0;
+    const total  = dados.total  ?? 4;
+    setTxt('tnUptime', Math.round((online / total) * 100) + '%');
+    if (latencias.length) {
+        const avg = Math.round(latencias.reduce((a,b) => a+b, 0) / latencias.length);
+        setTxt('tnLatencia', avg + ' ms');
+    }
+}
+
+/* ── AERARIUM ──────────────────────────────────────────────────────────────── */
 async function carregarAerarium() {
     try {
         const r = await fetch(`${API}/api/genesis/liquidity_status`).then(r => r.json());
-        const saldo   = r.valor_aerarium   ?? 0;
-        const teto    = r.aerarium_teto    ?? 1000;
-        const transb  = r.aerarium_transbordo ?? 0;
-        const usdc    = r.usdc_arrecadado_total ?? 0;
-        const pct     = Math.min((saldo / teto) * 100, 100);
+        const saldo  = r.valor_aerarium        ?? 0;
+        const teto   = r.aerarium_teto         ?? 1000;
+        const transb = r.aerarium_transbordo   ?? 0;
+        const usdc   = r.usdc_arrecadado_total ?? 0;
+        const pct    = Math.min((saldo / teto) * 100, 100);
 
-        setTxt('aerariumSaldo', fmtUSdt(saldo));
+        setTxt('aerariumSaldo', fmtU(saldo));
         setTxt('aerariumPct',   pct.toFixed(1) + '%');
-        setTxt('aerariumTransbordo', transb > 0 ? fmtUSdt(transb) + ' → Pool' : '—');
-        setTxt('aerariumUsdc', fmtUSdt(usdc));
+        setTxt('aerariumTransbordo', transb > 0 ? fmtU(transb) + ' → Pool' : '—');
+        setTxt('aerariumUsdc',  fmtU(usdc));
+        setTxt('ecoAerarium',   fmtU(saldo));
 
-        const bar = document.getElementById('aerariumBar');
-        if (bar) bar.style.width = pct + '%';
+        const bar = document.getElementById('aerariumBar'); if (bar) bar.style.width = pct + '%';
+        const b2  = document.getElementById('ecoAerariumBar'); if (b2) b2.style.width = pct + '%';
 
         const badge = document.getElementById('aerariumBadge');
-        if (badge) {
-            badge.innerHTML = saldo >= teto
-                ? '<span class="badge badge-green">TETO ATINGIDO</span>'
-                : '<span class="badge badge-amber">EM ACUMULAÇÃO</span>';
-        }
-    } catch(e) {
-        setTxt('aerariumSaldo', 'erro');
-    }
+        if (badge) badge.innerHTML = saldo >= teto
+            ? '<span class="badge badge-green">TETO ATINGIDO</span>'
+            : '<span class="badge badge-amber">EM ACUMULAÇÃO</span>';
+    } catch(e) { setTxt('aerariumSaldo', 'erro'); }
 }
 
-// ─────────────────────────────────────────────
-// SHIELD USUÁRIO
-// ─────────────────────────────────────────────
+/* ── SHIELD / SERVIÇOS ────────────────────────────────────────────────────── */
 async function carregarShield() {
     try {
-        const rCount = await fetch(`${API}/api/admin/shield/stats?admin_key=${encodeURIComponent(_adminKey)}`).then(r => r.json());
-        setTxt('shieldPCs',        fmt(rCount.pcs           ?? 0));
-        setTxt('shieldMobile',     fmt(rCount.mobile         ?? 0));
-        setTxt('shieldTotal',      fmt(rCount.total_ativos   ?? 0) + ' protegidos');
-        setTxt('shieldArrecadado', fmtUSdt(rCount.valor_arrecadado ?? 0));
-        setTxt('shieldRoyalties',  fmtUSdt(rCount.royalties_2pct   ?? 0));
+        const r     = await fetch(`${API}/shield/subscriptions/count`).then(r => r.json());
+        const pcs   = r.pcs             ?? 0;
+        const mob   = r.mobile          ?? 0;
+        const total = r.total_ativos    ?? 0;
+        const bruto = r.valor_arrecadado ?? 0;
+        const roy   = r.royalties_2pct  ?? 0;
+        const liq   = bruto - roy;
+
+        setTxt('svcTotal',      total + ' dispositivos');
+        setTxt('svcArrecadado', fmtU(bruto));
+        setTxt('svcRoyalties',  fmtU(roy));
+        setTxt('svcPCs',        fmt(pcs));
+        setTxt('svcMobile',     fmt(mob));
+        setTxt('svcTotalB',     fmt(total) + ' protegidos');
+        setTxt('svcBruto',      fmtU(bruto));
+        setTxt('svcRoyB',       fmtU(roy));
+        setTxt('svcLiquido',    fmtU(liq));
+
+        const totalAll = (pcs + mob) || 1;
+        const pcsPct   = Math.round((pcs / totalAll) * 100);
+        const mobPct   = 100 - pcsPct;
+        setTxt('svcPcsPct', pcsPct + '%');
+        setTxt('svcMobPct', mobPct + '%');
+        const pb = document.getElementById('svcPcsBar'); if (pb) pb.style.width = pcsPct + '%';
+        const mb = document.getElementById('svcMobBar'); if (mb) mb.style.width = mobPct + '%';
     } catch(e) {
-        ['shieldPCs','shieldMobile','shieldTotal','shieldArrecadado','shieldRoyalties'].forEach(id => setTxt(id, '—'));
+        ['svcTotal','svcArrecadado','svcRoyalties','svcPCs','svcMobile'].forEach(id => setTxt(id, '—'));
     }
 }
 
-// ─────────────────────────────────────────────
-// SÓCIOS
-// ─────────────────────────────────────────────
+/* ── SÓCIOS ────────────────────────────────────────────────────────────────── */
 function _tituloMedalha(is_genesis, balance) {
     const gb = balance ?? 0;
-    if (is_genesis && gb >= 6001)  return '🥇 Sócio Genesis · Master';
-    if (is_genesis && gb >= 3001)  return '🥈 Sócio Genesis · Sentinela';
-    if (is_genesis && gb >= 1000)  return '🥉 Sócio Genesis · Apoiador';
-    if (is_genesis)                return '⚪ Sócio Genesis · Sem boost';
-    // PLG-G secundário (sem DNA)
-    if (gb >= 6001)  return '🔵 Detentor · Master';
-    if (gb >= 3001)  return '🔵 Detentor · Sentinela';
-    if (gb >= 1000)  return '🔵 Detentor · Apoiador';
+    if (is_genesis && gb >= 6001) return 'Sócio Genesis · Master';
+    if (is_genesis && gb >= 3001) return 'Sócio Genesis · Sentinela';
+    if (is_genesis && gb >= 1000) return 'Sócio Genesis · Apoiador';
+    if (is_genesis)               return 'Sócio Genesis · Sem boost';
+    if (gb >= 6001) return 'Detentor · Master';
+    if (gb >= 3001) return 'Detentor · Sentinela';
+    if (gb >= 1000) return 'Detentor · Apoiador';
     return '— Sem título';
 }
-
 function _categoriaLabel(balance) {
     const b = balance ?? 0;
     if (b >= 6001) return '<span class="badge badge-cyan">MASTER</span>';
-    if (b >= 3001) return '<span class="badge" style="border-color:rgba(167,139,250,0.4);color:#a78bfa;background:rgba(167,139,250,0.08);">SENTINELA</span>';
+    if (b >= 3001) return '<span class="badge badge-purple">SENTINELA</span>';
     if (b >= 1000) return '<span class="badge badge-green">APOIADOR</span>';
-    return '<span class="badge" style="border-color:rgba(100,100,100,0.3);color:#666;">—</span>';
+    return '<span class="badge" style="border-color:rgba(100,100,100,0.3);color:#555;">—</span>';
 }
 
 async function carregarSocios() {
     const tbody = document.getElementById('socioTableBody');
     try {
-        let socios = [];
-        const r = await fetch(`${API}/api/genesis/socios`).then(r => r.json());
-        socios = r.socios ?? r ?? [];
-
+        const r      = await fetch(`${API}/api/genesis/socios`).then(r => r.json());
+        const socios = r.socios ?? r ?? [];
         setTxt('socioCount', socios.length + ' sócios');
+        if (!socios.length) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text2)">Nenhum sócio ainda.</td></tr>'; return; }
 
-        if (!socios.length) {
-            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text2)">Nenhum sócio ainda.</td></tr>';
-            return;
-        }
-
-        // Agrupa por (categoria, título)
         const grupos = {};
         socios.forEach(s => {
-            const gb   = s.genesis_balance ?? 0;
-            const cat  = _categoriaLabel(gb);
-            const tit  = _tituloMedalha(s.is_genesis, gb);
-            const key  = cat + '||' + tit;
+            const gb  = s.genesis_balance ?? 0;
+            const cat = _categoriaLabel(gb);
+            const tit = _tituloMedalha(s.is_genesis, gb);
+            const key = cat + '||' + tit;
             if (!grupos[key]) grupos[key] = { cat, tit, count: 0 };
             grupos[key].count++;
         });
-
-        // Ordena: Genesis primeiro, depois por balance desc
-        const ordem = ['Master', 'Sentinela', 'Apoiador', 'Sem boost', 'Detentor', 'Sem título'];
-        const linhas = Object.values(grupos).sort((a, b) => {
+        const ordem  = ['Master','Sentinela','Apoiador','Sem boost','Detentor','Sem título'];
+        const linhas = Object.values(grupos).sort((a,b) => {
             const ia = ordem.findIndex(o => a.tit.includes(o));
             const ib = ordem.findIndex(o => b.tit.includes(o));
-            return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+            return (ia===-1?99:ia) - (ib===-1?99:ib);
         });
-
         let i = 1;
-        tbody.innerHTML = linhas.map(g => `
-            <tr>
-                <td style="color:var(--text2)">${i++}</td>
-                <td>${g.cat}</td>
-                <td style="font-size:0.8rem;">${g.tit}</td>
-                <td style="text-align:center;font-weight:700;color:var(--cyan);font-size:1rem;">${g.count}</td>
-            </tr>`).join('');
-
+        tbody.innerHTML = linhas.map(g => `<tr>
+            <td style="color:var(--text2)">${i++}</td>
+            <td>${g.cat}</td>
+            <td style="font-size:0.82rem;">${g.tit}</td>
+            <td style="text-align:center;font-weight:700;color:var(--cyan);font-size:1rem;">${g.count}</td>
+        </tr>`).join('');
     } catch(e) {
         tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text2)">${e.message}</td></tr>`;
     }
 }
 
-// ─────────────────────────────────────────────
-// INSCRIÇÕES FUNDAÇÃO
-// ─────────────────────────────────────────────
+/* ── INSCRIÇÕES ────────────────────────────────────────────────────────────── */
 async function carregarInscricoes() {
     try {
-        const r = await fetch(`${API}/api/fundacao/inscricoes?admin_key=${encodeURIComponent(_adminKey)}`).then(r => r.json());
+        const r     = await fetch(`${API}/api/fundacao/inscricoes?admin_key=${encodeURIComponent(_adminKey)}`).then(r => r.json());
         const lista = r.inscricoes ?? r ?? [];
-        setTxt('inscricaoCount', lista.length + ' projetos');
+        const pend  = lista.filter(p => (p.status||'').toUpperCase() === 'PENDENTE').length;
+
+        const bell = document.getElementById('fundacaoBell');
+        if (bell) { setTxt('bellCount', pend); pend > 0 ? bell.classList.add('active') : bell.classList.remove('active'); }
+        const bellI = document.getElementById('bellPendente');
+        if (bellI) { bellI.style.display = pend > 0 ? '' : 'none'; setTxt('bellCountInline', pend); }
+
+        const sbBadge = document.getElementById('sbBadgeFundacao');
+        if (sbBadge) { sbBadge.textContent = pend > 0 ? pend : ''; pend > 0 ? sbBadge.classList.add('visible') : sbBadge.classList.remove('visible'); }
+
+        setTxt('inscricaoCount', lista.length + ' projeto(s) · ' + pend + ' pendente(s)');
+
         const tbody = document.getElementById('inscricaoBody');
-        if (!lista.length) {
-            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text2)">Nenhuma inscrição.</td></tr>';
-            return;
-        }
-        const segCor = { 'Proteção à Infância':'badge-cyan', 'Combate à Fome':'badge-amber', 'Libertação Humana':'badge-green' };
-        tbody.innerHTML = lista.map((p, i) => `
-            <tr>
+        if (!lista.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text2)">Nenhuma inscrição registada.</td></tr>'; return; }
+
+        const statusCor = s => { const u=(s||'').toUpperCase(); if(u==='APROVADA') return 'badge-green'; if(u==='REJEITADA') return 'badge-red'; return 'badge-amber'; };
+
+        tbody.innerHTML = lista.map((p, i) => {
+            const hash    = p.hash_inscricao || '—';
+            const hShort  = hash !== '—' ? hash.substring(0,22)+'…' : '—';
+            const cart    = p.carteira_plg   || '—';
+            const cShort  = cart !== '—' ? cart.substring(0,22)+'…' : '—';
+            const status  = (p.status || 'PENDENTE').toUpperCase();
+            const pending = status === 'PENDENTE';
+            const acoes   = pending
+                ? `<button class="btn-aprovar"  onclick="aprovarInscricao('${hash}')">Aprovar</button><button class="btn-rejeitar" onclick="rejeitarInscricao('${hash}')">Rejeitar</button>`
+                : `<span style="font-size:0.6rem;color:var(--text2)">—</span>`;
+            return `<tr>
                 <td style="color:var(--text2)">${p.id ?? i+1}</td>
-                <td style="color:var(--text)">${p.nome_projeto}</td>
-                <td><span class="badge ${segCor[p.segmento]||'badge-cyan'}">${p.segmento}</span></td>
-                <td>${p.responsavel}</td>
-                <td style="color:var(--text2);font-size:0.75rem">${p.localizacao}</td>
-                <td style="font-size:0.74rem;color:var(--cyan)">${fmtAddr(p.carteira_plg)}</td>
-                <td style="color:var(--text2);font-size:0.75rem">${new Date(p.created_at*1000).toLocaleDateString('pt-BR')}</td>
-                <td><span class="badge ${p.status==='APROVADO'?'badge-green':p.status==='REPROVADO'?'badge-red':'badge-amber'}">${p.status}</span></td>
-            </tr>`).join('');
+                <td style="font-size:0.6rem;color:var(--cyan);" title="${hash}">${hShort}</td>
+                <td style="font-size:0.6rem;color:var(--cyan);" title="${cart}">${cShort}</td>
+                <td style="color:var(--text2);font-size:0.75rem">${p.created_at ? new Date(p.created_at*1000).toLocaleDateString('pt-BR') : '—'}</td>
+                <td><span class="badge ${statusCor(p.status)}">${status}</span></td>
+                <td style="white-space:nowrap">${acoes}</td>
+            </tr>`;
+        }).join('');
     } catch(e) {
-        document.getElementById('inscricaoBody').innerHTML =
-            `<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text2)">${e.message}</td></tr>`;
+        setHtml('inscricaoBody', `<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text2)">${e.message}</td></tr>`);
     }
 }
 
-// ─────────────────────────────────────────────
-// VÉRTICES DAG
-// ─────────────────────────────────────────────
+async function aprovarInscricao(hash) {
+    if (!hash || hash === '—') { toast('Hash inválido', 'err'); return; }
+    if (!confirm(`Aprovar inscrição?\n${hash.substring(0,32)}…\n\nHash e carteira permanecem imutáveis.`)) return;
+    try {
+        const r = await fetch(`${API}/api/admin/fundacao/aprovar`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ admin_key: _adminKey, hash_inscricao: hash })
+        }).then(r => r.json());
+        if (r.erro) { toast('Erro: ' + r.erro, 'err'); return; }
+        toast('Inscrição aprovada — carteira elegível para doações', 'ok');
+        carregarInscricoes();
+    } catch(e) { toast('Erro: ' + e.message, 'err'); }
+}
+
+async function rejeitarInscricao(hash) {
+    if (!hash || hash === '—') { toast('Hash inválido', 'err'); return; }
+    if (!confirm(`Rejeitar inscrição?\n${hash.substring(0,32)}…`)) return;
+    try {
+        const r = await fetch(`${API}/api/admin/fundacao/rejeitar`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ admin_key: _adminKey, hash_inscricao: hash })
+        }).then(r => r.json());
+        if (r.erro) { toast('Erro: ' + r.erro, 'err'); return; }
+        toast('Inscrição rejeitada', 'err');
+        carregarInscricoes();
+    } catch(e) { toast('Erro: ' + e.message, 'err'); }
+}
+
+/* ── VÉRTICES ──────────────────────────────────────────────────────────────── */
 async function carregarVertices() {
     try {
-        const r = await fetch(`${API}/api/transactions?limit=20`).then(r => r.json());
-        const txs = r.transactions ?? r ?? [];
+        const r    = await fetch(`${API}/api/transactions?limit=20`).then(r => r.json());
+        const txs  = r.transactions ?? r ?? [];
         const tbody = document.getElementById('dagBody');
-        if (!txs.length) {
-            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text2)">Nenhum vértice.</td></tr>';
-            return;
-        }
-        tbody.innerHTML = [...txs].reverse().slice(0, 20).map(tx => `
-            <tr>
-                <td style="font-size:0.6rem;color:var(--cyan);font-family:'Space Mono'">${(tx.tx_hash||'').substring(0,18)}…</td>
-                <td style="font-size:0.75rem">${fmtAddr(tx.sender)}</td>
-                <td style="font-size:0.75rem">${fmtAddr(tx.receiver)}</td>
-                <td>${tx.amount != null ? Number(tx.amount).toLocaleString('pt-BR',{maximumFractionDigits:2}) : '—'}</td>
-                <td><span class="badge ${tx.node_type==='PROVER'?'badge-purple':'badge-cyan'}">${tx.node_type||'—'}</span></td>
-                <td style="color:var(--text2)">${tx.zk_proof_size || '—'}</td>
-                <td style="color:var(--text2);font-size:0.75rem">${fmtTs(tx.timestamp)}</td>
-            </tr>`).join('');
+        if (!txs.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text2)">Nenhum vértice.</td></tr>'; return; }
+        tbody.innerHTML = [...txs].reverse().slice(0,20).map(tx => `<tr>
+            <td style="font-size:0.6rem;color:var(--cyan);">${(tx.tx_hash||'').substring(0,18)}…</td>
+            <td style="font-size:0.78rem">${fmtAddr(tx.sender)}</td>
+            <td style="font-size:0.78rem">${fmtAddr(tx.receiver)}</td>
+            <td>${tx.amount != null ? Number(tx.amount).toLocaleString('pt-BR',{maximumFractionDigits:2}) : '—'}</td>
+            <td><span class="badge ${tx.node_type==='PROVER'?'badge-purple':'badge-cyan'}">${tx.node_type||'—'}</span></td>
+            <td style="color:var(--text2)">${tx.zk_proof_size||'—'}</td>
+            <td style="color:var(--text2);font-size:0.78rem">${fmtTs(tx.timestamp)}</td>
+        </tr>`).join('');
     } catch(e) {
-        document.getElementById('dagBody').innerHTML =
-            `<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text2)">${e.message}</td></tr>`;
+        setHtml('dagBody', `<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text2)">${e.message}</td></tr>`);
     }
 }
 
-// ─────────────────────────────────────────────
-// UTILITÁRIOS
-// ─────────────────────────────────────────────
-function copiarScript() {
-    const el = document.getElementById('installScript');
-    if (!el) return;
-    navigator.clipboard.writeText(el.textContent.trim())
-        .then(() => toast('Script copiado!', 'ok'))
-        .catch(() => toast('Erro ao copiar', 'err'));
+/* ── COUNTDOWN ─────────────────────────────────────────────────────────────── */
+function iniciarCountdown() {
+    const target = new Date('2026-05-09T00:00:00');
+    function atualizar() {
+        const diff = target - Date.now();
+        if (diff <= 0) { ['cd-dias','cd-horas','cd-min','cd-seg'].forEach(id => setTxt(id, '00')); return; }
+        setTxt('cd-dias',  String(Math.floor(diff / 86400000)).padStart(2,'0'));
+        setTxt('cd-horas', String(Math.floor((diff % 86400000) / 3600000)).padStart(2,'0'));
+        setTxt('cd-min',   String(Math.floor((diff % 3600000) / 60000)).padStart(2,'0'));
+        setTxt('cd-seg',   String(Math.floor((diff % 60000) / 1000)).padStart(2,'0'));
+    }
+    atualizar();
+    setInterval(atualizar, 1000);
 }
 </script>
-
 </body>
 </html>

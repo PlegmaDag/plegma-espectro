@@ -473,6 +473,54 @@
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
 
+        <!-- CONSOLE ADMIN NVMe + STATS REDE + FIX SERVIÇOS — 14 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">14 ABR 2026 — Console Admin · NVMe gauges · Stats em tempo real na aba Rede</span>
+                <div class="post-meta">
+                    <span class="post-tag">UI/UX</span>
+                    <span class="post-tag">INFRA</span>
+                </div>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Gauges NVMe — limpeza de duplicatas</div>
+                <p>O processo de renomear os gauges de NÓS para NVMe gerou, inadvertidamente, um bloco duplicado em cada card dos nós âncora — cada card ficou com 4 gauges (CPU · MEM · NVM · NVMe) em vez dos 3 correctos. Os blocos "NVM" foram removidos de todos os 4 cards (EU-Alpha, BR-Beta, MAL-Gamma, SIN-Delta), restabelecendo a grelha de 3 colunas: <strong>CPU</strong> (ciano) · <strong>MEM</strong> (roxo) · <strong>NVMe</strong> (âmbar). O último ID pendente de renomeação (<code>n-sin-nos-txt</code> → <code>n-sin-dsk-txt</code>) foi resolvido no mesmo passo.</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Dados NVMe em BR, MAL e SIN</div>
+                <p>Após o deploy do <code>core_vm.py</code> actualizado (com <code>psutil.disk_usage('/')</code> em <code>/api/status</code>), os três servidores continuavam a retornar <code>disk_pct: null</code>. A causa raiz: o <code>plegma-core.service</code> fora iniciado às 03:04 UTC mas o ficheiro foi actualizado às 20:12 UTC — o processo em produção era o antigo. Um <code>systemctl restart plegma-core</code> simultâneo nos três nós resolveu imediatamente. BR reporta 3,8% · MAL 4,3% · SIN 2,9% de utilização de disco. Adicionalmente, <code>psutil</code> foi incluído na linha <code>pip3 install</code> do <code>deploy.ps1</code> — qualquer deploy futuro instala a dependência automaticamente em todos os nós.</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Stats em tempo real — da aba Testnet para a aba Rede</div>
+                <p>Os quatro cards de métricas em tempo real (TPS Global, Vértices Total, Uptime Nós, Latência Média) foram movidos para o topo da grelha de estatísticas na aba Rede, ao lado dos cards existentes de transações e nós. Os IDs já eram alimentados pelas funções <code>carregarStatus()</code> (intervalo 30 s) e <code>carregarNosAncora()</code> (intervalo 10 s), ambas activas na aba Rede — não foi necessário alterar o JavaScript. A aba Testnet mantém o countdown, os parâmetros de rede e os parâmetros económicos.</p>
+            </div>
+        </article>
+
+        <!-- SANDBOX + VALIDADOR 24H + BATTERY MONITOR — 14 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">14 ABR 2026 — Ambiente Sandbox · Validador 24h · Battery Monitor</span>
+                <div class="post-meta">
+                    <span class="post-tag">INFRA</span>
+                    <span class="post-tag">APP</span>
+                    <span class="post-tag">BUILD</span>
+                </div>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Ambiente Sandbox Isolado</div>
+                <p>Configurado servidor dedicado como ambiente sandbox com stack idêntico à produção: nginx, Python 3.10, blake3, dilithium-py, PyJWT, bcrypt. SSL via Let's Encrypt emitido para o domínio sandbox. Acesso restrito por IP diretamente no nginx — qualquer outro endereço recebe 403 sem chegar à aplicação. Criados três artefactos: <code>setup_sandbox.sh</code> (provisioning inicial), <code>_nginx_sandbox.conf</code> (config espelho) e <code>deploy_sandbox.ps1</code> (deploy com a mesma lógica do script de produção). O fluxo de trabalho passa a ser: desenvolve → valida no sandbox → promove para a rede.</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Correção Crítica — Validador Mobile 24h</div>
+                <p>Identificada a causa raiz do validador não permanecer online: <code>initValidatorBgService()</code> nunca era invocado no <code>main()</code> antes do <code>runApp()</code>. Sem essa inicialização, o Android não registava a configuração do foreground service e não conseguia reconectá-lo após terminar o processo. A correção é simples mas bloqueante — sem ela, qualquer reinício do app (Doze mode, swipe, reboot) resultava na perda silenciosa do heartbeat.</p>
+                <p>Segunda correção: <code>ValidatorProvider.inicializar()</code> passa a verificar se o validador estava ativo e, caso o foreground service não esteja a correr, reinicia-o automaticamente — sem intervenção do utilizador.</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Monitorização de Bateria — Suspensão Automática</div>
+                <p><code>validator_bg_service.dart</code> reescrito com integração <code>battery_plus</code>. O serviço suspende a mineração automaticamente em duas condições: bateria ≤ 10% ou modo de economia de energia activo. A notificação persistente é atualizada com o motivo da pausa. Quando as condições normalizam, a mineração retoma sem intervenção. O nível da bateria é também incluído no payload do heartbeat como campo <code>battery_pct</code>, ficando registado nos metadados do nó na rede.</p>
+            </div>
+        </article>
+
         <!-- MESH SOCIAL PERFIL + AUTH FIX + AERARIUM + UI — 12 ABR 2026 -->
         <article class="post">
             <div class="post-header">
