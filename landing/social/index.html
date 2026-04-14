@@ -100,6 +100,14 @@
         .quote-block { border-left: 3px solid var(--purple); padding: 16px 24px; background: rgba(167,139,250,0.05); margin-bottom: 60px; }
         .quote-block p { font-size: 0.85rem; color: var(--text3); font-style: italic; line-height: 1.8; }
 
+        /* Tabs de Protocolo — sidebar */
+        .proto-tabs { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 14px; }
+        .proto-tab { background: var(--cyan2); border: 1px solid var(--border); border-radius: 3px; padding: 5px 8px; font-family: 'Space Mono', monospace; font-size: 0.58rem; color: var(--text2); letter-spacing: 1px; cursor: pointer; text-transform: uppercase; transition: all 0.15s; }
+        .proto-tab:hover { color: var(--text3); border-color: var(--border2); }
+        .proto-tab.active { color: var(--cyan); border-color: rgba(0,242,255,0.3); background: rgba(0,242,255,0.1); }
+        .proto-section { display: none; }
+        .proto-section.active { display: block; }
+
         /* Selos */
         .selos-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 60px; }
         .selo { background: var(--cyan2); border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px; font-size: 0.65rem; color: var(--text3); letter-spacing: 1px; }
@@ -172,6 +180,8 @@
         .vote-btn .vcount { font-size: 0.7rem; }
         .reply-btn { display: flex; align-items: center; gap: 6px; padding: 5px 10px; background: transparent; border: 1px solid var(--border); border-radius: 4px; font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--text2); cursor: pointer; transition: all 0.2s; margin-left: auto; }
         .reply-btn:hover { color: var(--text3); border-color: var(--border2); }
+        .del-btn { display: flex; align-items: center; gap: 4px; padding: 4px 9px; background: transparent; border: 1px solid rgba(239,68,68,0.25); border-radius: 4px; font-family: 'Space Mono', monospace; font-size: 0.58rem; color: var(--red); cursor: pointer; transition: all 0.2s; opacity: 0.55; }
+        .del-btn:hover { opacity: 1; border-color: rgba(239,68,68,0.65); }
 
         /* Separador antes das regras */
         .protocol-header { max-width: 900px; margin: 0 auto; padding: 60px 40px 0; }
@@ -319,8 +329,8 @@
 
     <!-- ═══ BANNER PRÉ-LANÇAMENTO ═══ -->
 <section class="splash">
-        <div class="splash-tag">PLEGMA Mesh-Social</div>
-        <h1>Rede Social<br>sem Vigilância</h1>
+        <div class="splash-tag">⬡ PROTOCOLO MESH · P2P</div>
+        <h1>PLEGMA Mesh-Social</h1>
         <div class="manifesto">
             "Você está entrando em uma rede imaterial.<br>
             Sem rastro, sem rosto, sem vigilância.<br>
@@ -328,7 +338,7 @@
             Compartilhe sua visão, não sua localização.<br>
             Doe sua gratidão, não seus dados."
         </div>
-        <div class="sync-code">Sincronizando... PLEGMA_ZKDAG_MAINNET_GENESIS_2026</div>
+        <div class="sync-code">Sincronizando... ZKDAG_PLG_GENESIS_2026</div>
     </section>
 
     <!-- ═══════════════════════════════════════════
@@ -337,8 +347,19 @@
     <section class="network-section">
         <div class="network-layout">
 
-            <!-- SIDEBAR: Perfis Oficiais -->
+            <!-- SIDEBAR: Protocolo + Perfis Oficiais -->
             <aside class="sidebar">
+                <div class="sidebar-title">⬡ Protocolo Mesh</div>
+                <div class="proto-tabs">
+                    <button class="proto-tab active" onclick="mostrarProtocolo(this,'evolucao')">Evolução</button>
+                    <button class="proto-tab" onclick="mostrarProtocolo(this,'filtragem')">Filtragem</button>
+                    <button class="proto-tab" onclick="mostrarProtocolo(this,'reputacao')">Reputação</button>
+                    <button class="proto-tab" onclick="mostrarProtocolo(this,'anonimato')">Anonimato</button>
+                    <button class="proto-tab" onclick="mostrarProtocolo(this,'isolamento')">Isolamento</button>
+                    <button class="proto-tab" onclick="mostrarProtocolo(this,'portal')">Portal +18</button>
+                    <button class="proto-tab" onclick="mostrarProtocolo(this,'selos')">Selos</button>
+                </div>
+
                 <div class="sidebar-title">⬡ Perfis Oficiais</div>
 
                 <!-- Plegmadag -->
@@ -411,7 +432,7 @@
                     <textarea class="creator-input" placeholder="Compartilhe sua visão... (máx. 280 caracteres)" maxlength="280" id="postInput"></textarea>
                     <div class="creator-footer">
                         <span class="creator-hint" id="charCount">280 caracteres restantes</span>
-                        <button class="btn-post" onclick="publicarPost()">Publicar ⬡</button>
+                        <button class="btn-post" id="btnPost" onclick="publicarPost()" disabled style="opacity:0.35;cursor:not-allowed">Publicar ⬡</button>
                     </div>
                     <div class="connect-wall" id="connectWall" style="display:none">
                         <a href="#" onclick="PlegmaAuth.openModal();return false">Conecte sua carteira</a> para publicar na rede.
@@ -504,11 +525,12 @@
     </div>
 
     <main class="main">
+
+        <!-- ── Evolução ── -->
+        <div class="proto-section active" id="proto-evolucao">
         <div style="background:rgba(0,242,255,0.03);border:1px solid var(--border);border-radius:6px;padding:16px 20px;margin-bottom:40px;font-size:0.72rem;color:var(--text2);text-align:center;letter-spacing:2px;text-transform:uppercase">
             ⬡ Protocolo da Rede — Código de Convivência
         </div>
-
-        <!-- Código de Evolução -->
         <div class="section-title">Código de Evolução</div>
         <ul class="regras-list">
             <li class="regra-item">
@@ -545,7 +567,10 @@
             <p>"Fale sobre o que te eleva, não sobre o que te divide. Na PLEGMA, o conhecimento é um bem comum e o respeito é a nossa lei única."</p>
         </div>
 
-        <!-- Filtragem Orgânica -->
+        </div><!-- /proto-evolucao -->
+
+        <!-- ── Filtragem Orgânica ── -->
+        <div class="proto-section" id="proto-filtragem">
         <div class="section-title">Mecanismo de Filtragem Orgânica</div>
         <div class="filter-levels">
             <div class="filter-level">
@@ -565,7 +590,10 @@
             </div>
         </div>
 
-        <!-- Reputação Soberana -->
+        </div><!-- /proto-filtragem -->
+
+        <!-- ── Reputação ── -->
+        <div class="proto-section" id="proto-reputacao">
         <div class="section-title">Reputação Soberana — Invisível</div>
         <div class="rep-grid">
             <div class="rep-card">
@@ -586,7 +614,10 @@
             </div>
         </div>
 
-        <!-- Anonimato Radical -->
+        </div><!-- /proto-reputacao -->
+
+        <!-- ── Anonimato ── -->
+        <div class="proto-section" id="proto-anonimato">
         <div class="section-title">Protocolo de Anonimato Radical</div>
         <div class="proibido-grid">
             <div class="proibido-item"><div class="p-icon">📱</div><span>Telefones</span></div>
@@ -602,7 +633,10 @@
             </div>
         </div>
 
-        <!-- Isolamento Cross-Platform -->
+        </div><!-- /proto-anonimato -->
+
+        <!-- ── Isolamento ── -->
+        <div class="proto-section" id="proto-isolamento">
         <div class="section-title">Protocolo de Isolamento Cross-Platform</div>
         <div class="alert-bloqueio">
             <span class="alert-tag">⚠ Bloqueio Anti-Setor</span>
@@ -615,7 +649,10 @@
             </div>
         </div>
 
-        <!-- Portal +18 -->
+        </div><!-- /proto-isolamento -->
+
+        <!-- ── Portal +18 ── -->
+        <div class="proto-section" id="proto-portal">
         <div class="section-title">Portal de Acesso — Filtro de Maturidade</div>
         <div class="portal-box">
             <h4>Declaração de Acesso</h4>
@@ -632,7 +669,10 @@
             </div>
         </div>
 
-        <!-- Selos -->
+        </div><!-- /proto-portal -->
+
+        <!-- ── Selos ── -->
+        <div class="proto-section" id="proto-selos">
         <div class="section-title">Selos da Convivência P2P</div>
         <div class="selos-grid">
             <span class="selo purple">[Pluralismo Soberano]</span>
@@ -648,6 +688,7 @@
             <span class="selo">[Maturity Assured]</span>
             <span class="selo purple">[Child-Safe Architecture]</span>
         </div>
+        </div><!-- /proto-selos -->
 
     </main>
 
@@ -702,6 +743,18 @@
 </div>
 
 <script>
+// Tabs de Protocolo Mesh
+function mostrarProtocolo(btn, id) {
+    document.querySelectorAll('.proto-section').forEach(function(s) { s.classList.remove('active'); });
+    var el = document.getElementById('proto-' + id);
+    if (el) {
+        el.classList.add('active');
+        el.scrollIntoView({behavior: 'smooth', block: 'start'});
+    }
+    document.querySelectorAll('.proto-tab').forEach(function(t) { t.classList.remove('active'); });
+    btn.classList.add('active');
+}
+
 // Contador de caracteres
 const postInput = document.getElementById('postInput');
 const charCount = document.getElementById('charCount');
@@ -728,11 +781,13 @@ async function publicarPost() {
     const shortAddr = author.slice(0, 8) + '…' + author.slice(-4);
     const agora = new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'}) + ' UTC';
 
-    function _inserirPost(textoSeguro) {
+    function _inserirPost(textoSeguro, postId) {
         const feed = document.getElementById('feedPosts');
         if (!feed) return;
         const div = document.createElement('div');
         div.className = 'post';
+        if (postId) div.dataset.postId = postId;
+        div.dataset.author = author;
         div.innerHTML =
             '<div class="post-header">' +
                 '<div class="post-avatar" style="background:rgba(0,242,255,0.06)">⬡</div>' +
@@ -745,7 +800,8 @@ async function publicarPost() {
             '<div class="post-footer">' +
                 '<button class="vote-btn respeit" onclick="votar(this,1)"><span>💠</span> <span class="vcount">0</span> Respeito</button>' +
                 '<button class="vote-btn ruido" onclick="votar(this,-1)"><span>⚡</span> <span class="vcount">0</span> Ruído</button>' +
-                '<button class="reply-btn">💬 Responder</button>' +
+                '<button class="reply-btn" onclick="responder(this)">💬 Responder</button>' +
+                '<button class="del-btn" onclick="apagarPost(this)">✕ Apagar</button>' +
             '</div>';
         /* insere após os posts fixados (último elemento com classe pinned ou pinned-fund) */
         const fixados = feed.querySelectorAll('.post.pinned, .post.pinned-fund');
@@ -767,10 +823,10 @@ async function publicarPost() {
         });
         const data = await resp.json();
         if (data.erro) throw new Error(data.erro);
-        _inserirPost(textoSeguro);
+        _inserirPost(textoSeguro, data.id);
     } catch(e) {
         console.warn('[PLEGMA] API offline, post local:', e.message);
-        _inserirPost(textoSeguro);
+        _inserirPost(textoSeguro, null);
     }
 }
 
@@ -819,33 +875,133 @@ async function publicarPost() {
     }
 }());
 
-// Carrega posts reais da API ao iniciar
+// ── Utilitários ─────────────────────────────────────────────────────────────
+function _enderecoAtual() {
+    return (window.PlegmaAuth && PlegmaAuth.isConnected())
+        ? PlegmaAuth.getSession().plg_address : null;
+}
+function _exigirAuth() {
+    if (!_enderecoAtual()) {
+        if (window.PlegmaAuth) PlegmaAuth.openModal();
+        return false;
+    }
+    return true;
+}
+
+// ── Renderizar post vindo da API ─────────────────────────────────────────────
+function _renderizarPostAPI(post) {
+    const feed = document.getElementById('feedPosts');
+    if (!feed) return;
+    // Evita duplicado (post já inserido localmente)
+    if (document.querySelector('[data-post-id="' + post.id + '"]')) return;
+    const addr = post.author || '';
+    const shortAddr = addr.length > 12 ? addr.slice(0, 8) + '…' + addr.slice(-4) : addr;
+    const ts = post.timestamp
+        ? new Date(post.timestamp * 1000).toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'}) + ' UTC'
+        : '';
+    const textoSeguro = (post.conteudo || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const euAutor = addr === _enderecoAtual();
+    const div = document.createElement('div');
+    div.className = 'post';
+    div.dataset.postId = post.id;
+    div.dataset.author = addr;
+    div.innerHTML =
+        '<div class="post-header">' +
+            '<div class="post-avatar" style="background:rgba(0,242,255,0.06)">⬡</div>' +
+            '<div class="post-meta">' +
+                '<div class="post-author"><span style="color:var(--text3)">' + shortAddr + '</span></div>' +
+                '<div class="post-time">' + ts + '</div>' +
+            '</div>' +
+        '</div>' +
+        '<div class="post-body">' + textoSeguro + '</div>' +
+        '<div class="post-footer">' +
+            '<button class="vote-btn respeit" onclick="votar(this,1)"><span>💠</span> <span class="vcount">' + formatNum(post.respeit || 0) + '</span> Respeito</button>' +
+            '<button class="vote-btn ruido" onclick="votar(this,-1)"><span>⚡</span> <span class="vcount">' + formatNum(post.ruido || 0) + '</span> Ruído</button>' +
+            '<button class="reply-btn" onclick="responder(this)">💬 Responder</button>' +
+            (euAutor ? '<button class="del-btn" onclick="apagarPost(this)">✕ Apagar</button>' : '') +
+        '</div>';
+    // Insere após os posts fixados (mesmo comportamento de _inserirPost)
+    const fixados = feed.querySelectorAll('.post.pinned, .post.pinned-fund');
+    const ancora = fixados.length ? fixados[fixados.length - 1].nextSibling : feed.firstChild;
+    feed.insertBefore(div, ancora);
+}
+
+// ── Carrega e renderiza posts da API ─────────────────────────────────────────
 async function carregarPostsAPI() {
     try {
-        const resp = await fetch('https://api.plegmadag.com/api/social/posts?limit=20');
+        const resp = await fetch('https://api.plegmadag.com/api/social/posts?limit=40');
+        if (!resp.ok) return;
         const data = await resp.json();
-        // Não substitui posts fixados — apenas adiciona após eles
-        // (implementação simplificada: apenas loga)
-        console.log('[PLEGMA] Posts carregados da API:', data.total);
-    } catch(e) {
-        console.warn('[PLEGMA] API offline, usando posts estáticos');
-    }
+        if (Array.isArray(data.posts)) {
+            data.posts.forEach(_renderizarPostAPI);
+        }
+    } catch(e) { /* API offline — feed estático mantém-se */ }
 }
 carregarPostsAPI();
 
-// PlegmaAuth — controla connectWall e botão publicar
+// ── PlegmaAuth ───────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
     if (typeof PlegmaAuth !== 'undefined') {
+
+        // Verifica perfil: cache localStorage → API → redirecionar se sem perfil
+        async function _verificarPerfil(addr) {
+            const CACHE_TTL = 24 * 60 * 60 * 1000;
+            const cacheKey  = 'plg_profile_' + addr;
+            // Valida cache: deve ter profile_id E cached_at válido
+            try {
+                const raw = localStorage.getItem(cacheKey);
+                if (raw) {
+                    const cached = JSON.parse(raw);
+                    if (cached && cached.profile_id && cached.cached_at && (Date.now() - cached.cached_at) < CACHE_TTL) return;
+                    // Cache inválido (sem profile_id ou expirado) — limpa e re-verifica
+                    localStorage.removeItem(cacheKey);
+                }
+            } catch (_) {}
+            try {
+                const res = await fetch('https://api.plegmadag.com/api/social/profile?plg=' + encodeURIComponent(addr));
+                if (res.status === 404) {
+                    window.location.href = '/social/criar-perfil/?plg=' + encodeURIComponent(addr);
+                    return;
+                }
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.profile_id) {
+                        data.cached_at = Date.now();
+                        localStorage.setItem(cacheKey, JSON.stringify(data));
+                    }
+                }
+                // status 5xx ou outro erro de rede → carrega feed normalmente (não bloquear)
+            } catch (_) {}
+        }
+
         PlegmaAuth.init({
             onLogin: function(addr) {
                 document.getElementById('connectWall').style.display = 'none';
-                document.querySelector('.btn-post') && (document.querySelector('.btn-post').disabled = false);
-                /* se havia texto pendente no momento do login, publica automaticamente */
-                var txt = document.getElementById('postInput');
-                if (txt && txt.value.trim()) publicarPost();
+                var btn = document.getElementById('btnPost');
+                if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
+                // Mostra botões de apagar para posts do próprio utilizador
+                document.querySelectorAll('.post[data-author="' + addr + '"]').forEach(function(p) {
+                    if (!p.querySelector('.del-btn')) {
+                        var footer = p.querySelector('.post-footer');
+                        if (footer) {
+                            var d = document.createElement('button');
+                            d.className = 'del-btn';
+                            d.setAttribute('onclick', 'apagarPost(this)');
+                            d.textContent = '✕ Apagar';
+                            footer.appendChild(d);
+                        }
+                    }
+                });
+                _verificarPerfil(addr).then(function() {
+                    var txt = document.getElementById('postInput');
+                    if (txt && txt.value.trim()) publicarPost();
+                });
             },
             onLogout: function() {
                 document.getElementById('connectWall').style.display = 'flex';
+                var btn = document.getElementById('btnPost');
+                if (btn) { btn.disabled = true; btn.style.opacity = '0.35'; btn.style.cursor = 'not-allowed'; }
+                document.querySelectorAll('.del-btn').forEach(function(b) { b.remove(); });
             }
         });
         if (!PlegmaAuth.isConnected()) {
@@ -854,14 +1010,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Votar
+// Votar — requer autenticação
 async function votar(btn, tipo) {
+    if (!_exigirAuth()) return;
     const postEl = btn.closest('.post');
     const postId = postEl ? postEl.dataset.postId : null;
-    const voter  = (window.PlegmaAuth && PlegmaAuth.isConnected())
-                   ? PlegmaAuth.getSession().plg_address
-                   : 'anon_' + Math.random().toString(36).substr(2,6);
-    if (postId) {
+    const voter  = _enderecoAtual();
+    if (postId && voter) {
         fetch('https://api.plegmadag.com/api/social/votar', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
@@ -869,7 +1024,7 @@ async function votar(btn, tipo) {
         }).catch(() => {});
     }
     const count = btn.querySelector('.vcount');
-    const n = parseInt(count.textContent.replace('.','')) || 0;
+    const n = parseInt(count.textContent.replace('.','').replace('K','000')) || 0;
     if (btn.dataset.voted) {
         count.textContent = formatNum(tipo > 0 ? n - 1 : n + 1);
         delete btn.dataset.voted;
@@ -881,6 +1036,72 @@ async function votar(btn, tipo) {
         btn.style.borderColor = tipo > 0 ? 'rgba(0,242,255,0.5)' : 'rgba(239,68,68,0.5)';
         btn.style.color = tipo > 0 ? 'var(--cyan)' : 'var(--red)';
     }
+}
+
+// Responder — requer autenticação
+function responder(btn) {
+    if (!_exigirAuth()) return;
+    const postEl = btn.closest('.post');
+    if (!postEl) return;
+    // Se já existe um composer de resposta, apenas focar
+    const existing = postEl.querySelector('.reply-composer');
+    if (existing) { existing.querySelector('textarea').focus(); return; }
+    const postId = postEl.dataset.postId || null;
+    const addr   = _enderecoAtual();
+    const composer = document.createElement('div');
+    composer.className = 'reply-composer';
+    composer.style.cssText = 'margin-top:10px;display:flex;gap:8px;align-items:flex-start';
+    composer.innerHTML =
+        '<textarea style="flex:1;background:#0d1520;border:1px solid var(--border);border-radius:4px;padding:8px;font-family:Space Mono,monospace;font-size:0.72rem;color:var(--text);resize:none;outline:none;min-height:52px" maxlength="280" placeholder="Responder..."></textarea>' +
+        '<button style="padding:6px 12px;background:rgba(0,242,255,0.1);border:1px solid rgba(0,242,255,0.4);border-radius:4px;font-family:Space Mono,monospace;font-size:0.6rem;color:var(--cyan);cursor:pointer;letter-spacing:1px;white-space:nowrap" onclick="enviarResposta(this)">⬡ Enviar</button>';
+    postEl.appendChild(composer);
+    composer.querySelector('textarea').focus();
+    // armazena contexto
+    composer.dataset.parentId = postId || '';
+    composer.dataset.author   = addr;
+}
+
+async function enviarResposta(btn) {
+    const composer  = btn.closest('.reply-composer');
+    const postEl    = composer.closest('.post');
+    const texto     = composer.querySelector('textarea').value.trim();
+    if (!texto) return;
+    const addr      = _enderecoAtual();
+    if (!addr) return;
+    const parent_id = composer.dataset.parentId || null;
+    try {
+        const resp = await fetch('https://api.plegmadag.com/api/social/post', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({author: addr, conteudo: texto, parent_id})
+        });
+        const data = await resp.json();
+        if (data.erro) throw new Error(data.erro);
+    } catch(_) { /* API offline — apenas remove composer */ }
+    composer.remove();
+}
+
+// Apagar post
+async function apagarPost(btn) {
+    if (!_exigirAuth()) return;
+    const postEl = btn.closest('.post');
+    if (!postEl) return;
+    const postId = postEl.dataset.postId;
+    const author = _enderecoAtual();
+    if (!postId || !author) return;
+    btn.disabled = true;
+    try {
+        const resp = await fetch('https://api.plegmadag.com/api/social/post/apagar', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({post_id: postId, author})
+        });
+        const data = await resp.json();
+        if (data.erro) { btn.disabled = false; return; }
+    } catch(_) { /* API offline — remove localmente */ }
+    postEl.style.transition = 'opacity 0.3s';
+    postEl.style.opacity = '0';
+    setTimeout(() => postEl.remove(), 320);
 }
 
 function formatNum(n) {

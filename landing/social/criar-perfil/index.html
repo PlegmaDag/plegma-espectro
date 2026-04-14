@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLEGMA | Criar Perfil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    <script src="/auth.js"></script>
+    <style>
+        :root {
+            --bg: #000; --bg2: #050a14;
+            --cyan: #00F2FF; --cyan2: rgba(0,242,255,0.08);
+            --green: #23d18b; --amber: #f59e0b; --red: #ef4444; --purple: #a78bfa;
+            --border: rgba(0,242,255,0.12); --border2: rgba(0,242,255,0.25);
+            --text: #e2e8f0; --text2: #64748b; --text3: #94a3b8;
+            --glow: 0 0 20px rgba(0,242,255,0.3); --glow-sm: 0 0 8px rgba(0,242,255,0.2);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: 'Space Mono', monospace; min-height: 100vh; overflow-x: hidden; }
+        body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(0,242,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,242,255,0.03) 1px, transparent 1px); background-size: 40px 40px; z-index: 0; pointer-events: none; }
+        .page { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 40px 20px 80px; }
+
+        nav { display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 60px; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
+        .nav-brand { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--cyan); text-shadow: var(--glow-sm); text-decoration: none; letter-spacing: 2px; }
+        .nav-tag { font-size: 0.65rem; color: var(--text2); letter-spacing: 3px; text-transform: uppercase; }
+
+        .container { width: 100%; max-width: 520px; margin-top: 80px; }
+
+        /* Cabeçalho */
+        .page-header { text-align: center; margin-bottom: 32px; }
+        .page-header .tag { font-size: 0.65rem; letter-spacing: 4px; color: var(--purple); text-transform: uppercase; margin-bottom: 12px; display: block; }
+        .page-header h1 { font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--cyan); text-shadow: var(--glow-sm); }
+        .page-header p { font-size: 0.75rem; color: var(--text3); margin-top: 10px; line-height: 1.7; }
+
+        /* Preview do perfil */
+        .preview-card { border: 1px solid var(--border2); border-radius: 8px; overflow: hidden; margin-bottom: 32px; }
+        .preview-cover { height: 100px; width: 100%; position: relative; display: flex; align-items: flex-end; padding: 0 20px 0; }
+        .preview-avatar { width: 52px; height: 52px; border-radius: 50%; border: 2px solid var(--bg); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; transform: translateY(26px); background: rgba(0,242,255,0.1); flex-shrink: 0; }
+        .preview-info { padding: 36px 20px 16px; background: var(--bg2); }
+        .preview-addr { font-size: 0.72rem; color: var(--text3); margin-bottom: 4px; }
+        .preview-bio-preview { font-size: 0.75rem; color: var(--text2); font-style: italic; min-height: 16px; }
+
+        /* Secções */
+        .section { margin-bottom: 28px; }
+        .section-label { font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: var(--cyan); margin-bottom: 14px; display: flex; align-items: center; gap: 12px; }
+        .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 14px; }
+        .tab-btn { flex: 1; background: transparent; border: none; padding: 8px; font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--text2); letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+        .tab-btn.active { background: var(--cyan2); color: var(--cyan); border-bottom: 2px solid var(--cyan); }
+        .tab-btn:hover:not(.active) { color: var(--text); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* Grid de avatares */
+        .avatar-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; }
+        .avatar-opt { background: var(--cyan2); border: 1px solid var(--border); border-radius: 4px; padding: 10px 6px; text-align: center; font-size: 1.3rem; cursor: pointer; transition: all 0.15s; user-select: none; }
+        .avatar-opt:hover { border-color: var(--border2); background: rgba(0,242,255,0.12); }
+        .avatar-opt.selected { border-color: var(--cyan); background: rgba(0,242,255,0.15); box-shadow: var(--glow-sm); }
+
+        /* Grid de capas */
+        .cover-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .cover-opt { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; cursor: pointer; transition: all 0.15s; height: 64px; position: relative; }
+        .cover-opt:hover { border-color: var(--border2); }
+        .cover-opt.selected { border-color: var(--cyan); box-shadow: var(--glow-sm); }
+        .cover-opt .cover-label { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.55); padding: 4px 6px; font-size: 0.55rem; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; text-align: center; }
+
+        /* Gradientes */
+        .grad-deep-space   { background: linear-gradient(135deg, #000010 0%, #0a0a2e 50%, #1a0a3e 100%); }
+        .grad-lattice-cyan { background: linear-gradient(135deg, #000d14 0%, #001a26 50%, #002233 100%); border-top: 2px solid rgba(0,242,255,0.4); }
+        .grad-genesis-green{ background: linear-gradient(135deg, #001a0d 0%, #002616 50%, #004020 100%); }
+        .grad-aerarium     { background: linear-gradient(135deg, #1a0d00 0%, #261500 50%, #3a2000 100%); }
+        .grad-sentinela    { background: linear-gradient(135deg, #1a0000 0%, #260000 50%, #400010 100%); }
+        .grad-protocol-blue{ background: linear-gradient(135deg, #00001a 0%, #000026 50%, #00003a 100%); }
+
+        /* Padrões SVG — inline como background */
+        .pat-hex-grid      { background-color: #060c1a; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='46'%3E%3Cpath d='M10 0 L30 0 L40 17 L30 34 L10 34 L0 17Z' fill='none' stroke='rgba(0,242,255,0.18)' stroke-width='0.8'/%3E%3C/svg%3E"); background-size: 40px 40px; }
+        .pat-dag-nodes     { background-color: #050a10; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='10' cy='10' r='2.5' fill='rgba(0,242,255,0.3)'/%3E%3Ccircle cx='50' cy='10' r='2.5' fill='rgba(35,209,139,0.3)'/%3E%3Ccircle cx='30' cy='35' r='2.5' fill='rgba(167,139,250,0.3)'/%3E%3Cline x1='10' y1='10' x2='50' y2='10' stroke='rgba(0,242,255,0.12)' stroke-width='0.8'/%3E%3Cline x1='10' y1='10' x2='30' y2='35' stroke='rgba(0,242,255,0.12)' stroke-width='0.8'/%3E%3Cline x1='50' y1='10' x2='30' y2='35' stroke='rgba(0,242,255,0.12)' stroke-width='0.8'/%3E%3C/svg%3E"); background-size: 60px 60px; }
+        .pat-lattice-grid  { background-color: #06060e; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30'%3E%3Crect x='0' y='0' width='30' height='30' fill='none' stroke='rgba(167,139,250,0.15)' stroke-width='0.6'/%3E%3Cline x1='0' y1='0' x2='30' y2='30' stroke='rgba(167,139,250,0.08)' stroke-width='0.5'/%3E%3Cline x1='30' y1='0' x2='0' y2='30' stroke='rgba(167,139,250,0.08)' stroke-width='0.5'/%3E%3C/svg%3E"); background-size: 30px 30px; }
+        .pat-zk-circuit    { background-color: #050d10; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50'%3E%3Cpath d='M5 25 L20 25 L25 10 L30 40 L35 25 L45 25' fill='none' stroke='rgba(0,242,255,0.22)' stroke-width='0.8'/%3E%3Ccircle cx='5' cy='25' r='2' fill='rgba(0,242,255,0.25)'/%3E%3Ccircle cx='45' cy='25' r='2' fill='rgba(0,242,255,0.25)'/%3E%3C/svg%3E"); background-size: 50px 50px; }
+        .pat-dilithium-waves { background-color: #0a050d; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='30'%3E%3Cpath d='M0 15 Q20 5 40 15 Q60 25 80 15' fill='none' stroke='rgba(167,139,250,0.2)' stroke-width='1'/%3E%3Cpath d='M0 20 Q20 10 40 20 Q60 30 80 20' fill='none' stroke='rgba(167,139,250,0.1)' stroke-width='0.6'/%3E%3C/svg%3E"); background-size: 80px 30px; }
+        .pat-blake3-dots   { background-color: #050a0a; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ccircle cx='4' cy='4' r='1.2' fill='rgba(0,242,255,0.25)'/%3E%3Ccircle cx='12' cy='4' r='0.8' fill='rgba(35,209,139,0.18)'/%3E%3Ccircle cx='20' cy='4' r='1' fill='rgba(167,139,250,0.2)'/%3E%3Ccircle cx='4' cy='12' r='0.8' fill='rgba(167,139,250,0.18)'/%3E%3Ccircle cx='12' cy='12' r='1.4' fill='rgba(0,242,255,0.3)'/%3E%3Ccircle cx='20' cy='12' r='0.8' fill='rgba(35,209,139,0.18)'/%3E%3Ccircle cx='4' cy='20' r='1' fill='rgba(35,209,139,0.22)'/%3E%3Ccircle cx='12' cy='20' r='0.8' fill='rgba(167,139,250,0.18)'/%3E%3Ccircle cx='20' cy='20' r='1.2' fill='rgba(0,242,255,0.25)'/%3E%3C/svg%3E"); background-size: 24px 24px; }
+
+        /* Bio */
+        .bio-wrap { position: relative; }
+        .bio-textarea { width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 12px; font-family: 'Space Mono', monospace; font-size: 0.78rem; color: var(--text); resize: none; outline: none; min-height: 80px; line-height: 1.6; transition: border-color 0.2s; }
+        .bio-textarea:focus { border-color: var(--border2); }
+        .bio-textarea.shield-err { border-color: rgba(239,68,68,0.6); }
+        .bio-counter { text-align: right; font-size: 0.62rem; color: var(--text2); margin-top: 4px; }
+        .shield-msg { display: none; margin-top: 8px; padding: 8px 12px; background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.25); border-radius: 4px; font-size: 0.68rem; color: var(--red); }
+        .shield-msg.visible { display: block; }
+
+        /* Botão */
+        .btn-criar { width: 100%; padding: 16px; background: transparent; border: 1px solid var(--cyan); border-radius: 4px; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 800; color: var(--cyan); letter-spacing: 4px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; margin-top: 12px; }
+        .btn-criar:hover:not(:disabled) { background: rgba(0,242,255,0.08); box-shadow: var(--glow-sm); }
+        .btn-criar:disabled { opacity: 0.35; cursor: not-allowed; border-color: var(--border); color: var(--text2); }
+        .btn-criar.loading { opacity: 0.6; cursor: wait; }
+
+        /* Erro geral */
+        .msg-erro { display: none; margin-top: 12px; padding: 10px 14px; background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.25); border-radius: 4px; font-size: 0.72rem; color: var(--red); text-align: center; }
+        .msg-erro.visible { display: block; }
+
+        /* Auth wall */
+        .auth-wall { display: none; text-align: center; padding: 40px 20px; }
+        .auth-wall p { font-size: 0.8rem; color: var(--text3); margin-bottom: 16px; }
+        .btn-auth { padding: 12px 24px; background: transparent; border: 1px solid var(--cyan); border-radius: 4px; font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--cyan); cursor: pointer; }
+
+        @media (max-width: 480px) {
+            .avatar-grid { grid-template-columns: repeat(4, 1fr); }
+            .cover-grid { grid-template-columns: repeat(2, 1fr); }
+            nav { padding: 0 16px; }
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <a href="/" class="nav-brand">⬡ PLEGMA</a>
+    <span class="nav-tag">Criar Perfil</span>
+</nav>
+
+<div class="page">
+<div class="container" id="mainContainer" style="display:none">
+
+    <div class="page-header">
+        <span class="tag">⬡ Mesh Social</span>
+        <h1>Criar Perfil</h1>
+        <p>Escolha como se apresenta na rede. A sua identidade é a sua chave pública.</p>
+    </div>
+
+    <!-- Preview -->
+    <div class="preview-card">
+        <div class="preview-cover grad-lattice-cyan" id="previewCover">
+            <div class="preview-avatar" id="previewAvatar">⬡</div>
+        </div>
+        <div class="preview-info">
+            <div class="preview-addr" id="previewAddr">PLG…</div>
+            <div class="preview-bio-preview" id="previewBio">A sua bio aparece aqui…</div>
+        </div>
+    </div>
+
+    <!-- Avatar -->
+    <div class="section">
+        <div class="section-label">Avatar</div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('avatar','sym')">Símbolos PLEGMA</button>
+            <button class="tab-btn" onclick="switchTab('avatar','emoji')">Emojis</button>
+        </div>
+        <div class="tab-panel active" id="avatar-sym">
+            <div class="avatar-grid" id="gridAvatarSym"></div>
+        </div>
+        <div class="tab-panel" id="avatar-emoji">
+            <div class="avatar-grid" id="gridAvatarEmoji"></div>
+        </div>
+    </div>
+
+    <!-- Capa -->
+    <div class="section">
+        <div class="section-label">Capa do Perfil</div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('cover','grad')">Gradientes</button>
+            <button class="tab-btn" onclick="switchTab('cover','pat')">Padrões DAG</button>
+        </div>
+        <div class="tab-panel active" id="cover-grad">
+            <div class="cover-grid" id="gridCoverGrad"></div>
+        </div>
+        <div class="tab-panel" id="cover-pat">
+            <div class="cover-grid" id="gridCoverPat"></div>
+        </div>
+    </div>
+
+    <!-- Bio -->
+    <div class="section">
+        <div class="section-label">Bio</div>
+        <div class="bio-wrap">
+            <textarea class="bio-textarea" id="bioInput" maxlength="100" placeholder="Descreva-se em poucas palavras..." oninput="validarBio(this)"></textarea>
+            <div class="bio-counter"><span id="bioCount">0</span>/100</div>
+            <div class="shield-msg" id="shieldMsg">⚠ Bio contém padrão não permitido (contacto pessoal)</div>
+        </div>
+    </div>
+
+    <!-- Botão -->
+    <button class="btn-criar" id="btnCriar" onclick="criarPerfil()" disabled>⬡ CRIAR PERFIL</button>
+    <div class="msg-erro" id="msgErro"></div>
+
+</div>
+
+<!-- Auth wall (se não autenticado) -->
+<div class="auth-wall" id="authWall">
+    <p>É necessário conectar a carteira PLEGMA para criar um perfil.</p>
+    <button class="btn-auth" onclick="PlegmaAuth.openModal()">Conectar Carteira</button>
+</div>
+</div>
+
+<script>
+// ── Dados ──────────────────────────────────────────────────────────────────
+const AVATARES_SYM = ['⬡','◈','◉','⬟','◆','⬢','⬠','⬣'];
+const AVATARES_EMOJI = ['🛡','⚡','🔮','🌐','💠','🔱','⬛','🧿','🔥','🌊','⚗️','🔬','🪐','🎯','🧬','⚙️'];
+
+const CAPAS_GRAD = [
+    { id: 'deep-space',    nome: 'Deep Space',     cls: 'grad-deep-space'    },
+    { id: 'lattice-cyan',  nome: 'Lattice Cyan',   cls: 'grad-lattice-cyan'  },
+    { id: 'genesis-green', nome: 'Genesis Green',  cls: 'grad-genesis-green' },
+    { id: 'aerarium',      nome: 'Aerarium',        cls: 'grad-aerarium'      },
+    { id: 'sentinela',     nome: 'Sentinela',       cls: 'grad-sentinela'     },
+    { id: 'protocol-blue', nome: 'Protocol Blue',  cls: 'grad-protocol-blue' },
+];
+const CAPAS_PAT = [
+    { id: 'hex-grid',         nome: 'Hex Grid',          cls: 'pat-hex-grid'         },
+    { id: 'dag-nodes',        nome: 'DAG Nodes',          cls: 'pat-dag-nodes'        },
+    { id: 'lattice-grid',     nome: 'Lattice Grid',       cls: 'pat-lattice-grid'     },
+    { id: 'zk-circuit',       nome: 'ZK Circuit',         cls: 'pat-zk-circuit'       },
+    { id: 'dilithium-waves',  nome: 'Dilithium Waves',    cls: 'pat-dilithium-waves'  },
+    { id: 'blake3-dots',      nome: 'BLAKE3 Dots',        cls: 'pat-blake3-dots'      },
+];
+
+// ── Estado ─────────────────────────────────────────────────────────────────
+var _avatarSel  = 'sym:⬡';
+var _coverSel   = 'grad:lattice-cyan';
+var _bioOk      = true;
+var _plgAddress = null;
+
+// ── Shield — padrões bloqueados na bio ─────────────────────────────────────
+var SHIELD_BIO = [
+    /\d{7,}/,
+    /(\d[\s\-._]){4,}\d/,
+    /@\w+/,
+    /\b[a-z0-9]{1,3}[\s\-_]?[0-9@]{1,3}[\s\-_]?[a-z0-9]{1,3}\b/i,
+    /\+\s*\d[\d\s]{6,}/,
+    /\(\d{2,3}\)\s*\d/,
+];
+
+function _bioPassaShield(txt) {
+    return !SHIELD_BIO.some(function(re) { return re.test(txt); });
+}
+
+function validarBio(el) {
+    var txt = el.value;
+    document.getElementById('bioCount').textContent = txt.length;
+    document.getElementById('previewBio').textContent = txt || 'A sua bio aparece aqui…';
+    _bioOk = _bioPassaShield(txt);
+    el.classList.toggle('shield-err', !_bioOk);
+    document.getElementById('shieldMsg').classList.toggle('visible', !_bioOk);
+    _atualizarBotao();
+}
+
+// ── Tabs ───────────────────────────────────────────────────────────────────
+function switchTab(grupo, painel) {
+    var prefixo = grupo + '-';
+    document.querySelectorAll('[id^="' + prefixo + '"]').forEach(function(el) {
+        el.classList.remove('active');
+    });
+    document.getElementById(prefixo + painel).classList.add('active');
+
+    var btns = document.getElementById(prefixo + painel).closest('.section').querySelectorAll('.tab-btn');
+    btns.forEach(function(b) { b.classList.remove('active'); });
+    btns[painel === 'sym' || painel === 'grad' ? 0 : 1].classList.add('active');
+}
+
+// ── Renderização das opções ────────────────────────────────────────────────
+function _renderAvatares() {
+    var gSym   = document.getElementById('gridAvatarSym');
+    var gEmoji = document.getElementById('gridAvatarEmoji');
+    AVATARES_SYM.forEach(function(sym) {
+        var d = document.createElement('div');
+        d.className = 'avatar-opt' + (('sym:' + sym) === _avatarSel ? ' selected' : '');
+        d.textContent = sym;
+        d.onclick = function() { _selecionarAvatar('sym:' + sym, sym); };
+        gSym.appendChild(d);
+    });
+    AVATARES_EMOJI.forEach(function(em) {
+        var d = document.createElement('div');
+        d.className = 'avatar-opt' + (('emoji:' + em) === _avatarSel ? ' selected' : '');
+        d.textContent = em;
+        d.onclick = function() { _selecionarAvatar('emoji:' + em, em); };
+        gEmoji.appendChild(d);
+    });
+}
+
+function _selecionarAvatar(key, glifo) {
+    _avatarSel = key;
+    document.querySelectorAll('.avatar-opt').forEach(function(el) { el.classList.remove('selected'); });
+    event.currentTarget.classList.add('selected');
+    document.getElementById('previewAvatar').textContent = glifo;
+    _atualizarBotao();
+}
+
+function _renderCapas() {
+    var gGrad = document.getElementById('gridCoverGrad');
+    var gPat  = document.getElementById('gridCoverPat');
+    CAPAS_GRAD.forEach(function(c) {
+        var d = document.createElement('div');
+        d.className = 'cover-opt ' + c.cls + (('grad:' + c.id) === _coverSel ? ' selected' : '');
+        d.innerHTML = '<span class="cover-label">' + c.nome + '</span>';
+        d.onclick = function() { _selecionarCapa('grad:' + c.id, c.cls); };
+        gGrad.appendChild(d);
+    });
+    CAPAS_PAT.forEach(function(c) {
+        var d = document.createElement('div');
+        d.className = 'cover-opt ' + c.cls + (('pat:' + c.id) === _coverSel ? ' selected' : '');
+        d.innerHTML = '<span class="cover-label">' + c.nome + '</span>';
+        d.onclick = function() { _selecionarCapa('pat:' + c.id, c.cls); };
+        gPat.appendChild(d);
+    });
+}
+
+function _selecionarCapa(key, cls) {
+    _coverSel = key;
+    document.querySelectorAll('.cover-opt').forEach(function(el) { el.classList.remove('selected'); });
+    event.currentTarget.classList.add('selected');
+    // Actualiza preview: remove classes de capa anteriores, adiciona nova
+    var prev = document.getElementById('previewCover');
+    CAPAS_GRAD.concat(CAPAS_PAT).forEach(function(c) { prev.classList.remove(c.cls); });
+    prev.classList.add(cls);
+    _atualizarBotao();
+}
+
+// ── Botão — activar quando tudo válido ────────────────────────────────────
+function _atualizarBotao() {
+    var ok = _avatarSel && _coverSel && _bioOk;
+    var btn = document.getElementById('btnCriar');
+    btn.disabled = !ok;
+}
+
+// ── Criar Perfil ──────────────────────────────────────────────────────────
+async function criarPerfil() {
+    var btn = document.getElementById('btnCriar');
+    var msgErro = document.getElementById('msgErro');
+    msgErro.classList.remove('visible');
+    btn.classList.add('loading');
+    btn.disabled = true;
+
+    var bio = document.getElementById('bioInput').value.trim();
+
+    try {
+        var resp = await fetch('https://api.plegmadag.com/api/social/profile', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                plg_address: _plgAddress,
+                avatar: _avatarSel,
+                cover:  _coverSel,
+                bio:    bio
+            })
+        });
+        var data = await resp.json();
+        if (data.erro) {
+            if (data.erro === 'perfil_ja_existe') {
+                // Já tem perfil, redireciona directo
+                window.location.href = '/social/';
+                return;
+            }
+            throw new Error(data.erro);
+        }
+        // Guarda em cache
+        data.cached_at = Date.now();
+        try { localStorage.setItem('plg_profile_' + _plgAddress, JSON.stringify(data)); } catch(_) {}
+        window.location.href = '/social/';
+    } catch(e) {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        msgErro.textContent = 'Erro ao criar perfil: ' + (e.message || 'servidor indisponível');
+        msgErro.classList.add('visible');
+    }
+}
+
+// ── Inicialização ─────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+    // Lê plg_address de URL param
+    var params = new URLSearchParams(window.location.search);
+    var plgParam = params.get('plg');
+
+    function _iniciarPagina(addr) {
+        _plgAddress = addr;
+        var shortAddr = addr.slice(0, 8) + '…' + addr.slice(-4);
+        document.getElementById('previewAddr').textContent = shortAddr;
+        _renderAvatares();
+        _renderCapas();
+        _atualizarBotao();
+        document.getElementById('mainContainer').style.display = 'block';
+        document.getElementById('authWall').style.display = 'none';
+    }
+
+    if (typeof PlegmaAuth !== 'undefined') {
+        PlegmaAuth.init({
+            onLogin: function(addr) {
+                // Valida que o endereço do URL corresponde ao logado
+                if (plgParam && plgParam !== addr) {
+                    // Endereço diferente — usa o endereço autenticado
+                }
+                _iniciarPagina(addr);
+            },
+            onLogout: function() {
+                document.getElementById('mainContainer').style.display = 'none';
+                document.getElementById('authWall').style.display = 'flex';
+            }
+        });
+
+        if (PlegmaAuth.isConnected()) {
+            var sess = PlegmaAuth.getSession();
+            _iniciarPagina(sess.plg_address);
+        } else {
+            document.getElementById('authWall').style.display = 'flex';
+        }
+    } else {
+        // auth.js não carregou
+        document.getElementById('authWall').style.display = 'flex';
+    }
+});
+</script>
+</body>
+</html>

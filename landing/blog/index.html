@@ -473,37 +473,59 @@
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
 
+        <!-- MESH SOCIAL PERFIL + AUTH FIX + AERARIUM + UI — 12 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">12 ABR 2026 — Mesh Social: Perfil · Auth QR Fix · Aerarium Day 0 · UI Tabs</span>
+                <div class="post-meta">
+                    <span class="post-tag">MESH SOCIAL</span>
+                    <span class="post-tag">AUTH</span>
+                    <span class="post-tag">INFRA</span>
+                    <span class="post-tag">UI/UX</span>
+                    <span class="post-tag">TOKENOMICS</span>
+                </div>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Fluxo de Criação de Perfil — Mesh Social</div>
+                <p>Implementado o fluxo completo de criação de perfil na rede P2P. Ao fazer login pela primeira vez, o utilizador é redirecionado para <code>/social/criar-perfil/</code>. A página permite selecionar um avatar (8 símbolos PLEGMA ou 16 emojis curados), uma capa do perfil (6 gradientes ou 6 padrões DAG SVG gerados inline), e escrever uma bio de até 100 caracteres com validação Shield em tempo real.</p>
+                <p>O Shield bloqueia na bio: 7+ dígitos consecutivos, dígitos separados por separadores, @handles, leetspeak básico e telefones com prefixo internacional. Perfis são armazenados em SQLite (<code>profiles</code>) com <code>profile_id = BLAKE3(plg_address+ts)[:16]</code>. Cache em localStorage com TTL 24h — a API é a fonte de verdade.</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Auth QR — Fix Pós-Migração de Servidor</div>
+                <p>Após a migração para o servidor EUR, o QR Auth entrava em modo offline. Causa raiz: o endpoint <code>/api/auth/challenge</code> passou a exigir <code>address</code> no query string, mas <code>auth.js</code> não o enviava. O servidor retornava 400, o nonce era <code>undefined</code>, e o <code>substring()</code> lançava TypeError — capturado pelo catch → modo offline.</p>
+                <p>Fixes: challenge não exige address; status retorna <code>status: 'verified'</code> (era <code>'autenticado'</code>) + <code>plg_address</code> além de <code>address</code>; verify aceita <code>nonce</code> OR <code>challenge_id</code>. Serviços <code>plegma-auth</code> (8082) e <code>plegma-wallet</code> (8083) adicionados ao systemd no <code>deploy.ps1</code> — estavam ausentes.</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Aerarium — Mineração Começa no Dia 0</div>
+                <p>Corrigida regra incorreta em <code>aerarium.py</code>: existia bloco <code>if current_day &lt; 30: return 0.0, None</code> que bloqueava toda a mineração durante a fase Genesis. A regra correta é: mineração ativa desde o Dia 0 com lockup de 30 dias por entrada. O trading (negociação de $PLG) é bloqueado até ao Dia 30. A liberação é diária (não acumulada no mês). Página Finanças atualizada com a descrição correta.</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Mesh Social — Persistência e Autenticação</div>
+                <p>Corrigida a posição dos posts carregados da API: <code>_renderizarPostAPI</code> usava <code>appendChild</code> — os posts ficavam no fundo da página abaixo dos posts fixados HTML, invisíveis sem scroll. Agora usa <code>insertBefore</code> após o último post fixado, igual ao comportamento do <code>publicarPost</code>. Votar e responder passam a exigir autenticação. Servidor rejeita voter anónimo (<code>anon_*</code>) com 401. Botão Apagar aparece apenas nos próprios posts. Cache de perfil agora exige <code>profile_id</code> para ser considerado válido.</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">UI — PLEGMA Mesh-Social + Abas de Protocolo</div>
+                <p>Título da Mesh Social alterado de "Rede Social sem Vigilância" para "PLEGMA Mesh-Social". Sync code corrigido para <code>ZKDAG_PLG_GENESIS_2026</code>. Na sidebar, acima dos Perfis Oficiais, foi adicionado um painel de 7 abas compactas (Evolução / Filtragem / Reputação / Anonimato / Isolamento / Portal +18 / Selos) que controlam o conteúdo do protocolo abaixo do feed — apenas uma secção visível de cada vez.</p>
+            </div>
+        </article>
+
         <!-- INFRA EUR + SSL + MESH SOCIAL FIX — 12 ABR 2026 -->
         <article class="post">
             <div class="post-header">
-                <span class="post-title">12 ABR 2026 — Novo Servidor Primário · SSL Emitido · Mesh Social Fix · deploy.ps1 Cluster 5 Nós</span>
+                <span class="post-title">12 ABR 2026 — Infraestrutura · HTTPS · Mesh Social Fix</span>
                 <div class="post-meta">
                     <span class="post-date">12 ABR 2026</span>
                     <span class="post-tag tag-infra">INFRA</span>
                     <span class="post-tag tag-ui">UI/UX</span>
-                    <span class="post-tag tag-core">CORE</span>
                 </div>
             </div>
             <div class="post-body">
-                <div class="post-section">Migração do Servidor Primário</div>
-                <p>O servidor primário da rede foi migrado para uma nova máquina com maior capacidade de armazenamento e processamento. O servidor anterior (contratado exclusivamente pelo anonimato) permanecerá ativo como <strong>nó minerador de teste</strong> até ao fim do período pago — servirá para validar o script de setup autónomo disponível no console.</p>
-                <p>O cluster passa a ter <strong>5 nós</strong>: EUR (primário — landing + nginx + SSL), BR, MAL, SIN e EU-MINER (standby). O nó EU-MINER está marcado com <code>Standby=$true</code> no <code>deploy.ps1</code> — excluído do deploy automático, só entra com <code>-Node EU-MINER</code> explícito.</p>
+                <div class="post-section">HTTPS Ativo em Todos os Domínios</div>
+                <p>A rede passa a servir exclusivamente HTTPS. Certificado TLS emitido com renovação automática para <code>plegmadag.com</code>, <code>api.plegmadag.com</code> e <code>www.plegmadag.com</code>. Todo o tráfego HTTP é redirecionado automaticamente para HTTPS.</p>
 
-                <div class="post-section">SSL — Certificado Emitido</div>
-                <p>Certificado Let's Encrypt emitido via Certbot para <code>plegmadag.com</code>, <code>api.plegmadag.com</code> e <code>www.plegmadag.com</code>. Renovação automática configurada pelo Certbot. DNS atualizado com registos A (IPv4) e AAAA (IPv6) apontando para o novo servidor. <strong>ISS-02 encerrado</strong> — a rede serve exclusivamente HTTPS.</p>
-
-                <div class="post-section">deploy.ps1 — Cluster 5 Nós + Fixes</div>
-                <p>O script de deploy foi reestruturado para suportar o novo cluster:</p>
-                <ul>
-                    <li><strong>Standby flag</strong> — nós marcados como standby são excluídos do deploy padrão sem precisar remover o entry do array</li>
-                    <li><strong>FASE 0b</strong> — prepara automaticamente o web root + symlink nginx no servidor primário antes de enviar landing pages</li>
-                    <li><strong>Fix awk</strong> — escape <code>\$1</code> corrigido para <code>`$1</code> (sintaxe PowerShell correta para passar literal ao bash)</li>
-                    <li><strong>Fix null crash</strong> — guard antes de <code>.Trim()</code> no resultado SSH de md5sum evita erro em ficheiros inexistentes remotamente</li>
-                </ul>
-
-                <div class="post-section">Mesh Social — Nav + publicarPost Fix</div>
-                <p>Três ficheiros da Mesh Social tinham o link de navegação como "REDE" em vez de "MESH SOCIAL": <code>social/index.html</code>, <code>social/perfil/fundacao.html</code> e <code>social/perfil/plegmadag.html</code>. Corrigidos.</p>
-                <p>Bug crítico na função <code>publicarPost()</code>: ao clicar Publicar sem estar autenticado, o modal de auth abria e a função retornava. Após autenticar, o utilizador precisava clicar Publicar novamente — comportamento não óbvio. Fix: o callback <code>onLogin</code> do <code>PlegmaAuth.init()</code> agora verifica se existe texto pendente no textarea e chama <code>publicarPost()</code> automaticamente. Adicionado também guard <code>if (window.PlegmaAuth)</code> para evitar crash quando o script de auth não carregou.</p>
+                <div class="post-section">Mesh Social — Navegação + Publicação</div>
+                <p>Corrigido o link de navegação em três páginas da Mesh Social que exibiam "REDE" em vez de "MESH SOCIAL".</p>
+                <p>Bug na função de publicação: ao tentar publicar sem sessão activa, o modal de autenticação abria correctamente mas após o login era necessário clicar Publicar novamente. O fluxo foi corrigido — após autenticar, o post pendente é submetido automaticamente sem interação adicional.</p>
             </div>
         </article>
 
