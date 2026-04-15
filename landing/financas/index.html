@@ -29,6 +29,7 @@
             --text: #e2e8f0; --text2: #64748b; --text3: #94a3b8;
             --glow: 0 0 20px rgba(0,242,255,0.3);
             --glow-sm: 0 0 8px rgba(0,242,255,0.2);
+            --purple: #a78bfa;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: var(--bg); color: var(--text); font-family: 'Space Mono', monospace; min-height: 100vh; overflow-x: hidden; }
@@ -55,7 +56,7 @@
         .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border2); }
 
         /* Regra 10/30/30/30 */
-        .pillars-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 60px; }
+        .pillars-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 60px; }
         .pillar-card { background: var(--cyan2); border: 1px solid var(--border); border-radius: 6px; padding: 24px; text-align: center; transition: border-color 0.2s, box-shadow 0.2s; }
         .pillar-card:hover { border-color: var(--cyan); box-shadow: var(--glow-sm); }
         .pillar-pct { font-family: 'Montserrat', sans-serif; font-size: 2.5rem; font-weight: 800; color: var(--cyan); text-shadow: var(--glow-sm); }
@@ -98,6 +99,9 @@
 
         footer { border-top: 1px solid var(--border); padding: 40px; text-align: center; }
         footer p { font-size: 0.65rem; color: var(--text2); letter-spacing: 4px; text-transform: uppercase; }
+        .footer-legal { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+        .footer-legal a { font-size: 0.6rem; color: var(--text2); text-decoration: none; letter-spacing: 2px; text-transform: uppercase; transition: color 0.2s; }
+        .footer-legal a:hover { color: var(--cyan); }
 
         /* Tech Seals */
         .tech-seals-wrap { max-width: 900px; margin: 0 auto; padding: 0 40px 40px; }
@@ -113,15 +117,10 @@
 
         @media (max-width: 600px) {
             nav { padding: 0 20px; }
-            .hero { padding: 60px 20px 40px; }
-            .main { padding: 40px 20px; }
-            .nav-links { gap: 14px; }
-            .tech-seals-wrap { padding: 0 20px 30px; }
-        }
-
-        @media (max-width: 600px) {
             .hero { padding: 50px 20px 40px !important; }
             .main, .content, .page-wrap { padding: 30px 20px !important; max-width: 100% !important; }
+            .nav-links { gap: 14px; }
+            .tech-seals-wrap { padding: 0 20px 30px; }
             h1 { font-size: clamp(1.6rem, 7vw, 2.4rem) !important; }
             .grid-2, .grid-3, .cards-grid, .benefits-grid, .pillars-grid { grid-template-columns: 1fr !important; }
             table { font-size: 0.7rem; }
@@ -255,14 +254,14 @@
             <p>O Aerarium é o <strong style="color:var(--cyan)">tesouro autónomo da rede</strong>. Não é controlado por nenhuma pessoa, empresa ou fundação — é gerido por estatutos codificados no protocolo. Acumula uma parcela das taxas de rede até um teto definido por governança, e todo excedente retorna automaticamente aos mineradores. O teto padrão é <strong style="color:var(--cyan)">$1.000 USDC</strong> e só pode ser alterado por votação da comunidade.</p>
         </div>
 
-        <!-- §3 — Supply e Pools de Mineração -->
-        <div class="section-title">Estatuto §3 · §13 — Supply e Pools de Mineração</div>
+        <!-- §13 — Supply e Pools de Mineração -->
+        <div class="section-title">Estatuto §13 — Supply e Pools de Mineração</div>
 
         <div class="pillars-grid" style="margin-bottom:20px">
             <div class="pillar-card" style="border-color:rgba(0,242,255,0.3)">
                 <div class="pillar-pct">21B</div>
                 <div class="pillar-name">Supply Máximo</div>
-                <div class="pillar-desc">21.000.000.000 $PLG. Fixo e imutável. Zero inflação. Zero pré-mine para fundadores.</div>
+                <div class="pillar-desc">21.000.000.000 $PLG. Fixo e imutável. Zero inflação.</div>
             </div>
             <div class="pillar-card reinvest">
                 <div class="pillar-pct">60%</div>
@@ -278,6 +277,14 @@
                 <div class="pillar-pct">30d</div>
                 <div class="pillar-name">Lock-up Obrigatório</div>
                 <div class="pillar-desc">Toda recompensa é bloqueada 30 dias a partir do timestamp do vértice minerado. Sem exceções.</div>
+            </div>
+            <!-- Card destaque ZERO — ocupa 2 colunas ao lado do 30d -->
+            <div class="pillar-card" style="grid-column:span 2;border-color:rgba(35,209,139,0.5);background:rgba(35,209,139,0.06);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px 24px;position:relative;overflow:hidden">
+                <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#23d18b,transparent)"></div>
+                <div style="font-family:'Montserrat',sans-serif;font-size:3rem;font-weight:800;color:#23d18b;text-shadow:0 0 20px rgba(35,209,139,0.5);letter-spacing:2px;line-height:1">ZERO</div>
+                <div style="font-size:0.7rem;letter-spacing:4px;text-transform:uppercase;color:#23d18b;margin:10px 0 14px;opacity:0.85">Premineração &nbsp;·&nbsp; Pré-venda &nbsp;·&nbsp; Alocação para Fundadores</div>
+                <div style="font-size:0.8rem;color:var(--text3);line-height:1.7;max-width:520px">Nenhum $PLG foi criado antes do lançamento da rede. Nenhum token foi reservado ou vendido antecipadamente a fundadores, investidores ou parceiros. <strong style="color:var(--text)">Todo o supply existe exclusivamente para ser minerado</strong> por nós reais da rede — sem exceções, sem backdoors, sem privilégios.</div>
+                <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#23d18b,transparent)"></div>
             </div>
         </div>
 
@@ -351,13 +358,6 @@
                     <span>Com o fim da Genesis, a negociação de $PLG torna-se disponível. Os tokens desbloqueiam diariamente — cada entrada de mineração aos 30 dias do seu próprio timestamp, nunca em lote acumulado. R = G/N + taxa de rede (Estatuto §6).</span>
                 </div>
             </li>
-            <li>
-                <span class="feat-pct" style="color:var(--green)">Fair</span>
-                <div class="feat-info">
-                    <strong>Zero Pré-Mine — Zero Vantagem para Fundadores</strong>
-                    <span>O supply total nunca foi pré-alocado. Todos os $PLG em existência foram ou serão minerados por nós reais da rede.</span>
-                </div>
-            </li>
         </ul>
 
         <!-- Anti-Dump / Baleia -->
@@ -385,8 +385,9 @@
         <div class="section-title">Cláusula 14 — Justice Cap</div>
 
         <div class="principle-box" style="margin-bottom:50px;border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.03)">
-            <h4 style="color:var(--amber)">Nenhum Prover pode deter mais de 10% da rede</h4>
-            <p>Nenhum Prover individual pode processar mais de <strong style="color:var(--amber)">10% do trabalho total da rede</strong> em qualquer ciclo. Esta cláusula impede a centralização do poder computacional e garante que a distribuição de recompensas do Prover Pool permanece geograficamente e economicamente diversificada.</p>
+            <h4 style="color:var(--amber)">Trabalho Equitativo — Distribuição por Latência</h4>
+            <p>Não existe percentagem máxima por Prover. O trabalho é <strong style="color:var(--amber)">fracionado de forma equitativa</strong> — cada Prover ativo recebe a mesma carga de trabalho que os demais do mesmo ciclo.</p>
+            <p style="margin-top:12px">O fracionamento obedece a <strong style="color:var(--text)">prioridade de latência</strong>: nós no Brasil fracionam preferencialmente com outros nós no Brasil; nós em Espanha fracionam com outros nós em Espanha. A distribuição global existe e é suportada, mas a latência geográfica define a ordem de prioridade — garantindo eficiência de rede sem concentração regional.</p>
         </div>
 
         <!-- Governança do Aerarium -->
@@ -407,7 +408,7 @@
             <span class="selo">[Aerarium Teto: $1.000 USDC]</span>
             <span class="selo">[Taxa de Rede: 0,1%]</span>
             <span class="selo">[Anti-Dump: 500K $PLG / 24h]</span>
-            <span class="selo">[Justice Cap: 10% por Prover]</span>
+            <span class="selo">[Justice Cap: Trabalho Equitativo · Latência]</span>
             <span class="selo">[Decaimento: ~5% a.a.]</span>
             <span class="selo">[Fair Launch: Zero Pre-Mine]</span>
         </div>
@@ -489,10 +490,12 @@ function googleTranslateElementInit() {
         if (!bar) return;
         if (Date.now() >= LAUNCH) {
             bar.style.display = 'block';
-            /* Empurra o body para baixo para não sobrepor conteúdo */
+            /* Empurra body + baixa a nav para não sobrepor o ticker */
             document.body.style.paddingTop = (
                 (parseInt(document.body.style.paddingTop) || 0) + 26
             ) + 'px';
+            var nav = document.querySelector('nav');
+            if (nav) nav.style.top = '26px';
         } else {
             /* Verifica novamente quando chegar a hora */
             setTimeout(showTicker, Math.min(LAUNCH - Date.now(), 60000));

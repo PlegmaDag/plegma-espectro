@@ -473,6 +473,33 @@
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
 
+        <!-- MINERADOR + FINANÇAS + LABS — 15 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">15 ABR 2026 — Minerador Windows estável · Finanças corrigida · COFRE QUÂNTICO no LABS</span>
+                <div class="post-meta">
+                    <span class="post-tag">BUILD</span>
+                    <span class="post-tag">UI/UX</span>
+                    <span class="post-tag">ZK</span>
+                    <span class="post-tag">LABS</span>
+                </div>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Minerador Windows — Crash fix + Single-instance</div>
+                <p>O executável do minerador Windows não abria devido a um crash silencioso introduzido pela flag <code>console=False</code> do PyInstaller. Nesse modo, <code>sys.stdout</code> e <code>sys.stderr</code> são <code>None</code> — qualquer acesso a <code>sys.stdout.buffer</code> ou criação de <code>StreamHandler(sys.stderr)</code> terminava o processo antes da janela aparecer. Corrigido com guards condicionais em ambos os pontos e redirecionamento do log para a pasta do executável via <code>sys.executable</code> quando <code>sys.frozen=True</code>.</p>
+                <p>Adicionado mecanismo de instância única via Windows Named Mutex (<code>Global\PLEGMA_Minerador_V4_Instance</code>). Ao tentar abrir uma segunda instância, o protocolo exibe uma caixa de diálogo de erro e termina imediatamente — independentemente do tipo de conta do utilizador. Novo build deploy: 33.1 MB.</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Página Finanças — Correções CSS e conteúdo</div>
+                <p>Resolvidos quatro erros CSS: variável <code>--purple</code> ausente do <code>:root</code> (selos de tecnologia Lattice e Governança sem cor), classe <code>.footer-legal</code> sem definição (links do rodapé renderizavam como hiperligações puras), bloco <code>@media 600px</code> duplicado fundido num único, e sobreposição entre o ticker de TESTNET (fixo em <code>top:0</code>) e a barra de navegação (sticky em <code>top:0</code>) — nav ajustada para <code>top:26px</code> quando o ticker está ativo.</p>
+                <p>No conteúdo: referência ao §3 removida do título da secção de Supply (correto: §13). Card <strong>ZERO</strong> adicionado em destaque — ocupa duas colunas ao lado do card de lock-up, documentando que não existe pré-mineração, pré-venda nem alocação para fundadores. Card "Fair" anterior removido por redundância. Descrição da Cláusula 14 reescrita: o protocolo não impõe percentagem máxima por nó — o trabalho é distribuído de forma equitativa com prioridade por latência geográfica (nós regionais têm precedência, fallback global mantido).</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">LABS — COFRE QUÂNTICO</div>
+                <p>Removida a ideia "Dashboard mobile nativo para mineradores", tornada obsoleta pelo app nativo da rede. Adicionada nova proposta ao LABS: <strong>COFRE QUÂNTICO</strong> — sistema de armazenamento descentralizado de documentos sobre a rede DAG. O documento é fragmentado, distribuído pelos nós mineradores e cada fragmento compactado numa prova ZK-SNARK de 22KB. O acesso requer três elementos simultâneos: hash do documento, endereço da carteira PLG e senha definida no momento do envio. O custo por peso em $PLG será definido por votação da comunidade.</p>
+            </div>
+        </article>
+
         <!-- CONSOLE ADMIN NVMe + STATS REDE + FIX SERVIÇOS — 14 ABR 2026 -->
         <article class="post">
             <div class="post-header">
