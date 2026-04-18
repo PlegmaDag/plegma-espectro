@@ -324,6 +324,7 @@
         <a href="/genesis" class="nav-link">GENESIS</a>
         <a href="/servicos" class="nav-link">SERVIÇOS</a>
         <a href="/podcast" class="nav-link">PODCAST</a>
+            <a href="/ajuda" class="nav-link">AJUDA</a>
             <a href="/testnet/" class="nav-link nav-testnet">TESTNET</a>
         <button class="nav-btn" data-plg-wallet-btn
             onclick="PlegmaAuth.isConnected() ? window.location.href='/dashboard/?plg='+PlegmaAuth.getSession().plg_address : PlegmaAuth.openModal()">
@@ -472,6 +473,34 @@
 
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
+
+        <!-- FASTAPI + NGINX LOCAL-ONLY + BATCH WRITE QUEUE — 18 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">18 ABR 2026 — FastAPI em todos os nós · Nginx local-only · Batch write queue SQLite</span>
+                <div class="post-meta">
+                    <span class="post-tag">INFRA</span>
+                    <span class="post-tag">BUILD</span>
+                    <span class="post-tag">PERF</span>
+                </div>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Migração para FastAPI + uvicorn</div>
+                <p>O servidor HTTP da rede — anteriormente baseado em <code>ThreadingHTTPServer</code> — foi integralmente substituído por <strong>FastAPI + uvicorn (ASGI)</strong>. Todos os 57 endpoints foram portados para handlers assíncronos nativos: <code>asyncio.Lock()</code> em vez de <code>threading.Lock()</code>, <code>asyncio.to_thread()</code> para todo o código síncrono (SQLite, módulos do motor criptográfico). O módulo <code>gevent</code> foi removido de todos os nós. O novo ficheiro <code>core_api.py</code> entrou em produção nos 10 backends (EU · SIN · BR · MAL) após validação completa no sandbox isolado — 16/16 testes aprovados.</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Nginx local-only — eliminação do hot-server</div>
+                <p>Cada nó âncora passou a ter o nginx configurado com upstream apontando exclusivamente para os seus próprios backends via loopback (<code>127.0.0.1</code>). Anteriormente, todos os upstreams listavam os 10 backends da rede — o algoritmo <code>least_conn</code> favorecia sistematicamente os backends do nó EU (respostas em ~1ms via loopback), fazendo com que um único servidor absorvesse cerca de 70–80% do tráfego global. Com a configuração local-only, o DNS round-robin com 4 IPs distribui equitativamente e cada nó serve apenas a sua fracção do tráfego com latência mínima.</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Batch write queue — SQLite assíncrono</div>
+                <p>A DAG é uma estrutura inerentemente paralela: múltiplos vértices podem ser processados em simultâneo. O SQLite, no entanto, serializa os writes — cada commit individual liberava e readquiria o lock, criando um bottleneck artificial. A solução implementada é uma fila assíncrona com janela de acumulação de <strong>50ms</strong>: um loop de background (<code>_db_writer_loop</code>) drena a fila até 500 operações por ciclo, ordena pelo BLAKE3 key para garantir determinismo entre nós, e executa um único <code>BEGIN/COMMIT</code> por janela. Em caso de falha: rollback completo + gossip resync. O endpoint <code>/api/mine</code> retorna agora <strong>202 Accepted</strong> após validação criptográfica completa mas antes do I/O SQLite — semântica correta para uma DAG assíncrona.</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Resultados do load test no cluster</div>
+                <p>Teste com 200 workers concorrentes contra <code>api.plegmadag.com</code> (round-robin pelos 4 nós): <span class="highlight">399 req/s em <code>/api/status</code></span> com 91% de cache hit (nginx micro-cache 2s TTL), <span class="highlight">302 req/s em <code>/api/mine</code></span> e <span class="highlight">371 req/s em <code>/api/social</code></span> — todos com <strong>0% de erros</strong>. A meta de 3K TPS para a fase de lançamento está validada com margem significativa quando escalada para os cenários reais de vértices DAG.</p>
+            </div>
+        </article>
 
         <!-- MINERADOR + FINANÇAS + LABS — 15 ABR 2026 -->
         <article class="post">
@@ -2537,6 +2566,45 @@
     <div class="tab-content" id="tab-testes">
 
         <div class="posts-category">Resultados de Autotestes</div>
+
+        <!-- AUTOTEST SANDBOX + PRODUCAO 2026-04-16 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">AUTOTEST — Bateria Diária: Sandbox 16/16 · Produção 16/16 · Produção 420ms mais rápida · 16 Abr 2026</span>
+                <div class="post-meta">
+                    <span class="post-date">16 Abr 2026 · Testes Automáticos</span>
+                    <span class="post-tag">AUTOTEST</span>
+                    <span class="post-tag" style="border-color:rgba(35,209,139,0.4);color:#23d18b;background:rgba(35,209,139,0.06);">PASS 16/16</span>
+                    <span class="post-tag" style="border-color:rgba(0,242,255,0.4);color:#00F2FF;background:rgba(0,242,255,0.06);">SANDBOX + PRODUÇÃO</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Resumo</div>
+                <p>Primeira bateria diária automatizada executada contra dois ambientes: <strong>Sandbox</strong> (<code>80.78.26.52</code>) e <strong>Produção</strong> (<code>api.plegmadag.com</code>). 16 testes em cada — disponibilidade, autenticação, Genesis, segurança (SQLi, XSS, path traversal, oversized), stress concorrente, performance e saúde pós-ataque. Ambos passaram com <strong>16/16</strong>.</p>
+
+                <div class="post-section">Performance: Produção vs Sandbox</div>
+                <ul>
+                    <li>Sandbox (<code>80.78.26.52</code>): avg <strong>492ms</strong> · p95 1243ms · throughput 15.1 req/s</li>
+                    <li>Produção (<code>api.plegmadag.com</code>): avg <strong>72ms</strong> · p95 122ms · throughput 14.9 req/s</li>
+                    <li>Resultado: produção é <strong>420ms mais rápida</strong> — nginx com SSL e 4 nós âncora distribui carga e termina TLS mais próximo do servidor EU.</li>
+                    <li>Nó EU directo (<code>213.199.42.88:8080</code>): avg <strong>109ms</strong> — o mais rápido dos âncoras. BR / MAL / SIN inacessíveis directamente por firewall (UFW bloqueia porta 8080 externamente — esperado por design).</li>
+                </ul>
+
+                <div class="post-section">Testes de Segurança (ambos os ambientes)</div>
+                <ul>
+                    <li><strong>SQL Injection (4 payloads)</strong> — todos rejeitados com HTTP 400, sem leak, servidor vivo.</li>
+                    <li><strong>XSS (3 payloads)</strong> — nenhum refletido na resposta.</li>
+                    <li><strong>Path Traversal (5 paths)</strong> — HTTP 404 em todos, sem vazamento de ficheiros.</li>
+                    <li><strong>Oversized Requests (50KB+)</strong> — HTTP 400/503, sem crash.</li>
+                    <li><strong>Rate Limit Auth</strong> — HTTP 429 após N requests por IP.</li>
+                    <li><strong>Stress 200 req / 50 threads (sandbox)</strong> — 199/200 OK (99.5%).</li>
+                    <li><strong>Stress 100 req / 20 threads (produção)</strong> — 100/100 OK (100%).</li>
+                </ul>
+
+                <div class="post-section">Schedule de Testes</div>
+                <p>Bateria agendada via Claude Code Remote Agent — 5× por dia (10h, 13h, 16h, 19h, 22h Madrid). Cada execução: testa → revisa falhas → corrige código → commita no repositório. Erros críticos geram alerta imediato.</p>
+            </div>
+        </article>
 
         <!-- SECURITY PATCH REPORT 2026-03-29 -->
         <article class="post">

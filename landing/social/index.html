@@ -322,6 +322,7 @@
             <a href="/genesis" class="nav-link">GENESIS</a>
             <a href="/servicos" class="nav-link">SERVIÇOS</a>
             <a href="/podcast" class="nav-link">PODCAST</a>
+            <a href="/ajuda" class="nav-link">AJUDA</a>
             <a href="/testnet/" class="nav-link nav-testnet">TESTNET</a>
             <a href="/dashboard" class="nav-link">DASHBOARD</a>
         </div>
@@ -463,6 +464,52 @@
                         <div class="post-footer">
                             <button class="vote-btn respeit" onclick="votar(this,1)"><span>💠</span> <span class="vcount">892</span> Respeito</button>
                             <button class="vote-btn ruido" onclick="votar(this,-1)"><span>⚡</span> <span class="vcount">1</span> Ruído</button>
+                            <button class="reply-btn">💬 Responder</button>
+                        </div>
+                    </div>
+
+                    <!-- POST — Plegmadag · Blog 18 ABR 2026 -->
+                    <div class="post">
+                        <div class="post-header">
+                            <div class="post-avatar" style="background:rgba(0,242,255,0.1)">⬡</div>
+                            <div class="post-meta">
+                                <div class="post-author">Plegmadag <span>@plegmadag · ✦ Oficial</span></div>
+                                <div class="post-time">18 ABR 2026 · Dev Log</div>
+                            </div>
+                        </div>
+                        <div class="post-body">
+                            📋 <strong>Dev Log — 18 ABR 2026</strong><br><br>
+                            <span class="highlight">FastAPI em todos os nós · Nginx local-only · Batch write queue SQLite</span><br><br>
+                            O servidor HTTP da rede migrou para FastAPI + uvicorn ASGI em todos os 10 backends. Nginx reconfigurado com upstream local-only — elimina hot-server. Batch write queue 50ms garante ACID no SQLite sem serializar a DAG. Cluster: 399 req/s @ 0% erros.<br><br>
+                            <span style="font-size:0.75rem;color:var(--text2)">[INFRA] &nbsp;[BUILD] &nbsp;[PERF]</span><br><br>
+                            <a href="/blog/" style="color:var(--cyan);font-size:0.8rem;text-decoration:none;border-bottom:1px solid rgba(0,242,255,0.3)">→ Ler artigo completo no Blog</a>
+                        </div>
+                        <div class="post-footer">
+                            <button class="vote-btn respeit" onclick="votar(this,1)"><span>💠</span> <span class="vcount">0</span> Respeito</button>
+                            <button class="vote-btn ruido" onclick="votar(this,-1)"><span>⚡</span> <span class="vcount">0</span> Ruído</button>
+                            <button class="reply-btn">💬 Responder</button>
+                        </div>
+                    </div>
+
+                    <!-- POST — Plegmadag · Blog 15 ABR 2026 -->
+                    <div class="post">
+                        <div class="post-header">
+                            <div class="post-avatar" style="background:rgba(0,242,255,0.1)">⬡</div>
+                            <div class="post-meta">
+                                <div class="post-author">Plegmadag <span>@plegmadag · ✦ Oficial</span></div>
+                                <div class="post-time">15 ABR 2026 · Dev Log</div>
+                            </div>
+                        </div>
+                        <div class="post-body">
+                            📋 <strong>Dev Log — 15 ABR 2026</strong><br><br>
+                            <span class="highlight">Minerador Windows estável · Finanças corrigida · COFRE QUÂNTICO no LABS</span><br><br>
+                            Executável do Minerador Windows corrigido — instância única garantida por Mutex. Página Finanças atualizada com fixes de conteúdo e estilo. Nova proposta <strong>COFRE QUÂNTICO</strong> adicionada ao LABS: armazenamento descentralizado de documentos via ZK-SNARK 22KB com acesso hash + carteira + senha.<br><br>
+                            <span style="font-size:0.75rem;color:var(--text2)">[BUILD] &nbsp;[UI/UX] &nbsp;[ZK] &nbsp;[LABS]</span><br><br>
+                            <a href="/blog/" style="color:var(--cyan);font-size:0.8rem;text-decoration:none;border-bottom:1px solid rgba(0,242,255,0.3)">→ Ler artigo completo no Blog</a>
+                        </div>
+                        <div class="post-footer">
+                            <button class="vote-btn respeit" onclick="votar(this,1)"><span>💠</span> <span class="vcount">0</span> Respeito</button>
+                            <button class="vote-btn ruido" onclick="votar(this,-1)"><span>⚡</span> <span class="vcount">0</span> Ruído</button>
                             <button class="reply-btn">💬 Responder</button>
                         </div>
                     </div>
