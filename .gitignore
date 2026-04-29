@@ -45,6 +45,8 @@ build/
 secrets/
 private/
 *.secret
+*.local
+njalla_token.local
 
 # Excecao: template publico sem dados reais
 !.env.example
