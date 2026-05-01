@@ -2948,7 +2948,7 @@
         var plgAddr = document.getElementById('sidebarAddr') ?
             (window._connectedAddress || '') : '';
         if (plgAddr && window.DAG_API) {
-            fetch(window.DAG_API + '/api/admin/download_register', {
+            fetch(window.DAG_API + '/api/shield/download_register', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
