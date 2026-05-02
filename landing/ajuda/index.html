@@ -7,6 +7,7 @@
     <meta name="description" content="Aprenda tudo sobre o ecossistema PLEGMA: instalar o app, comprar PLG-G, minerar, segurança e governança.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    <script src="/auth.js"></script>
     <style>
         :root {
             --bg:      #060d1a;
@@ -37,9 +38,14 @@
             background: rgba(6,13,26,0.95); backdrop-filter: blur(20px);
             position: sticky; top: 0; z-index: 100;
         }
-        .nav-brand { font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 800; color: var(--cyan); text-shadow: var(--glow-sm); text-decoration: none; letter-spacing: 3px; }
-        .nav-back { font-size: 0.6rem; color: var(--text3); text-decoration: none; letter-spacing: 2px; text-transform: uppercase; transition: color 0.2s; }
-        .nav-back:hover { color: var(--cyan); }
+        .nav-brand { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; letter-spacing: 2px; text-decoration: none; color: var(--cyan); display: flex; align-items: center; gap: 10px; }
+        .nav-links { display: flex; gap: 20px; align-items: center; }
+        .nav-link { font-size: 0.65rem; color: var(--text2); text-decoration: none; letter-spacing: 2px; text-transform: uppercase; transition: color 0.2s; padding: 6px 8px; border-radius: 3px; }
+        .nav-link:hover { color: var(--cyan); }
+        .nav-link.active { color: var(--cyan); }
+        .nav-btn { font-size: 0.65rem; background: rgba(0,242,255,0.08); color: var(--cyan); border: 1px solid rgba(0,242,255,0.3); padding: 6px 14px; border-radius: 3px; font-family: 'Space Mono', monospace; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+        .nav-btn:hover { background: var(--cyan); color: #000; box-shadow: var(--glow); }
+        .nav-testnet { font-size: 0.58rem !important; letter-spacing: 3px !important; color: #f97316 !important; border: 1px solid rgba(249,115,22,0.55) !important; padding: 4px 10px !important; border-radius: 3px; }
 
         /* ── HERO ── */
         .hero {
@@ -217,11 +223,25 @@
         footer { border-top: 1px solid var(--border); padding: 32px 40px; text-align: center; font-size: 0.6rem; color: var(--text3); letter-spacing: 3px; text-transform: uppercase; }
 
         /* ── MOBILE ── */
-        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; background: none; border: none; }
-        .hamburger span { display: block; width: 20px; height: 2px; background: var(--cyan); border-radius: 2px; }
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; background: none; border: none; z-index: 200; }
+        .hamburger span { display: block; width: 22px; height: 2px; background: var(--cyan); border-radius: 2px; transition: all 0.3s; }
+        .nav-open .hamburger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .nav-open .hamburger span:nth-child(2) { opacity: 0; }
+        .nav-open .hamburger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
         @media (max-width: 768px) {
             nav { padding: 0 20px; }
+            .hamburger { display: flex; }
+            .nav-links {
+                display: none; position: fixed; top: 56px; left: 0; right: 0;
+                flex-direction: column; background: rgba(6,13,26,0.98);
+                backdrop-filter: blur(20px); padding: 16px 20px 24px;
+                border-bottom: 1px solid var(--border); z-index: 99;
+            }
+            .nav-open .nav-links { display: flex; }
+            .nav-link { font-size: 0.75rem; padding: 12px 16px; border-radius: 4px; width: 100%; text-align: left; }
+            .nav-link:hover { background: rgba(0,242,255,0.08); }
+            .nav-btn { width: 100%; text-align: center; padding: 12px 16px; margin-top: 8px; }
             .hero { padding: 48px 20px 36px; }
             .layout { grid-template-columns: 1fr; padding: 24px 20px; }
             .sidebar { padding-right: 0; margin-bottom: 28px; }
@@ -235,13 +255,74 @@
         .social-links a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid rgba(0,242,255,0.18); border-radius: 6px; background: rgba(0,242,255,0.05); color: rgba(255,255,255,0.4); transition: all 0.2s; }
         .social-links a:hover { color: #00f2ff; border-color: rgba(0,242,255,0.55); background: rgba(0,242,255,0.12); box-shadow: 0 0 14px rgba(0,242,255,0.22); }
         .social-links a svg { display: block; }
+    
+        /* ── GC TESTNET TICKER ────────────────────────────────────────── */
+        #gc-testnet-bar {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            height: 26px;
+            z-index: 99999;
+            background: rgba(249,115,22,0.08);
+            border-bottom: 1px solid rgba(249,115,22,0.40);
+            overflow: hidden;
+            pointer-events: none;
+        }
+        #gc-testnet-inner {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            white-space: nowrap;
+            animation: gc-scroll 38s linear infinite;
+        }
+        @keyframes gc-scroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        #gc-testnet-inner span {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.58rem;
+            color: #f97316;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            padding-right: 80px;
+        }
     </style>
 </head>
 <body>
 
+<!-- GC TESTNET TICKER -->
+<div id="gc-testnet-bar">
+  <div id="gc-testnet-inner">
+    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
+    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
+  </div>
+</div>
+
 <nav>
-    <a href="/" class="nav-brand">PLEGMA DAG</a>
-    <a href="/" class="nav-back">← Voltar ao site</a>
+    <a href="/" class="nav-brand">
+        <img src="/assets/img/logo.gif" alt="PLEGMA" style="height:36px;filter:drop-shadow(0 0 6px rgba(0,242,255,0.5))">
+        <span>PLEGMA DAG</span>
+    </a>
+    <button class="hamburger" onclick="this.closest('nav').classList.toggle('nav-open')" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links">
+        <a href="/financas" class="nav-link">FINANÇAS</a>
+        <a href="/fundacao" class="nav-link">FUNDAÇÃO</a>
+        <a href="/social" class="nav-link">MESH SOCIAL</a>
+        <a href="/blog" class="nav-link">BLOG</a>
+        <a href="/labs" class="nav-link">LABS</a>
+        <a href="/genesis" class="nav-link">GENESIS</a>
+        <a href="/servicos" class="nav-link">SERVIÇOS</a>
+        <a href="/podcast" class="nav-link">PODCAST</a>
+        <a href="/ajuda" class="nav-link active">AJUDA</a>
+        <a href="/testnet/" class="nav-link nav-testnet">TESTNET</a>
+        <button class="nav-btn" data-plg-wallet-btn
+            onclick="PlegmaAuth.isConnected() ? window.location.href='/dashboard/?plg='+PlegmaAuth.getSession().plg_address : PlegmaAuth.openModal()">
+            DASHBOARD
+        </button>
+    </div>
 </nav>
 
 <!-- HERO -->
@@ -312,7 +393,7 @@
                     <span class="count" id="cnt-genesis">0</span>
                 </button>
                 <button class="cat-btn" onclick="filtrarCat('usdt', this)">
-                    <span class="dot" style="background:var(--green)"></span> Como Comprar USDT
+                    <span class="dot" style="background:var(--green)"></span> Como Comprar USDC
                     <span class="count" id="cnt-usdt">0</span>
                 </button>
                 <button class="cat-btn" onclick="filtrarCat('mineracao', this)">
@@ -466,11 +547,11 @@ var ARTIGOS = [
     <h4>PLG-G não é PLG</h4>
     <ul>
       <li><strong>PLG</strong> — moeda principal, minerada pelo DAG, usada para transações.</li>
-      <li><strong>PLG-G</strong> — token de governança Genesis, adquirido via compra com USDT durante a fase Genesis Reserve.</li>
+      <li><strong>PLG-G</strong> — token de governança Genesis, adquirido via compra com USDC durante a fase Genesis Reserve.</li>
     </ul>
     <h4>Para que serve o PLG-G</h4>
     <ul>
-      <li>Boost de recompensa de mineração (até 3×)</li>
+      <li>Boost de recompensa de mineração (até 2×)</li>
       <li>Voto nas decisões da rede (1 pessoa = 1 voto)</li>
       <li>Participação no quórum de maturidade da rede (queima da chave DEUS)</li>
       <li>Selo de <strong>Sócio Genesis</strong> — identidade permanente na rede</li>
@@ -482,18 +563,18 @@ var ARTIGOS = [
   cat: 'genesis',
   titulo: 'Como comprar PLG-G na Reserva Genesis (passo a passo)',
   corpo: `
-    <p>A compra de PLG-G é feita com <strong>USDT (Tether)</strong>, enviado diretamente para a carteira de custódia da Genesis Reserve.</p>
+    <p>A compra de PLG-G é feita com <strong>USDC (USD Coin)</strong> na rede <strong>Polygon</strong>, enviado diretamente para a carteira de custódia da Genesis Reserve.</p>
     <h4>Pré-requisito</h4>
-    <p>Você precisa ter USDT disponível em uma carteira que suporte a rede onde a Genesis opera. Se ainda não tem, veja o artigo <em>"Como comprar USDT"</em>.</p>
+    <p>Você precisa ter USDC disponível em uma carteira compatível com a rede Polygon. Qualquer carteira EVM com suporte Polygon funciona (MetaMask, Trust Wallet, Coinbase Wallet, etc.). Se ainda não tem USDC, veja o artigo <em>"Como comprar USDC"</em>.</p>
     <h4>Passo a passo</h4>
     <div class="step"><span class="step-num">1</span><span class="step-text">Acesse <strong>plegmadag.com/genesis</strong> e clique em <strong>"Participar da Genesis Reserve"</strong>.</span></div>
     <div class="step"><span class="step-num">2</span><span class="step-text">Conecte sua carteira PLEGMA clicando em <strong>"Conectar Carteira"</strong> no topo do site.</span></div>
-    <div class="step"><span class="step-num">3</span><span class="step-text">Informe o valor em USDT que deseja investir. O sistema calcula automaticamente quantos PLG-G você receberá.</span></div>
+    <div class="step"><span class="step-num">3</span><span class="step-text">Informe o valor em USDC que deseja investir (mínimo $100 USDC = 1.000 PLG-G). O sistema calcula automaticamente quantos PLG-G você receberá.</span></div>
     <div class="step"><span class="step-num">4</span><span class="step-text">Clique em <strong>"Registrar Intenção"</strong>. Um código de referência (<code>ref_id</code>) será gerado — <strong>guarde esse código</strong>.</span></div>
-    <div class="step"><span class="step-num">5</span><span class="step-text">Envie o valor exato de USDT para o endereço da Genesis Reserve exibido na tela. Use o <code>ref_id</code> como memo/descrição da transferência.</span></div>
+    <div class="step"><span class="step-num">5</span><span class="step-text">Envie o valor exato de USDC nativo pela rede Polygon para o endereço da Genesis Reserve exibido na tela. O <code>ref_id</code> no campo memo facilita a conciliação em caso de atraso.</span></div>
     <div class="step"><span class="step-num">6</span><span class="step-text">O sistema detecta o pagamento automaticamente. Após confirmação, os PLG-G aparecem na sua carteira com lockup de 30 dias.</span></div>
     <div class="warn">⚠ Envie <strong>exatamente</strong> o valor informado. Valores diferentes podem atrasar ou impedir o processamento.</div>
-    <div class="danger">⛔ Não envie USDT sem antes registrar a intenção. Transferências sem <code>ref_id</code> não são associadas automaticamente.</div>
+    <div class="danger">⛔ Use <strong>USDC nativo</strong> na rede Polygon. Não use USDT, USDC.e (bridged) ou outra rede. Token ou rede errada resultam em perda permanente dos fundos.</div>
   `
 },
 {
@@ -543,38 +624,42 @@ var ARTIGOS = [
     <p>Qualquer Sócio Genesis com saldo PLG-G liberado (fora do lockup).</p>
     <h4>Como transferir</h4>
     <div class="step"><span class="step-num">1</span><span class="step-text">Acesse <strong>plegmadag.com/genesis</strong> ou use o endpoint <code>POST /api/genesis/transferir</code>.</span></div>
-    <div class="step"><span class="step-num">2</span><span class="step-text">Informe: carteira de destino, quantidade de PLG-G, e o preço unitário (em USDT) que deseja cobrar.</span></div>
-    <div class="step"><span class="step-num">3</span><span class="step-text">O comprador confirma a transferência. A liquidação financeira ocorre fora da rede (USDT entre as partes).</span></div>
+    <div class="step"><span class="step-num">2</span><span class="step-text">Informe: carteira de destino, quantidade de PLG-G, e o preço unitário (em USDC) que deseja cobrar.</span></div>
+    <div class="step"><span class="step-num">3</span><span class="step-text">O comprador confirma a transferência. A liquidação financeira ocorre fora da rede (USDC entre as partes).</span></div>
     <div class="warn">⚠ Lembre-se: se você zerar seu saldo PLG-G, perde o Selo Sócio Genesis permanentemente.</div>
     <div class="tip">💡 O último preço registrado por Sócios no P2P é visível em <code>/api/genesis/ultimo_preco</code>.</div>
   `
 },
 
-// ── COMO COMPRAR USDT ─────────────────────────────────────────────────────────
+// ── COMO COMPRAR USDC ─────────────────────────────────────────────────────────
 {
   cat: 'usdt',
-  titulo: 'O que é USDT e por que preciso para comprar PLG-G',
+  titulo: 'O que é USDC e por que preciso para comprar PLG-G',
   corpo: `
-    <p><strong>USDT (Tether)</strong> é uma stablecoin — uma criptomoeda atrelada ao dólar americano. 1 USDT = aproximadamente R$ 5,80 (varia com o câmbio).</p>
-    <h4>Por que a Genesis Reserve aceita USDT</h4>
+    <p><strong>USDC (USD Coin)</strong> é uma stablecoin emitida pela Circle, atrelada ao dólar americano. 1 USDC ≈ R$ 5,80 (varia com o câmbio).</p>
+    <h4>Por que a Genesis Reserve aceita USDC</h4>
     <ul>
-      <li>É a moeda mais usada em transações cripto globalmente</li>
-      <li>Evita volatilidade no valor pago — 100 USDT hoje = 100 USDT amanhã</li>
+      <li>Evita volatilidade no valor pago — 100 USDC hoje = 100 USDC amanhã</li>
+      <li>USDC na rede Polygon tem taxas de gás inferiores a $0,01 — praticamente zero</li>
       <li>Permite que pessoas de qualquer país participem sem conversão de moeda local</li>
     </ul>
-    <h4>Não confunda</h4>
+    <h4>Qual carteira usar?</h4>
+    <p>Você pode usar <strong>qualquer carteira cripto com suporte à rede Polygon</strong> — não precisa criar uma carteira nova se já tem uma EVM. Exemplos compatíveis:</p>
     <ul>
-      <li><strong>USDT</strong> = Tether (emitido pela Tether Limited)</li>
-      <li><strong>USDC</strong> = USD Coin (emitido pela Circle) — similar, igualmente aceito</li>
+      <li><strong>MetaMask</strong> — extensão para navegador e app mobile</li>
+      <li><strong>Trust Wallet</strong> — app mobile, Polygon pré-configurada</li>
+      <li><strong>Coinbase Wallet</strong> — versão self-custody da Coinbase</li>
+      <li><strong>Rainbow</strong>, <strong>Zerion</strong>, <strong>1inch Wallet</strong> e qualquer carteira EVM</li>
     </ul>
-    <div class="tip">💡 Para participar da Genesis Reserve você vai precisar de USDT em uma carteira cripto. Se nunca comprou cripto antes, leia o próximo artigo.</div>
+    <div class="tip">💡 Se já usa MetaMask ou Trust Wallet para Ethereum ou BNB Chain, basta adicionar a rede Polygon — é a mesma carteira, endereço diferente.</div>
+    <div class="warn">⚠ Use somente <strong>USDC nativo</strong> na rede Polygon. Não use USDT, nem USDC.e (bridged). Token errado pode resultar em perda de fundos.</div>
   `
 },
 {
   cat: 'usdt',
-  titulo: 'Como comprar USDT em uma exchange (iniciantes)',
+  titulo: 'Como comprar USDC em uma exchange (iniciantes)',
   corpo: `
-    <p>A forma mais comum de comprar USDT é através de uma <strong>exchange</strong> — uma corretora de criptomoedas.</p>
+    <p>A forma mais comum de comprar USDC é através de uma <strong>exchange</strong> — uma corretora de criptomoedas.</p>
     <h4>Opções populares no Brasil</h4>
     <ul>
       <li><strong>Mercado Bitcoin</strong> — exchange brasileira, aceita PIX, em português</li>
@@ -585,26 +670,27 @@ var ARTIGOS = [
     <h4>Passo a passo geral</h4>
     <div class="step"><span class="step-num">1</span><span class="step-text">Crie uma conta na exchange escolhida e complete a verificação de identidade (KYC — envio de documento e selfie).</span></div>
     <div class="step"><span class="step-num">2</span><span class="step-text">Deposite reais (BRL) via PIX ou TED.</span></div>
-    <div class="step"><span class="step-num">3</span><span class="step-text">Na exchange, compre <strong>USDT</strong> com o saldo depositado. Procure o par <strong>USDT/BRL</strong>.</span></div>
-    <div class="step"><span class="step-num">4</span><span class="step-text">Após a compra, o USDT ficará na sua conta da exchange. Para usar na Genesis Reserve, você precisará <strong>sacar para uma carteira externa</strong>.</span></div>
+    <div class="step"><span class="step-num">3</span><span class="step-text">Na exchange, compre <strong>USDC</strong> com o saldo depositado. Procure o par <strong>USDC/BRL</strong>.</span></div>
+    <div class="step"><span class="step-num">4</span><span class="step-text">Após a compra, o USDC ficará na sua conta da exchange. Para usar na Genesis Reserve, você precisará <strong>sacar para sua carteira na rede Polygon</strong>.</span></div>
     <div class="warn">⚠ O processo de verificação (KYC) pode levar de minutos a alguns dias dependendo da exchange. Planeje com antecedência.</div>
-    <div class="tip">💡 Para compras pequenas (menos de $100), considere o P2P dentro da própria Binance — compra diretamente de outro usuário via PIX, sem precisar de conta bancária adicional.</div>
+    <div class="tip">💡 Na hora de sacar, selecione sempre a rede <strong>Polygon</strong> (também chamada de MATIC). As taxas de saque são muito baixas nessa rede.</div>
   `
 },
 {
   cat: 'usdt',
-  titulo: 'Como transferir USDT da exchange para pagar na Genesis Reserve',
+  titulo: 'Como transferir USDC da exchange para pagar na Genesis Reserve',
   corpo: `
-    <p>Após comprar USDT na exchange, você precisa enviá-lo para o endereço da Genesis Reserve.</p>
-    <h4>Atenção: redes de transferência</h4>
-    <p>O USDT existe em várias redes blockchain. Antes de transferir, verifique qual rede a Genesis Reserve aceita — a informação está na página <strong>plegmadag.com/genesis</strong>.</p>
-    <div class="danger">⛔ Enviar USDT pela rede errada pode resultar em perda permanente dos fundos. Sempre confirme a rede antes de enviar.</div>
+    <p>Após comprar USDC na exchange, você precisa enviá-lo para o endereço da Genesis Reserve na rede Polygon.</p>
+    <h4>Atenção: rede obrigatória — Polygon</h4>
+    <p>A Genesis Reserve aceita <strong>somente USDC nativo na rede Polygon Mainnet</strong>. Não use Ethereum, BSC ou qualquer outra rede.</p>
+    <div class="danger">⛔ Enviar USDC pela rede errada (ex: Ethereum, BSC) resulta em perda permanente dos fundos. Não use também USDC.e (bridged). Confirme a rede antes de enviar.</div>
     <h4>Passo a passo</h4>
-    <div class="step"><span class="step-num">1</span><span class="step-text">Na exchange, vá em <strong>Sacar → USDT</strong>.</span></div>
-    <div class="step"><span class="step-num">2</span><span class="step-text">Cole o endereço da Genesis Reserve exibido no site.</span></div>
-    <div class="step"><span class="step-num">3</span><span class="step-text">Selecione a rede correta (verificar na página Genesis).</span></div>
-    <div class="step"><span class="step-num">4</span><span class="step-text">Informe o valor e confirme o saque. A transferência leva alguns minutos.</span></div>
+    <div class="step"><span class="step-num">1</span><span class="step-text">Na exchange, vá em <strong>Sacar → USDC</strong>.</span></div>
+    <div class="step"><span class="step-num">2</span><span class="step-text">Cole o endereço da Genesis Reserve exibido em <strong>plegmadag.com/genesis</strong>.</span></div>
+    <div class="step"><span class="step-num">3</span><span class="step-text">Selecione a rede <strong>Polygon</strong> (pode aparecer como "MATIC" ou "Polygon Mainnet"). Confirme antes de prosseguir.</span></div>
+    <div class="step"><span class="step-num">4</span><span class="step-text">Informe o valor e confirme o saque. A transferência leva alguns minutos. A taxa de gás é inferior a $0,01.</span></div>
     <div class="tip">💡 Faça um teste com um valor pequeno primeiro para confirmar que tudo funciona antes de transferir o valor total.</div>
+    <div class="tip">💡 Se ainda não tem a rede Polygon configurada na sua carteira, acesse <strong>plegmadag.com/genesis</strong> — há um guia passo a passo para adicionar a rede e o token USDC.</div>
   `
 },
 
@@ -636,7 +722,7 @@ var ARTIGOS = [
     <div class="step"><span class="step-num">1</span><span class="step-text">Abra o app e vá até a aba <strong>Miner</strong>.</span></div>
     <div class="step"><span class="step-num">2</span><span class="step-text">Toque em <strong>"Iniciar Mineração"</strong>. O minerador começa a submeter vértices ao DAG.</span></div>
     <div class="step"><span class="step-num">3</span><span class="step-text">Acompanhe as estatísticas: blocos submetidos, taxa de aprovação e boost PLG-G.</span></div>
-    <div class="step"><span class="step-num">4</span><span class="step-num">4</span><span class="step-text">Para pausar, toque em <strong>"Pausar"</strong>. A mineração também pode ser controlada remotamente via API.</span></div>
+    <div class="step"><span class="step-num">4</span><span class="step-text">Para pausar, toque em <strong>"Pausar"</strong>. A mineração também pode ser controlada remotamente via API.</span></div>
     <div class="tip">💡 Mantenha o app conectado à internet e com a tela ligada ou com o modo "Não otimizar bateria" ativado para melhor performance.</div>
     <div class="warn">⚠ A mineração consome dados e bateria. Recomendamos usar em Wi-Fi com o celular carregando.</div>
   `
@@ -796,7 +882,7 @@ var ARTIGOS = [
     </ul>
     <h4>Por que o DAG é melhor para o PLEGMA</h4>
     <ul>
-      <li>Sem taxa por transação (não há mineradores competindo por fees)</li>
+      <li>Taxa fixa de 0,1% do valor (sem leilão competitivo de fees como no Bitcoin/Ethereum)</li>
       <li>Escalabilidade natural — quanto mais usuários, mais rápida fica a rede</li>
       <li>Consumo de energia muito menor — smartphone consegue participar</li>
       <li>Sem centralização de poder computacional (ASICs e farms são inúteis)</li>
@@ -917,7 +1003,7 @@ function renderArtigos() {
     }
 
     var catLabel = {
-        inicio: 'Primeiros Passos', genesis: 'Reserva Genesis', usdt: 'Como Comprar USDT',
+        inicio: 'Primeiros Passos', genesis: 'Reserva Genesis', usdt: 'Como Comprar USDC',
         mineracao: 'Mineração', fundacao: 'Fundação', seguranca: 'Segurança', rede: 'Rede & Governança'
     };
 
@@ -963,13 +1049,13 @@ document.getElementById('busca').addEventListener('keydown', function(e) {
 var INSTALL_DATA = {
     android: {
         name: 'Android',
-        sub: 'Arquivo .apk · v1.8.0',
+        sub: 'Arquivo .apk · v1.14.2',
         iconColor: '#a4c639',
         iconPath: 'M17.523 15.341a.87.87 0 0 1-.87-.87V9.52a.87.87 0 0 1 1.74 0v4.95a.87.87 0 0 1-.87.872Zm-11.046 0a.87.87 0 0 1-.87-.87V9.52a.87.87 0 0 1 1.74 0v4.95a.87.87 0 0 1-.87.872ZM8.1 17.5v2.63a.87.87 0 0 0 1.74 0V17.5h2.32v2.63a.87.87 0 0 0 1.74 0V17.5c1.14-.13 2.02-1.09 2.02-2.26V8.76H6.08v6.48c0 1.17.88 2.13 2.02 2.26ZM15.2 5.1l.96-1.66a.2.2 0 0 0-.07-.27.2.2 0 0 0-.27.07l-.97 1.68a6.1 6.1 0 0 0-2.85-.69 6.1 6.1 0 0 0-2.85.69L8.18 3.24a.2.2 0 0 0-.27-.07.2.2 0 0 0-.07.27l.96 1.66A5.56 5.56 0 0 0 6.08 8.5h11.84A5.56 5.56 0 0 0 15.2 5.1Zm-4.7 1.93a.44.44 0 1 1 0-.88.44.44 0 0 1 0 .88Zm2.98 0a.44.44 0 1 1 0-.88.44.44 0 0 1 0 .88Z',
-        downloadUrl: '/download/plegma-v1.8.1.apk',
+        downloadUrl: '/download/plegma-v1.14.2.apk',
         body: `
             <h4>Passo a passo</h4>
-            <div class="step"><span class="step-num">1</span><span class="step-text">Clique em <strong>"Baixar agora"</strong> abaixo. O arquivo <code>plegma-v1.8.1.apk</code> será salvo na pasta de downloads do seu celular.</span></div>
+            <div class="step"><span class="step-num">1</span><span class="step-text">Clique em <strong>"Baixar agora"</strong> abaixo. O arquivo <code>plegma-v1.14.2.apk</code> será salvo na pasta de downloads do seu celular.</span></div>
             <div class="step"><span class="step-num">2</span><span class="step-text">Abra o arquivo baixado. O Android vai exibir um aviso sobre <strong>instalação de fontes desconhecidas</strong> — toque em <strong>"Configurações"</strong> e ative apenas para o seu navegador.</span></div>
             <div class="step"><span class="step-num">3</span><span class="step-text">Volte e confirme a instalação. O app aparecerá na sua lista de apps como <strong>"PLEGMA"</strong>.</span></div>
             <div class="step"><span class="step-num">4</span><span class="step-text">Abra o app. Na primeira execução ele criará sua carteira automaticamente e pedirá configuração de segurança.</span></div>
@@ -1052,5 +1138,36 @@ document.addEventListener('keydown', function(e) {
 });
 </script>
 
+
+<script>
+/* ── GC Testnet Ticker — ativa 09/04/2026 18:00 Madrid (CEST = UTC+2) ── */
+(function () {
+    var LAUNCH = new Date('2026-04-09T18:00:00+02:00').getTime();
+    function showTicker() {
+        var bar = document.getElementById('gc-testnet-bar');
+        if (!bar) return;
+        if (Date.now() >= LAUNCH) {
+            bar.style.display = 'block';
+            /* Empurra o body para baixo para não sobrepor conteúdo */
+            document.body.style.paddingTop = (
+                (parseInt(document.body.style.paddingTop) || 0) + 26
+            ) + 'px';
+            /* Corrige sticky nav para ficar abaixo do ticker */
+            var navEl = document.querySelector('nav');
+            if (navEl) navEl.style.top = '26px';
+            var linksEl = document.querySelector('.nav-links');
+            if (linksEl) linksEl.style.top = '82px';
+        } else {
+            /* Verifica novamente quando chegar a hora */
+            setTimeout(showTicker, Math.min(LAUNCH - Date.now(), 60000));
+        }
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', showTicker);
+    } else {
+        showTicker();
+    }
+}());
+</script>
 </body>
 </html>

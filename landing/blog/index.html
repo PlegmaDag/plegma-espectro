@@ -474,6 +474,33 @@
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
 
+        <!-- DEPLOY PIPELINE ESTABILIZADO · INFRA · 02 MAI 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <div class="post-tags">
+                    <span class="tag">INFRA</span>
+                    <span class="tag">BUILD</span>
+                    <span class="tag">SECURITY</span>
+                </div>
+                <div class="post-date">02 Mai 2026</div>
+            </div>
+            <h2 class="post-title">Pipeline de Deploy Estabilizado — Validação Progressiva por Nó</h2>
+            <div class="post-body">
+                <div class="post-section">
+                    <h3>Deploy automático sandbox → produção</h3>
+                    <p>O fluxo de deploy foi revisto para garantir progressão totalmente automática: após validação bem-sucedida no sandbox, os 4 nós de produção (EUR/BR/MAL/SIN) são actualizados em sequência, um de cada vez. Cada nó é validado individualmente — verificação de serviço activo + resposta HTTP 200 — antes de avançar para o seguinte. Em caso de falha num nó, o pipeline aborta com diagnóstico e o terminal permanece aberto para análise.</p>
+                </div>
+                <div class="post-section">
+                    <h3>Estabilidade da camada de infra</h3>
+                    <p>Resolvidos vários problemas de compatibilidade entre o ambiente Windows e os servidores Linux no processo de envio de scripts remotos. A camada de comunicação entre o pipeline local e os nós foi reforçada, garantindo que comandos de configuração (systemd, nginx, permissões) chegam e executam sem corrupção de encoding.</p>
+                </div>
+                <div class="post-section">
+                    <h3>Download APK</h3>
+                    <p>Corrigido o link de download do APK Android no site público. O ficheiro <code>plegma-v1.14.2.apk</code> está disponível em <code>/download/</code> e os servidores respondem correctamente ao pedido.</p>
+                </div>
+            </div>
+        </article>
+
         <!-- HARDENING SSH · FIX VALIDADOR · APK v1.14.1 — 02 MAI 2026 -->
         <article class="post">
             <div class="post-header">
