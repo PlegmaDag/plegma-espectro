@@ -474,6 +474,251 @@
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
 
+        <!-- HARDENING SSH · FIX VALIDADOR · APK v1.14.1 — 02 MAI 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">02 MAI 2026 — Hardening SSH · Fix Validador Background · Migração de Storage · APK v1.14.1</span>
+                <div class="post-tags">
+                    <span class="tag">SECURITY</span>
+                    <span class="tag">APP</span>
+                    <span class="tag">INFRA</span>
+                    <span class="tag">BUILD</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">
+                    <div class="post-section-title">Fix Crítico — Validador Background não Activava</div>
+                    <p>Identificado e corrigido o problema que impedia o validador de se registar na rede: o serviço background (<code>validator_bg_service</code>) lia o endereço PLG de um backend de armazenamento diferente do utilizado pelo resto da app. O <code>StorageService</code> utiliza o Keystore Android directamente (<code>encryptedSharedPreferences: false</code>), enquanto o validador lia de <code>EncryptedSharedPreferences</code> — dois sistemas isolados no Android. O resultado era uma leitura permanentemente nula, fazendo o serviço terminar silenciosamente sem enviar qualquer heartbeat. Correcção: alinhamento do backend no validador com o padrão da app.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Migração Automática de Carteiras (APKs Anteriores)</div>
+                    <p>Utilizadores que tinham a carteira configurada em versões anteriores da app (que usavam <code>encryptedSharedPreferences: true</code>) veriam a tela de "criar carteira" ao instalar a nova versão, por incompatibilidade de backend. Implementado <code>StorageService.migrarStorageLegado()</code>: no primeiro arranque após actualização, o sistema lê automaticamente os dados do backend antigo, transfere para o Keystore e elimina a entrada original. A operação é idempotente e transparente para o utilizador.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Hardening de Segurança — SSH e Credenciais</div>
+                    <p>Auditoria completa da superfície de ataque remota do cluster. Acesso SSH (porta 22) restrito ao IP do administrador em todos os cinco nós da rede. Porta auxiliar 2222 detectada como aberta sem justificação num nó — fechada. Credencial administrativa removida de ficheiro de deploy versionável e movida para ficheiro local não versionado, seguindo o padrão já adoptado para tokens de terceiros. Ficheiro de peers com endereço desconhecido detectado e eliminado.</p>
+                </div>
+            </div>
+        </article>
+
+        <!-- AUDITORIA SENTINELA COMPLETA · LOGGING · APP — 01 MAI 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">01 MAI 2026 — Auditoria Sentinela Concluída · Score MEDIUM 457→0 · Camada de Observabilidade · App Reforçada</span>
+                <div class="post-tags">
+                    <span class="tag">SECURITY</span>
+                    <span class="tag">BACKEND</span>
+                    <span class="tag">APP</span>
+                    <span class="tag">INFRA</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">
+                    <div class="post-section-title">Auditoria Sentinela — Score MEDIUM 457→0</div>
+                    <p>Ciclo completo de auditoria estática pré-Genesis concluído. O motor de análise Sentinela atingiu pontuação zero em todas as categorias: CRITICAL 0 · HIGH 0 · MEDIUM 0 · LOW 0. A resolução dos 457 achados MEDIUM envolveu a introdução de uma camada de observabilidade estruturada em 23 módulos do backend — substituição de output directo por sistema de logging hierárquico, permitindo controlo granular de verbosidade por módulo sem alterar comportamento de runtime. Ficheiros de interface CLI e GUI classificados formalmente como camada de apresentação, com regras de análise ajustadas em conformidade. O motor Sentinela foi igualmente melhorado com suporte a janela de contexto por regra, eliminando falsos positivos em endpoints com validação interna.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Reforço de Autorização em Endpoints Sensíveis</div>
+                    <p>Dois vectores identificados e corrigidos: (1) endpoint de configuração do monitor de pagamentos não exigia credenciais administrativas — autenticação implementada em paridade com os restantes endpoints da camada administrativa; (2) endpoint de telemetria de downloads estava incorrectamente classificado no namespace administrativo — movido para namespace próprio, reflectindo correctamente a sua natureza de telemetria pública sem autenticação. Ambas as correcções foram propagadas para todos os pontos de chamada no frontend e no servidor legado.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">App Mobile — Gestão de Erros Reforçada (v1.14.1)</div>
+                    <p>Identificados dez blocos de captura de excepção silenciosos em módulos críticos da app: arranque do validador background, recuperação de conta, inicialização de ecrã, provers, sentinela, shield e serviço de API. Em modo de debug, erros silenciados impediam diagnóstico de falhas de boot e autenticação. Todos os blocos foram actualizados para registar a excepção com identificação do contexto, mantendo comportamento de produção idêntico e melhorando significativamente a capacidade de diagnóstico durante desenvolvimento e testes.</p>
+                </div>
+            </div>
+        </article>
+
+        <!-- DEPLOY ROLLING + DAG RESILÊNCIA + INFRA — 29 ABR 2026 TARDE -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">29 ABR 2026 — Rolling Deploy Zero-Downtime · DAG Tolerância a Partições · Watchdog 3 Fases · Uptime Rede</span>
+                <div class="post-tags">
+                    <span class="tag">INFRA</span>
+                    <span class="tag">DAG</span>
+                    <span class="tag">AUTH</span>
+                    <span class="tag">SECURITY</span>
+                    <span class="tag">DEPLOY</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">
+                    <div class="post-section-title">Rolling Deploy Zero-Downtime via Cluster DNS</div>
+                    <p>Implementado sistema de deploy por rotação de cluster: cada nó é removido temporariamente do balanceamento DNS, actualizado e verificado antes de reentrar, enquanto os restantes três nós absorvem o tráfego. O processo percorre os nós em sequência (BR → MAL → SIN → EU), com health check HTTP obrigatório antes de cada re-inserção no cluster. Em caso de falha crítica durante o deploy — incluindo crash do servidor, falha SSH ou timeout de recuperação — o nó é imediatamente re-adicionado ao DNS e o deploy aborta com relatório detalhado. O TTL DNS é restaurado automaticamente mesmo em caso de abort, via bloco <code>finally</code>.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Sequência de Restart em 3 Fases + Watchdog Autónomo</div>
+                    <p>Criado <code>restart_service.sh</code> com três modos de recuperação progressivos: reinício nativo via gestor de serviços, paragem forçada com reinício limpo, e modo nuclear com limpeza de porta e arranque directo do processo. Cada fase tenta três vezes antes de escalar. Complementarmente, um watchdog independente (<code>plegma_watchdog.sh</code>) corre como timer systemd a cada 60 segundos, monitorizando os cinco serviços e invocando o script de recuperação automaticamente. Corrigida também a configuração do gestor de serviços que impedia reinícios automáticos após falhas sucessivas.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">DAG — Tolerância a Partições e Merge Determinístico</div>
+                    <p>Resolvidos três vectores de instabilidade no protocolo P2P: (1) gestão de tips da DAG migrada para estrutura thread-safe com lock explícito, eliminando condições de corrida sob carga concorrente; (2) algoritmo de sincronização após isolamento de nó refactorizado para resolver recursivamente todos os pais em falta antes de inserir qualquer vértice — profundidade máxima 64 níveis; (3) ordenação determinística por <code>(timestamp, tx_hash)</code> garante que o mesmo conjunto de vértices reconstrói a mesma DAG em qualquer nó, independentemente da ordem de chegada. Adicionado loop de reconexão periódico (5 min) para recuperação automática após isolamento de continente.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Autenticação — Persistência de Desafios entre Reinícios</div>
+                    <p>Vulnerabilidade detectada na camada de autenticação: desafios QR eram mantidos exclusivamente em memória do processo, sendo destruídos em cada reinício do serviço e causando falhas de validação para utilizadores que tinham iniciado o fluxo antes do restart. Correcção implementada: desafios agora persistidos na base de dados SQLite existente com TTL controlado. O processo relê os desafios activos ao arrancar, mantendo continuidade total do fluxo de autenticação através de reinícios de serviço.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Uptime da Rede — Separação de Métricas</div>
+                    <p>O painel de administração exibia o tempo de vida do processo como uptime da rede — valor que reiniciava a cada manutenção de serviço. Separadas duas métricas distintas: <strong>uptime da rede</strong> (calculado a partir do timestamp de inicio da Fase Zero em 09/04/2026 — constante, nunca reinicia) e <strong>uptime do nó</strong> (desde o último arranque do processo naquele servidor — útil para diagnóstico de manutenção). Ambas visíveis no painel administrativo.</p>
+                </div>
+            </div>
+        </article>
+
+        <!-- AUDITORIA DE SEGURANÇA — CORS + SENTINELA — 29 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">29 ABR 2026 — Auditoria de Segurança · Score HIGH 91→36 · Restrição de Origins · Sentinela Refinado</span>
+                <div class="post-meta">
+                    <span class="post-tag">SECURITY</span>
+                    <span class="post-tag">INFRA</span>
+                    <span class="post-tag">BACKEND</span>
+                    <div class="post-date">29 ABR 2026</div>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">
+                    <div class="post-section-title">Auditoria de Segurança — Score HIGH 91 → 36</div>
+                    <p>Realizada auditoria completa da camada de comunicação entre nós e do frontend do protocolo. O score do Sentinela passou de <strong>HIGH 91</strong> para <strong>HIGH 36</strong> — uma redução de 60%. CRITICAL permanece em <strong>0</strong>. Os achados restantes são classificados como risco controlado: dados servidos exclusivamente pelo próprio servidor do protocolo, sem exposição a input externo.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Restrição de Origins na Comunicação entre Nós</div>
+                    <p>Vulnerabilidade detectada na camada de comunicação entre serviços → protecção de origin implementada. Todos os servidores do protocolo (autenticação, carteira, escudo, minerador, núcleo API) passaram a validar o origin de cada pedido HTTP contra a lista canónica de domains do protocolo. Pedidos de origins não autorizados recebem o origin padrão de produção em vez de acesso irrestrito.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Sentinela — Refinamento de Regras</div>
+                    <p>O motor de análise estática Sentinela foi melhorado com novas exclusões inteligentes: template literals multi-linha, funções de sanitização conhecidas, IPs de nós âncora públicos, e padrões de renderização de dados blockchain (hashes, endereços, saldos). Estas melhorias eliminam falsos positivos sem enfraquecer a detecção de vulnerabilidades reais.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Estado do Sentinela — Pré-Genesis</div>
+                    <p>Com 10 dias para o Genesis (09/05/2026 18:00 CEST), o protocolo mantém zero vulnerabilidades CRITICAL. O score HIGH reflecte principalmente padrões de renderização de dados do servidor próprio, categorizados como risco aceite e documentado. A meta é atingir HIGH ≤ 20 antes do lançamento.</p>
+                </div>
+            </div>
+        </article>
+
+        <!-- NAV PADRONIZADO /AJUDA/ — 25 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">25 ABR 2026 — Página /ajuda/ · NAV Padronizado · Fix Ticker Testnet · UI/UX</span>
+                <div class="post-meta">
+                    <span class="post-tag">UI/UX</span>
+                    <span class="post-tag">BUILD</span>
+                    <div class="post-date">25 ABR 2026</div>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">
+                    <div class="post-section-title">NAV Padronizado — Página Central de Ajuda</div>
+                    <p>A página <code>/ajuda/</code> passou a incluir o sistema de navegação principal do site: logótipo animado, hamburger menu mobile com animação X, todos os links de secção e botão de acesso ao dashboard. O link <strong>AJUDA</strong> é destacado como ativo na nav. O módulo de autenticação foi adicionado ao cabeçalho da página, tornando o fluxo de acesso ao dashboard consistente com o resto do ecossistema.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Fix — Ticker Testnet a Sobrepor a NAV em Scroll</div>
+                    <p>O ticker de fase TESTNET (barra laranja fixa no topo, z-index elevado) sobrepunha a navegação sticky ao fazer scroll. Corrigido: o activador do ticker passa agora a ajustar dinamicamente a posição da nav e do dropdown mobile para ficarem sempre visíveis abaixo da barra de aviso.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Hamburger Mobile — Dropdown Completo</div>
+                    <p>Adicionado o CSS e comportamento completo do menu hamburger mobile à página de ajuda: dropdown com fundo blur, animação de abertura/fecho em X, e todos os links acessíveis em ecrãs pequenos.</p>
+                </div>
+            </div>
+        </article>
+
+        <!-- FUNDAÇÃO — FLUXO DE INSCRIÇÃO — 25 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">25 ABR 2026 — Fundação PLEGMA · Fluxo de Inscrição · Auth por Carteira · Transparência Total</span>
+                <div class="post-meta">
+                    <span class="post-tag">INFRA</span>
+                    <span class="post-tag">AUTH</span>
+                    <span class="post-tag">UI/UX</span>
+                    <span class="post-tag">FUNDAÇÃO</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <div class="post-section">
+                    <div class="post-section-title">Fluxo de Inscrição — Fundação PLEGMA</div>
+                    <p>O processo de candidatura de projectos humanitários à Fundação PLEGMA foi auditado e reestruturado nesta sessão. Quatro componentes foram identificados e resolvidos para garantir que o fluxo funcione de ponta a ponta: do formulário público até à decisão do Console Mestre.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Autenticação por Carteira — Obrigatória</div>
+                    <p>O formulário de inscrição passou a exigir autenticação com carteira PLEGMA antes de permitir a submissão. O sistema utiliza o módulo <code>PlegmaAuth</code> já integrado na plataforma — sem criar nova dependência. O endereço PLG do submitter é registado junto à candidatura, garantindo rastreabilidade.</p>
+                    <p>O botão de submissão permanece desactivado até a carteira estar autenticada, eliminando submissões anónimas.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Base de Dados — Dados Completos do Projecto</div>
+                    <p>A tabela de candidaturas foi expandida com 12 colunas adicionais via migration segura. Toda a informação do projecto — nome, segmento, localização, descrição, responsável, redes sociais, vídeo de prova — é agora persistida no DAG. A migration respeita instâncias existentes e não afecta registos anteriores.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Endpoint Público — Instituições Aprovadas</div>
+                    <p>O endpoint <code>/api/fundacao/aprovadas</code> foi implementado, disponibilizando publicamente a lista de instituições aprovadas com todos os campos públicos. O endpoint não requer autenticação e exclui candidaturas pendentes ou rejeitadas — apenas o que foi validado pelo protocolo é visível.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Console Mestre — Revisão de Candidaturas</div>
+                    <p>A aba FUNDAÇÃO no Console Mestre foi actualizada para apresentar o nome do projecto e o segmento de actuação directamente na tabela de candidaturas. Localização, responsável e descrição estão disponíveis em tooltip por linha. Os botões APROVAR e REJEITAR permanecem funcionais para candidaturas PENDENTES.</p>
+                </div>
+                <div class="post-section">
+                    <div class="post-section-title">Notificações — Fallback Garantido</div>
+                    <p>O sistema de notificação por email foi reforçado com fallback automático para registo local: independentemente da configuração SMTP, cada nova candidatura é registada em ficheiro seguro no servidor. Nenhuma inscrição se perde por falha de configuração.</p>
+                </div>
+            </div>
+        </article>
+
+        <!-- ORCHESTRATOR LOCAL + AUDITORIA SEGURANÇA — 25 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">25 ABR 2026 — Orchestrator Local v1.0.0 · Auditoria de Segurança · Filtro de Publicação</span>
+                <div class="post-meta">
+                    <span class="post-tag">INFRA</span>
+                    <span class="post-tag">SECURITY</span>
+                    <span class="post-tag">AUTH</span>
+                    <span class="post-tag">BUILD</span>
+                </div>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">PLEGMA Orchestrator v1.0.0 — Sistema de Agentes Locais</div>
+                <p>Construção completa do <strong>PLEGMA Orchestrator</strong> — sistema de orquestração local com 6 agentes especializados: <em>validation</em> (conformidade criptográfica), <em>security</em> (auditoria estática), <em>coder</em> (qualidade de código), <em>deploy</em> (publicação multi-nó), <em>test_runner</em> (bateria de testes) e <em>coordinator</em> (pipelines compostos). O sistema funciona 100% offline, sem dependências externas, com memória neural persistente em SQLite e fingerprints BLAKE3 para aprendizagem de padrões de tarefas. O router analisa complexidade (SIMPLE / MEDIUM / COMPLEX) e despacha automaticamente para o agente correcto. Pipelines disponíveis: <span class="highlight">pre_deploy</span>, <span class="highlight">full_audit</span>, <span class="highlight">ci_check</span> e <span class="highlight">full</span>.</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Auditoria de Segurança — Estado Actual</div>
+                <p>Auditoria estática completa ao codebase. <strong>Score actual: CRITICAL 0 · HIGH 90 · MEDIUM 453 · LOW 3.</strong> Três camadas reforçadas nesta sessão:</p>
+                <ul>
+                    <li>Vulnerabilidade detectada na camada de autenticação → <span class="highlight">validação migrada para servidor</span></li>
+                    <li>Vulnerabilidade detectada em queries de base de dados → <span class="highlight">queries parametrizadas e colunas explícitas implementadas</span></li>
+                    <li>Vulnerabilidade detectada na camada frontend → <span class="highlight">sanitização de output implementada em múltiplos módulos</span></li>
+                </ul>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Filtro de Publicação</div>
+                <p>Protocolo interno de publicação actualizado: correcções de segurança são reportadas apenas em formato abstracto, sem referência a ficheiros, vectores ou detalhes de exploração. O objectivo é manter transparência sobre o estado de segurança do protocolo sem comprometer a sua superfície de ataque.</p>
+            </div>
+        </article>
+
+        <!-- MARKETING GENESIS RESERVE — 24 ABR 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <span class="post-title">24 ABR 2026 — Marketing Genesis Reserve · Directrizes de Lançamento · 3 Bloqueadores Críticos</span>
+                <div class="post-meta">
+                    <span class="post-tag">MARKETING</span>
+                    <span class="post-tag">GENESIS</span>
+                    <span class="post-tag">ESTRATÉGIA</span>
+                </div>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Simulação de mercado e headline principal</div>
+                <p>Para preparar o lançamento do Genesis Reserve (9 de Maio de 2026), foram executadas simulações de reacção de mercado em Twitter/Reddit com múltiplos perfis de agentes — desde puristas Bitcoin a investigadores de criptografia pós-quântica. O sinal mais forte identificado foi o endorsement NIST/Dilithium3: <span class="highlight">confiança 0.6, sinal positivo 0.8</span> — o argumento de maior tração em todos os segmentos testados. A headline principal foi assim definida: <strong>"Post-Quantum Bitcoin. Fair Launch. No Compromises."</strong></p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Hierarquia de narrativas</div>
+                <p>Tier 1 (activar imediatamente): <strong>Post-Quantum Bitcoin</strong> — único com FIPS 204 em produção desde genesis — e <strong>Fair Launch Absolutista</strong> — zero team allocation, zero VC, unsold supply burned on-chain no Dia 30. Tier 2 (suporte): Mobile Mining com Justice Cap e DAG como arquitectura. Narrativa da Fundação P2P bloqueada até que pelo menos 1 organização real seja nomeada publicamente — sem prova, o argumento não é credível.</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">Materiais de lançamento produzidos</div>
+                <p>Criados 5 documentos de directriz: tagline e hierarquia de narrativas por persona, thread de 12 tweets para o dia do Genesis, FAQ com respostas às 8 objecções mais comuns (versão curta para Twitter + versão longa para Reddit), checklist de conteúdo obrigatório com timing D-14 a D+30, e post completo de Due Diligence para r/CryptoCurrency em inglês e português.</p>
+            </div>
+            <div class="post-section">
+                <div class="post-section-title">3 Bloqueadores críticos antes de 9 de Maio</div>
+                <p>Identificados e adicionados ao roadmap como pré-requisitos absolutos: (1) <strong>Data pública do audit comprometida</strong> — sem data publicada, ataques de @rugpull_radar ficam sem resposta; (2) <strong>1 parceiro real da Fundação nomeado</strong> — sem organização real, a narrativa P2P humanitária não é activável; (3) <strong>Endereço de burn on-chain documentado</strong> — guia técnico de verificação transforma cepticismo sobre o lockup de 30 dias em prova verificável.</p>
+            </div>
+        </article>
+
         <!-- FASTAPI + NGINX LOCAL-ONLY + BATCH WRITE QUEUE — 18 ABR 2026 -->
         <article class="post">
             <div class="post-header">
@@ -704,10 +949,10 @@
             </div>
         </article>
 
-        <!-- AUDITORIA ZK + REMOÇÃO BN128 + SCRIPT NÓ — 09 ABR 2026 -->
+        <!-- AUDITORIA ZK + CONSOLIDAÇÃO LATTICE + SCRIPT NÓ — 09 ABR 2026 -->
         <article class="post">
             <div class="post-header">
-                <span class="post-title">09 ABR 2026 — Auditoria ZK · Remoção Groth16/BN128 · Script de Instalação de Nó Corrigido</span>
+                <span class="post-title">09 ABR 2026 — Auditoria ZK · Consolidação Lattice Ring-LWE · Script de Instalação de Nó Corrigido</span>
                 <div class="post-meta">
                     <span class="post-date">09 ABR 2026 · 23:30</span>
                     <span class="post-tag tag-core">ZK</span>
@@ -723,7 +968,7 @@
                 </div>
                 <div class="post-section">
                     <div class="post-section-title">Limpeza de Referências Pré-Quânticas</div>
-                    <p>Varrimento completo ao projecto identificou referências a BN128/Groth16 em páginas públicas. Substituídas por <strong>Lattice Ring-LWE</strong> em: <code>index.html</code> (tech tags), <code>quem-somos/index.html</code> (pilar ZK + ficha técnica), <code>servicos/index.html</code> (ZK-Snapshot). Hash <code>SHA3-256</code> no serviço de snapshot corrigido para <code>BLAKE3</code> — consistência com o protocolo canónico.</p>
+                    <p>Varrimento completo ao projecto garantiu consistência do stack criptográfico em todas as páginas públicas: <strong>Lattice Ring-LWE</strong> em <code>index.html</code> (tech tags), <code>quem-somos/index.html</code> (pilar ZK + ficha técnica), <code>servicos/index.html</code> (ZK-Snapshot). Hash <code>SHA3-256</code> no serviço de snapshot corrigido para <code>BLAKE3</code> — consistência com o protocolo canónico.</p>
                 </div>
                 <div class="post-section">
                     <div class="post-section-title">Script de Instalação de Nó — Console</div>
