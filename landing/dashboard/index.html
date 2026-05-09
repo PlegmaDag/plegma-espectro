@@ -20,14 +20,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600&family=Montserrat:wght@800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <script src="../auth.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/blake3@2.1.4/browser-async.js"></script>
-    <script>
-    // BLAKE3 para operações locais — substitui crypto.subtle.digest('SHA-256')
-    async function blake3Hex(data) {
-        const h = await blake3.hash(data instanceof Uint8Array ? data : new TextEncoder().encode(data));
-        return Array.from(h).map(b => b.toString(16).padStart(2,'0')).join('');
-    }
-    </script>
     <style>
         :root {
             --bg-center: #0a192f;
@@ -485,7 +477,7 @@
         .genesis-progress-label { display: flex; justify-content: space-between; font-size: 0.6rem; color: var(--text-dim); margin-bottom: 6px; font-family: 'Space Mono', monospace; }
         .genesis-progress-bar { height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; border: 1px solid rgba(245,158,11,0.2); }
         .genesis-progress-fill { height: 100%; background: linear-gradient(90deg, var(--amber), var(--accent-cyan)); border-radius: 3px; transition: width 1s ease; width: 0%; }
-        .genesis-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+        .genesis-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
         .genesis-stat { background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px 10px; text-align: center; }
         .genesis-stat .gs-label { font-size: 0.5rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 4px; }
         .genesis-stat .gs-value { font-family: 'Space Mono', monospace; font-size: 0.78rem; font-weight: 700; color: var(--accent-cyan); }
@@ -530,9 +522,49 @@
             .grid-pool { grid-template-columns: 1fr; }
             .grid-deflacao { grid-template-columns: 1fr 1fr; }
         }
+    
+        /* ── GC TESTNET TICKER ────────────────────────────────────────── */
+        #gc-testnet-bar {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            height: 26px;
+            z-index: 99999;
+            background: rgba(249,115,22,0.08);
+            border-bottom: 1px solid rgba(249,115,22,0.40);
+            overflow: hidden;
+            pointer-events: none;
+        }
+        #gc-testnet-inner {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            white-space: nowrap;
+            animation: gc-scroll 38s linear infinite;
+        }
+        @keyframes gc-scroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        #gc-testnet-inner span {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.58rem;
+            color: #f97316;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            padding-right: 80px;
+        }
     </style>
 </head>
 <body>
+
+<!-- GC TESTNET TICKER -->
+<div id="gc-testnet-bar">
+  <div id="gc-testnet-inner">
+    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
+    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
+  </div>
+</div>
 
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
@@ -790,8 +822,11 @@
             <!-- COLUNA ESQUERDA: Genesis Reserve + Telemetria empilhados -->
             <div style="display:flex; flex-direction:column; gap:16px; min-height:0; height:100%;">
 
+                <!-- Supply cards: Genesis Reserve + PLG Supply -->
+                <div style="display:flex; flex-direction:column; gap:16px; flex-shrink:0;">
+
                 <!-- Genesis Reserve -->
-                <div class="card genesis-card" style="flex-shrink:0;">
+                <div class="card genesis-card">
                     <div class="genesis-card-header">
                         <span class="genesis-card-title">GENESIS RESERVE</span>
                         <div style="display:flex;gap:6px;align-items:center;">
@@ -815,11 +850,15 @@
                         </div>
                         <div class="genesis-stat">
                             <div class="gs-label">Vendidos</div>
-                            <div class="gs-value amber" id="genesisVendidos">847</div>
+                            <div class="gs-value amber" id="genesisVendidos">—</div>
                         </div>
                         <div class="genesis-stat">
                             <div class="gs-label">Disponíveis</div>
-                            <div class="gs-value green" id="genesisDisponiveis">9.653.153</div>
+                            <div class="gs-value green" id="genesisDisponiveis">—</div>
+                        </div>
+                        <div class="genesis-stat" style="border-color:rgba(239,68,68,0.25);background:rgba(239,68,68,0.03);">
+                            <div class="gs-label">Queimados</div>
+                            <div class="gs-value" style="color:var(--red);" id="genesisQueimados">0</div>
                         </div>
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
@@ -827,9 +866,60 @@
                             <span class="genesis-monitor-dot" id="genesisMonitorDot"></span>
                             <span style="font-size:0.55rem; color:var(--text-dim); letter-spacing:1px; font-family:'Space Mono',monospace;" id="genesisMonitorLabel">Monitor ativo</span>
                         </div>
-                        <a href="/genesis" class="btn-genesis-link">VER RESERVA GENESIS →</a>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <a href="/burn" class="btn-genesis-link" style="color:var(--red);border-color:rgba(239,68,68,0.4);background:rgba(239,68,68,0.05);" title="Ver endereço de queima">QUEIMA →</a>
+                            <a href="/genesis" class="btn-genesis-link">RESERVA →</a>
+                        </div>
                     </div>
                 </div>
+
+                <!-- PLG Supply -->
+                <div class="card" style="border-color:rgba(0,242,255,0.3);">
+                    <div class="genesis-card-header">
+                        <span class="genesis-card-title">SUPPLY $PLG</span>
+                        <div style="display:flex;gap:6px;align-items:center;">
+                            <span class="badge" style="border:1px solid rgba(0,242,255,0.4);color:var(--accent-cyan);background:rgba(0,242,255,0.08);">$PLG</span>
+                            <span class="badge" id="plgPhaseBadge" style="border:1px solid rgba(245,158,11,0.5);color:var(--amber);background:rgba(245,158,11,0.08);">TESTNET</span>
+                        </div>
+                    </div>
+                    <div class="genesis-progress-wrap">
+                        <div class="genesis-progress-label">
+                            <span>Em circulação</span>
+                            <span id="plgSupplyPct">0%</span>
+                        </div>
+                        <div class="genesis-progress-bar" style="border-color:rgba(0,242,255,0.2);">
+                            <div class="genesis-progress-fill" id="plgSupplyFill" style="background:linear-gradient(90deg,var(--accent-cyan),var(--green-pulse));"></div>
+                        </div>
+                    </div>
+                    <div class="genesis-stats">
+                        <div class="genesis-stat">
+                            <div class="gs-label">Supply Total</div>
+                            <div class="gs-value">21.000.000.000</div>
+                        </div>
+                        <div class="genesis-stat">
+                            <div class="gs-label">Em Circulação</div>
+                            <div class="gs-value amber" id="plgCirculacao">0</div>
+                        </div>
+                        <div class="genesis-stat">
+                            <div class="gs-label">Não Emitido</div>
+                            <div class="gs-value green" id="plgNaoEmitido">21.000.000.000</div>
+                        </div>
+                        <div class="genesis-stat">
+                            <div class="gs-label">Geração/dia</div>
+                            <div class="gs-value" style="color:var(--accent-cyan);" id="plgGeracao">—</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <span style="font-size:0.55rem; color:var(--text-dim); letter-spacing:1px; font-family:'Space Mono',monospace;" id="plgMiningLabel">Mining inicia 10/05/2026</span>
+                        </div>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <a href="/genesis" class="btn-genesis-link">INFO →</a>
+                        </div>
+                    </div>
+                </div>
+
+                </div><!-- /supply grid -->
 
                 <!-- Telemetria de Rede -->
                 <div class="card dag-container" style="flex:1;">
@@ -926,6 +1016,12 @@
                         ↑ ENVIAR PLG-G
                     </button>
                 </div>
+
+                <!-- Doar à Fundação -->
+                <button onclick="abrirModalDoacao()" style="width:100%; font-family:'Space Mono',monospace; font-size:0.65rem; letter-spacing:1.5px; padding:13px; border-radius:8px; text-transform:uppercase; border:1px solid rgba(35,209,139,0.5); background:rgba(35,209,139,0.06); color:var(--green-pulse); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.2s;" onmouseover="this.style.background='rgba(35,209,139,0.12)'" onmouseout="this.style.background='rgba(35,209,139,0.06)'">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg>
+                    DOAR À FUNDAÇÃO
+                </button>
 
                 <!-- Próximos Vestings -->
                 <div class="card">
@@ -1668,7 +1764,7 @@
             <div style="flex:1;">
                 <div id="su-hero-label" style="font-family:'Space Mono',monospace; font-size:0.6rem; letter-spacing:3px; color:#ef4444; margin-bottom:6px;">LATTICE SHIELD · PROTOCOLO SENTINELA</div>
                 <div style="font-size:1rem; font-weight:600; color:var(--text-main); margin-bottom:8px;">Proteção DAG para seu dispositivo</div>
-                <div style="font-size:0.72rem; color:var(--text-dim); line-height:1.7;">Proteção de nível militar para PCs — construída sobre a mesma tecnologia DAG e criptografia Dilithium3 que protege a rede PLEGMA. Camada de defesa ativa acima do protocolo de segurança nativo do sistema operacional. O Lattice Shield usa a inteligência coletiva da rede para identificar e bloquear ameaças em tempo real, antes que afetem o dispositivo.</div>
+                <div style="font-size:0.72rem; color:var(--text-dim); line-height:1.7;">Proteção de nível militar para Android — construída sobre a mesma tecnologia DAG e criptografia Dilithium3 que protege a rede PLEGMA. O Lattice Shield usa a inteligência coletiva da rede para identificar e bloquear ameaças em tempo real, antes que afetem o dispositivo. <strong style="color:#ef4444;">Ativação exclusivamente pelo app PLEGMA DAG.</strong></div>
             </div>
             <div style="text-align:right; flex-shrink:0;">
                 <div style="font-family:'Space Mono',monospace; font-size:1.6rem; font-weight:700; color:var(--text-main);">$12</div>
@@ -1704,12 +1800,12 @@
             <div class="card" style="padding:16px; gap:8px; display:flex; flex-direction:column;">
                 <svg class="su-theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 <div style="font-size:0.68rem; font-weight:600; color:var(--text-main);">Protocolo Nativo +1</div>
-                <div style="font-size:0.63rem; color:var(--text-dim); line-height:1.6;">Não substitui o Windows Defender — adiciona uma camada extra. O que passa pelo SO é filtrado novamente pelo Shield.</div>
+                <div style="font-size:0.63rem; color:var(--text-dim); line-height:1.6;">Não substitui a proteção nativa do Android — adiciona uma camada extra. O que passa pelo SO é filtrado novamente pelo Shield.</div>
             </div>
             <div class="card" style="padding:16px; gap:8px; display:flex; flex-direction:column;">
                 <svg class="su-theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
                 <div style="font-size:0.68rem; font-weight:600; color:var(--text-main);">Nó Sentinela da Rede</div>
-                <div style="font-size:0.63rem; color:var(--text-dim); line-height:1.6;">Cada PC com Shield ativo é um nó Sentinela — contribui para a detecção coletiva e fortalece a segurança de todos.</div>
+                <div style="font-size:0.63rem; color:var(--text-dim); line-height:1.6;">Cada dispositivo com Shield ativo é um nó Sentinela — contribui para a detecção coletiva e fortalece a segurança de todos.</div>
             </div>
         </div>
 
@@ -1774,155 +1870,16 @@
             </div>
         </div>
 
-        <!-- COMO INSTALAR (PC) -->
-        <div style="font-family:'Space Mono',monospace; font-size:0.58rem; letter-spacing:3px; color:var(--text-dim); text-transform:uppercase; margin-bottom:2px; flex-shrink:0;">Instalação — PC Windows / Linux</div>
-        <div class="card" style="flex-shrink:0; padding:20px; border-color:rgba(0,242,255,0.15);">
-            <div style="display:flex; gap:24px; align-items:flex-start;">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="1.5" style="flex-shrink:0; margin-top:2px;"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                <div style="font-size:0.7rem; color:var(--text-dim); line-height:1.8; flex:1;">
-                    Após ativar o serviço, faça o download do <strong style="color:var(--text-main);">Pack PLEGMA Shield</strong> — um instalador que inclui o agente Sentinela e o minerador/validador com Shield embutido. O agente roda em background e se conecta automaticamente à rede pelo endereço PLG da sua carteira. Nenhuma configuração adicional é necessária.
-                    <div style="margin-top:10px; font-family:'Space Mono',monospace; font-size:0.6rem; color:var(--text-dim);">
-                        <span style="color:var(--accent-cyan);">Dashboard</span> → <span style="color:var(--accent-cyan);">Shield Usuário</span> → <span style="color:var(--accent-cyan);">Ativar</span> → <span style="color:var(--accent-cyan);">Download Pack</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TERMO DE CONTRATAÇÃO -->
-        <div style="font-family:'Space Mono',monospace; font-size:0.58rem; letter-spacing:3px; color:var(--text-dim); text-transform:uppercase; margin-bottom:2px; flex-shrink:0;">Termo de Contratação de Serviço</div>
-        <div id="su-bloco-ativacao" class="card" style="flex-shrink:0; padding:20px; border-color:rgba(239,68,68,0.2);">
-            <div style="background:rgba(0,0,0,0.3); border:1px solid var(--border-color); border-radius:6px; padding:16px; max-height:160px; overflow-y:auto; font-size:0.63rem; color:var(--text-dim); line-height:1.9; margin-bottom:16px; font-family:'Space Mono',monospace;">
-                <strong style="color:var(--text-main); display:block; margin-bottom:8px;">CONTRATO DE SERVIÇO — LATTICE SHIELD · PROTOCOLO SENTINELA</strong>
-                Ao ativar o Lattice Shield, o usuário declara ter lido e compreendido integralmente os termos abaixo:<br><br>
-                <strong style="color:var(--accent-cyan);">1. NATUREZA DO SERVIÇO</strong><br>
-                O Lattice Shield é um serviço pago de proteção de dispositivo fornecido pela rede PLEGMA DAG. O serviço tem custo de <strong style="color:var(--text-main);">$12,00 por ano, por dispositivo</strong>, cobrado automaticamente ao final de cada ciclo anual.<br><br>
-                <strong style="color:var(--accent-cyan);">2. MODELO DE PAGAMENTO</strong><br>
-                O valor será abatido prioritariamente das recompensas de mineração acumuladas no Aerarium. Caso as recompensas sejam insuficientes ao final do ciclo, a diferença será debitada diretamente da carteira PLG associada ao endereço de ativação.<br><br>
-                <strong style="color:var(--accent-cyan);">3. TRIAL GENESIS</strong><br>
-                Carteiras com saldo PLG-G registrado na Genesis Reserve recebem automaticamente 30 dias de trial gratuito a partir da data de ativação. Ao término do trial, a cobrança anual tem início.<br><br>
-                <strong style="color:var(--accent-cyan);">4. INSTALAÇÃO E DADOS</strong><br>
-                O Pack PLEGMA Shield instala um agente de monitoramento que opera em background. O agente acessa informações de processos do sistema operacional exclusivamente para fins de detecção de ameaças. Nenhum dado pessoal é armazenado fora da rede PLEGMA DAG. O endereço PLG é a única identidade associada ao serviço.<br><br>
-                <strong style="color:var(--accent-cyan);">5. CANCELAMENTO</strong><br>
-                O serviço pode ser cancelado a qualquer momento via Dashboard. Não há reembolso proporcional ao período restante do ciclo anual em curso.<br><br>
-                <strong style="color:var(--accent-cyan);">6. RESPONSABILIDADE</strong><br>
-                O Lattice Shield é uma camada adicional de proteção e não substitui boas práticas de segurança. A rede PLEGMA DAG não se responsabiliza por danos decorrentes de ameaças anteriores à instalação do agente ou de ameaças não contempladas na base de assinaturas vigente.<br><br>
-                <strong style="color:var(--accent-cyan);">7. PROPRIEDADE INTELECTUAL</strong><br>
-                O Lattice Shield foi concebido e registrado pelo fundador da rede PLEGMA DAG. Os royalties são distribuídos automaticamente para o endereço criador a cada cobrança realizada, conforme registro imutável on-chain.<br><br>
-                Este contrato é regido pelas regras do protocolo PLEGMA DAG, registrado on-chain e auditável publicamente. A ativação constitui aceite integral e irrevogável destes termos.
-            </div>
-
-            <!-- Checkbox de aceite -->
-            <label style="display:flex; gap:12px; align-items:flex-start; cursor:pointer; margin-bottom:20px; padding:12px; background:rgba(239,68,68,0.04); border:1px solid rgba(239,68,68,0.15); border-radius:6px;">
-                <input type="checkbox" id="su-termo-check" onchange="suToggleBtn()"
-                       style="width:16px; height:16px; margin-top:1px; flex-shrink:0; accent-color:#ef4444; cursor:pointer;">
-                <span style="font-size:0.68rem; color:var(--text-dim); line-height:1.6;">
-                    Li e aceito integralmente os termos do <strong style="color:var(--text-main);">Contrato de Serviço Lattice Shield</strong>. Estou ciente de que estou contratando um <strong style="color:#ef4444;">serviço pago</strong> ($12/ano por dispositivo) e que o valor será debitado das minhas recompensas de mineração ou carteira PLG ao final do ciclo anual.
-                </span>
-            </label>
-
-            <!-- Botão ATIVAR -->
-            <button id="su-btn-ativar" onclick="suAtivar()" disabled
-                    style="width:100%; padding:14px; background:transparent; border:1px solid rgba(239,68,68,0.3); border-radius:8px; color:rgba(239,68,68,0.4); font-family:'Space Mono',monospace; font-size:0.72rem; letter-spacing:3px; cursor:not-allowed; text-transform:uppercase; transition:all 0.3s; display:flex; align-items:center; justify-content:center; gap:10px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                ATIVAR PROTEÇÃO
-            </button>
-        </div>
-
-        <!-- BLOCO PENDENTE (aguardando instalação) -->
-        <div id="su-bloco-pendente" style="display:none; flex-direction:column; gap:16px; flex-shrink:0;">
-
-            <!-- Banner pendente -->
-            <div style="background:rgba(245,158,11,0.07); border:1px solid rgba(245,158,11,0.35); border-radius:10px; padding:20px; display:flex; align-items:center; gap:16px;">
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.5" style="flex-shrink:0; animation:spin 3s linear infinite;">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    <circle cx="12" cy="13" r="2" fill="var(--amber)" stroke="none"/>
-                </svg>
-                <div style="flex:1;">
-                    <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--amber); letter-spacing:2px; margin-bottom:4px;">INSTALAÇÃO PENDENTE ●</div>
-                    <div style="font-size:0.7rem; color:var(--text-dim); line-height:1.6;">Serviço registrado. Faça o download e instale o Pack abaixo para ativar a proteção no seu PC. O agente detecta a instalação automaticamente.</div>
-                </div>
-                <div style="text-align:right; font-size:0.6rem; color:var(--text-dim); flex-shrink:0;">
-                    <div>Registrado em</div>
-                    <div id="su-data-ativacao" style="color:var(--text-main); font-family:'Space Mono',monospace; margin-top:4px;">--/--/----</div>
-                </div>
-            </div>
-
-            <!-- Download Pack -->
-            <div class="card" style="padding:24px; border-color:rgba(245,158,11,0.2);">
-                <div style="display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;">
-                    <div style="display:flex; align-items:center; gap:16px;">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.2" style="flex-shrink:0;"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                        <div>
-                            <div style="font-family:'Space Mono',monospace; font-size:0.7rem; color:var(--text-main); letter-spacing:1px;">PLEGMA SHIELD PACK</div>
-                            <div style="font-size:0.63rem; color:var(--text-dim); margin-top:4px; line-height:1.6;">Validador · Agente Sentinela com Shield embutido<br>Windows 10/11 · Linux x64 · Não requer configuração</div>
-                            <div style="font-size:0.58rem; color:var(--text-dim); margin-top:6px;">
-                                <span style="margin-right:12px;">📦 ~45 MB</span>
-                                <span style="margin-right:12px;">🔒 Assinado Dilithium3</span>
-                                <span>⬡ Versão 0.9.0-beta</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-end;">
-                        <button onclick="suDownload(this)"
-                                style="padding:12px 28px; background:rgba(245,158,11,0.08); border:1px solid var(--amber); border-radius:8px; color:var(--amber); font-family:'Space Mono',monospace; font-size:0.7rem; letter-spacing:2px; cursor:pointer; text-transform:uppercase; transition:all 0.2s; white-space:nowrap; display:flex; align-items:center; gap:8px;"
-                                onmouseover="this.style.background='rgba(245,158,11,0.15)'" onmouseout="this.style.background='rgba(245,158,11,0.08)'">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                            DOWNLOAD PACK
-                        </button>
-                        <!-- Botão simular instalação (dev/demo) -->
-                        <button onclick="suSimularInstalacao()"
-                                style="padding:6px 14px; background:transparent; border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:var(--text-dim); font-family:'Space Mono',monospace; font-size:0.55rem; letter-spacing:1px; cursor:pointer; text-transform:uppercase;"
-                                title="Simular instalação concluída (demo)">
-                            ▶ SIMULAR INSTALAÇÃO
-                        </button>
-                    </div>
-                </div>
-                <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border-color); font-size:0.6rem; color:var(--text-dim); line-height:1.8;">
-                    <strong style="color:var(--amber);">Aguardando instalação:</strong> após instalar o Pack, o agente detecta automaticamente o endereço PLG e ativa a proteção — o status aqui será atualizado para <strong style="color:var(--green-pulse);">ATIVO</strong> automaticamente.
-                </div>
-            </div>
-        </div>
-
-        <!-- BLOCO ATIVO (pós-instalação) -->
-        <div id="su-bloco-ativo" style="display:none; flex-direction:column; gap:16px; flex-shrink:0;">
-
-            <!-- Banner ativo -->
-            <div style="background:rgba(35,209,139,0.06); border:1px solid rgba(35,209,139,0.3); border-radius:10px; padding:20px; display:flex; align-items:center; gap:16px;">
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--green-pulse)" stroke-width="1.5" style="flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-                <div style="flex:1;">
-                    <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--green-pulse); letter-spacing:2px; margin-bottom:4px;">PROTEÇÃO ATIVA ✓</div>
-                    <div style="font-size:0.7rem; color:var(--text-dim); line-height:1.6;">Agente Sentinela instalado e operacional. Seu dispositivo está registrado como nó da rede e protegido pelo Lattice Shield.</div>
-                </div>
-                <div style="text-align:right; font-size:0.6rem; color:var(--text-dim); flex-shrink:0;">
-                    <div>Ciclo anual iniciado em</div>
-                    <div id="su-data-ativo" style="color:var(--text-main); font-family:'Space Mono',monospace; margin-top:4px;">--/--/----</div>
-                </div>
-            </div>
-
-            <!-- Status do agente -->
-            <div class="card" style="padding:20px; border-color:rgba(35,209,139,0.2);">
-                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; text-align:center; border-bottom:1px solid var(--border-color); padding-bottom:16px; margin-bottom:16px;">
-                    <div>
-                        <div style="font-family:'Space Mono',monospace; font-size:0.7rem; font-weight:700; color:var(--green-pulse);">ONLINE</div>
-                        <div style="font-size:0.58rem; color:var(--text-dim); margin-top:4px;">Agente Sentinela</div>
-                    </div>
-                    <div>
-                        <div style="font-family:'Space Mono',monospace; font-size:0.7rem; font-weight:700; color:var(--accent-cyan);">0</div>
-                        <div style="font-size:0.58rem; color:var(--text-dim); margin-top:4px;">Ameaças bloqueadas</div>
-                    </div>
-                    <div>
-                        <div style="font-family:'Space Mono',monospace; font-size:0.7rem; font-weight:700; color:var(--text-main);">NÓ ATIVO</div>
-                        <div style="font-size:0.58rem; color:var(--text-dim); margin-top:4px;">Sentinela da rede</div>
-                    </div>
-                </div>
-                <div style="display:flex; justify-content:flex-end;">
-                    <button onclick="suDesativar()"
-                            style="padding:8px 20px; background:transparent; border:1px solid rgba(239,68,68,0.4); border-radius:6px; color:rgba(239,68,68,0.7); font-family:'Space Mono',monospace; font-size:0.6rem; letter-spacing:2px; cursor:pointer; text-transform:uppercase; transition:all 0.2s;"
-                            onmouseover="this.style.background='rgba(239,68,68,0.08)'; this.style.color='#ef4444'; this.style.borderColor='#ef4444';"
-                            onmouseout="this.style.background='transparent'; this.style.color='rgba(239,68,68,0.7)'; this.style.borderColor='rgba(239,68,68,0.4)';">
-                        DESATIVAR PROTEÇÃO
-                    </button>
-                </div>
+        <!-- ATIVAR NO APP -->
+        <div class="card" style="flex-shrink:0; padding:24px; border-color:rgba(239,68,68,0.2); display:flex; align-items:center; gap:20px;">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.5" style="flex-shrink:0; filter:drop-shadow(0 0 8px rgba(239,68,68,0.4));">
+                <rect x="5" y="2" width="14" height="20" rx="2"/>
+                <line x1="12" y1="18" x2="12" y2="18.01"/>
+            </svg>
+            <div style="flex:1;">
+                <div style="font-family:'Space Mono',monospace; font-size:0.6rem; letter-spacing:3px; color:#ef4444; margin-bottom:6px;">ATIVAÇÃO EXCLUSIVA · APP ANDROID</div>
+                <div style="font-size:0.75rem; font-weight:600; color:var(--text-main); margin-bottom:6px;">Ative o Lattice Shield pelo app PLEGMA DAG</div>
+                <div style="font-size:0.68rem; color:var(--text-dim); line-height:1.7;">A ativação e gestão do Lattice Shield são realizadas exclusivamente pelo app PLEGMA DAG para Android. Abra o app, acesse <strong style="color:var(--text-main);">Shield</strong> e siga as instruções para ativar a proteção.</div>
             </div>
         </div>
 
@@ -1946,7 +1903,7 @@
         </div>
 
         <!-- ===== SUB-PAINEL: API & CONSOLE ===== -->
-        <div id="devSub-api" style="display:flex; flex-direction:column; gap:16px; flex:1; min-height:0;">
+        <div id="devSub-api" style="display:flex; flex-direction:column; gap:16px;">
 
         <div class="grid-3">
             <div class="card" id="srv-card-8080">
@@ -1984,9 +1941,9 @@
             </div>
         </div>
 
-        <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:16px; flex:1; min-height:0;">
+        <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:16px;">
 
-            <div style="display:flex; flex-direction:column; gap:14px; overflow-y:auto;">
+            <div style="display:flex; flex-direction:column; gap:14px;">
 
                 <div class="card">
                     <span class="label">Último Vértice DAG</span>
@@ -2035,14 +1992,14 @@
                 </div>
             </div>
 
-            <div style="display:flex; flex-direction:column; gap:14px; overflow-y:auto;">
+            <div style="display:flex; flex-direction:column; gap:14px;">
 
-                <div class="card" style="flex:1; padding:0; overflow:hidden; display:flex; flex-direction:column; min-height:200px;">
+                <div class="card" style="padding:0; overflow:hidden; display:flex; flex-direction:column; min-height:200px;">
                     <div style="padding:11px 16px; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
                         <span class="label">Logs da API — Tempo Real</span>
                         <button onclick="devLimparLogs()" style="font-size:0.55rem;font-family:'Space Mono',monospace;letter-spacing:1px;padding:3px 8px;border-radius:3px;border:1px solid var(--border-color);background:transparent;color:var(--text-dim);cursor:pointer;text-transform:uppercase;">LIMPAR</button>
                     </div>
-                    <div id="devLogs" style="flex:1;overflow-y:auto;padding:10px 14px;font-family:'Space Mono',monospace;font-size:0.6rem;line-height:1.8;">
+                    <div id="devLogs" style="min-height:160px;padding:10px 14px;font-family:'Space Mono',monospace;font-size:0.6rem;line-height:1.8;">
                         <div style="color:var(--text-dim);">Aguardando chamadas à API...</div>
                     </div>
                 </div>
@@ -2051,7 +2008,7 @@
                     <div style="padding:11px 16px; border-bottom:1px solid var(--border-color);">
                         <span class="label">Rotas Disponíveis V1.0</span>
                     </div>
-                    <div style="max-height:280px; overflow-y:auto;" id="devDocs"></div>
+                    <div id="devDocs"></div>
                 </div>
 
             </div>
@@ -2060,7 +2017,7 @@
         </div><!-- /devSub-api -->
 
         <!-- ===== SUB-PAINEL: CONTRATOS ===== -->
-        <div id="devSub-contratos" style="display:none; flex-direction:column; gap:16px; flex:1; min-height:0;">
+        <div id="devSub-contratos" style="display:none; flex-direction:column; gap:16px;">
 
             <!-- Banner V2.0+ -->
             <div class="card" style="border-color:rgba(167,139,250,0.3); background:rgba(167,139,250,0.04);">
@@ -2080,7 +2037,7 @@
                 </div>
             </div>
 
-            <div style="display:grid; grid-template-columns:1.6fr 1fr; gap:16px; flex:1; min-height:0;">
+            <div style="display:grid; grid-template-columns:1.6fr 1fr; gap:16px;">
 
                 <!-- Editor de código (visual) -->
                 <div class="card" style="padding:0; overflow:hidden; display:flex; flex-direction:column;">
@@ -2105,13 +2062,13 @@
                     </div>
 
                     <!-- Área de código -->
-                    <div style="flex:1; display:flex; overflow:hidden; font-family:'Space Mono',monospace; font-size:0.7rem; line-height:1.8;">
+                    <div style="display:flex; font-family:'Space Mono',monospace; font-size:0.7rem; line-height:1.8;">
                         <!-- Números de linha -->
                         <div style="background:rgba(0,0,0,0.3); padding:14px 12px; color:rgba(100,116,139,0.5); font-size:0.62rem; text-align:right; border-right:1px solid var(--border-color); user-select:none; flex-shrink:0; line-height:1.8;">
                             1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28
                         </div>
                         <!-- Código com syntax highlight simulado -->
-                        <div style="flex:1; padding:14px 16px; overflow:auto; line-height:1.8; color:var(--text-dim);">
+                        <div style="flex:1; padding:14px 16px; line-height:1.8; color:var(--text-dim); word-break:break-word;">
 <span style="color:#6272a4;">// ================================================================</span>
 <br><span style="color:#6272a4;">// PLEGMA CONTRACT — Exemplo: Token de Acesso por Staking</span>
 <br><span style="color:#6272a4;">// Status: CONGELADO — Disponível na V2.0+</span>
@@ -2153,7 +2110,7 @@
                 </div>
 
                 <!-- Coluna direita: info + roadmap -->
-                <div style="display:flex; flex-direction:column; gap:14px; overflow-y:auto;">
+                <div style="display:flex; flex-direction:column; gap:14px;">
 
                     <!-- O que são contratos PLEGMA -->
                     <div class="card">
@@ -2278,11 +2235,44 @@
     </div>
 </div>
 
+<!-- ═══ MODAL DOAÇÃO FUNDAÇÃO ═══ -->
+<div id="modalDoacao" style="display:none;position:fixed;inset:0;z-index:900;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;">
+    <div style="background:#050d1a;border:1px solid rgba(35,209,139,0.3);border-radius:12px;padding:32px;max-width:440px;width:92%;box-shadow:0 0 40px rgba(35,209,139,0.15);position:relative;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#23d18b"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg>
+            <span style="font-family:'Space Mono',monospace;font-size:0.85rem;font-weight:700;color:#23d18b;letter-spacing:2px;">DOAR À FUNDAÇÃO</span>
+        </div>
+        <div style="font-size:0.62rem;color:#64748b;letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;">Enviado directamente — sem intermediários</div>
+
+        <div id="doacaoInstInfo" style="background:rgba(35,209,139,0.05);border:1px solid rgba(35,209,139,0.2);border-radius:6px;padding:12px 14px;margin-bottom:20px;font-size:0.72rem;color:#94a3b8;line-height:1.7;">
+            <span style="color:#23d18b;font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;">Distribuição Aerarium</span><br>
+            O valor será dividido igualmente entre <strong id="doacaoNInst" style="color:#23d18b;">—</strong> instituição(ões) aprovada(s).<br>
+            Cada carteira recebe a sua parte directamente — envio simultâneo.
+        </div>
+
+        <label style="font-size:0.6rem;color:#64748b;letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:8px;">Valor a Doar ($PLG)</label>
+        <input id="doacaoValor" type="number" min="0.01" step="0.01" placeholder="ex: 10.00"
+               style="width:100%;background:rgba(35,209,139,0.04);border:1px solid rgba(35,209,139,0.25);color:#e2e8f0;padding:12px 16px;font-family:'Space Mono',monospace;font-size:0.85rem;border-radius:6px;outline:none;transition:border-color 0.2s;margin-bottom:6px;"
+               onfocus="this.style.borderColor='rgba(35,209,139,0.6)'" onblur="this.style.borderColor='rgba(35,209,139,0.25)'"
+               oninput="atualizarPreviewDoacao()">
+
+        <div id="doacaoPreview" style="font-size:0.68rem;color:#64748b;min-height:20px;margin-bottom:20px;line-height:1.6;"></div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <button onclick="fecharModalDoacao()" style="padding:12px;border-radius:8px;border:1px solid rgba(100,116,139,0.3);background:transparent;color:#64748b;font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(100,116,139,0.6)'" onmouseout="this.style.borderColor='rgba(100,116,139,0.3)'">CANCELAR</button>
+            <button id="btnConfirmarDoacao" onclick="confirmarDoacao()" style="padding:12px;border-radius:8px;border:1px solid rgba(35,209,139,0.5);background:rgba(35,209,139,0.08);color:#23d18b;font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:700;" onmouseover="this.style.background='rgba(35,209,139,0.18)'" onmouseout="this.style.background='rgba(35,209,139,0.08)'">♥ CONFIRMAR</button>
+        </div>
+
+        <div id="doacaoFeedback" style="display:none;margin-top:14px;font-size:0.72rem;padding:10px 14px;border-radius:6px;line-height:1.6;"></div>
+    </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
     const WALLET_API = 'https://api.plegmadag.com';
     const DAG_API    = 'https://api.plegmadag.com';
+    function _esc(s) { return String(s==null?'—':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#x27;'); }
     // Desativa polling de rede quando aberto localmente via file://
     const NETWORK_AVAILABLE = location.protocol !== 'file:';
 
@@ -2547,8 +2537,11 @@
         const tbody = document.getElementById('proversTableBody');
         if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="padding:24px; text-align:center; color:var(--text-dim); font-size:0.7rem;">Carregando...</td></tr>`;
 
+        const _sess = PlegmaAuth.getSession();
+        const _addr = _sess?.plg_address || '';
+
         try {
-            const r = await fetch(`${WALLET_API}/wallet/provers`);
+            const r = await fetch(`${WALLET_API}/wallet/provers${_addr ? '?address=' + encodeURIComponent(_addr) : ''}`);
             const d = await r.json();
             const ativos = (d.provers || []).filter(p => p.ativo);
             const cp = d.count_provers    ?? ativos.filter(p => p.tipo !== 'VALIDATOR').length;
@@ -2794,7 +2787,7 @@
         var action = document.getElementById('su-card-action');
         if (action) {
             if (estado === 'inativo') {
-                action.innerHTML = '<button onclick="showPanel(\'shield-usuario\', document.querySelector(\'.nav-item[onclick*=shield-usuario]\'))" style="margin-top:10px; width:100%; padding:9px; background:transparent; border:1px solid #ef4444; border-radius:6px; color:#ef4444; font-family:\'Space Mono\',monospace; font-size:0.65rem; letter-spacing:2px; cursor:pointer; text-transform:uppercase;" onmouseover="this.style.background=\'rgba(239,68,68,0.1)\'" onmouseout="this.style.background=\'transparent\'">ATIVAR PROTEÇÃO</button>';
+                action.innerHTML = '<button onclick="showPanel(\'shield-usuario\', document.querySelector(\'.nav-item[onclick*=shield-usuario]\'))" style="margin-top:10px; width:100%; padding:9px; background:transparent; border:1px solid #ef4444; border-radius:6px; color:#ef4444; font-family:\'Space Mono\',monospace; font-size:0.65rem; letter-spacing:2px; cursor:pointer; text-transform:uppercase;" onmouseover="this.style.background=\'rgba(239,68,68,0.1)\'" onmouseout="this.style.background=\'transparent\'">ATIVAR NO APP</button>';
             } else if (estado === 'pendente') {
                 action.innerHTML = '<div style="margin-top:10px; width:100%; padding:9px; background:rgba(245,158,11,0.08); border:1px solid #f59e0b; border-radius:6px; color:#f59e0b; font-family:\'Space Mono\',monospace; font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; text-align:center;">⏳ INSTALAÇÃO PENDENTE</div>';
             } else if (estado === 'ativo') {
@@ -2844,133 +2837,11 @@
             ico.setAttribute('stroke', c.cor);
         });
 
-        // Checkbox accent-color
-        var chk = document.getElementById('su-termo-check');
-        if (chk) chk.style.accentColor = c.cor;
     }
 
     function suHexToRgb(hex) {
         var r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
         return r+','+g+','+b;
-    }
-
-    function suToggleBtn() {
-        var check = document.getElementById('su-termo-check');
-        var btn   = document.getElementById('su-btn-ativar');
-        if (!check || !btn) return;
-        if (check.checked) {
-            btn.disabled = false;
-            btn.style.color = '#ef4444'; btn.style.borderColor = '#ef4444'; btn.style.cursor = 'pointer';
-            btn.onmouseover = function(){ btn.style.background = 'rgba(239,68,68,0.08)'; };
-            btn.onmouseout  = function(){ btn.style.background = 'transparent'; };
-        } else {
-            btn.disabled = true;
-            btn.style.color = 'rgba(239,68,68,0.4)'; btn.style.borderColor = 'rgba(239,68,68,0.3)'; btn.style.cursor = 'not-allowed';
-            btn.onmouseover = null; btn.onmouseout = null;
-        }
-    }
-
-    function suAtivar() {
-        var check = document.getElementById('su-termo-check');
-        if (!check || !check.checked) return;
-
-        SU_ESTADO = 'pendente';
-
-        // Data de registro
-        var data = suDataHoje();
-        var dataEl = document.getElementById('su-data-ativacao');
-        if (dataEl) dataEl.textContent = data;
-
-        // Troca blocos
-        var blocoAtiv    = document.getElementById('su-bloco-ativacao');
-        var blocoPend    = document.getElementById('su-bloco-pendente');
-        if (blocoAtiv) blocoAtiv.style.display = 'none';
-        if (blocoPend) blocoPend.style.display = 'flex';
-
-        // Atualiza card na aba Lattice Shield
-        suAplicarCoresCard('pendente');
-    }
-
-    function suSimularInstalacao() {
-        // Simula o agente detectando a instalação e ativando o shield
-        SU_ESTADO = 'ativo';
-
-        var data = suDataHoje();
-        var dataAtivo = document.getElementById('su-data-ativo');
-        if (dataAtivo) dataAtivo.textContent = data;
-
-        var blocoPend  = document.getElementById('su-bloco-pendente');
-        var blocoAtivo = document.getElementById('su-bloco-ativo');
-        if (blocoPend)  blocoPend.style.display  = 'none';
-        if (blocoAtivo) blocoAtivo.style.display = 'flex';
-
-        suAplicarCoresCard('ativo');
-    }
-
-    function suDesativar() {
-        SU_ESTADO = 'inativo';
-
-        var blocoAtivo = document.getElementById('su-bloco-ativo');
-        var blocoAtiv  = document.getElementById('su-bloco-ativacao');
-        if (blocoAtivo) blocoAtivo.style.display = 'none';
-        if (blocoAtiv)  { blocoAtiv.style.display = 'block'; }
-
-        // Resetar checkbox e botão
-        var check = document.getElementById('su-termo-check');
-        var btn   = document.getElementById('su-btn-ativar');
-        if (check) check.checked = false;
-        if (btn)   { btn.disabled = true; btn.style.color = 'rgba(239,68,68,0.4)'; btn.style.borderColor = 'rgba(239,68,68,0.3)'; }
-
-        suAplicarCoresCard('inativo');
-    }
-
-    function suDownload(btn) {
-        var isWin   = navigator.userAgent.toLowerCase().indexOf('win') > -1;
-        var isLinux = navigator.userAgent.toLowerCase().indexOf('linux') > -1 &&
-                      navigator.userAgent.toLowerCase().indexOf('android') === -1;
-        var baseUrl = 'https://plegmadag.com/dashboard/files/';
-        var file    = isWin
-            ? 'plegma-shield-pack-0.9.0-beta-windows.zip'
-            : (isLinux
-                ? 'plegma-shield-pack-0.9.0-beta-linux-x64.tar.gz'
-                : null);
-
-        if (!file) {
-            showToast('Plataforma não suportada. Use Windows ou Linux x64.', 'error');
-            return;
-        }
-
-        var orig = btn.innerHTML;
-        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> BAIXANDO...';
-        btn.disabled = true; btn.style.opacity = '0.7'; btn.style.cursor = 'wait';
-
-        // Registra download na API
-        var plgAddr = document.getElementById('sidebarAddr') ?
-            (window._connectedAddress || '') : '';
-        if (plgAddr && window.DAG_API) {
-            fetch(window.DAG_API + '/api/shield/download_register', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    plg_address: plgAddr,
-                    version: '0.9.0-beta',
-                    platform: isWin ? 'windows' : 'linux'
-                })
-            }).catch(function(){});
-        }
-
-        setTimeout(function(){
-            var a = document.createElement('a');
-            a.href = baseUrl + file;
-            a.download = file;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-
-            btn.innerHTML = orig;
-            btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer';
-            showToast('Download iniciado — ' + file, 'ok');
-        }, 600);
     }
 
     // =========================================================================
@@ -3227,21 +3098,61 @@
                 if (ns) ns.textContent = d.status === 'ONLINE' ? 'REDE: ONLINE ●' : 'REDE: OFFLINE ○';
                 const bar = document.getElementById('nodeBar');
                 if (bar) bar.style.width = Math.min((d.nos_ativos / 10000) * 100, 100) + '%';
-                injectFeedItem(`TX_${Date.now()}`, (Math.random()*5).toFixed(2));
             }).catch(() => {});
     }, 3000);
 
-    function injectFeedItem(hash, amount) {
+    // ── Feed de Atividade Real da Rede ──────────────────────────────────────────
+    let _feedUltimoTs = 0;
+
+    function _corToken(tipo) {
+        if (tipo === 'PLG-G') return 'var(--purple)';
+        if (tipo === 'PLG')   return 'var(--green-pulse)';
+        return 'var(--accent-cyan)'; // FAUCET / T-PLG
+    }
+
+    function _renderFeed(itens) {
         const feed  = document.getElementById('txFeed');
         const total = document.getElementById('txTotal');
-        if (!feed) return;
-        const item = document.createElement('div');
-        item.className = 'tx-feed-item';
-        item.innerHTML = `<span style="color:var(--text-dim)">TX_ANON</span><span style="color:var(--accent-cyan)">+${amount} $PLG</span>`;
-        feed.appendChild(item);
-        if (feed.children.length > 12) feed.removeChild(feed.firstChild);
-        if (total) total.innerText = (parseInt(total.innerText) + 1).toString().padStart(6,'0');
+        if (!feed || !itens.length) return;
+
+        // Apenas itens mais recentes que o último processado
+        const novos = itens.filter(tx => (tx.ts || 0) > _feedUltimoTs);
+        if (!novos.length) return;
+        _feedUltimoTs = Math.max(...novos.map(t => t.ts || 0));
+
+        novos.forEach(tx => {
+            const item = document.createElement('div');
+            item.className = 'tx-feed-item';
+            const cor  = _corToken(tx.tipo);
+            let   desc = '';
+            if (tx.tipo === 'FAUCET') {
+                desc = `<span style="color:var(--text-dim)">${tx.hash || 'FAUCET'}</span><span style="color:${cor}">+${tx.amount} T-PLG</span>`;
+            } else if (tx.tipo === 'PLG') {
+                desc = `<span style="color:var(--text-dim)">${tx.de}→${tx.para}</span><span style="color:${cor}">${tx.amount} PLG</span>`;
+            } else if (tx.tipo === 'PLG-G') {
+                desc = `<span style="color:var(--text-dim)">${tx.addr}</span><span style="color:${cor}">+${tx.amount} PLG-G</span>`;
+            }
+            item.innerHTML = desc;
+            feed.appendChild(item);
+            if (feed.children.length > 12) feed.removeChild(feed.firstChild);
+        });
+
+        if (total) {
+            const atual = parseInt(total.innerText.replace(/\D/g,'')) || 0;
+            total.innerText = (atual + novos.length).toString().padStart(6,'0');
+        }
     }
+
+    function _carregarFeedRede() {
+        fetch(`${DAG_API}/api/rede/feed?limite=20`)
+            .then(r => r.json())
+            .then(d => _renderFeed(d.feed || []))
+            .catch(() => {});
+    }
+
+    // Carrega imediatamente ao entrar e depois a cada 15s
+    _carregarFeedRede();
+    setInterval(_carregarFeedRede, 15000);
 
     // =========================================================================
     // COTAÇÃO PLG/USDT — Simulação Pré-Listagem
@@ -3376,7 +3287,17 @@
             document.getElementById('authLock').classList.remove('show');
             document.body.style.overflow = '';
             atualizarHeaderAuth(sess.plg_address);
+            _navegarParaTabUrl();
         }
+    }
+
+    function _navegarParaTabUrl() {
+        const tab = new URLSearchParams(location.search).get('tab');
+        if (!tab) return;
+        const PAINEIS_VALIDOS = ['dashboard','shield','shield-usuario','dev','wallet','enviar','extrato','provers','negociar'];
+        if (!PAINEIS_VALIDOS.includes(tab)) return;
+        const navEl = document.querySelector('.nav-item[onclick*="' + tab + '"]');
+        showPanel(tab, navEl || null);
     }
 
     // =========================================================================
@@ -3724,7 +3645,7 @@
             <div style="display:flex;justify-content:space-between;font-size:0.68rem;"><span style="color:var(--text-dim);">PLG vendido</span><span style="color:var(--text-main);font-family:'Space Mono',monospace;">${(data.plg_amount||0).toFixed(2)} PLG</span></div>
             <div style="display:flex;justify-content:space-between;font-size:0.68rem;"><span style="color:var(--text-dim);">USDC estimado</span><span style="color:#EF4444;font-family:'Space Mono',monospace;">$${(data.usdc_estimado||0).toFixed(6)}</span></div>
             <div style="display:flex;justify-content:space-between;font-size:0.68rem;"><span style="color:var(--text-dim);">Status</span><span style="color:rgba(251,191,36,0.9);">PENDENTE — até 24h</span></div>
-            ${data.aviso ? `<div style="font-size:0.6rem;color:var(--text-dim);line-height:1.6;">${data.aviso}</div>` : ''}
+            ${data.aviso ? `<div style="font-size:0.6rem;color:var(--text-dim);line-height:1.6;">${_esc(data.aviso)}</div>` : ''}
         </div>`);
     }
 
@@ -3786,9 +3707,7 @@
         const isVisible = form.style.display !== 'none';
         form.style.display = isVisible ? 'none' : 'block';
         if (!isVisible) {
-            // Indica se é primeiro boot
-            const hasHash = !!localStorage.getItem('plg_admin_hash');
-            document.getElementById('adminFirstBoot').style.display = hasHash ? 'none' : 'block';
+            document.getElementById('adminFirstBoot').style.display = 'none';
             setTimeout(() => document.getElementById('adminPassInput').focus(), 50);
         }
     }
@@ -3796,18 +3715,22 @@
     async function adminLogin() {
         const pw = document.getElementById('adminPassInput').value;
         if (!pw) return;
-        const hash = await blake3Hex(new TextEncoder().encode(pw));
-        const stored = localStorage.getItem('plg_admin_hash');
-        if (!stored) {
-            // Primeiro acesso — define a senha admin
-            localStorage.setItem('plg_admin_hash', hash);
+        const inp = document.getElementById('adminPassInput');
+        inp.disabled = true;
+        try {
+            const r = await fetch(`${DAG_API}/api/admin/downloads?admin_key=${encodeURIComponent(pw)}`);
+            if (r.status === 403) throw new Error();
+            const d = await r.json();
+            if (d.erro) throw new Error();
+            sessionStorage.setItem('plg_admin_dl_key', pw);
+            inp.value = '';
             _concederAcessoAdmin();
-        } else if (hash === stored) {
-            _concederAcessoAdmin();
-        } else {
+        } catch(_) {
             document.getElementById('adminLoginErr').style.display = 'block';
-            document.getElementById('adminPassInput').value = '';
-            document.getElementById('adminPassInput').focus();
+            inp.value = '';
+            inp.focus();
+        } finally {
+            inp.disabled = false;
         }
     }
 
@@ -3840,6 +3763,7 @@
             setText('sidebarAddr', plgAddress.substring(0,8) + '...' + plgAddress.slice(-6));
             setText('shieldPubKey', plgAddress);
             fetchWalletStatus();
+            _navegarParaTabUrl();
             showToast('Carteira conectada ✓', 'ok');
             // Mostra card de downloads e recarrega com chave salva se houver
             const card = document.getElementById('adminDownloadsCard');
@@ -3896,13 +3820,12 @@
     // PAINEL DESENVOLVEDOR
     // =========================================================================
     function devSwitchTab(tab) {
-        // Sub-painéis
         document.getElementById('devSub-api').style.display        = tab === 'api'       ? 'flex' : 'none';
         document.getElementById('devSub-contratos').style.display   = tab === 'contratos' ? 'flex' : 'none';
-        // Tabs
         document.getElementById('devTab-api').classList.toggle('active',       tab === 'api');
         document.getElementById('devTab-contratos').classList.toggle('active', tab === 'contratos');
     }
+
     const ROTAS_DOCS = [
         { server:'DAG :8080',    method:'GET',  route:'/api/status',           desc:'Status da rede, nós ativos, aceitas/rejeitadas' },
         { server:'DAG :8080',    method:'GET',  route:'/api/lastBlock',         desc:'Último vértice: hash, timestamp, peso ZK' },
@@ -4064,8 +3987,8 @@
     async function carregarGenesisStatus() {
         const GENESIS_API = 'https://api.plegmadag.com/api/genesis/status';
         const SUPPLY_TOTAL = 10500000;
-        const MOCK_VENDIDOS = 847;
-        const MOCK_DISPONIVEIS = 9653153;
+        const MOCK_VENDIDOS = 0;
+        const MOCK_DISPONIVEIS = 10500000;
 
         function setGenesisOnline() {
             const dot   = document.getElementById('genesisMonitorDot');
@@ -4107,16 +4030,57 @@
             if (dEl)   dEl.textContent   = Number(disponiveis).toLocaleString('pt-BR');
         }
 
+        function renderPlgSupply(statusData) {
+            const fase = statusData?.rede_fase ?? 'TESTNET';
+            const genesisAtivo = fase === 'GENESIS_ATIVO' || fase === 'MAINNET_PLENA';
+            const phaseBadge = document.getElementById('plgPhaseBadge');
+            const miningLabel = document.getElementById('plgMiningLabel');
+            if (phaseBadge) {
+                if (genesisAtivo) {
+                    phaseBadge.textContent = 'GENESIS ATIVO';
+                    phaseBadge.style.borderColor = 'rgba(35,209,139,0.5)';
+                    phaseBadge.style.color       = 'var(--green-pulse)';
+                    phaseBadge.style.background  = 'rgba(35,209,139,0.08)';
+                } else {
+                    phaseBadge.textContent = 'TESTNET';
+                    phaseBadge.style.borderColor = 'rgba(245,158,11,0.5)';
+                    phaseBadge.style.color       = 'var(--amber)';
+                    phaseBadge.style.background  = 'rgba(245,158,11,0.08)';
+                }
+            }
+            if (miningLabel) miningLabel.textContent = genesisAtivo ? 'Mining ativo · R=G/N' : 'Mining inicia 10/05/2026';
+            const geracaoEl = document.getElementById('plgGeracao');
+            if (geracaoEl) {
+                const rVal = statusData?.recompensa_validator_atual;
+                geracaoEl.textContent = rVal != null
+                    ? Number(rVal).toLocaleString('pt-BR', { maximumFractionDigits: 6 }) + ' PLG'
+                    : '—';
+            }
+        }
+
         try {
-            const res = await fetch(GENESIS_API, { signal: AbortSignal.timeout(6000) });
-            if (!res.ok) throw new Error('HTTP ' + res.status);
-            const d = await res.json();
-            const vendidos    = d.vendido    ?? MOCK_VENDIDOS;
-            const disponiveis = d.disponivel ?? MOCK_DISPONIVEIS;
+            const [res, resBurn, resStatus] = await Promise.allSettled([
+                fetch(GENESIS_API, { signal: AbortSignal.timeout(6000) }),
+                fetch('https://api.plegmadag.com/api/genesis/burn', { signal: AbortSignal.timeout(6000) }),
+                fetch('https://api.plegmadag.com/api/status', { signal: AbortSignal.timeout(6000) })
+            ]);
+            const d       = res.status       === 'fulfilled' && res.value.ok       ? await res.value.json()       : null;
+            const dBurn   = resBurn.status   === 'fulfilled' && resBurn.value.ok   ? await resBurn.value.json()   : null;
+            const dStatus = resStatus.status === 'fulfilled' && resStatus.value.ok ? await resStatus.value.json() : null;
+
+            const vendidos    = d?.vendido    ?? MOCK_VENDIDOS;
+            const disponiveis = d?.disponivel ?? MOCK_DISPONIVEIS;
             renderGenesisStats(vendidos, disponiveis);
-            setGenesisOnline();
+
+            const qEl = document.getElementById('genesisQueimados');
+            if (qEl && dBurn) qEl.textContent = Number(dBurn.burned_plgg ?? 0).toLocaleString('pt-BR');
+
+            renderPlgSupply(dStatus ?? {});
+
+            if (d) setGenesisOnline(); else setGenesisOffline();
         } catch(e) {
             renderGenesisStats(MOCK_VENDIDOS, MOCK_DISPONIVEIS);
+            renderPlgSupply({});
             setGenesisOffline();
         }
     }
@@ -4157,5 +4121,132 @@ function googleTranslateElementInit() {
 }
 </script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<script>
+/* ── GC Testnet Ticker — ativa 09/04/2026 18:00 Madrid (CEST = UTC+2) ── */
+(function () {
+    var LAUNCH = new Date('2026-04-09T18:00:00+02:00').getTime();
+    function showTicker() {
+        var bar = document.getElementById('gc-testnet-bar');
+        if (!bar) return;
+        if (Date.now() >= LAUNCH) {
+            bar.style.display = 'block';
+            /* Empurra o body para baixo para não sobrepor conteúdo */
+            document.body.style.paddingTop = (
+                (parseInt(document.body.style.paddingTop) || 0) + 26
+            ) + 'px';
+        } else {
+            /* Verifica novamente quando chegar a hora */
+            setTimeout(showTicker, Math.min(LAUNCH - Date.now(), 60000));
+        }
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', showTicker);
+    } else {
+        showTicker();
+    }
+}());
+</script>
+
+<script>
+// ═══════════════════════════════════════════════
+// DOAÇÃO À FUNDAÇÃO — Aerarium Split
+// ═══════════════════════════════════════════════
+let _instAprovadas = [];
+
+async function abrirModalDoacao() {
+    const modal = document.getElementById('modalDoacao');
+    modal.style.display = 'flex';
+    document.getElementById('doacaoValor').value = '';
+    document.getElementById('doacaoPreview').textContent = '';
+    document.getElementById('doacaoFeedback').style.display = 'none';
+
+    // Busca número de instituições aprovadas
+    try {
+        const r = await fetch('https://api.plegmadag.com/api/fundacao/aprovadas').then(r => r.json());
+        _instAprovadas = r.instituicoes ?? r ?? [];
+        document.getElementById('doacaoNInst').textContent = _instAprovadas.length || '0';
+        if (!_instAprovadas.length) {
+            document.getElementById('doacaoInstInfo').innerHTML =
+                '<span style="color:var(--amber);font-size:0.7rem;">⚠ Nenhuma instituição aprovada no momento. Aguarde a aprovação de inscrições.</span>';
+        }
+    } catch(e) {
+        document.getElementById('doacaoNInst').textContent = '?';
+    }
+}
+
+function fecharModalDoacao() {
+    document.getElementById('modalDoacao').style.display = 'none';
+}
+
+function atualizarPreviewDoacao() {
+    const val = parseFloat(document.getElementById('doacaoValor').value) || 0;
+    const n   = _instAprovadas.length;
+    const prev = document.getElementById('doacaoPreview');
+    if (val <= 0 || n === 0) {
+        prev.textContent = '';
+        return;
+    }
+    const parcelaStr = (val / n).toLocaleString('pt-BR', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+    prev.innerHTML = `Cada instituição receberá <strong style="color:#23d18b">${parcelaStr} $PLG</strong> · ${n} carteira(s) beneficiada(s)`;
+}
+
+async function confirmarDoacao() {
+    const val = parseFloat(document.getElementById('doacaoValor').value);
+    if (!val || val <= 0) {
+        mostrarFeedbackDoacao('Informe um valor válido.', false); return;
+    }
+    if (!_instAprovadas.length) {
+        mostrarFeedbackDoacao('Sem instituições aprovadas para receber.', false); return;
+    }
+
+    // Endereço do utilizador (disponível no contexto de auth do dashboard)
+    const myAddr = window._plgAddr || window.currentWalletAddress || '';
+
+    const btn = document.getElementById('btnConfirmarDoacao');
+    btn.disabled = true;
+    btn.textContent = 'ENVIANDO…';
+
+    try {
+        const r = await fetch('https://api.plegmadag.com/api/aerarium/doar_fundacao', {
+            method : 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body   : JSON.stringify({
+                remetente     : myAddr,
+                valor_total   : val,
+                hash_sessao   : sessionStorage.getItem('plg_session') || ''
+            })
+        }).then(r => r.json());
+
+        if (r.erro) {
+            mostrarFeedbackDoacao('Erro: ' + r.erro, false);
+        } else {
+            mostrarFeedbackDoacao(
+                `✔ Doação processada! ${_instAprovadas.length} instituição(ões) receberam ${(val / _instAprovadas.length).toFixed(4)} $PLG cada.\nHash: ${(r.hash_doacao||'').substring(0,24)}…`,
+                true
+            );
+        }
+    } catch(e) {
+        mostrarFeedbackDoacao('Erro de conexão: ' + e.message, false);
+    }
+
+    btn.disabled = false;
+    btn.textContent = '♥ CONFIRMAR';
+}
+
+function mostrarFeedbackDoacao(msg, ok) {
+    const el = document.getElementById('doacaoFeedback');
+    el.style.display = 'block';
+    el.textContent   = msg;
+    el.style.background = ok ? 'rgba(35,209,139,0.07)' : 'rgba(239,68,68,0.07)';
+    el.style.border     = ok ? '1px solid rgba(35,209,139,0.3)' : '1px solid rgba(239,68,68,0.3)';
+    el.style.color      = ok ? '#23d18b' : '#ef4444';
+}
+
+// Fecha modal ao clicar fora
+document.getElementById('modalDoacao').addEventListener('click', function(e) {
+    if (e.target === this) fecharModalDoacao();
+});
+</script>
 </body>
 </html>

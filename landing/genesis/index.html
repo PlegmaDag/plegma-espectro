@@ -246,9 +246,60 @@
         .social-links a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid rgba(0,242,255,0.18); border-radius: 6px; background: rgba(0,242,255,0.05); color: rgba(255,255,255,0.4); transition: all 0.2s; }
         .social-links a:hover { color: #00f2ff; border-color: rgba(0,242,255,0.55); background: rgba(0,242,255,0.12); box-shadow: 0 0 14px rgba(0,242,255,0.22); }
         .social-links a svg { display: block; }
+
+        /* GC — TESTNET nav badge */
+        @keyframes pulse-orange {
+            0%,100% { box-shadow: 0 0 0 0 rgba(249,115,22,0); border-color: rgba(249,115,22,0.45); }
+            50% { box-shadow: 0 0 8px 2px rgba(249,115,22,0.45); border-color: rgba(249,115,22,0.9); }
+        }
+        .nav-testnet { font-size: 0.58rem !important; letter-spacing: 3px; text-transform: uppercase;
+            font-weight: 700; padding: 4px 10px !important; border-radius: 3px;
+            color: #f97316 !important; border: 1px solid rgba(249,115,22,0.55) !important;
+            background: rgba(249,115,22,0.08) !important;
+            animation: pulse-orange 1.8s ease-in-out infinite; cursor: pointer; }
+    
+        /* ── GC TESTNET TICKER ────────────────────────────────────────── */
+        #gc-testnet-bar {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            height: 26px;
+            z-index: 99999;
+            background: rgba(249,115,22,0.08);
+            border-bottom: 1px solid rgba(249,115,22,0.40);
+            overflow: hidden;
+            pointer-events: none;
+        }
+        #gc-testnet-inner {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            white-space: nowrap;
+            animation: gc-scroll 38s linear infinite;
+        }
+        @keyframes gc-scroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        #gc-testnet-inner span {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.58rem;
+            color: #f97316;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            padding-right: 80px;
+        }
     </style>
 </head>
 <body>
+
+<!-- GC TESTNET TICKER -->
+<div id="gc-testnet-bar">
+  <div id="gc-testnet-inner">
+    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
+    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
+  </div>
+</div>
 <div class="page">
     <nav>
         <a href="/" class="nav-brand">
@@ -261,12 +312,14 @@
         <div class="nav-links">
             <a href="/financas" class="nav-link">FINANÇAS</a>
             <a href="/fundacao" class="nav-link">FUNDAÇÃO</a>
-            <a href="/social" class="nav-link">REDE</a>
+            <a href="/social" class="nav-link">MESH SOCIAL</a>
             <a href="/blog" class="nav-link">BLOG</a>
             <a href="/labs" class="nav-link">LABS</a>
             <a href="/genesis" class="nav-link active">GENESIS</a>
             <a href="/servicos" class="nav-link">SERVIÇOS</a>
             <a href="/podcast" class="nav-link">PODCAST</a>
+            <a href="/ajuda" class="nav-link">AJUDA</a>
+            <a href="/testnet/" class="nav-link nav-testnet">TESTNET</a>
             <button class="nav-btn" data-plg-wallet-btn
                 onclick="PlegmaAuth.isConnected() ? window.location.href='/dashboard/?plg='+PlegmaAuth.getSession().plg_address : PlegmaAuth.openModal()">
                 DASHBOARD
@@ -329,8 +382,8 @@
         </div>
         <script>
         (function(){
-            // 09/05/2026 18:00 hora de Espanha (CEST = UTC+2 em Maio)
-            var LAUNCH_GN = new Date('2026-05-09T18:00:00+02:00').getTime();
+            // 10/05/2026 18:00 hora de Espanha (CEST = UTC+2 em Maio)
+            var LAUNCH_GN = new Date('2026-05-10T18:00:00+02:00').getTime();
             var _gnDone = false;
             function _gnPad(n){ return String(Math.floor(n)).padStart(2,'0'); }
             function _gnTick(){
@@ -776,7 +829,7 @@ let _countdownInterval = null;
 // ─── Carrega status da Genesis via API ───────────────────────────
 async function carregarStatus() {
     try {
-        const r = await fetch('http://80.78.26.52:8080/api/genesis/status');
+        const r = await fetch('https://api.plegmadag.com/api/genesis/status');
         if (!r.ok) throw new Error('HTTP ' + r.status);
         const d = await r.json();
 
@@ -818,7 +871,6 @@ async function carregarStatus() {
         }
 
     } catch (e) {
-        console.warn('Genesis API offline:', e.message);
         document.getElementById('offlineNotice').style.display = 'block';
         // Valores mockados quando API offline
         const MOCK_VENDIDOS = 0;
@@ -842,9 +894,9 @@ function iniciarContador(fimTimestampMs, state) {
     const sub   = document.getElementById('cdSub');
     const nums  = ['cdDias','cdHoras','cdMin','cdSec'];
 
-    // Estado pendente — conta regressiva para o lançamento real (09/05/2026 18:00 Madrid)
+    // Estado pendente — conta regressiva para o lançamento real (10/05/2026 18:00 Madrid)
     if (state === 'pending') {
-        const LAUNCH_TS_MS = 1746806400 * 1000; // 09 MAI 2026 16:00 UTC = 18:00 Madrid CEST
+        const LAUNCH_TS_MS = 1746892800 * 1000; // 10 MAI 2026 16:00 UTC = 18:00 Madrid CEST
         if (_countdownInterval) clearInterval(_countdownInterval);
 
         function tickPending() {
@@ -953,7 +1005,7 @@ async function gerarInstrucao() {
     btn.textContent = 'Aguarde...';
 
     try {
-        const r = await fetch('http://80.78.26.52:8080/api/genesis/registrar', {
+        const r = await fetch('https://api.plegmadag.com/api/genesis/registrar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ plg_address: plg, usdt_amount: usdcV })
@@ -1027,5 +1079,31 @@ function googleTranslateElementInit() {
 }
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<script>
+/* ── GC Testnet Ticker — ativa 09/04/2026 18:00 Madrid (CEST = UTC+2) ── */
+(function () {
+    var LAUNCH = new Date('2026-04-09T18:00:00+02:00').getTime();
+    function showTicker() {
+        var bar = document.getElementById('gc-testnet-bar');
+        if (!bar) return;
+        if (Date.now() >= LAUNCH) {
+            bar.style.display = 'block';
+            /* Empurra o body para baixo para não sobrepor conteúdo */
+            document.body.style.paddingTop = (
+                (parseInt(document.body.style.paddingTop) || 0) + 26
+            ) + 'px';
+        } else {
+            /* Verifica novamente quando chegar a hora */
+            setTimeout(showTicker, Math.min(LAUNCH - Date.now(), 60000));
+        }
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', showTicker);
+    } else {
+        showTicker();
+    }
+}());
+</script>
 </body>
 </html>

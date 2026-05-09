@@ -308,6 +308,8 @@
         .btn-aprovar:hover  { filter: brightness(1.3); }
         .btn-rejeitar { background: rgba(239,68,68,0.1); color: var(--red); border-color: rgba(239,68,68,0.4); margin-left: 4px; }
         .btn-rejeitar:hover { filter: brightness(1.3); }
+        .btn-desvincular { background: rgba(245,158,11,0.1); color: var(--amber); border-color: rgba(245,158,11,0.4); }
+        .btn-desvincular:hover { filter: brightness(1.3); }
 
         /* ═══ DONUT ═══ */
         .donut-wrap   { display: flex; align-items: center; gap: 20px; margin-top: 16px; }
@@ -419,6 +421,14 @@
         <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
         Testnet
     </button>
+    <button class="sb-item" data-aba="minerador" onclick="navegarPara('minerador')">
+        <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+        Minerador
+    </button>
+    <button class="sb-item" data-aba="validador" onclick="navegarPara('validador')">
+        <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Validador
+    </button>
 
     <div class="sb-section">Económico</div>
     <button class="sb-item" data-aba="genesis" onclick="navegarPara('genesis')">
@@ -446,7 +456,7 @@
         <div class="sb-footer-text">
             PLEGMA DAG<br>
             BUILD <strong>009</strong> · TESTNET<br>
-            MAINNET <strong>09/05/2026</strong>
+            MAINNET <strong>10/05/2026</strong>
         </div>
     </div>
 </nav>
@@ -459,7 +469,8 @@
         <div class="section-label">
             Estado da Rede
             <span id="erroStatus" style="color:#f97316;font-size:0.62rem;"></span>
-            <span class="sl-uptime" id="uptimeDisplay" title="Motor online desde último arranque">—</span>
+            <span class="sl-uptime" id="uptimeDisplay" title="Rede PLEGMA ativa desde 09/04/2026 — não reinicia com restarts de nós">—</span>
+            <span id="motorUptimeDisplay" style="font-size:0.55rem;color:var(--text-dim);letter-spacing:1px;margin-left:8px;" title="Este nó ativo desde último arranque do processo"></span>
         </div>
 
         <div class="stat-grid" id="statGrid">
@@ -685,6 +696,21 @@
 
         </div>
 
+        <div class="section-label" style="margin-top:24px;">
+            Nós Conectados — Heartbeat Ativo
+            <span class="sl-refresh" onclick="carregarNosConectados()">↺ Atualizar</span>
+        </div>
+        <div class="panel" style="margin-bottom:24px;">
+            <div style="overflow-x:auto;">
+                <table class="data-table" id="nosConectadosTable">
+                    <thead><tr>
+                        <th>Tipo</th><th>Endereço PLG</th><th>Node ID</th><th>Último Heartbeat</th>
+                    </tr></thead>
+                    <tbody id="nosConectadosBody"><tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text2)">Carregando...</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+
         <div class="section-label">
             Últimos Vértices na DAG
             <span class="sl-refresh" onclick="carregarVertices()">↺</span>
@@ -759,7 +785,7 @@
                     <tr><td>Prover Pool</td><td>40% da geração</td></tr>
                     <tr><td>Validator Pool Saldo</td><td id="tnValidatorPool">—</td></tr>
                     <tr><td>Prover Pool Saldo</td><td id="tnProverPool">—</td></tr>
-                    <tr><td>Início Mining</td><td>09/05/2026</td></tr>
+                    <tr><td>Início Mining</td><td>10/05/2026</td></tr>
                     <tr><td>Governança</td><td id="tnGov">—</td></tr>
                 </table>
             </div>
@@ -799,7 +825,11 @@
                         <tr><td style="color:var(--text2)">Último preço P2P</td><td id="genesisPreco" style="text-align:right;">—</td></tr>
                         <tr><td style="color:var(--text2)">Dia da Rede</td><td id="genesisDia" style="text-align:right;">—</td></tr>
                         <tr><td style="color:var(--text2)">Governança</td><td id="genesisGov" style="text-align:right;">—</td></tr>
+                        <tr><td style="color:var(--red)">PLG-G Queimados</td><td id="adminGenesisQueimados" style="text-align:right;color:var(--red);">0</td></tr>
                     </table>
+                    <div style="margin-top:8px;text-align:right;">
+                        <a href="/burn" style="font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--red);opacity:0.7;text-decoration:none;" target="_blank">Ver endereço de queima →</a>
+                    </div>
                     <div class="donut-wrap" style="margin-top:20px;">
                         <svg width="90" height="90" viewBox="0 0 90 90">
                             <circle cx="45" cy="45" r="35" fill="none" stroke="#05080f" stroke-width="18"/>
@@ -836,7 +866,7 @@
                             <tr><td style="color:var(--text2)">Geração base</td><td style="text-align:right;color:var(--cyan);">1.000.000 $PLG/dia</td></tr>
                             <tr><td style="color:var(--text2)">Fórmula</td><td style="text-align:right;color:var(--cyan);">R = G ÷ N</td></tr>
                             <tr><td style="color:var(--text2)">Fase Atual</td><td style="text-align:right;"><span class="badge badge-amber">TESTNET</span></td></tr>
-                            <tr><td style="color:var(--text2)">Mining ativo em</td><td style="text-align:right;color:var(--text2);">09/05/2026</td></tr>
+                            <tr><td style="color:var(--text2)">Mining ativo em</td><td style="text-align:right;color:var(--text2);">10/05/2026</td></tr>
                         </table>
                     </div>
                 </div>
@@ -991,10 +1021,10 @@
             <div style="overflow-x:auto;max-height:600px;overflow-y:auto;">
                 <table class="data-table">
                     <thead><tr>
-                        <th>#</th><th>Hash Inscrição</th><th>Carteira PLG</th>
+                        <th>#</th><th>Projeto</th><th>Segmento</th><th>Hash Inscrição</th><th>Carteira PLG</th>
                         <th>Data</th><th>Status</th><th>Ações</th>
                     </tr></thead>
-                    <tbody id="inscricaoBody"><tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text2)">Carregando...</td></tr></tbody>
+                    <tbody id="inscricaoBody"><tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text2)">Carregando...</td></tr></tbody>
                 </table>
             </div>
             <div style="padding:10px 20px;font-size:0.62rem;color:var(--text2);border-top:1px solid var(--border);line-height:1.8;">
@@ -1004,6 +1034,94 @@
         </div>
     </div><!-- /panel-fundacao -->
 
+    <!-- ══════════════════════════════════ ABA: MINERADOR ══ -->
+    <div class="tab-panel" id="panel-minerador">
+        <div class="section-label">
+            Minerador · Estado do Daemon
+            <span class="sl-refresh" onclick="carregarMineradorStatus()">↺ Atualizar</span>
+        </div>
+
+        <div class="stat-grid">
+            <div class="stat-card amber">
+                <div class="sc-label">Hash Rate</div>
+                <div class="sc-val" id="mnrHashRate">—</div>
+                <div class="sc-sub">H/s</div>
+            </div>
+            <div class="stat-card green">
+                <div class="sc-label">Total Aceitas</div>
+                <div class="sc-val" id="mnrAceitas">—</div>
+                <div class="sc-sub">Blocos minerados</div>
+            </div>
+            <div class="stat-card">
+                <div class="sc-label">Recompensa</div>
+                <div class="sc-val" id="mnrRecompensa">—</div>
+                <div class="sc-sub">$PLG acumulado</div>
+            </div>
+            <div class="stat-card purple">
+                <div class="sc-label">Uptime</div>
+                <div class="sc-val" id="mnrUptime">—</div>
+                <div class="sc-sub">Daemon online</div>
+            </div>
+        </div>
+
+        <div class="panel" style="margin-top:24px;">
+            <div class="panel-header">Controlo do Daemon</div>
+            <div class="panel-body">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                    <span style="font-size:0.7rem;color:var(--text2)">Estado:</span>
+                    <span id="mnrEstado" class="badge badge-amber">Verificando...</span>
+                </div>
+                <div style="display:flex;gap:10px;margin-bottom:16px;">
+                    <button onclick="minerPause()" style="padding:8px 18px;background:var(--amber2);border:1px solid rgba(245,158,11,0.35);border-radius:6px;color:var(--amber);font-family:'Space Mono',monospace;font-size:0.72rem;cursor:pointer;">⏸ Pausar</button>
+                    <button onclick="minerResume()" style="padding:8px 18px;background:var(--green2);border:1px solid rgba(35,209,139,0.35);border-radius:6px;color:var(--green);font-family:'Space Mono',monospace;font-size:0.72rem;cursor:pointer;">▶ Retomar</button>
+                </div>
+                <table class="data-table">
+                    <tr><td style="color:var(--text2)">Estado Daemon</td><td id="mnrStatusText" style="text-align:right;">—</td></tr>
+                    <tr><td style="color:var(--text2)">Rede</td><td style="text-align:right;"><span class="badge badge-amber">TESTNET</span></td></tr>
+                    <tr><td style="color:var(--text2)">Porta</td><td style="text-align:right;">8084</td></tr>
+                </table>
+            </div>
+        </div>
+    </div><!-- /panel-minerador -->
+
+    <!-- ══════════════════════════════════ ABA: VALIDADOR ══ -->
+    <div class="tab-panel" id="panel-validador">
+        <div class="section-label">
+            Validadores · Provers na Rede
+            <span class="sl-refresh" onclick="carregarProvers()">↺ Atualizar</span>
+        </div>
+
+        <div class="kpi-row">
+            <div class="kpi-card cyan">
+                <div class="kpi-label">Total Provers</div>
+                <div class="kpi-val" id="valCountProvers">—</div>
+                <div class="kpi-sub">PC · VPS · Servidor</div>
+            </div>
+            <div class="kpi-card green">
+                <div class="kpi-label">Total Validadores</div>
+                <div class="kpi-val" id="valCountValidadores">—</div>
+                <div class="kpi-sub">Mobile · Tablet</div>
+            </div>
+            <div class="kpi-card amber">
+                <div class="kpi-label">Total Ganhos</div>
+                <div class="kpi-val" id="valTotalGanhos">—</div>
+                <div class="kpi-sub">$PLG distribuído</div>
+            </div>
+        </div>
+
+        <div class="panel" style="margin-top:24px;">
+            <div class="panel-header">Lista de Provers / Validadores</div>
+            <div style="overflow-x:auto;max-height:520px;overflow-y:auto;">
+                <table class="data-table">
+                    <thead><tr>
+                        <th>#</th><th>Endereço</th><th>Tipo</th><th>Ganhos $PLG</th><th>Uptime</th>
+                    </tr></thead>
+                    <tbody id="valTableBody"><tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text2)">Carregando...</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div><!-- /panel-validador -->
+
 </main>
 </div><!-- /app -->
 
@@ -1011,9 +1129,10 @@
 
 <script>
 const _sandbox = new URLSearchParams(window.location.search).get('sandbox') === '1';
-const API = _sandbox ? 'http://80.78.26.52:8080' : 'https://api.plagmadag.com';
+const API = _sandbox ? 'http://80.78.26.52:8080' : 'https://api.plegmadag.com';
 let _adminKey  = '';
-let _launchTs  = null; // motor_start_ts — preenchido pelo /api/status
+let _launchTs  = null; // network_start_ts (FASE_ZERO) — nunca reinicia
+let _motorTs   = null; // motor_start_ts — reinicia a cada restart do processo
 
 /* ── GATE ──────────────────────────────────────────────────────────────────── */
 async function verificarAcesso(e) {
@@ -1066,32 +1185,120 @@ function navegarPara(aba) {
             delay: anime.stagger(35), duration: 340, easing: 'easeOutCubic'
         });
     }
-    if (aba === 'fundacao') carregarInscricoes();
-    if (aba === 'genesis')  carregarSocios();
-    if (aba === 'economia') carregarAerarium();
-    if (aba === 'servicos') carregarShield();
-    if (aba === 'testnet')  { carregarStatus(); carregarNosAncora(); }
+    if (aba === 'fundacao')  carregarInscricoes();
+    if (aba === 'genesis')   carregarSocios();
+    if (aba === 'economia')  carregarAerarium();
+    if (aba === 'servicos')  carregarShield();
+    if (aba === 'testnet')   { carregarStatus(); carregarNosAncora(); }
+    if (aba === 'minerador') carregarMineradorStatus();
+    if (aba === 'validador') carregarProvers();
+}
+
+/* ── MINERADOR ─────────────────────────────────────────────────────────────── */
+async function carregarMineradorStatus() {
+    try {
+        const r = await fetch(`${API}/miner/status`, { signal: AbortSignal.timeout(8000) }).then(r => r.json());
+        const pausado = r.pausado ?? false;
+        setTxt('mnrHashRate',   (r.hash_rate != null ? r.hash_rate : '—') + (r.hash_rate != null ? ' H/s' : ''));
+        setTxt('mnrAceitas',    fmt(r.total_aceitas ?? 0));
+        setTxt('mnrRecompensa', fmt(r.recompensa ?? 0) + ' $PLG');
+        setTxt('mnrUptime',     r.uptime ?? '—');
+        setTxt('mnrStatusText', pausado ? 'Pausado' : 'Ativo');
+        const estadoEl = document.getElementById('mnrEstado');
+        if (estadoEl) {
+            estadoEl.className = 'badge ' + (pausado ? 'badge-amber' : 'badge-green');
+            estadoEl.textContent = pausado ? 'PAUSADO' : 'ATIVO';
+        }
+    } catch(e) {
+        ['mnrHashRate','mnrAceitas','mnrRecompensa','mnrUptime','mnrStatusText'].forEach(id => setTxt(id, '—'));
+        const estadoEl = document.getElementById('mnrEstado');
+        if (estadoEl) { estadoEl.className = 'badge'; estadoEl.textContent = 'INACESSÍVEL'; }
+    }
+}
+
+async function minerPause() {
+    try {
+        await fetch(`${API}/miner/pause`, { signal: AbortSignal.timeout(8000) });
+        await carregarMineradorStatus();
+        toast('Minerador pausado', 'ok');
+    } catch(e) { toast('Erro ao pausar minerador', 'err'); }
+}
+
+async function minerResume() {
+    try {
+        await fetch(`${API}/miner/resume`, { signal: AbortSignal.timeout(8000) });
+        await carregarMineradorStatus();
+        toast('Minerador retomado', 'ok');
+    } catch(e) { toast('Erro ao retomar minerador', 'err'); }
+}
+
+/* ── VALIDADORES / PROVERS ──────────────────────────────────────────────────── */
+async function carregarProvers() {
+    const tbody = document.getElementById('valTableBody');
+    try {
+        const r = await fetch(`${API}/wallet/provers`, { signal: AbortSignal.timeout(8000) }).then(r => r.json());
+        const provers = r.provers ?? [];
+        const tipos   = ['MOBILE','CELULAR','ANDROID','IOS','SMARTPHONE'];
+        setTxt('valCountProvers',     fmt(r.count_provers     ?? provers.filter(p => !tipos.includes((p.tipo||'').toUpperCase())).length));
+        setTxt('valCountValidadores', fmt(r.count_validadores ?? provers.filter(p =>  tipos.includes((p.tipo||'').toUpperCase())).length));
+        setTxt('valTotalGanhos',      fmt(r.total_ganhos ?? 0) + ' $PLG');
+        if (!provers.length) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text2)">Nenhum prover registado.</td></tr>';
+            return;
+        }
+        tbody.innerHTML = provers.map((p, i) => {
+            const uptime = p.linked_at ? Math.floor((Date.now() / 1000 - p.linked_at) / 3600) + 'h' : '—';
+            const isVal  = tipos.includes((p.tipo||'').toUpperCase());
+            const badge  = isVal ? '<span class="badge badge-green">VALIDATOR</span>' : '<span class="badge badge-cyan">PROVER</span>';
+            return `<tr>
+                <td style="color:var(--text2)">${i + 1}</td>
+                <td style="font-family:monospace;font-size:0.7rem;">${_esc(p.address ?? '—')}</td>
+                <td>${badge}</td>
+                <td style="text-align:right;color:var(--cyan);">${fmt(p.ganhos ?? 0)} $PLG</td>
+                <td style="text-align:right;color:var(--text2);">${_esc(uptime)}</td>
+            </tr>`;
+        }).join('');
+    } catch(e) {
+        ['valCountProvers','valCountValidadores','valTotalGanhos'].forEach(id => setTxt(id, '—'));
+        if (tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text2)">Erro ao carregar dados.</td></tr>';
+    }
 }
 
 /* ── INIT ──────────────────────────────────────────────────────────────────── */
 function inicializar() {
     carregarStatus();
     carregarNosAncora();
+    carregarNosConectados();
     carregarInscricoes();
     carregarVertices();
     iniciarCountdown();
-    setInterval(carregarStatus,    30000);
-    setInterval(carregarNosAncora, 10000); // tempo real — 10s
+    setInterval(carregarStatus,       30000);
+    setInterval(carregarNosAncora,    10000); // tempo real — 10s
+    setInterval(carregarNosConectados, 60000);
     setInterval(() => {
+        // Uptime da rede (FASE_ZERO) — nunca reinicia
         const el = document.getElementById('uptimeDisplay');
-        if (!el || _launchTs === null) return;
-        const s = Math.floor(Date.now() / 1000 - _launchTs);
-        if (s < 0) { el.textContent = '—'; return; }
-        const d   = Math.floor(s / 86400);
-        const h   = Math.floor((s % 86400) / 3600);
-        const m   = Math.floor((s % 3600) / 60);
-        const sec = s % 60;
-        el.textContent = `${d}d ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+        if (el && _launchTs !== null) {
+            const s = Math.floor(Date.now() / 1000 - _launchTs);
+            if (s < 0) { el.textContent = '—'; }
+            else {
+                const d   = Math.floor(s / 86400);
+                const h   = Math.floor((s % 86400) / 3600);
+                const m   = Math.floor((s % 3600) / 60);
+                const sec = s % 60;
+                el.textContent = `${d}d ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+            }
+        }
+        // Uptime do nó (processo) — reinicia com cada restart
+        const el2 = document.getElementById('motorUptimeDisplay');
+        if (el2 && _motorTs !== null) {
+            const s2 = Math.floor(Date.now() / 1000 - _motorTs);
+            if (s2 >= 0) {
+                const h2 = Math.floor(s2 / 3600);
+                const m2 = Math.floor((s2 % 3600) / 60);
+                el2.textContent = `nó ${h2}h${String(m2).padStart(2,'0')}m`;
+            }
+        }
     }, 1000);
     if (typeof anime !== 'undefined') {
         anime({
@@ -1113,7 +1320,7 @@ function fmtU(v)     { return v == null ? '—' : '$' + Number(v).toLocaleString
 function fmtTs(ts)   { return ts ? new Date(ts * 1000).toLocaleString('pt-BR') : '—'; }
 function fmtAddr(a)  { return a ? a.substring(0,16)+'…' : '—'; }
 function setTxt(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
-function setHtml(id, v){ const el = document.getElementById(id); if (el) el.innerHTML = v; }
+function _esc(s) { return String(s==null?'—':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#x27;'); }
 
 function toast(msg, type='ok') {
     const t = document.getElementById('toast');
@@ -1150,17 +1357,19 @@ async function carregarStatus() {
     setTxt('erroStatus', '');
     try {
         const safeJson = r => r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`));
-        const [sStatus, sLastBlock, sGenesis, sGov] = await Promise.allSettled([
+        const [sStatus, sLastBlock, sGenesis, sGov, sBurn] = await Promise.allSettled([
             fetch(`${API}/api/status`).then(safeJson),
             fetch(`${API}/api/lastBlock`).then(safeJson),
             fetch(`${API}/api/genesis/status`).then(safeJson),
-            fetch(`${API}/api/genesis/governance`).then(safeJson)
+            fetch(`${API}/api/genesis/governance`).then(safeJson),
+            fetch(`${API}/api/genesis/burn`).then(safeJson)
         ]);
 
         const rStatus    = sStatus.status    === 'fulfilled' ? sStatus.value    : {};
         const rLastBlock = sLastBlock.status === 'fulfilled' ? sLastBlock.value : {};
         const rGenesis   = sGenesis.status   === 'fulfilled' ? sGenesis.value   : {};
         const rGov       = sGov.status       === 'fulfilled' ? sGov.value       : {};
+        const rBurn      = sBurn.status      === 'fulfilled' ? sBurn.value      : null;
 
         if (sStatus.status === 'rejected') setTxt('erroStatus', 'Servidor sem resposta');
 
@@ -1174,7 +1383,8 @@ async function carregarStatus() {
         setTxt('statValidadores',fmt(rStatus.validadores_ativos));
         setTxt('poolLastHash',   rLastBlock.last_vertex_hash ? rLastBlock.last_vertex_hash.substring(0,24)+'…' : '—');
 
-        if (rStatus.motor_start_ts) _launchTs = rStatus.motor_start_ts;
+        if (rStatus.network_start_ts) _launchTs = rStatus.network_start_ts;
+        if (rStatus.motor_start_ts)   _motorTs  = rStatus.motor_start_ts;
         const total = rStatus.total_transacoes ?? 0;
         const tps   = rStatus.transacoes_ativas ? (total > 0 ? (total / Math.max(1, rStatus.launch_ts_utc ? (Date.now()/1000 - rStatus.launch_ts_utc) : 86400)).toFixed(4) : '0') : '—';
         setTxt('tnTps',      tps);
@@ -1190,6 +1400,7 @@ async function carregarStatus() {
         if (plggBar) plggBar.style.width = pct + '%';
         setTxt('genesisUsdt', fmtU(rGenesis.total_usdt_arrecadado));
         setTxt('genesisDia',  fmt(rGenesis.network_day) + 'º dia');
+        if (rBurn) setTxt('adminGenesisQueimados', Number(rBurn.burned_plgg ?? 0).toLocaleString('pt-BR') + ' PLG-G');
 
         const vPool = rGenesis.validator_pool_remaining;
         const pPool = rGenesis.prover_pool_remaining;
@@ -1211,8 +1422,10 @@ async function carregarStatus() {
         const govHTML = rGov.ativa
             ? '<span class="badge badge-green">ATIVA</span>'
             : '<span class="badge badge-amber">AGUARDANDO</span>';
-        setHtml('genesisGov', govHTML);
-        setHtml('tnGov', govHTML);
+        const _gEl1 = document.getElementById('genesisGov');
+        if (_gEl1) _gEl1.innerHTML = govHTML;
+        const _gEl2 = document.getElementById('tnGov');
+        if (_gEl2) _gEl2.innerHTML = govHTML;
 
         const sBadge = document.getElementById('genesisStatusBadge');
         if (sBadge) {
@@ -1232,6 +1445,38 @@ async function carregarStatus() {
     }
     carregarAerarium();
     carregarShield();
+}
+
+/* ── NÓS CONECTADOS (HEARTBEAT) ─────────────────────────────────────────── */
+async function carregarNosConectados() {
+    const tbody = document.getElementById('nosConectadosBody');
+    if (!tbody) return;
+    const _INFRA = new Set(['ANCHOR', 'WALLET']);
+    try {
+        const r = await fetch(`${API}/api/node/map`, { signal: AbortSignal.timeout(8000) }).then(r => r.json());
+        const nos = (r.nos ?? []).filter(n => {
+            const tipo = (n.node_type || '').toUpperCase();
+            return !_INFRA.has(tipo) && (n.latencia ?? 9999) <= 300;
+        });
+        if (!nos.length) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text2)">Nenhum validador ou minerador conectado.</td></tr>';
+            return;
+        }
+        const badgeMap = { 'VALIDATOR': 'badge-green', 'PROVER': 'badge-cyan' };
+        tbody.innerHTML = nos.map(n => {
+            const tipo = (n.node_type || 'UNKNOWN').toUpperCase();
+            const cls  = badgeMap[tipo] || 'badge-amber';
+            const lat  = n.latencia != null ? Math.round(n.latencia) + 's atrás' : '—';
+            return `<tr>
+                <td><span class="badge ${cls}">${tipo}</span></td>
+                <td style="font-family:monospace;font-size:0.7rem;">${_esc(n.node_address || '—')}</td>
+                <td style="font-size:0.75rem;color:var(--text2);">${_esc(n.node_id || '—')}</td>
+                <td style="text-align:right;color:var(--cyan);">${lat}</td>
+            </tr>`;
+        }).join('');
+    } catch(e) {
+        if (tbody) tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text2)">Erro ao carregar nós.</td></tr>';
+    }
 }
 
 /* ── NÓS ÂNCORA ───────────────────────────────────────────────────────────── */
@@ -1348,20 +1593,20 @@ async function carregarShield() {
 /* ── SÓCIOS ────────────────────────────────────────────────────────────────── */
 function _tituloMedalha(is_genesis, balance) {
     const gb = balance ?? 0;
-    if (is_genesis && gb >= 6001) return 'Sócio Genesis · Master';
-    if (is_genesis && gb >= 3001) return 'Sócio Genesis · Sentinela';
-    if (is_genesis && gb >= 1000) return 'Sócio Genesis · Apoiador';
-    if (is_genesis)               return 'Sócio Genesis · Sem boost';
-    if (gb >= 6001) return 'Detentor · Master';
-    if (gb >= 3001) return 'Detentor · Sentinela';
-    if (gb >= 1000) return 'Detentor · Apoiador';
+    if (is_genesis && gb >= 10000) return 'Sócio Genesis · Master';
+    if (is_genesis && gb >= 5000)  return 'Sócio Genesis · Sentinela';
+    if (is_genesis && gb >= 1000)  return 'Sócio Genesis · Apoiador';
+    if (is_genesis)                return 'Sócio Genesis · Sem boost';
+    if (gb >= 10000) return 'Detentor · Master';
+    if (gb >= 5000)  return 'Detentor · Sentinela';
+    if (gb >= 1000)  return 'Detentor · Apoiador';
     return '— Sem título';
 }
 function _categoriaLabel(balance) {
     const b = balance ?? 0;
-    if (b >= 6001) return '<span class="badge badge-cyan">MASTER</span>';
-    if (b >= 3001) return '<span class="badge badge-purple">SENTINELA</span>';
-    if (b >= 1000) return '<span class="badge badge-green">APOIADOR</span>';
+    if (b >= 10000) return '<span class="badge badge-cyan">MASTER</span>';
+    if (b >= 5000)  return '<span class="badge badge-purple">SENTINELA</span>';
+    if (b >= 1000)  return '<span class="badge badge-green">APOIADOR</span>';
     return '<span class="badge" style="border-color:rgba(100,100,100,0.3);color:#555;">—</span>';
 }
 
@@ -1391,12 +1636,12 @@ async function carregarSocios() {
         let i = 1;
         tbody.innerHTML = linhas.map(g => `<tr>
             <td style="color:var(--text2)">${i++}</td>
-            <td>${g.cat}</td>
-            <td style="font-size:0.82rem;">${g.tit}</td>
+            <td>${_esc(g.cat)}</td>
+            <td style="font-size:0.82rem;">${_esc(g.tit)}</td>
             <td style="text-align:center;font-weight:700;color:var(--cyan);font-size:1rem;">${g.count}</td>
         </tr>`).join('');
     } catch(e) {
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text2)">${e.message}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text2)">${_esc(e.message)}</td></tr>`;
     }
 }
 
@@ -1418,22 +1663,34 @@ async function carregarInscricoes() {
         setTxt('inscricaoCount', lista.length + ' projeto(s) · ' + pend + ' pendente(s)');
 
         const tbody = document.getElementById('inscricaoBody');
-        if (!lista.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text2)">Nenhuma inscrição registada.</td></tr>'; return; }
+        if (!lista.length) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text2)">Nenhuma inscrição registada.</td></tr>'; return; }
 
         const statusCor = s => { const u=(s||'').toUpperCase(); if(u==='APROVADA') return 'badge-green'; if(u==='REJEITADA') return 'badge-red'; return 'badge-amber'; };
 
+        const _segLabel = { infancia: 'Infância', fome: 'Fome', libertacao: 'Libertação' };
         tbody.innerHTML = lista.map((p, i) => {
             const hash    = p.hash_inscricao || '—';
-            const hShort  = hash !== '—' ? hash.substring(0,22)+'…' : '—';
+            const hShort  = hash !== '—' ? hash.substring(0,18)+'…' : '—';
             const cart    = p.carteira_plg   || '—';
-            const cShort  = cart !== '—' ? cart.substring(0,22)+'…' : '—';
+            const cShort  = cart !== '—' ? cart.substring(0,18)+'…' : '—';
             const status  = (p.status || 'PENDENTE').toUpperCase();
             const pending = status === 'PENDENTE';
+            const nome    = _esc(p.nome_projeto || '—');
+            const seg     = _esc(_segLabel[p.segmento] || p.segmento || '—');
+            const tooltip = [
+                p.localizacao   ? '📍 ' + p.localizacao   : '',
+                p.responsavel   ? '👤 ' + p.responsavel   : '',
+                p.descricao     ? p.descricao              : '',
+            ].filter(Boolean).join('\n');
             const acoes   = pending
                 ? `<button class="btn-aprovar"  onclick="aprovarInscricao('${hash}')">Aprovar</button><button class="btn-rejeitar" onclick="rejeitarInscricao('${hash}')">Rejeitar</button>`
-                : `<span style="font-size:0.6rem;color:var(--text2)">—</span>`;
+                : status === 'APROVADA'
+                    ? `<button class="btn-desvincular" onclick="desvincularInscricao('${hash}')">Desvincular</button>`
+                    : `<span style="font-size:0.6rem;color:var(--text2)">—</span>`;
             return `<tr>
                 <td style="color:var(--text2)">${p.id ?? i+1}</td>
+                <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${tooltip}">${nome}</td>
+                <td style="font-size:0.68rem;color:var(--amber)">${seg}</td>
                 <td style="font-size:0.6rem;color:var(--cyan);" title="${hash}">${hShort}</td>
                 <td style="font-size:0.6rem;color:var(--cyan);" title="${cart}">${cShort}</td>
                 <td style="color:var(--text2);font-size:0.75rem">${p.created_at ? new Date(p.created_at*1000).toLocaleDateString('pt-BR') : '—'}</td>
@@ -1442,7 +1699,8 @@ async function carregarInscricoes() {
             </tr>`;
         }).join('');
     } catch(e) {
-        setHtml('inscricaoBody', `<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text2)">${e.message}</td></tr>`);
+        const _iEl = document.getElementById('inscricaoBody');
+        if (_iEl) _iEl.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text2)">${_esc(e.message)}</td></tr>`;
     }
 }
 
@@ -1474,6 +1732,20 @@ async function rejeitarInscricao(hash) {
     } catch(e) { toast('Erro: ' + e.message, 'err'); }
 }
 
+async function desvincularInscricao(hash) {
+    if (!hash || hash === '—') { toast('Hash inválido', 'err'); return; }
+    if (!confirm(`Desvincular inscrição aprovada?\n${hash.substring(0,32)}…\n\nA instituição será removida da lista pública do site e volta ao estado pendente.`)) return;
+    try {
+        const r = await fetch(`${API}/api/admin/fundacao/desvincular`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ admin_key: _adminKey, hash_inscricao: hash })
+        }).then(r => r.json());
+        if (r.erro) { toast('Erro: ' + r.erro, 'err'); return; }
+        toast('Inscrição desvinculada — removida da lista pública', 'ok');
+        carregarInscricoes();
+    } catch(e) { toast('Erro: ' + e.message, 'err'); }
+}
+
 /* ── VÉRTICES ──────────────────────────────────────────────────────────────── */
 async function carregarVertices() {
     try {
@@ -1491,13 +1763,14 @@ async function carregarVertices() {
             <td style="color:var(--text2);font-size:0.78rem">${fmtTs(tx.timestamp)}</td>
         </tr>`).join('');
     } catch(e) {
-        setHtml('dagBody', `<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text2)">${e.message}</td></tr>`);
+        const _dEl = document.getElementById('dagBody');
+        if (_dEl) _dEl.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text2)">${_esc(e.message)}</td></tr>`;
     }
 }
 
 /* ── COUNTDOWN ─────────────────────────────────────────────────────────────── */
 function iniciarCountdown() {
-    const target = new Date('2026-05-09T00:00:00');
+    const target = new Date('2026-05-10T16:00:00Z'); // 18:00 CEST = 16:00 UTC
     function atualizar() {
         const diff = target - Date.now();
         if (diff <= 0) { ['cd-dias','cd-horas','cd-min','cd-seg'].forEach(id => setTxt(id, '00')); return; }
