@@ -1770,7 +1770,7 @@ async function carregarVertices() {
 
 /* ── COUNTDOWN ─────────────────────────────────────────────────────────────── */
 function iniciarCountdown() {
-    const target = new Date('2026-05-10T16:00:00Z'); // 18:00 CEST = 16:00 UTC
+    const target = new Date('2026-05-11T16:00:00Z'); // 18:00 CEST = 16:00 UTC
     function atualizar() {
         const diff = target - Date.now();
         if (diff <= 0) { ['cd-dias','cd-horas','cd-min','cd-seg'].forEach(id => setTxt(id, '00')); return; }
