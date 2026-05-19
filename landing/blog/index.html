@@ -253,59 +253,21 @@
         .social-links a:hover { color: #00f2ff; border-color: rgba(0,242,255,0.55); background: rgba(0,242,255,0.12); box-shadow: 0 0 14px rgba(0,242,255,0.22); }
         .social-links a svg { display: block; }
 
-        /* GC — TESTNET nav badge */
+        /* GC — GENESIS nav badge */
         @keyframes pulse-orange {
             0%,100% { box-shadow: 0 0 0 0 rgba(249,115,22,0); border-color: rgba(249,115,22,0.45); }
             50% { box-shadow: 0 0 8px 2px rgba(249,115,22,0.45); border-color: rgba(249,115,22,0.9); }
         }
-        .nav-testnet { font-size: 0.58rem !important; letter-spacing: 3px; text-transform: uppercase;
+        .nav-genesis { font-size: 0.58rem !important; letter-spacing: 3px; text-transform: uppercase;
             font-weight: 700; padding: 4px 10px !important; border-radius: 3px;
             color: #f97316 !important; border: 1px solid rgba(249,115,22,0.55) !important;
             background: rgba(249,115,22,0.08) !important;
             animation: pulse-orange 1.8s ease-in-out infinite; cursor: pointer; }
     
-        /* ── GC TESTNET TICKER ────────────────────────────────────────── */
-        #gc-testnet-bar {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%;
-            height: 26px;
-            z-index: 99999;
-            background: rgba(249,115,22,0.08);
-            border-bottom: 1px solid rgba(249,115,22,0.40);
-            overflow: hidden;
-            pointer-events: none;
-        }
-        #gc-testnet-inner {
-            display: flex;
-            align-items: center;
-            height: 100%;
-            white-space: nowrap;
-            animation: gc-scroll 38s linear infinite;
-        }
-        @keyframes gc-scroll {
-            0%   { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-        #gc-testnet-inner span {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.58rem;
-            color: #f97316;
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
-            padding-right: 80px;
-        }
-    </style>
+        </style>
+    <script src="/assets/genesis-banner.js" defer></script>
 </head>
 <body>
-
-<!-- GC TESTNET TICKER -->
-<div id="gc-testnet-bar">
-  <div id="gc-testnet-inner">
-    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
-    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
-  </div>
-</div>
 
 <nav>
     <a href="/" class="nav-brand" style="display:flex;align-items:center;gap:10px">
@@ -321,11 +283,10 @@
         <a href="/social" class="nav-link">MESH SOCIAL</a>
         <a href="/blog" class="nav-link active">BLOG</a>
         <a href="/labs" class="nav-link">LABS</a>
-        <a href="/genesis" class="nav-link">GENESIS</a>
+        <a href="/genesis" class="nav-link nav-genesis">GENESIS</a>
         <a href="/servicos" class="nav-link">SERVIÇOS</a>
         <a href="/podcast" class="nav-link">PODCAST</a>
             <a href="/ajuda" class="nav-link">AJUDA</a>
-            <a href="/testnet/" class="nav-link nav-testnet">TESTNET</a>
         <button class="nav-btn" data-plg-wallet-btn
             onclick="PlegmaAuth.isConnected() ? window.location.href='/dashboard/?plg='+PlegmaAuth.getSession().plg_address : PlegmaAuth.openModal()">
             DASHBOARD
@@ -473,6 +434,129 @@
 
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
+
+        <!-- INTEGRIDADE DAG · QUALIDADE ZERO · INFRAESTRUTURA · 19 MAI 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <div class="post-tags">
+                    <span class="tag">INFRA</span>
+                    <span class="tag">SECURITY</span>
+                    <span class="tag">DAG</span>
+                </div>
+                <span class="post-title">19 MAI 2026 — Integridade DAG Completa · Qualidade Zero · Infraestrutura HTTPS</span>
+                <span class="post-date">19 Mai 2026 · 23:30 CEST</span>
+            </div>
+            <div class="post-body">
+                <div class="post-section">
+                    <span class="post-section-title">⬡ Auditoria DAG — 4/4 Nós Verificados</span>
+                    O sistema de auditoria do DAG foi optimizado para comunicar com os nós através dos canais públicos encriptados. Todos os quatro nós da rede passam agora na auditoria completa — validação de transacções, unicidade de hashes, provas ZK e topologia DAG confirmadas. Auditoria: CRITICAL 0 · HIGH 0 · MEDIUM 0.
+                </div>
+                <div class="post-section">
+                    <span class="post-section-title">⬡ Infraestrutura HTTPS Unificada</span>
+                    O nó primário passou a expor todos os endpoints de API através do canal HTTPS público. Anteriormente, o proxy de rede apenas encaminhava pedidos de autenticação; agora toda a comunicação API — estado da DAG, transacções, carteira — flui pelo mesmo canal encriptado que os restantes nós regionais.
+                </div>
+                <div class="post-section">
+                    <span class="post-section-title">⬡ Atomicidade do Protocolo de Mineração</span>
+                    O registo de blocos minerados passou a ser atómico: o contador de blocos aceites é agora gravado na mesma transacção ACID que o vértice e o registo de vesting. Eliminada uma janela temporal onde um reinício abrupto do servidor poderia deixar o contador desincronizado. O estado em memória é também actualizado imediatamente após cada bloco aceite.
+                </div>
+                <div class="post-section">
+                    <span class="post-section-title">⬡ Qualidade de Código — Zero Observações</span>
+                    O agente de qualidade de código foi aperfeiçoado para distinguir ferramentas de linha de comando, interfaces gráficas e ficheiros de teste do código de produção do servidor. Resultado: zero observações em 28 ficheiros de servidor. O sentinela de segurança reduziu a zero as ocorrências de severidade MÉDIO — os padrões identificados são aceites por design no código da aplicação móvel.
+                </div>
+            </div>
+        </article>
+
+        <!-- INTEGRIDADE DE PAGAMENTOS · AUDITORIA DE CÓDIGO · 10 MAI 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <div class="post-tags">
+                    <span class="tag">INFRA</span>
+                    <span class="tag">SECURITY</span>
+                    <span class="tag">BUILD</span>
+                </div>
+                <span class="post-title">10 MAI 2026 — Integridade de Pagamentos · Auditoria de Código · Consenso Local</span>
+                <span class="post-date">10 Mai 2026 · 23:00 CEST</span>
+            </div>
+            <div class="post-body">
+                <div class="post-section">Correcção de Contrato de Pagamento</div>
+                <p>O monitor de pagamentos Polygon foi actualizado para utilizar o contrato USDC nativo (<code>0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359</code>), substituindo o contrato bridged anteriormente configurado. Esta correcção garante que todas as transferências USDC realizadas pelos utilizadores através da MetaMask e carteiras compatíveis são detectadas e processadas correctamente. O endereço da pool de liquidez (<code>0xD8422d...</code>) foi igualmente validado e confirmado como destino correcto dos 90% de cada operação Genesis.</p>
+
+                <div class="post-section">Auditoria de Criptografia — L1 Restaurada</div>
+                <p>Auditoria automatizada via orquestrador interno identificou e corrigiu uma violação da Lei de Determinismo: um gerador de identificadores não-determinístico foi substituído por derivação via BLAKE3 com âncora de estado, mantendo o protocolo 100% determinístico e pós-quântico.</p>
+
+                <div class="post-section">Reconciliação de Base de Dados Genesis</div>
+                <p>Os registos de aquisição PLG-G foram reconciliados com a realidade on-chain da Polygon. Dados de desenvolvimento foram removidos do ambiente de produção. Contadores de emissão actualizados para reflectir exclusivamente transacções confirmadas: <strong>20.0 PLG-G</strong> emitidos para 2 detentores reais.</p>
+
+                <div class="post-section">Limpeza de Código — 92KB Removidos</div>
+                <p>O orquestrador identificou 6 módulos Python sem referências activas (nunca importados por nenhum ponto de entrada da rede). Os módulos foram isolados em quarentena nos 4 nós do cluster. Após 48h de operação sem alertas, serão eliminados definitivamente. Score da auditoria: <strong>CRITICAL 0 · HIGH 3 · MEDIUM 20</strong>.</p>
+
+                <div class="post-section">Consenso Local do Orquestrador</div>
+                <p>O orquestrador PLEGMA foi actualizado com um motor de consenso local (validation + security + coder) que opera de forma autónoma sem dependências externas. O ritual de encerramento de sessão passa agora a correr este consenso como primeira etapa, bloqueando qualquer acção se forem encontradas violações críticas de protocolo.</p>
+            </div>
+        </article>
+
+        <!-- MONITOR POLYGON · ESTABILIDADE PRÉ-LANÇAMENTO · 09 MAI 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <div class="post-tags">
+                    <span class="tag">INFRA</span>
+                    <span class="tag">GENESIS</span>
+                    <span class="tag">INTEGRAÇÃO</span>
+                </div>
+                <div class="post-date">09 Mai 2026</div>
+            </div>
+            <h2 class="post-title">Monitor de Pagamentos Polygon — Activação e Estabilização Pré-Lançamento</h2>
+            <div class="post-body">
+                <div class="post-section">
+                    <h3>Monitor de Pagamentos USDC → PLG-G</h3>
+                    <p>O módulo de detecção de pagamentos Polygon foi completamente revisto e activado nos quatro nós da rede. O sistema monitoriza transferências USDC para a carteira Genesis Pool a cada 60 segundos, confirmando automaticamente compras e emitindo PLG-G aos compradores. Verificação: bloco Polygon actualizado com diferencial inferior a 60 blocos em todos os nós.</p>
+                </div>
+                <div class="post-section">
+                    <h3>Resiliência de Conectividade RPC</h3>
+                    <p>A lista de endpoints RPC Polygon foi reestruturada para suportar fallback automático entre cinco fornecedores públicos independentes. O módulo tenta cada endpoint em sequência até obter resposta válida, com reconexão automática após cinco falhas consecutivas. Eliminada dependência de fornecedores únicos com restrições de autenticação ou limites de taxa atingidos.</p>
+                </div>
+                <div class="post-section">
+                    <h3>Compatibilidade Multi-versão web3</h3>
+                    <p>O motor de detecção de eventos foi adaptado para operar correctamente com web3 v6 e v7 em simultâneo — as duas versões presentes na infraestrutura. A versão é detectada em runtime e a chamada de obtenção de eventos usa a API correspondente, eliminando falhas silenciosas de filtragem.</p>
+                </div>
+                <div class="post-section">
+                    <h3>Sweep Pré-Lançamento — Estado da Rede</h3>
+                    <p>Auditoria completa realizada às vésperas do lançamento Genesis (09/05/2026 18:00 CEST): 4/4 nós online, 16 endpoints HTTP com resposta 200, todos os serviços systemd activos. Supply Genesis: 10.500.000 PLG-G disponível. Espaço em disco: mínimo 68 GB livre por servidor. A rede encontra-se operacional e pronta para o primeiro bloco Genesis.</p>
+                </div>
+            </div>
+        </article>
+
+        <!-- DAEMON 24/7 · CONSENSO TRI-IA · APK v1.15.0 · 07 MAI 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <div class="post-tags">
+                    <span class="tag">INFRA</span>
+                    <span class="tag">BUILD</span>
+                    <span class="tag">APP</span>
+                    <span class="tag">SECURITY</span>
+                </div>
+                <div class="post-date">07 Mai 2026</div>
+            </div>
+            <h2 class="post-title">Daemon 24/7 Activo · Consenso Tri-IA · APK v1.15.0</h2>
+            <div class="post-body">
+                <div class="post-section">
+                    <h3>Orquestrador autónomo — 12 agentes activos</h3>
+                    <p>O daemon de vigilância PLEGMA está agora activo 24 horas por dia com 12 agentes agendados. O sistema monitoriza continuamente os 4 nós da rede, modera a rede social, sincroniza estado entre servidores e executa auditorias de segurança automáticas. Os serviços dos nós são reiniciados automaticamente em caso de falha, sem intervenção humana.</p>
+                </div>
+                <div class="post-section">
+                    <h3>Consenso Tri-IA — Claude · Gemini · Groq</h3>
+                    <p>Toda acção significativa sobre o protocolo — deploys, alterações de código, integrações externas — passa agora por um mecanismo de consenso entre três IAs independentes. Uma decisão requer aprovação de pelo menos 2 em 3 árbitros. Cada decisão é registada com hash único no audit trail imutável do daemon.</p>
+                </div>
+                <div class="post-section">
+                    <h3>Briefings automáticos e pesquisa de inovações</h3>
+                    <p>Dois novos agentes especializados entram em operação: o agente de briefing gera relatórios textuais às 05:00 e 17:00 UTC com o estado completo da rede, actividade do daemon e alertas das últimas 12 horas. O agente de auto-update pesquisa diariamente repositórios públicos com boa avaliação em criptografia pós-quântica, DAG, ZK proofs e Flutter — e só implementa novidades após aprovação pelo consenso Tri-IA.</p>
+                </div>
+                <div class="post-section">
+                    <h3>APK v1.15.0 — Android</h3>
+                    <p>Nova versão da app Android publicada. O build foi submetido ao consenso Tri-IA antes de ser aprovado para publicação. Inclui melhorias internas de estabilidade e alinhamento de versão. Disponível em <code>/download/plegma-v1.15.0.apk</code>.</p>
+                </div>
+            </div>
+        </article>
 
         <!-- DEPLOY PIPELINE ESTABILIZADO · INFRA · 02 MAI 2026 -->
         <article class="post">
@@ -2852,14 +2936,14 @@
             </div>
             <div class="post-body">
                 <div class="post-section">Resumo</div>
-                <p>Primeira bateria diária automatizada executada contra dois ambientes: <strong>Sandbox</strong> (<code>80.78.26.52</code>) e <strong>Produção</strong> (<code>api.plegmadag.com</code>). 16 testes em cada — disponibilidade, autenticação, Genesis, segurança (SQLi, XSS, path traversal, oversized), stress concorrente, performance e saúde pós-ataque. Ambos passaram com <strong>16/16</strong>.</p>
+                <p>Primeira bateria diária automatizada executada contra dois ambientes: <strong>Sandbox</strong> e <strong>Produção</strong> (<code>api.plegmadag.com</code>). 16 testes em cada — disponibilidade, autenticação, Genesis, segurança (SQLi, XSS, path traversal, oversized), stress concorrente, performance e saúde pós-ataque. Ambos passaram com <strong>16/16</strong>.</p>
 
                 <div class="post-section">Performance: Produção vs Sandbox</div>
                 <ul>
-                    <li>Sandbox (<code>80.78.26.52</code>): avg <strong>492ms</strong> · p95 1243ms · throughput 15.1 req/s</li>
+                    <li>Sandbox: avg <strong>492ms</strong> · p95 1243ms · throughput 15.1 req/s</li>
                     <li>Produção (<code>api.plegmadag.com</code>): avg <strong>72ms</strong> · p95 122ms · throughput 14.9 req/s</li>
                     <li>Resultado: produção é <strong>420ms mais rápida</strong> — nginx com SSL e 4 nós âncora distribui carga e termina TLS mais próximo do servidor EU.</li>
-                    <li>Nó EU directo (<code>213.199.42.88:8080</code>): avg <strong>109ms</strong> — o mais rápido dos âncoras. BR / MAL / SIN inacessíveis directamente por firewall (UFW bloqueia porta 8080 externamente — esperado por design).</li>
+                    <li>Nó EU directo: avg <strong>109ms</strong> — o mais rápido dos âncoras. BR / MAL / SIN inacessíveis directamente por firewall (UFW bloqueia portas externamente — esperado por design).</li>
                 </ul>
 
                 <div class="post-section">Testes de Segurança (ambos os ambientes)</div>
@@ -2959,30 +3043,5 @@
 </script>
 
 
-<script>
-/* ── GC Testnet Ticker — ativa 09/04/2026 18:00 Madrid (CEST = UTC+2) ── */
-(function () {
-    var LAUNCH = new Date('2026-04-09T18:00:00+02:00').getTime();
-    function showTicker() {
-        var bar = document.getElementById('gc-testnet-bar');
-        if (!bar) return;
-        if (Date.now() >= LAUNCH) {
-            bar.style.display = 'block';
-            /* Empurra o body para baixo para não sobrepor conteúdo */
-            document.body.style.paddingTop = (
-                (parseInt(document.body.style.paddingTop) || 0) + 26
-            ) + 'px';
-        } else {
-            /* Verifica novamente quando chegar a hora */
-            setTimeout(showTicker, Math.min(LAUNCH - Date.now(), 60000));
-        }
-    }
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', showTicker);
-    } else {
-        showTicker();
-    }
-}());
-</script>
 </body>
 </html>

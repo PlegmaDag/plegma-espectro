@@ -254,59 +254,22 @@
         .social-links a:hover { color: #00f2ff; border-color: rgba(0,242,255,0.55); background: rgba(0,242,255,0.12); box-shadow: 0 0 14px rgba(0,242,255,0.22); }
         .social-links a svg { display: block; }
 
-        /* GC — TESTNET nav badge */
+        /* GC — GENESIS nav badge */
         @keyframes pulse-orange {
             0%,100% { box-shadow: 0 0 0 0 rgba(249,115,22,0); border-color: rgba(249,115,22,0.45); }
             50% { box-shadow: 0 0 8px 2px rgba(249,115,22,0.45); border-color: rgba(249,115,22,0.9); }
         }
-        .nav-testnet { font-size: 0.58rem !important; letter-spacing: 3px; text-transform: uppercase;
+        .nav-genesis { font-size: 0.58rem !important; letter-spacing: 3px; text-transform: uppercase;
             font-weight: 700; padding: 4px 10px !important; border-radius: 3px;
             color: #f97316 !important; border: 1px solid rgba(249,115,22,0.55) !important;
             background: rgba(249,115,22,0.08) !important;
             animation: pulse-orange 1.8s ease-in-out infinite; cursor: pointer; }
     
-        /* ── GC TESTNET TICKER ────────────────────────────────────────── */
-        #gc-testnet-bar {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%;
-            height: 26px;
-            z-index: 99999;
-            background: rgba(249,115,22,0.08);
-            border-bottom: 1px solid rgba(249,115,22,0.40);
-            overflow: hidden;
-            pointer-events: none;
-        }
-        #gc-testnet-inner {
-            display: flex;
-            align-items: center;
-            height: 100%;
-            white-space: nowrap;
-            animation: gc-scroll 38s linear infinite;
-        }
-        @keyframes gc-scroll {
-            0%   { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-        #gc-testnet-inner span {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.58rem;
-            color: #f97316;
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
-            padding-right: 80px;
-        }
-    </style>
+        </style>
+    <script src="/assets/genesis-banner.js" defer></script>
 </head>
 <body>
 
-<!-- GC TESTNET TICKER -->
-<div id="gc-testnet-bar">
-  <div id="gc-testnet-inner">
-    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
-    <span>⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot; ⬡ FASE TESTNET ATIVA &middot; REDE EM AMBIENTE DE TESTES &middot; T-PLG NÃO TEM VALOR REAL &middot; DADOS E TRANSAÇÕES SÃO FICTÍCIOS &middot; APENAS PARA FINS DE TESTE &middot;</span>
-  </div>
-</div>
 <div class="page">
     <nav>
         <a href="/" class="nav-brand" style="display:flex;align-items:center;gap:10px"><img src="/assets/img/logo.gif" alt="PLEGMA" style="height:36px;filter:drop-shadow(0 0 6px rgba(0,242,255,0.5))"><span>PLEGMA DAG</span></a>
@@ -319,11 +282,10 @@
             <a href="/social" class="nav-link active">MESH SOCIAL</a>
             <a href="/blog" class="nav-link">BLOG</a>
             <a href="/labs" class="nav-link">LABS</a>
-            <a href="/genesis" class="nav-link">GENESIS</a>
+            <a href="/genesis" class="nav-link nav-genesis">GENESIS</a>
             <a href="/servicos" class="nav-link">SERVIÇOS</a>
             <a href="/podcast" class="nav-link">PODCAST</a>
             <a href="/ajuda" class="nav-link">AJUDA</a>
-            <a href="/testnet/" class="nav-link nav-testnet">TESTNET</a>
             <a href="/dashboard" class="nav-link">DASHBOARD</a>
         </div>
     </nav>
@@ -464,6 +426,53 @@
                         <div class="post-footer">
                             <button class="vote-btn respeit" onclick="votar(this,1)"><span>💠</span> <span class="vcount">892</span> Respeito</button>
                             <button class="vote-btn ruido" onclick="votar(this,-1)"><span>⚡</span> <span class="vcount">1</span> Ruído</button>
+                            <button class="reply-btn">💬 Responder</button>
+                        </div>
+                    </div>
+
+                    <!-- POST — Plegmadag · Blog 19 MAI 2026 · Integridade DAG · Qualidade Zero -->
+                    <div class="post">
+                        <div class="post-header">
+                            <div class="post-avatar" style="background:rgba(0,242,255,0.1)">⬡</div>
+                            <div class="post-meta">
+                                <div class="post-author">Plegmadag <span>@plegmadag · ✦ Oficial</span></div>
+                                <div class="post-time">19 Mai 2026 · Dev Log</div>
+                            </div>
+                        </div>
+                        <div class="post-body">
+                            📋 <strong>Dev Log — 19 Mai 2026</strong><br><br>
+                            <span class="highlight">Integridade DAG Completa · Qualidade Zero · Infraestrutura HTTPS</span><br><br>
+                            Todos os 4 nós da rede passam na auditoria DAG completa. Infraestrutura HTTPS unificada no nó primário. Atomicidade do protocolo de mineração reforçada. Zero observações de qualidade no código de servidor.<br><br>
+                            Auditoria: CRITICAL 0 · HIGH 0 · MEDIUM 0<br><br>
+                            <span style="font-size:0.75rem;color:var(--text2)">INFRA · SECURITY · DAG</span><br><br>
+                            <a href="/blog/" style="color:var(--cyan);font-size:0.8rem;text-decoration:none;border-bottom:1px solid rgba(0,242,255,0.3)">→ Ler artigo completo no Blog</a>
+                        </div>
+                        <div class="post-footer">
+                            <button class="vote-btn respeit" onclick="votar(this,1)"><span>💠</span> <span class="vcount">0</span> Respeito</button>
+                            <button class="vote-btn ruido" onclick="votar(this,-1)"><span>⚡</span> <span class="vcount">0</span> Ruído</button>
+                            <button class="reply-btn">💬 Responder</button>
+                        </div>
+                    </div>
+
+                    <!-- POST — Plegmadag · Blog 10 MAI 2026 · Integridade Pagamentos · Auditoria -->
+                    <div class="post">
+                        <div class="post-header">
+                            <div class="post-avatar" style="background:rgba(0,242,255,0.1)">⬡</div>
+                            <div class="post-meta">
+                                <div class="post-author">Plegmadag <span>@plegmadag · ✦ Oficial</span></div>
+                                <div class="post-time">10 Mai 2026 · Dev Log</div>
+                            </div>
+                        </div>
+                        <div class="post-body">
+                            📋 <strong>Dev Log — 10 MAI 2026</strong><br><br>
+                            <span class="highlight">Integridade de Pagamentos · Auditoria de Código · Consenso Local</span><br><br>
+                            Contrato USDC nativo activo na Polygon. Auditoria: CRITICAL 0 · HIGH 3. Base de dados Genesis reconciliada com realidade on-chain. 92KB de código sem referências isolados nos 4 nós do cluster.<br><br>
+                            <span style="font-size:0.75rem;color:var(--text2)">#INFRA #SECURITY #BUILD</span><br><br>
+                            <a href="/blog/" style="color:var(--cyan);font-size:0.8rem;text-decoration:none;border-bottom:1px solid rgba(0,242,255,0.3)">→ Ler artigo completo no Blog</a>
+                        </div>
+                        <div class="post-footer">
+                            <button class="vote-btn respeit" onclick="votar(this,1)"><span>💠</span> <span class="vcount">0</span> Respeito</button>
+                            <button class="vote-btn ruido" onclick="votar(this,-1)"><span>⚡</span> <span class="vcount">0</span> Ruído</button>
                             <button class="reply-btn">💬 Responder</button>
                         </div>
                     </div>
@@ -1433,30 +1442,5 @@ function googleTranslateElementInit() {
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-<script>
-/* ── GC Testnet Ticker — ativa 09/04/2026 18:00 Madrid (CEST = UTC+2) ── */
-(function () {
-    var LAUNCH = new Date('2026-04-09T18:00:00+02:00').getTime();
-    function showTicker() {
-        var bar = document.getElementById('gc-testnet-bar');
-        if (!bar) return;
-        if (Date.now() >= LAUNCH) {
-            bar.style.display = 'block';
-            /* Empurra o body para baixo para não sobrepor conteúdo */
-            document.body.style.paddingTop = (
-                (parseInt(document.body.style.paddingTop) || 0) + 26
-            ) + 'px';
-        } else {
-            /* Verifica novamente quando chegar a hora */
-            setTimeout(showTicker, Math.min(LAUNCH - Date.now(), 60000));
-        }
-    }
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', showTicker);
-    } else {
-        showTicker();
-    }
-}());
-</script>
 </body>
 </html>
