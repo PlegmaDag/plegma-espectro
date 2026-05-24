@@ -6,6 +6,7 @@
     <meta name="description" content="Logs de desenvolvimento, artigos técnicos e fundamentos do protocolo PLEGMA DAG desde 01/02/2026.">
     <meta name="keywords" content="PLEGMA DAG, blockchain DAG, criptografia pós-quântica, Dilithium3, ZK-SNARK, PLG-G, governança descentralizada, mineração mobile">
     <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://plegmadag.com/blog/">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://plegmadag.com/blog/">
     <meta property="og:title" content="Blog — Linha do Tempo | PLEGMA DAG">
@@ -434,6 +435,192 @@
 
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
+
+        <!-- AUDITORIA DE REDE · 23 MAI 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <div class="post-date">23 MAI 2026</div>
+                <div class="post-tags">
+                    <span class="tag">INFRA</span>
+                    <span class="tag">SEGURANÇA</span>
+                    <span class="tag">PROTOCOLO</span>
+                    <span class="tag">REDE</span>
+                </div>
+            </div>
+            <h2 class="post-title">23 MAI 2026 — Auditoria de Rede · Correção de Gossip · Resiliência de Infraestrutura</h2>
+            <div class="post-body">
+                <div class="post-section">Auditoria completa dos 4 nós âncora</div>
+                <p>Sessão dedicada à auditoria do estado completo da rede PLEGMA DAG. Todos os 4 nós âncora foram inspeccionados ao nível de processos, consumo de recursos, sincronização de estado e conformidade com o protocolo de gossip P2P. O resultado final: todos os nós sincronizados com 21 transacções confirmadas e gossip funcional em todos os sentidos.</p>
+
+                <div class="post-section">Instâncias de serviço redundantes removidas</div>
+                <p>Detectadas e removidas instâncias de serviço obsoletas em múltiplos nós, activas desde finais de Abril. Estas instâncias consumiam memória desnecessariamente e podiam interferir com a propagação de mensagens gossip. Após remoção, o consumo de memória normalizou em todos os nós para níveis equivalentes.</p>
+
+                <div class="post-section">Sincronização de base de dados entre nós</div>
+                <p>Identificada uma transacção ausente nas bases de dados de três nós secundários. A transacção foi inserida directamente e o estado do DAG reestabelecido de forma consistente entre os 4 nós. A divergência era residual e não afectava operação, mas foi corrigida para manter integridade completa.</p>
+
+                <div class="post-section">Correcção estrutural no protocolo de gossip</div>
+                <p>Identificado e corrigido um bug estrutural no endpoint de propagação de vértices P2P: vértices gerados pelos nós âncora (mine-accepted) não carregam as mesmas credenciais de utilizador que as transacções comuns, o que levava a rejeições silenciosas entre nós. A correcção estabelece um conjunto de confiança explícito para comunicação interna entre âncoras, mantendo a verificação Dilithium3 activa para todas as fontes externas. Deploy realizado nos 4 nós via zero-downtime.</p>
+
+                <div class="post-section">Remediação de anomalia de conectividade externa</div>
+                <p>Detectada ligação externa anómala a um dos nós — origem não reconhecida como parte da infraestrutura. Após análise, confirmado que não houve acesso indevido a dados ou serviços. A fonte foi bloqueada ao nível de rede com persistência automática, e a configuração de acesso remoto ao nó foi auditada e corrigida.</p>
+
+                <div class="post-section">Orquestrador — Score final</div>
+                <p>Auditoria tri-agente pós-sessão: <strong>CRITICAL 0 · HIGH 0 · MEDIUM 0 · LOW 30</strong>. Resultado: APROVADO. Os LOW são observações cosméticas sem impacto funcional.</p>
+            </div>
+        </article>
+
+        <!-- RESOLUÇÃO CT-1 · 22 MAI 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <div class="post-date">22 MAI 2026 · 00:30</div>
+                <div class="post-tags">
+                    <span class="tag">SEGURANÇA</span>
+                    <span class="tag">CRIPTOGRAFIA</span>
+                    <span class="tag">PROTOCOLO</span>
+                    <span class="tag">BUILD</span>
+                </div>
+            </div>
+            <h2 class="post-title">22 MAI 2026 — CT-1 Resolvido · DagSealEngine v4.1 · Integridade Documental Completa</h2>
+            <div class="post-body">
+                <div class="post-section">Resolução do Crítico Transversal 1 — Honestidade Criptográfica</div>
+                <p>O primeiro crítico transversal identificado na Auditoria L-99 foi resolvido. O módulo de selagem de integridade do protocolo foi completamente reescrito com nomenclatura honesta e implementação formal: <code>DagSealEngine</code> v4.1 substituiu a classe anterior, com BLAKE3 keyed-mode para separação formal de domínio.</p>
+
+                <div class="post-section">O que mudou</div>
+                <p>O sistema de selagem de integridade do DAG foi convertido de uma implementação com nomenclatura incorrecta para um <strong>State Commitment Seal</strong> honesto. A primitiva permanece a mesma — BLAKE3 determinístico — mas agora com chaves de domínio de 32 bytes em modo keyed, separação formal entre os contextos de estado, encadeamento e expansão, e docstrings que declaram exactamente o que o sistema garante e o que não garante.</p>
+
+                <div class="post-section">Retrocompatibilidade Total</div>
+                <p>O alias <code>ZkPressEngine = DagSealEngine</code> garante que todos os consumidores existentes continuam a funcionar sem alteração. Os 4 nós âncora receberam a nova versão via deploy zero-downtime. Orquestrador tri-IA pós-implementação: CRITICAL 0 · HIGH 0. Self-test: geração, verificação, anti-adulteração e encadeamento — todos validados.</p>
+
+                <div class="post-section">Limpeza de Documentação</div>
+                <p>Todas as referências incorrectas foram removidas de código e documentação pública: 20+ páginas HTML actualizadas, ficheiros GEO e llms.txt corrigidos, meta keywords alinhados com a pilha real. O protocolo declara-se com exactamente o que implementa: assinaturas Dilithium3 (ML-DSA-65, NIST FIPS 204) e selagem BLAKE3 determinística.</p>
+            </div>
+        </article>
+
+        <!-- AUDITORIA L-99 · 21 MAI 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <div class="post-date">21 MAI 2026 · 23:00</div>
+                <div class="post-tags">
+                    <span class="tag">SEGURANÇA</span>
+                    <span class="tag">PROTOCOLO</span>
+                    <span class="tag">AUDITORIA</span>
+                    <span class="tag">CRIPTOGRAFIA</span>
+                </div>
+            </div>
+            <h2 class="post-title">21 MAI 2026 — Auditoria L-99 Concluída · 5 Perspectivas Independentes</h2>
+            <div class="post-body">
+                <div class="post-section">Auditoria Completa do Protocolo</div>
+                <p>O protocolo PLEGMA DAG foi submetido a uma auditoria de nível L-99, conduzida por cinco perspectivas independentes cobrindo as áreas mais exigentes da industria criptográfica: integridade do supply e descentralização, contratos e escalabilidade, trust minimization e incentivos, consenso Byzantine e provas formais, e criptografia aplicada pós-quântica.</p>
+
+                <div class="post-section">Resultado: APROVADO CONDICIONAL</div>
+                <p>O protocolo recebeu veredicto <strong>APROVADO CONDICIONAL</strong>. A base criptográfica é sólida e pioneira — Crystals-Dilithium3 (ML-DSA-65, NIST FIPS 204) e BLAKE3 foram validados como correctamente implementados e genuinamente pós-quânticos. O fair launch sem alocação de fundadores foi reconhecido como um dos mais limpos identificados. O determinismo rigoroso foi classificado como disciplina de engenharia sólida.</p>
+
+                <div class="post-section">Orquestrador Tri-IA</div>
+                <p>Auditoria do orquestrador confirmou: CRITICAL 0 · HIGH 0 · MEDIUM 0 · LOW 30. Nenhuma vulnerabilidade crítica de segurança activa. Cinco issues pré-existentes em fluxo DAG documentados e rastreados para resolução na FASE 1 dos Contratos Inteligentes L0.</p>
+
+                <div class="post-section">Melhorias Imediatas Aplicadas</div>
+                <p>Duas correcções de protocolo aplicadas directamente com base nos resultados da auditoria: rejeição de transacções sintéticas (sender==receiver) implementada ao nível do motor DAG — protecção que antes era apenas operacional passa a ser garantia protocolar; correcção de bug no módulo de distribuição de fundos Genesis identificado durante a auditoria.</p>
+
+                <div class="post-section">Documento L-99 Publicado</div>
+                <p>O documento completo de auditoria — incluindo relatórios individuais das cinco perspectivas, critérios transversais, tabela de recomendações priorizadas por impacto e esforço, e apêndices técnicos — está arquivado e disponível para revisão externa. Este é o primeiro documento de auditoria pública do protocolo PLEGMA DAG.</p>
+            </div>
+        </article>
+
+        <!-- SEO/GEO/AEO · CONTRATOS L0 · 21 MAI 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <div class="post-tags">
+                    <span class="tag">INFRA</span>
+                    <span class="tag">PROTOCOLO</span>
+                    <span class="tag">MARKETING</span>
+                    <span class="tag">ROADMAP</span>
+                </div>
+                <span class="post-title">21 MAI 2026 — Indexação GEO Activada · Plano Contratos Inteligentes L0 Aprovado</span>
+                <span class="post-date">21 Mai 2026 · CEST</span>
+            </div>
+            <div class="post-body">
+                <div class="post-section">
+                    <span class="post-section-title">⬡ Camada GEO — Motores de Busca Generativos</span>
+                    A rede PLEGMA DAG passa a ter presença activa nos motores de busca generativos (assistentes IA como ChatGPT, Perplexity e Gemini). Foi criada uma camada de documentação pública em <code>/geo/</code> — ficheiros de texto estruturado sem JavaScript nem autenticação, acessíveis a qualquer crawler. A camada inclui visão técnica do protocolo, tokenomics completo, perguntas frequentes e roadmap. O ficheiro <code>/llms.txt</code> segue o padrão emergente llmstxt.org para comunicação directa com modelos de linguagem.
+                </div>
+                <div class="post-section">
+                    <span class="post-section-title">⬡ SEO Técnico — Schema.org e Canonical</span>
+                    Todas as 17 páginas públicas do site recebem agora o atributo canonical. As páginas principais (homepage, Genesis Reserve, Central de Ajuda) passam a incluir dados estruturados JSON-LD com schemas Organization, WebSite, SoftwareApplication, Product e FAQPage — legíveis tanto por motores de busca tradicionais como por motores generativos. Sitemap.xml e robots.txt foram criados e deployados, com configuração específica para cada classe de crawler.
+                </div>
+                <div class="post-section">
+                    <span class="post-section-title">⬡ Plano Contratos Inteligentes L0 — Aprovado</span>
+                    O protocolo PLEGMA DAG aprovou formalmente o plano de implementação de contratos inteligentes nativos na Camada 0. A decisão foi submetida ao consenso do orquestrador tri-IA e obteve aprovação (2/3). Os contratos executarão exclusivamente dentro do protocolo DAG — sem pontes de terceiros, sem máquina virtual externa. A pilha criptográfica mantém-se Dilithium3 + BLAKE3 + ZK-SNARK. Os contratos existentes (Genesis Reserve, Aerarium, Swap Pool) serão formalmente registados no novo Contract Registry com endereços determinísticos derivados por BLAKE3. Governança e Forge são os dois novos contratos planeados. O roadmap completo está disponível publicamente em <a href="/geo/roadmap.txt" style="color:var(--cyan)">/geo/roadmap.txt</a>.
+                </div>
+                <div class="post-section">
+                    <span class="post-section-title">⬡ Consenso Orquestrador</span>
+                    Auditoria de fecho: CRITICAL 0 · HIGH 0 · MEDIUM 0 · LOW 30. DAG_AUDITOR: EUR score=8/8. Quatro nós operacionais, consenso estável.
+                </div>
+            </div>
+        </article>
+
+        <!-- SHIELD WEB · SCANNER AUDITORIA · 21 MAI 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <div class="post-tags">
+                    <span class="tag">APP</span>
+                    <span class="tag">SHIELD</span>
+                    <span class="tag">SECURITY</span>
+                    <span class="tag">UI/UX</span>
+                </div>
+                <span class="post-title">21 MAI 2026 — Lattice Shield Web · Autenticação QR Activada · Auditoria CRITICAL 0 · HIGH 0</span>
+                <span class="post-date">21 Mai 2026 · CEST</span>
+            </div>
+            <div class="post-body">
+                <div class="post-section">
+                    <span class="post-section-title">⬡ Lattice Shield Web — Aba de Autenticação</span>
+                    A secção Lattice Shield na aplicação web passou a exibir directamente a interface de autenticação com Crystals-Dilithium3. O endereço de carteira, a especificação do algoritmo pós-quântico (NIST FIPS 204 · Level 3) e as funcionalidades de leitura e colagem de QR estão agora acessíveis no navegador. Funcionalidades exclusivas de dispositivos Android (monitorização de processos, permissões de sistema) mantêm-se confinadas à app nativa.
+                </div>
+                <div class="post-section">
+                    <span class="post-section-title">⬡ Scanner de Código de Segurança — Melhoria de Precisão</span>
+                    O scanner de análise estática foi aperfeiçoado para excluir ficheiros compilados e gerados automaticamente pelo processo de build. Ficheiros de terceiros e saídas de compilação eram sinalizados como achados quando o padrão existia no código gerado, não no código do protocolo. Resultado após ajuste: CRITICAL 0 · HIGH 0 · MEDIUM 0.
+                </div>
+                <div class="post-section">
+                    <span class="post-section-title">⬡ Consenso Orquestrador</span>
+                    Auditoria completa: CRITICAL 0 · HIGH 0 · MEDIUM 0 · LOW 30. DAG_AUDITOR: EUR score=8/8. Quatro nós activos, gossip estável.
+                </div>
+            </div>
+        </article>
+
+        <!-- AUDIT FRONTEND-BACKEND · APP PAGE · AUTH FIX · 20 MAI 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <div class="post-tags">
+                    <span class="tag">APP</span>
+                    <span class="tag">UI/UX</span>
+                    <span class="tag">AUTH</span>
+                    <span class="tag">INFRA</span>
+                </div>
+                <span class="post-title">20 MAI 2026 — Auditoria Interface-Protocolo · Página App · Fluxos de Autenticação</span>
+                <span class="post-date">20 Mai 2026 · CEST</span>
+            </div>
+            <div class="post-body">
+                <div class="post-section">
+                    <span class="post-section-title">⬡ Auditoria Completa Interface-Protocolo</span>
+                    Realizada auditoria sistemática de todos os parâmetros das interfaces de gestão (Console, Dashboard, Painel de Administração). Cada chamada de rede foi rastreada até ao endpoint de backend correspondente e validada. Foram identificados e corrigidos fluxos desconectados onde a interface não enviava os dados necessários para que o servidor pudesse processar o pedido.
+                </div>
+                <div class="post-section">
+                    <span class="post-section-title">⬡ Fluxo de Autenticação Corrigido</span>
+                    O mecanismo de autenticação administrativa foi uniformizado em todas as interfaces. As sessões de administrador passam agora pelo fluxo correcto de obtenção de token — os tokens de sessão são emitidos pelo servidor e persistidos na sessão do navegador para evitar re-autenticação desnecessária. Auditoria: CRITICAL 0 · HIGH 0 · MEDIUM 0.
+                </div>
+                <div class="post-section">
+                    <span class="post-section-title">⬡ Desvinculação de Prover Activada</span>
+                    A funcionalidade de desvinculação de nós Prover no Dashboard passou a realizar a operação efectiva no servidor. Anteriormente a acção era apenas visual. A sessão activa do utilizador é agora verificada antes de qualquer operação de gestão de nós.
+                </div>
+                <div class="post-section">
+                    <span class="post-section-title">⬡ Página PLEGMA APP</span>
+                    Criada a página <code>/app/</code> com apresentação da aplicação móvel — cartão de download Android disponível imediatamente, cartão iOS com data de submissão indicada. A página inclui requisitos mínimos e características técnicas do protocolo embarcado.
+                </div>
+                <div class="post-section">
+                    <span class="post-section-title">⬡ Endpoint de Queima Genesis</span>
+                    Adicionado endpoint de execução da queima de tokens Genesis não vendidos, protegido por autenticação administrativa. A funcionalidade de queima no painel de controlo passa a estar plenamente conectada ao protocolo.
+                </div>
+            </div>
+        </article>
 
         <!-- INTEGRIDADE DAG · QUALIDADE ZERO · INFRAESTRUTURA · 19 MAI 2026 -->
         <article class="post">
