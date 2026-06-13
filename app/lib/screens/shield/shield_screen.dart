@@ -338,7 +338,7 @@ class _ShieldAtivacaoViewState extends State<_ShieldAtivacaoView> {
       throw Exception(errCode.isNotEmpty ? errCode : 'Falha na ativação');
     }
     await StorageService.shieldAtivoSalvar(true);
-    SnapshotService.criarSnapshot(addr).catchError((_) {});
+    SnapshotService.criarSnapshot(addr).catchError((_) {}); // ignore: body_might_complete_normally_catch_error
   }
 
   @override
@@ -608,6 +608,7 @@ class _AuthTabState extends State<_AuthTab> with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
 
   String? _address;
+  // ignore: unused_field
   String? _pubKey;
   bool    _scanQR           = false;
   bool    _autenticando     = false;
