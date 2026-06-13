@@ -1,34 +1,41 @@
+import 'dart:typed_data';
+
 // ============================================================
 // SeedService — stub para análise estática (CI)
-// Gestão de frase semente (BIP-39 / derivação de carteira).
+// Gestão de frase semente e derivação de carteira.
 // ============================================================
 
 class SeedService {
   SeedService._();
   static final SeedService instance = SeedService._();
 
-  /// Gera uma nova frase semente (12 ou 24 palavras).
-  Future<List<String>> generateMnemonic({int strength = 128}) async {
+  /// Gera uma nova frase semente (12 palavras).
+  Future<List<String>> gerar() async {
     throw UnimplementedError('SeedService: não implementado.');
   }
 
-  /// Valida uma frase semente.
-  bool validateMnemonic(List<String> words) {
+  /// Lê a frase semente armazenada.
+  Future<List<String>?> ler() async {
     throw UnimplementedError('SeedService: não implementado.');
   }
 
-  /// Deriva a chave privada a partir da frase semente.
-  Future<String> derivePrivateKey(List<String> mnemonic) async {
+  /// Salva a frase semente.
+  Future<void> salvar(List<String> mnemonic) async {
     throw UnimplementedError('SeedService: não implementado.');
   }
 
-  /// Armazena a frase semente de forma segura.
-  Future<void> storeMnemonic(List<String> mnemonic) async {
+  /// Encripta ou decripta uma chave com a frase semente.
+  Future<Uint8List> encriptarOuDecriptarChave(Uint8List chave, {bool encriptar = true}) async {
     throw UnimplementedError('SeedService: não implementado.');
   }
 
-  /// Recupera a frase semente armazenada.
-  Future<List<String>?> retrieveMnemonic() async {
+  /// Verifica se foi realizado backup da frase semente.
+  Future<bool> backupFeito() async {
+    throw UnimplementedError('SeedService: não implementado.');
+  }
+
+  /// Envia backup ZK da frase semente.
+  Future<void> enviarZkBackup() async {
     throw UnimplementedError('SeedService: não implementado.');
   }
 
