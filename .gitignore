@@ -10,28 +10,41 @@
 *_private_key*
 *dilithium*
 *seed*
-*wallet*
 
 # LOGICA DE AUTENTICACAO
 auth_server.py
 *_auth_logic*
-*_validator*
 auth_server_real.py
 
-# LOGS OFFLINE & MEMORIA PERSISTENTE
+# BASES DE DADOS (dados de utilizadores reais)
+*.db
+*.sqlite
+*.sqlite3
+
+# LOGS OPERACIONAIS
+logs/
+relatorios/
 offline_logs/
+*.log
+
+# CONTEXTO INTERNO DE DESENVOLVIMENTO
+SESSION_CTX_*.md
+PROJECT_MEMORY/
+
+# DADOS PESSOAIS & REGISTO LOCAL
+personal_data/
+*.personal.*
 persistent_memory/
 local_registry/
 *.registry.json
 *_offline.*
-
-# DADOS PESSOAIS
-personal_data/
-*.personal.*
+stability_state.json
+peers.json
 
 # ARTEFATOS DE SISTEMA & IDE
 __pycache__/
 *.pyc
+*.pyo
 .DS_Store
 node_modules/
 .venv/
@@ -40,13 +53,18 @@ build/
 *.egg-info/
 .idea/
 .vscode/
+.dart_tool/
+.flutter-plugins-dependencies
 
 # CATCH-ALL DE SEGREDOS
 secrets/
 private/
 *.secret
 *.local
-njalla_token.local
+
+# FLUTTER BUILD OUTPUT
+app/build/
+app/.dart_tool/
 
 # Excecao: template publico sem dados reais
 !.env.example

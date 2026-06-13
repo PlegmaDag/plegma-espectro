@@ -1,0 +1,67 @@
+name: plegma_app
+description: "PLEGMA DAG — Carteira e Validador Pós-Quântico"
+publish_to: 'none'
+version: 1.16.3+39
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # Estado
+  provider: ^6.1.2
+
+  # HTTP
+  http: ^1.2.0
+
+  # Armazenamento seguro
+  flutter_secure_storage: ^9.2.4
+  shared_preferences: ^2.2.3
+
+  # Scanner QR
+  mobile_scanner: ^5.2.3
+
+  # Gerador QR (endereço da carteira)
+  qr_flutter: ^4.1.0
+
+  # Criptografia — Lattice (Dilithium3 + BLAKE3 via FFI nativo / WASM web)
+  ffi: ^2.1.0
+
+  # UI
+  google_fonts: ^6.3.3
+  fl_chart: ^0.68.0
+
+  # Biometria
+  local_auth: ^2.3.0
+
+  # Deep links (plegma://auth e plegma://prover)
+  app_links: ^6.0.0
+
+  # Foreground service — heartbeat 24h quando validador activo
+  flutter_background_service: ^5.0.5
+
+  # Monitorização de bateria (suspende mineração < 10% ou economia de bateria)
+  battery_plus: ^6.0.3
+
+  # Internacionalização
+  intl: any
+
+  # Abre URLs no browser externo
+  url_launcher: ^6.3.0
+
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  generate: true
+  assets:
+    - assets/images/

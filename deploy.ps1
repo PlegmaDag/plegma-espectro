@@ -12,7 +12,7 @@
 #   .\deploy.ps1 -Node EUR           # produção num nó específico
 #   .\deploy.ps1 -Rolling            # rolling zero-downtime via Njalla DNS
 #
-# Nós de produção: EUR 213.199.42.88 | BR 187.127.19.209 | MAL 187.127.108.201 | SIN 82.197.70.189
+# Nós de produção: EUR 213.199.42.88 | USA 209.126.7.120 | MUM 217.217.251.206 | SIN 82.197.70.189
 # Sandbox:         80.78.26.52:22  (plagmadag.com)
 # EU-MINER:        80.78.26.52:2222 (standby, deploy com -Node EU-MINER)
 # =============================================================================
@@ -72,8 +72,8 @@ $SBX_WEBROOT = "/var/www/${SBX_DOMAIN}/html"
 # Cluster de produção
 $ALL_NODES = @(
     @{ Name="EUR";      Host="213.199.42.88";   Port=22;   Region="EU";     Standby=$false; RecordId="2340241" },
-    @{ Name="BR";       Host="187.127.19.209";  Port=22;   Region="BR";     Standby=$false; RecordId="2521435" },
-    @{ Name="MAL";      Host="187.127.108.201"; Port=22;   Region="MAL";    Standby=$false; RecordId="2479675" },
+    @{ Name="USA";      Host="209.126.7.120";   Port=22;   Region="USA";    Standby=$false; RecordId="" },
+    @{ Name="MUM";      Host="217.217.251.206"; Port=22;   Region="MUM";    Standby=$false; RecordId="" },
     @{ Name="SIN";      Host="82.197.70.189";   Port=22;   Region="SIN";    Standby=$false; RecordId="2479679" },
     @{ Name="EU-MINER"; Host="80.78.26.52";     Port=2222; Region="EU-OLD"; Standby=$true;  RecordId="" }
 )
