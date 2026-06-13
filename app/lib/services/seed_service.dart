@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 
 // ============================================================
 // SeedService — stub para análise estática (CI)
