@@ -26,7 +26,7 @@ import 'dilithium_ffi_service.dart';
 
 const _kIntervalMinutes  = 2;
 const _kBatteryThreshold = 10;   // % mínimo para manter mineração
-const _kNotifChannelId   = 'plegma_validator_channel';
+const _kNotifChannelId   = 'plegma_validator_channel'; // ignore: unused_element
 const _kNotifId          = 888;
 
 /// Inicializa o serviço (chamar uma vez no main(), antes de runApp).
