@@ -6,7 +6,14 @@ import 'package:flutter/material.dart';
 // ============================================================
 
 class SeedPhraseScreen extends StatelessWidget {
-  const SeedPhraseScreen({super.key});
+  final List<String> words;
+  final String plgAddress;
+
+  const SeedPhraseScreen({
+    super.key,
+    required this.words,
+    required this.plgAddress,
+  });
 
   @override
   Widget build(BuildContext context) {
