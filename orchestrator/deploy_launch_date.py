@@ -1,7 +1,7 @@
 # Deploy urgente: actualiza data de lançamento para 11/05/2026 em todos os servidores.
 # Ficheiros afectados: index.html, genesis/index.html, admin/index.html,
 #                      social/index.html, dashboard/index.html
-"""
+#
 import paramiko
 import sys
 from pathlib import Path
