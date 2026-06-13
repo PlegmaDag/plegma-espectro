@@ -131,7 +131,7 @@ class _PatternPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final linePaint = Paint()
-      ..color      = activeColor.withValues(alpha: 0.55)
+      ..color      = activeColor.withOpacity(0.55)
       ..strokeWidth = 1.8
       ..style      = PaintingStyle.stroke;
 
@@ -154,13 +154,13 @@ class _PatternPainter extends CustomPainter {
       canvas.drawCircle(
         centers[i], hitR * 0.52,
         Paint()
-          ..color      = color.withValues(alpha: sel ? 0.18 : 0.1)
+          ..color      = color.withOpacity(sel ? 0.18 : 0.1)
           ..style      = PaintingStyle.fill,
       );
       canvas.drawCircle(
         centers[i], hitR * 0.52,
         Paint()
-          ..color      = color.withValues(alpha: sel ? 0.6 : 0.35)
+          ..color      = color.withOpacity(sel ? 0.6 : 0.35)
           ..strokeWidth = 1.2
           ..style      = PaintingStyle.stroke,
       );
