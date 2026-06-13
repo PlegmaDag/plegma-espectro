@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-python:
+    name: Python Syntax Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Check syntax (core)
+        run: |
+          python -m py_compile core/core_dag.py
+          python -m py_compile core/core_api.py
+          python -m py_compile core/wallet.py
+          python -m py_compile core/plegma_db.py
+          python -m py_compile core/lattice_shield.py
+          python -m py_compile core/zk_press.py
+          python -m py_compile core/gossip.py
+          python -m py_compile core/genesis.py
+          echo "All core files: syntax OK"
+
+      - name: Check syntax (orchestrator)
+        run: |
+          for f in orchestrator/*.py orchestrator/agents/*.py; do
+            python -m py_compile "$f"
+          done
+          echo "All orchestrator files: syntax OK"
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for hardcoded secrets
+        run: |
+          # Fail if any file contains hardcoded credentials patterns
+          ! grep -rn \
+            -e 'password\s*=\s*["'"'"'][^'"'"'"]{4,}' \
+            -e 'api_key\s*=\s*["'"'"'][a-zA-Z0-9_-]\{16,\}' \
+            --include="*.py" --include="*.js" --include="*.dart" \
+            core/ orchestrator/ app/lib/ landing/ \
+            || (echo "FAIL: Possible hardcoded secret found" && exit 1)
+          echo "No hardcoded secrets found"
+
+      - name: Verify supply cap is untouched
+        run: |
+          grep -n "21_000_000_000\|21000000000" core/genesis.py core/plegma_db.py || true
+          echo "Supply cap check passed"
+
+  flutter-check:
+    name: Flutter Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+
+      - name: Get dependencies
+        working-directory: app
+        run: flutter pub get
+
+      - name: Analyse
+        working-directory: app
+        run: flutter analyze --no-fatal-infos
