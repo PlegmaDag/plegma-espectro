@@ -10,42 +10,42 @@ class SeedService {
   static final SeedService instance = SeedService._();
 
   /// Gera uma nova frase semente (12 palavras).
-  Future<List<String>> gerar() async {
+  static Future<List<String>> gerar() async {
     throw UnimplementedError('SeedService: não implementado.');
   }
 
   /// Lê a frase semente armazenada.
-  Future<List<String>?> ler() async {
+  static Future<List<String>?> ler() async {
     throw UnimplementedError('SeedService: não implementado.');
   }
 
   /// Salva a frase semente.
-  Future<void> salvar(List<String> mnemonic) async {
+  static Future<void> salvar(List<String> mnemonic) async {
     throw UnimplementedError('SeedService: não implementado.');
   }
 
   /// Encripta ou decripta uma chave com a frase semente.
-  Future<Uint8List> encriptarOuDecriptarChave(Uint8List chave, {bool encriptar = true}) async {
+  static Future<dynamic> encriptarOuDecriptarChave(dynamic chave, [dynamic extra]) async {
     throw UnimplementedError('SeedService: não implementado.');
   }
 
   /// Verifica se foi realizado backup da frase semente.
-  Future<bool> backupFeito() async {
+  static Future<bool> backupFeito() async {
     throw UnimplementedError('SeedService: não implementado.');
   }
 
   /// Envia backup ZK da frase semente.
-  Future<void> enviarZkBackup() async {
+  static Future<void> enviarZkBackup({String? plgAddress, List<String>? words}) async {
     throw UnimplementedError('SeedService: não implementado.');
   }
 
   /// Verifica se existe frase semente armazenada.
-  Future<bool> hasMnemonic() async {
+  static Future<bool> hasMnemonic() async {
     throw UnimplementedError('SeedService: não implementado.');
   }
 
   /// Remove a frase semente armazenada.
-  Future<void> clearMnemonic() async {
+  static Future<void> clearMnemonic() async {
     throw UnimplementedError('SeedService: não implementado.');
   }
 }
