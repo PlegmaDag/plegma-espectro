@@ -436,6 +436,120 @@
         <!-- ═══ LOGS DE DESENVOLVIMENTO ═══ -->
         <div class="posts-category">Logs de Desenvolvimento</div>
 
+        <!-- OPEN SOURCE · 13 JUN 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <div class="post-date">13 JUN 2026</div>
+                <div class="post-tags">
+                    <span class="tag">OPEN SOURCE</span>
+                    <span class="tag">PROTOCOLO</span>
+                    <span class="tag">SEGURANÇA</span>
+                </div>
+            </div>
+            <h2 class="post-title">PLEGMA DAG — Código Aberto ao Público</h2>
+            <div class="post-section">
+                <p>O protocolo PLEGMA DAG é agora <strong>open source</strong>, publicado no GitHub sob licença MIT — o mesmo modelo adoptado pelo Bitcoin. Todo o código está disponível para auditoria pública: motor DAG, criptografia pós-quântica, carteira, app mobile e agentes de orquestração.</p>
+            </div>
+            <div class="post-section">
+                <h3>Transparência Total</h3>
+                <p>Qualquer pessoa pode verificar que o protocolo faz o que afirma. O código do consenso DAG, da camada criptográfica (BLAKE3 + Crystals-Dilithium3), do sistema de mineração e da carteira está completamente visível. Os relatórios de auditoria de segurança estão incluídos no repositório.</p>
+            </div>
+            <div class="post-section">
+                <h3>Modelo de Contribuição</h3>
+                <p>O repositório aceita Pull Requests da comunidade. Cada contribuição é verificada por CI automático (análise sintáctica, scan de segurança, análise Flutter) antes de ser revista. Nenhuma alteração ao código oficial acontece sem aprovação do maintainer — o deploy para os nós de produção permanece controlado internamente.</p>
+            </div>
+            <div class="post-section">
+                <h3>Auditoria de Fecho</h3>
+                <p>Consenso orquestrador: CRITICAL 0 · HIGH 4 · MEDIUM 0 · LOW 30. Release v1.0.0 publicado. APK v1.16.2+37 — sem mudanças Flutter nesta sessão.</p>
+            </div>
+        </article>
+
+        <!-- TIMESTAMP WALLET + BLAKE3 + GENESIS · 01 JUN 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <div class="post-date">04 JUN 2026</div>
+                <div class="post-tags">
+                    <span class="tag">INFRA</span>
+                    <span class="tag">UI/UX</span>
+                    <span class="tag">SERVIÇOS</span>
+                </div>
+            </div>
+            <h2 class="post-title">Plegma Translator — Serviço de Tradução de PDFs em Produção</h2>
+            <div class="post-section">
+                <p>A rede PLEGMA lança o <strong>Plegma Translator</strong>, acessível em <code>translator.plegmadag.com</code>. O serviço permite traduzir documentos PDF entre 14 idiomas directamente pela infraestrutura PLEGMA — sem registo, sem carteira necessária. A marca d'água <em>Justiça Absoluta</em> é aplicada automaticamente em todas as páginas do documento de saída.</p>
+            </div>
+            <div class="post-section">
+                <h3>Infraestrutura</h3>
+                <p>O serviço corre nos 4 nós da rede (EUR, BR, MAL, SIN) como unidade independente (<code>plegma-translator.service</code>) na porta 8020. O stack utiliza FastAPI + uvicorn com venv isolado por nó. A camada de processamento foi adaptada para compatibilidade com os sistemas de ficheiros Linux dos servidores de produção, incluindo suporte a fontes Unicode para idiomas com escrita não-latina.</p>
+            </div>
+            <div class="post-section">
+                <h3>Nova Aba em /servicos</h3>
+                <p>A página de serviços da rede foi actualizada com uma terceira aba — <strong>Plegma Translator</strong> — com acesso directo ao serviço, descrição técnica do fluxo de processamento e nota de transparência sobre a transmissão de conteúdo ao motor de tradução. O sistema de abas mantém o padrão visual existente: cyan para Lattice Shield, purple para Plegma Timestamp, amber para Translator.</p>
+            </div>
+            <div class="post-section">
+                <h3>Auditoria de Fecho</h3>
+                <p>Consenso orquestrador: CRITICAL 0 · HIGH 0 · MEDIUM 0 · LOW 30. Sem mudanças no app mobile — APK v1.16.3+38 mantém-se como versão actual.</p>
+            </div>
+        </article>
+
+        <article class="post">
+            <div class="post-header">
+                <div class="post-date">01 JUN 2026</div>
+                <div class="post-tags">
+                    <span class="tag">APP</span>
+                    <span class="tag">ZK</span>
+                    <span class="tag">GENESIS</span>
+                    <span class="tag">INFRA</span>
+                </div>
+            </div>
+            <h2 class="post-title">Integração de Carteira no Timestamp · BLAKE3 WASM · Genesis Corrigido</h2>
+            <div class="post-section">
+                <p>O fluxo de pagamento PLG do <strong>Plegma Timestamp</strong> está agora integrado com o app mobile. Ao abrir o QR de ancoragem num dispositivo Android, o deep link <code>plegma://pay</code> lança directamente o ecrã de confirmação de pagamento — com verificação de saldo, execução da transferência Dilithium3 e notificação automática do serviço de ancoragem.</p>
+            </div>
+            <div class="post-section">
+                <h3>BLAKE3 Real no Frontend</h3>
+                <p>O placeholder SHA-256 foi removido do frontend do Timestamp. O hash de texto é agora calculado com o mesmo módulo WASM usado pelo app — <code>plegma_crypto_bridge.js</code> + <code>plegma_crypto.wasm</code> — garantindo que o hash gerado no browser é idêntico ao que seria gerado em qualquer nó da rede PLEGMA.</p>
+            </div>
+            <div class="post-section">
+                <h3>Genesis Reserve — Datas Corrigidas</h3>
+                <p>A duração da fase Genesis foi alinhada em todos os componentes da rede: <code>genesis_contract.py</code>, <code>shield_server.py</code> e o contador regressivo do frontend. Encerramento: <strong>10/07/2026</strong>. Queima automática de PLG-G não vendido: <strong>11/07/2026</strong>.</p>
+            </div>
+            <div class="post-section">
+                <h3>Auditoria de Fecho</h3>
+                <p>Consenso orquestrador: CRITICAL 0 · HIGH 0 · MEDIUM 0 · LOW 30. APK v1.16.3+38 compilado e distribuído.</p>
+            </div>
+        </article>
+
+        <!-- PLEGMA TIMESTAMP · 31 MAI 2026 -->
+        <article class="post">
+            <div class="post-header">
+                <div class="post-date">31 MAI 2026</div>
+                <div class="post-tags">
+                    <span class="tag">INFRA</span>
+                    <span class="tag">NOVO SERVIÇO</span>
+                    <span class="tag">ZK</span>
+                    <span class="tag">DEPLOY</span>
+                </div>
+            </div>
+            <h2 class="post-title">Plegma Timestamp — Ancoragem Criptográfica em Produção</h2>
+            <div class="post-section">
+                <p>O <strong>Plegma Timestamp</strong> entrou em produção hoje em <code>timestamp.plegmadag.com</code>, disponível nos 4 nós do cluster (EUR · BR · MAL · SIN). O serviço permite ancorar a impressão digital criptográfica de qualquer documento na rede PLEGMA DAG por $2,00 USD (equivalente em $PLG à taxa de mercado no momento da ancoragem) — sem revelar o conteúdo, sem depender de terceiros.</p>
+                <p>O hash é calculado localmente no browser do utilizador (BLAKE3 keyed-mode) e apenas a impressão digital viaja para a rede. O documento nunca é transmitido.</p>
+            </div>
+            <div class="post-section">
+                <h3>Arquitectura do Serviço</h3>
+                <p>Backend FastAPI (porta 8010) · motor de PDF com carimbo automático em cada página · API Keys com lock mínimo em PLG · distribuição automática de receita: 2% royalties autor · 98% Aerarium (10% manutenção + 90% dividendos aos detentores de PLG).</p>
+            </div>
+            <div class="post-section">
+                <h3>Integração com o Orquestrador</h3>
+                <p>Dois novos agentes foram adicionados ao daemon: <code>cartorio_deploy</code> (deploy nos 4 nós via SSH/SFTP) e <code>cartorio_monitor</code> (health check a cada 5 minutos com auto-restart). O deploy é executável via <code>python daemon.py --run cartorio_deploy</code>.</p>
+            </div>
+            <div class="post-section">
+                <h3>Auditoria de Fecho</h3>
+                <p>Consenso orquestrador: CRITICAL 0 · HIGH 0 · MEDIUM 0 · LOW 30. DAG Auditor EUR score=8/8.</p>
+            </div>
+        </article>
+
         <!-- AUDITORIA DE REDE · 23 MAI 2026 -->
         <article class="post">
             <div class="post-header">
@@ -2289,7 +2403,7 @@
             <div class="post-body">
                 <ul>
                     <li><span class="highlight">/servicos — sistema de abas:</span> Página de serviços reestruturada com tab-bar idêntico ao Blog — <span class="green">[ Lattice Shield ]</span> e <span class="purple">[ Plegma Timestamp ]</span>. URL hash (#lattice / #timestamp) para navegação direta.</li>
-                    <li><span class="highlight">Plegma Timestamp — novo serviço:</span> Serviço de Ancoragem de Estado completo. BLAKE3 local via WASM → ZK-Press 22KB → DAG. Fluxo 5 etapas, distribuição de receita (2% Royalties · 10% Aerarium · 88% Rede), verificação gratuita para qualquer pessoa, preço 2€/registro em $PLG.</li>
+                    <li><span class="highlight">Plegma Timestamp — novo serviço:</span> Serviço de Ancoragem de Estado completo. BLAKE3 local via WASM → ZK-Press 22KB → DAG. Fluxo 5 etapas, distribuição de receita (2% Royalties · 10% Aerarium · 88% Rede), verificação gratuita para qualquer pessoa, preço $2 USD/registo em $PLG (quantidade variável conforme cotação).</li>
                     <li><span class="highlight">Protocolo de Propriedade de Serviço:</span> Cada serviço agora tem secção "Propriedade do Serviço" com campo bloqueado pré-lançamento. Após lançamento da rede, a carteira do criador é revelada via <code>/api/status</code> (rede_ativa). Royalties distribuídos automaticamente pelo protocolo — sem custódia. Padrão obrigatório para todo serviço futuro.</li>
                     <li><span class="highlight">/labs — PROJETOS como aba:</span> Botão PROJETOS removido do nav (era gaveta). Substituído por tab-bar padrão <span class="green">[ Ideias ]</span> / <span class="green">[ Projetos ]</span> abaixo do hero. Protocolo de serviços explicado no tab Projetos: ideia registrada no Labs com carteira → aprovada → serviço ativo com endereço PLG pré-atribuído.</li>
                     <li><span class="highlight">/labs — badge "Em Teste":</span> Os 3 projetos do Arsenal (ZKM Forge, ZKM Viewer, ZKM Player) receberam badge âmbar <span class="amber">⚠ Em Teste</span> indicando que ainda não funcionam 100%. Controlado por campo <code>beta: true</code> no array — remover quando estável.</li>
