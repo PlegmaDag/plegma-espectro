@@ -61,7 +61,7 @@ class PlegmaTheme {
         type                  : BottomNavigationBarType.fixed,
         elevation             : 0,
       ),
-      cardTheme: CardThemeData(
+      cardTheme: CardTheme(
         color        : PlegmaColors.bg2,
         elevation    : 0,
         shape        : RoundedRectangleBorder(
