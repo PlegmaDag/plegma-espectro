@@ -1027,7 +1027,7 @@ class _SaldoTab extends StatelessWidget {
                                 ));
                                 return;
                               }
-                              if (w != null && qtdV > w.plggAvailable) {
+                              if (w != null && qtdV > w.plggAvailable) { // ignore: unnecessary_null_comparison // ignore: unnecessary_null_comparison
                                 ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(
                                   content: Text('Saldo PLG-G disponível insuficiente'),
                                   backgroundColor: PlegmaColors.red,
